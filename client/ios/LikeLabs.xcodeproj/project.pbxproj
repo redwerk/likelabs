@@ -1,0 +1,359 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5577153F564E00649AB4 /* UIKit.framework */; };
+		0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5579153F564E00649AB4 /* Foundation.framework */; };
+		0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB557B153F564E00649AB4 /* CoreGraphics.framework */; };
+		0AAB5582153F564E00649AB4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0AAB5580153F564E00649AB4 /* InfoPlist.strings */; };
+		0AAB5584153F564E00649AB4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5583153F564E00649AB4 /* main.m */; };
+		0AAB5588153F564E00649AB4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5587153F564E00649AB4 /* AppDelegate.m */; };
+		0AAB559C153F577400649AB4 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB558F153F577400649AB4 /* Contact.m */; };
+		0AAB559D153F577400649AB4 /* Review.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5591153F577400649AB4 /* Review.m */; };
+		0AAB559E153F577400649AB4 /* ReviewService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5593153F577400649AB4 /* ReviewService.m */; };
+		0AAB559F153F577400649AB4 /* SettingsDao.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5595153F577400649AB4 /* SettingsDao.m */; };
+		0AAB55A0153F577400649AB4 /* SettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5597153F577400649AB4 /* SettingsService.m */; };
+		0AAB55A1153F577400649AB4 /* Tablet.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5599153F577400649AB4 /* Tablet.m */; };
+		0AAB55A2153F577400649AB4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB559B153F577400649AB4 /* User.m */; };
+		0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB55B2153F59BB00649AB4 /* TextReviewController.m */; };
+		0AAB55B5153F59BB00649AB4 /* TextReviewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0AAB5573153F564E00649AB4 /* LikeLabs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikeLabs.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AAB5577153F564E00649AB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0AAB5579153F564E00649AB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0AAB557B153F564E00649AB4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		0AAB557F153F564E00649AB4 /* LikeLabs-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LikeLabs-Info.plist"; sourceTree = "<group>"; };
+		0AAB5581153F564E00649AB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0AAB5583153F564E00649AB4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0AAB5585153F564E00649AB4 /* LikeLabs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LikeLabs-Prefix.pch"; sourceTree = "<group>"; };
+		0AAB5586153F564E00649AB4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0AAB5587153F564E00649AB4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0AAB558E153F577400649AB4 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contact.h; path = LikeLabs/Contact.h; sourceTree = "<group>"; };
+		0AAB558F153F577400649AB4 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Contact.m; path = LikeLabs/Contact.m; sourceTree = "<group>"; };
+		0AAB5590153F577400649AB4 /* Review.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Review.h; path = LikeLabs/Review.h; sourceTree = "<group>"; };
+		0AAB5591153F577400649AB4 /* Review.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Review.m; path = LikeLabs/Review.m; sourceTree = "<group>"; };
+		0AAB5592153F577400649AB4 /* ReviewService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReviewService.h; path = LikeLabs/ReviewService.h; sourceTree = "<group>"; };
+		0AAB5593153F577400649AB4 /* ReviewService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReviewService.m; path = LikeLabs/ReviewService.m; sourceTree = "<group>"; };
+		0AAB5594153F577400649AB4 /* SettingsDao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsDao.h; path = LikeLabs/SettingsDao.h; sourceTree = "<group>"; };
+		0AAB5595153F577400649AB4 /* SettingsDao.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsDao.m; path = LikeLabs/SettingsDao.m; sourceTree = "<group>"; };
+		0AAB5596153F577400649AB4 /* SettingsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsService.h; path = LikeLabs/SettingsService.h; sourceTree = "<group>"; };
+		0AAB5597153F577400649AB4 /* SettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsService.m; path = LikeLabs/SettingsService.m; sourceTree = "<group>"; };
+		0AAB5598153F577400649AB4 /* Tablet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tablet.h; path = LikeLabs/Tablet.h; sourceTree = "<group>"; };
+		0AAB5599153F577400649AB4 /* Tablet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Tablet.m; path = LikeLabs/Tablet.m; sourceTree = "<group>"; };
+		0AAB559A153F577400649AB4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = LikeLabs/User.h; sourceTree = "<group>"; };
+		0AAB559B153F577400649AB4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = LikeLabs/User.m; sourceTree = "<group>"; };
+		0AAB55B1153F59BB00649AB4 /* TextReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextReviewController.h; path = LikeLabs/TextReviewController.h; sourceTree = "<group>"; };
+		0AAB55B2153F59BB00649AB4 /* TextReviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextReviewController.m; path = LikeLabs/TextReviewController.m; sourceTree = "<group>"; };
+		0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TextReviewController.xib; path = LikeLabs/TextReviewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0AAB5570153F564E00649AB4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */,
+				0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */,
+				0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0AAB5568153F564E00649AB4 = {
+			isa = PBXGroup;
+			children = (
+				0AAB557D153F564E00649AB4 /* LikeLabs */,
+				0AAB5576153F564E00649AB4 /* Frameworks */,
+				0AAB5574153F564E00649AB4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0AAB5574153F564E00649AB4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB5573153F564E00649AB4 /* LikeLabs.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0AAB5576153F564E00649AB4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB5577153F564E00649AB4 /* UIKit.framework */,
+				0AAB5579153F564E00649AB4 /* Foundation.framework */,
+				0AAB557B153F564E00649AB4 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0AAB557D153F564E00649AB4 /* LikeLabs */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB55A5153F57AC00649AB4 /* Data Access */,
+				0AAB55A3153F578D00649AB4 /* Model */,
+				0AAB5586153F564E00649AB4 /* AppDelegate.h */,
+				0AAB5587153F564E00649AB4 /* AppDelegate.m */,
+				0AAB557E153F564E00649AB4 /* Supporting Files */,
+				0AAB55A4153F57A000649AB4 /* Services */,
+				0AAB55A6153F57D100649AB4 /* Presentation */,
+			);
+			path = LikeLabs;
+			sourceTree = "<group>";
+		};
+		0AAB557E153F564E00649AB4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB557F153F564E00649AB4 /* LikeLabs-Info.plist */,
+				0AAB5580153F564E00649AB4 /* InfoPlist.strings */,
+				0AAB5583153F564E00649AB4 /* main.m */,
+				0AAB5585153F564E00649AB4 /* LikeLabs-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0AAB55A3153F578D00649AB4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB558E153F577400649AB4 /* Contact.h */,
+				0AAB558F153F577400649AB4 /* Contact.m */,
+				0AAB5590153F577400649AB4 /* Review.h */,
+				0AAB5591153F577400649AB4 /* Review.m */,
+				0AAB5598153F577400649AB4 /* Tablet.h */,
+				0AAB5599153F577400649AB4 /* Tablet.m */,
+				0AAB559A153F577400649AB4 /* User.h */,
+				0AAB559B153F577400649AB4 /* User.m */,
+			);
+			name = Model;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0AAB55A4153F57A000649AB4 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB5592153F577400649AB4 /* ReviewService.h */,
+				0AAB5593153F577400649AB4 /* ReviewService.m */,
+				0AAB5596153F577400649AB4 /* SettingsService.h */,
+				0AAB5597153F577400649AB4 /* SettingsService.m */,
+			);
+			name = Services;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0AAB55A5153F57AC00649AB4 /* Data Access */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB5594153F577400649AB4 /* SettingsDao.h */,
+				0AAB5595153F577400649AB4 /* SettingsDao.m */,
+			);
+			name = "Data Access";
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0AAB55A6153F57D100649AB4 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				0AAB55B1153F59BB00649AB4 /* TextReviewController.h */,
+				0AAB55B2153F59BB00649AB4 /* TextReviewController.m */,
+				0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */,
+			);
+			name = Presentation;
+			path = ..;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0AAB5572153F564E00649AB4 /* LikeLabs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0AAB558B153F564E00649AB4 /* Build configuration list for PBXNativeTarget "LikeLabs" */;
+			buildPhases = (
+				0AAB556F153F564E00649AB4 /* Sources */,
+				0AAB5570153F564E00649AB4 /* Frameworks */,
+				0AAB5571153F564E00649AB4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LikeLabs;
+			productName = LikeLabs;
+			productReference = 0AAB5573153F564E00649AB4 /* LikeLabs.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0AAB556A153F564E00649AB4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Redwerk;
+			};
+			buildConfigurationList = 0AAB556D153F564E00649AB4 /* Build configuration list for PBXProject "LikeLabs" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0AAB5568153F564E00649AB4;
+			productRefGroup = 0AAB5574153F564E00649AB4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0AAB5572153F564E00649AB4 /* LikeLabs */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0AAB5571153F564E00649AB4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AAB5582153F564E00649AB4 /* InfoPlist.strings in Resources */,
+				0AAB55B5153F59BB00649AB4 /* TextReviewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0AAB556F153F564E00649AB4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0AAB5584153F564E00649AB4 /* main.m in Sources */,
+				0AAB5588153F564E00649AB4 /* AppDelegate.m in Sources */,
+				0AAB559C153F577400649AB4 /* Contact.m in Sources */,
+				0AAB559D153F577400649AB4 /* Review.m in Sources */,
+				0AAB559E153F577400649AB4 /* ReviewService.m in Sources */,
+				0AAB559F153F577400649AB4 /* SettingsDao.m in Sources */,
+				0AAB55A0153F577400649AB4 /* SettingsService.m in Sources */,
+				0AAB55A1153F577400649AB4 /* Tablet.m in Sources */,
+				0AAB55A2153F577400649AB4 /* User.m in Sources */,
+				0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0AAB5580153F564E00649AB4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0AAB5581153F564E00649AB4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0AAB5589153F564E00649AB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		0AAB558A153F564E00649AB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0AAB558C153F564E00649AB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LikeLabs/LikeLabs-Prefix.pch";
+				INFOPLIST_FILE = "LikeLabs/LikeLabs-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		0AAB558D153F564E00649AB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LikeLabs/LikeLabs-Prefix.pch";
+				INFOPLIST_FILE = "LikeLabs/LikeLabs-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0AAB556D153F564E00649AB4 /* Build configuration list for PBXProject "LikeLabs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AAB5589153F564E00649AB4 /* Debug */,
+				0AAB558A153F564E00649AB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0AAB558B153F564E00649AB4 /* Build configuration list for PBXNativeTarget "LikeLabs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0AAB558C153F564E00649AB4 /* Debug */,
+				0AAB558D153F564E00649AB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0AAB556A153F564E00649AB4 /* Project object */;
+}
