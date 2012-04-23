@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A3FD0F2154568A400C59743 /* TempDashboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD0F0154568A400C59743 /* TempDashboardController.m */; };
+		0A3FD0F3154568A400C59743 /* TempDashboardController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3FD0F1154568A400C59743 /* TempDashboardController.xib */; };
+		0A3FD14315457B5500C59743 /* RootWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3FD14215457B5500C59743 /* RootWindow.xib */; };
+		0A5D58831545993D0037C062 /* Temp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5D58811545993D0037C062 /* Temp.m */; };
+		0A5D58841545993D0037C062 /* Temp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A5D58821545993D0037C062 /* Temp.xib */; };
 		0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5577153F564E00649AB4 /* UIKit.framework */; };
 		0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5579153F564E00649AB4 /* Foundation.framework */; };
 		0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB557B153F564E00649AB4 /* CoreGraphics.framework */; };
@@ -25,6 +30,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A3FD0EF154568A400C59743 /* TempDashboardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TempDashboardController.h; path = LikeLabs/TempDashboardController.h; sourceTree = "<group>"; };
+		0A3FD0F0154568A400C59743 /* TempDashboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TempDashboardController.m; path = LikeLabs/TempDashboardController.m; sourceTree = "<group>"; };
+		0A3FD0F1154568A400C59743 /* TempDashboardController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TempDashboardController.xib; path = LikeLabs/TempDashboardController.xib; sourceTree = "<group>"; };
+		0A3FD14215457B5500C59743 /* RootWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootWindow.xib; sourceTree = "<group>"; };
+		0A5D58801545993D0037C062 /* Temp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Temp.h; path = LikeLabs/Temp.h; sourceTree = "<group>"; };
+		0A5D58811545993D0037C062 /* Temp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Temp.m; path = LikeLabs/Temp.m; sourceTree = "<group>"; };
+		0A5D58821545993D0037C062 /* Temp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Temp.xib; path = LikeLabs/Temp.xib; sourceTree = "<group>"; };
 		0AAB5573153F564E00649AB4 /* LikeLabs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikeLabs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AAB5577153F564E00649AB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AAB5579153F564E00649AB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -98,13 +110,14 @@
 		0AAB557D153F564E00649AB4 /* LikeLabs */ = {
 			isa = PBXGroup;
 			children = (
-				0AAB55A5153F57AC00649AB4 /* Data Access */,
-				0AAB55A3153F578D00649AB4 /* Model */,
+				0AAB557E153F564E00649AB4 /* Supporting Files */,
 				0AAB5586153F564E00649AB4 /* AppDelegate.h */,
 				0AAB5587153F564E00649AB4 /* AppDelegate.m */,
-				0AAB557E153F564E00649AB4 /* Supporting Files */,
+				0AAB55A5153F57AC00649AB4 /* Data Access */,
+				0AAB55A3153F578D00649AB4 /* Model */,
 				0AAB55A4153F57A000649AB4 /* Services */,
 				0AAB55A6153F57D100649AB4 /* Presentation */,
+				0A3FD14215457B5500C59743 /* RootWindow.xib */,
 			);
 			path = LikeLabs;
 			sourceTree = "<group>";
@@ -164,6 +177,12 @@
 				0AAB55B1153F59BB00649AB4 /* TextReviewController.h */,
 				0AAB55B2153F59BB00649AB4 /* TextReviewController.m */,
 				0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */,
+				0A3FD0EF154568A400C59743 /* TempDashboardController.h */,
+				0A3FD0F0154568A400C59743 /* TempDashboardController.m */,
+				0A3FD0F1154568A400C59743 /* TempDashboardController.xib */,
+				0A5D58801545993D0037C062 /* Temp.h */,
+				0A5D58811545993D0037C062 /* Temp.m */,
+				0A5D58821545993D0037C062 /* Temp.xib */,
 			);
 			name = Presentation;
 			path = ..;
@@ -222,6 +241,9 @@
 			files = (
 				0AAB5582153F564E00649AB4 /* InfoPlist.strings in Resources */,
 				0AAB55B5153F59BB00649AB4 /* TextReviewController.xib in Resources */,
+				0A3FD0F3154568A400C59743 /* TempDashboardController.xib in Resources */,
+				0A3FD14315457B5500C59743 /* RootWindow.xib in Resources */,
+				0A5D58841545993D0037C062 /* Temp.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +264,8 @@
 				0AAB55A1153F577400649AB4 /* Tablet.m in Sources */,
 				0AAB55A2153F577400649AB4 /* User.m in Sources */,
 				0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */,
+				0A3FD0F2154568A400C59743 /* TempDashboardController.m in Sources */,
+				0A5D58831545993D0037C062 /* Temp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

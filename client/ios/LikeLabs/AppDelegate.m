@@ -3,12 +3,13 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
+@synthesize tabBarController = _tabBarController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];	
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window addSubview:self.tabBarController.view];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -52,4 +53,9 @@
      */
 }
 
+- (void)dealloc {
+    [_window release];
+    [_tabBarController release];
+    [super dealloc];
+}
 @end
