@@ -44,4 +44,9 @@
         <url-pattern>/static/*</url-pattern>
     </servlet-mapping>
 
+    <context-param>
+      <param-name>webAppRootKey</param-name>
+      <param-value>likelabs_root_key</param-value>
+    </context-param>
+
 </web-app>
