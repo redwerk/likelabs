@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface LoginController : UIViewController
+@interface LoginController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *inputCode;
 @property (strong, nonatomic) IBOutlet UITextField *inputPassword;

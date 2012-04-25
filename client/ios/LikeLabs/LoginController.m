@@ -1,10 +1,6 @@
 #import "LoginController.h"
 #import "LoginService.h"
 
-@interface LoginController ()
-
-@end
-
 @implementation LoginController
 
 @synthesize inputCode;
@@ -21,6 +17,17 @@ NSString *bgPortrait = @"bg_portrait.png";
     inputPassword.borderStyle = UITextBorderStyleRoundedRect;
     [super viewDidLoad];
 }
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if(textField == inputCode) {
+        [inputPassword becomeFirstResponder];
+    } else if (textField == inputPassword) {
+        [textField resignFirstResponder];
+        [self formSubmit:nil];
+    }
+    return YES;
+}
+
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     UIColor *background;
     UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
