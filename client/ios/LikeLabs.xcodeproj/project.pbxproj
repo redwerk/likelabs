@@ -10,8 +10,6 @@
 		0A3FD0F2154568A400C59743 /* TempDashboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD0F0154568A400C59743 /* TempDashboardController.m */; };
 		0A3FD0F3154568A400C59743 /* TempDashboardController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3FD0F1154568A400C59743 /* TempDashboardController.xib */; };
 		0A3FD14315457B5500C59743 /* RootWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3FD14215457B5500C59743 /* RootWindow.xib */; };
-		0A5D58831545993D0037C062 /* Temp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A5D58811545993D0037C062 /* Temp.m */; };
-		0A5D58841545993D0037C062 /* Temp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A5D58821545993D0037C062 /* Temp.xib */; };
 		0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5577153F564E00649AB4 /* UIKit.framework */; };
 		0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5579153F564E00649AB4 /* Foundation.framework */; };
 		0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB557B153F564E00649AB4 /* CoreGraphics.framework */; };
@@ -27,6 +25,11 @@
 		0AAB55A2153F577400649AB4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB559B153F577400649AB4 /* User.m */; };
 		0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB55B2153F59BB00649AB4 /* TextReviewController.m */; };
 		0AAB55B5153F59BB00649AB4 /* TextReviewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */; };
+		E9F81B831545A09200E0B41A /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F81B821545A09200E0B41A /* LoginController.m */; };
+		E9F81B861545A14E00E0B41A /* LoginService.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F81B851545A14E00E0B41A /* LoginService.m */; };
+		E9F81B881545A21000E0B41A /* LoginController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B871545A21000E0B41A /* LoginController.xib */; };
+		E9F81B9715471A7100E0B41A /* bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9515471A7000E0B41A /* bg_landscape.png */; };
+		E9F81B9815471A7100E0B41A /* bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9615471A7000E0B41A /* bg_portrait.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,9 +37,6 @@
 		0A3FD0F0154568A400C59743 /* TempDashboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TempDashboardController.m; path = LikeLabs/TempDashboardController.m; sourceTree = "<group>"; };
 		0A3FD0F1154568A400C59743 /* TempDashboardController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TempDashboardController.xib; path = LikeLabs/TempDashboardController.xib; sourceTree = "<group>"; };
 		0A3FD14215457B5500C59743 /* RootWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootWindow.xib; sourceTree = "<group>"; };
-		0A5D58801545993D0037C062 /* Temp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Temp.h; path = LikeLabs/Temp.h; sourceTree = "<group>"; };
-		0A5D58811545993D0037C062 /* Temp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Temp.m; path = LikeLabs/Temp.m; sourceTree = "<group>"; };
-		0A5D58821545993D0037C062 /* Temp.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Temp.xib; path = LikeLabs/Temp.xib; sourceTree = "<group>"; };
 		0AAB5573153F564E00649AB4 /* LikeLabs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikeLabs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AAB5577153F564E00649AB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AAB5579153F564E00649AB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -64,6 +64,13 @@
 		0AAB55B1153F59BB00649AB4 /* TextReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextReviewController.h; path = LikeLabs/TextReviewController.h; sourceTree = "<group>"; };
 		0AAB55B2153F59BB00649AB4 /* TextReviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextReviewController.m; path = LikeLabs/TextReviewController.m; sourceTree = "<group>"; };
 		0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TextReviewController.xib; path = LikeLabs/TextReviewController.xib; sourceTree = "<group>"; };
+		E9F81B811545A09200E0B41A /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginController.h; path = LikeLabs/LoginController.h; sourceTree = "<group>"; };
+		E9F81B821545A09200E0B41A /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginController.m; path = LikeLabs/LoginController.m; sourceTree = "<group>"; };
+		E9F81B841545A14E00E0B41A /* LoginService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginService.h; path = LikeLabs/LoginService.h; sourceTree = "<group>"; };
+		E9F81B851545A14E00E0B41A /* LoginService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginService.m; path = LikeLabs/LoginService.m; sourceTree = "<group>"; };
+		E9F81B871545A21000E0B41A /* LoginController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginController.xib; path = LikeLabs/LoginController.xib; sourceTree = "<group>"; };
+		E9F81B9515471A7000E0B41A /* bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_landscape.png; sourceTree = "<group>"; };
+		E9F81B9615471A7000E0B41A /* bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_portrait.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +117,8 @@
 		0AAB557D153F564E00649AB4 /* LikeLabs */ = {
 			isa = PBXGroup;
 			children = (
+				E9F81B9515471A7000E0B41A /* bg_landscape.png */,
+				E9F81B9615471A7000E0B41A /* bg_portrait.png */,
 				0AAB557E153F564E00649AB4 /* Supporting Files */,
 				0AAB5586153F564E00649AB4 /* AppDelegate.h */,
 				0AAB5587153F564E00649AB4 /* AppDelegate.m */,
@@ -152,6 +161,8 @@
 		0AAB55A4153F57A000649AB4 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				E9F81B841545A14E00E0B41A /* LoginService.h */,
+				E9F81B851545A14E00E0B41A /* LoginService.m */,
 				0AAB5592153F577400649AB4 /* ReviewService.h */,
 				0AAB5593153F577400649AB4 /* ReviewService.m */,
 				0AAB5596153F577400649AB4 /* SettingsService.h */,
@@ -174,15 +185,15 @@
 		0AAB55A6153F57D100649AB4 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				E9F81B871545A21000E0B41A /* LoginController.xib */,
+				E9F81B811545A09200E0B41A /* LoginController.h */,
+				E9F81B821545A09200E0B41A /* LoginController.m */,
 				0AAB55B1153F59BB00649AB4 /* TextReviewController.h */,
 				0AAB55B2153F59BB00649AB4 /* TextReviewController.m */,
 				0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */,
 				0A3FD0EF154568A400C59743 /* TempDashboardController.h */,
 				0A3FD0F0154568A400C59743 /* TempDashboardController.m */,
 				0A3FD0F1154568A400C59743 /* TempDashboardController.xib */,
-				0A5D58801545993D0037C062 /* Temp.h */,
-				0A5D58811545993D0037C062 /* Temp.m */,
-				0A5D58821545993D0037C062 /* Temp.xib */,
 			);
 			name = Presentation;
 			path = ..;
@@ -243,7 +254,9 @@
 				0AAB55B5153F59BB00649AB4 /* TextReviewController.xib in Resources */,
 				0A3FD0F3154568A400C59743 /* TempDashboardController.xib in Resources */,
 				0A3FD14315457B5500C59743 /* RootWindow.xib in Resources */,
-				0A5D58841545993D0037C062 /* Temp.xib in Resources */,
+				E9F81B881545A21000E0B41A /* LoginController.xib in Resources */,
+				E9F81B9715471A7100E0B41A /* bg_landscape.png in Resources */,
+				E9F81B9815471A7100E0B41A /* bg_portrait.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +278,8 @@
 				0AAB55A2153F577400649AB4 /* User.m in Sources */,
 				0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */,
 				0A3FD0F2154568A400C59743 /* TempDashboardController.m in Sources */,
-				0A5D58831545993D0037C062 /* Temp.m in Sources */,
+				E9F81B831545A09200E0B41A /* LoginController.m in Sources */,
+				E9F81B861545A14E00E0B41A /* LoginService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
