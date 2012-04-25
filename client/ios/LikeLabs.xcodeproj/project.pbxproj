@@ -10,6 +10,7 @@
 		0A3FD0F2154568A400C59743 /* TempDashboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD0F0154568A400C59743 /* TempDashboardController.m */; };
 		0A3FD0F3154568A400C59743 /* TempDashboardController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3FD0F1154568A400C59743 /* TempDashboardController.xib */; };
 		0A3FD14315457B5500C59743 /* RootWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3FD14215457B5500C59743 /* RootWindow.xib */; };
+		0A5D58C61545C6830037C062 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A5D58C51545C6830037C062 /* QuartzCore.framework */; };
 		0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5577153F564E00649AB4 /* UIKit.framework */; };
 		0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB5579153F564E00649AB4 /* Foundation.framework */; };
 		0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AAB557B153F564E00649AB4 /* CoreGraphics.framework */; };
@@ -37,6 +38,7 @@
 		0A3FD0F0154568A400C59743 /* TempDashboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TempDashboardController.m; path = LikeLabs/TempDashboardController.m; sourceTree = "<group>"; };
 		0A3FD0F1154568A400C59743 /* TempDashboardController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TempDashboardController.xib; path = LikeLabs/TempDashboardController.xib; sourceTree = "<group>"; };
 		0A3FD14215457B5500C59743 /* RootWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootWindow.xib; sourceTree = "<group>"; };
+		0A5D58C51545C6830037C062 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0AAB5573153F564E00649AB4 /* LikeLabs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LikeLabs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AAB5577153F564E00649AB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AAB5579153F564E00649AB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -64,6 +66,7 @@
 		0AAB55B1153F59BB00649AB4 /* TextReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextReviewController.h; path = LikeLabs/TextReviewController.h; sourceTree = "<group>"; };
 		0AAB55B2153F59BB00649AB4 /* TextReviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextReviewController.m; path = LikeLabs/TextReviewController.m; sourceTree = "<group>"; };
 		0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TextReviewController.xib; path = LikeLabs/TextReviewController.xib; sourceTree = "<group>"; };
+		E7C4A91F154852B400EEC86D /* LikeLabs copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LikeLabs copy-Info.plist"; path = "/Users/vladimir/projects/likelabs/trunk/LikeLabs copy-Info.plist"; sourceTree = "<absolute>"; };
 		E9F81B811545A09200E0B41A /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginController.h; path = LikeLabs/LoginController.h; sourceTree = "<group>"; };
 		E9F81B821545A09200E0B41A /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginController.m; path = LikeLabs/LoginController.m; sourceTree = "<group>"; };
 		E9F81B841545A14E00E0B41A /* LoginService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginService.h; path = LikeLabs/LoginService.h; sourceTree = "<group>"; };
@@ -78,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A5D58C61545C6830037C062 /* QuartzCore.framework in Frameworks */,
 				0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */,
 				0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */,
 				0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */,
@@ -93,6 +97,7 @@
 				0AAB557D153F564E00649AB4 /* LikeLabs */,
 				0AAB5576153F564E00649AB4 /* Frameworks */,
 				0AAB5574153F564E00649AB4 /* Products */,
+				E7C4A91F154852B400EEC86D /* LikeLabs copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +112,7 @@
 		0AAB5576153F564E00649AB4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A5D58C51545C6830037C062 /* QuartzCore.framework */,
 				0AAB5577153F564E00649AB4 /* UIKit.framework */,
 				0AAB5579153F564E00649AB4 /* Foundation.framework */,
 				0AAB557B153F564E00649AB4 /* CoreGraphics.framework */,
@@ -317,7 +323,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -336,7 +342,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;

@@ -5,11 +5,16 @@ typedef enum {
     Photo
 } ReviewType;
 
+@class User;
+
 @interface Review : NSObject
 
-@property int reviewPhotoIndex;
-@property(strong) NSArray *photos;
-@property(strong) NSString *text;
+@property (retain, nonatomic) User *user;
+@property NSInteger reviewPhotoIndex;
+@property(retain, nonatomic) NSArray *photos;
+@property(retain, nonatomic) NSString *text;
 @property ReviewType reviewType;
+
+- (id)initWithUser:(User*)user andText:(NSString*)text;
 
 @end

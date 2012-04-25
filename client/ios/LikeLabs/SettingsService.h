@@ -6,10 +6,10 @@
 
 @interface SettingsService : NSObject
 
-NSString* getCompanyName();
-id getLogo();
-Tablet* getTablet();
-NSArray* getWelcomeReviews();
-NSArray* getSocialReviews();
+- (NSString*) getCompanyName;
+- (id) getLogo;
+- (Tablet*) getTablet;
+- (NSArray*) getWelcomeReviews;
+- (NSArray*) getTextReviews;
 
 @end
