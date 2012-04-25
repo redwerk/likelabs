@@ -1,12 +1,24 @@
 <%@include file="header.jsp" %>
         <div class="row">
             <h4>Sign Up for Like Labs</h4>
-            <div style="width: 200px;" class="center">
+            <div style="width: 350px;" class="center">
                 <div class="field">
                     Enter your phone:
                 </div>
                 <div class="field">
-                    <input type="text" style="width: 180px;"/>
+                    <select id="countryCodeSelect" style="width: 140px" onchange="document.getElementById('phone').focus();"></select>
+                    <input type="text" style="width: 165px;font-family: Arial"id="phone"/>
+<script type="text/javascript" src="/scripts/phones.js"></script>
+<script>
+    var select = document.getElementById("countryCodeSelect");
+    var option;
+    for (var i=0; i < codes.length;i++) {
+        option = document.createElement("option");
+        option.innerHTML = codes[i][1];
+        option.value = codes[i][3];
+        select.appendChild(option);
+    }
+</script>
                 </div>
                 <div class="field" style="font-size: 10px;margin: 0; padding: 0">
                     <span><input type="checkbox"/></span>

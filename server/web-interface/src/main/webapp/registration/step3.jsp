@@ -8,7 +8,7 @@
             
             <div>
                 <div class="field">
-                    Congratulations! You was successfully registered to Like Labs!
+                    Congratulations! You were successfully registered to Like Labs!
                 </div>
             </div>
         </div>

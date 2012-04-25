@@ -4,7 +4,7 @@
             
             <div>
                 <div class="field">
-                    Activation code was sended to your phone. Please enter recieved code here:
+                    Activation code was sent to your phone. Please enter received code here:
                 </div>
                 <div class="field">
                     <input type="text" style="width: 180px;"/>
