@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.application;
 
 import com.redwerk.likelabs.application.dto.PointData;
-import com.redwerk.likelabs.domain.model.Point;
+import com.redwerk.likelabs.domain.model.point.Point;
 
 import java.util.List;
 

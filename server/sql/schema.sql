@@ -6,8 +6,7 @@ CREATE TABLE `user` (
      `phone` VARCHAR(20) NOT NULL,
      `password` VARCHAR(20) NOT NULL,
      `email` VARCHAR(40),
-     `is_active` TINYINT(1) NOT NULL,
-     `is_system_admin` TINYINT(1) NOT NULL,
+     `system_admin` TINYINT(1) NOT NULL,
      `publish_reviews_in_sn` TINYINT(1) NOT NULL,
      `notify_if_client` TINYINT(1) NOT NULL,
      `created_dt` DATETIME NOT NULL,
@@ -19,12 +18,10 @@ CREATE TABLE `user` (
 
 DROP TABLE IF EXISTS `user_social_account`;
 CREATE TABLE `user_social_account` (
-     `id` BIGINT AUTO_INCREMENT NOT NULL,
+     `user_id` BIGINT NOT NULL,
      `type` TINYINT NOT NULL,
      `name` VARCHAR(100) NOT NULL,
-     `user_id` BIGINT NOT NULL,
-     CONSTRAINT `PK_user_social_account` PRIMARY KEY (`id`),
-     CONSTRAINT `UC_user_social_account_type_user` UNIQUE(`type`, `user_id`),
+     CONSTRAINT `PK_user_social_account` PRIMARY KEY (`user_id`, `type`),
      CONSTRAINT `FK_user_social_account_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
@@ -160,7 +157,7 @@ CREATE TABLE `event` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `type` TINYINT NOT NULL,
      `created_dt` DATETIME NOT NULL,
-     `is_user_notified` TINYINT(1) NOT NULL,
+     `notified_dt` DATETIME NOT NULL,
      `user_id` BIGINT NOT NULL,
      `review_id` BIGINT NOT NULL,
      CONSTRAINT `PK_event` PRIMARY KEY (`id`),

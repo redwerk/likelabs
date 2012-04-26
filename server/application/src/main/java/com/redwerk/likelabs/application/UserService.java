@@ -1,8 +1,8 @@
 package com.redwerk.likelabs.application;
 
 import com.redwerk.likelabs.application.dto.UserData;
-import com.redwerk.likelabs.domain.model.Image;
-import com.redwerk.likelabs.domain.model.User;
+import com.redwerk.likelabs.domain.model.photo.Photo;
+import com.redwerk.likelabs.domain.model.user.User;
 
 import java.util.List;
 
@@ -19,6 +19,6 @@ public interface UserService {
     void updateUser(long userId, UserData userData);
 
 
-    List<Image> getUserImages(long userId);
+    List<Photo> getUserPhotos(long userId);
 
 }

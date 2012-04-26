@@ -4,5 +4,7 @@
              version="2.0">
     <persistence-unit name="likelabs" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>com.redwerk.likelabs.domain.model.user.User</class>
+        <class>com.redwerk.likelabs.domain.model.user.UserSocialAccount</class>
     </persistence-unit>
 </persistence>

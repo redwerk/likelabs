@@ -2,8 +2,8 @@ package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.UserData;
-import com.redwerk.likelabs.domain.model.Image;
-import com.redwerk.likelabs.domain.model.User;
+import com.redwerk.likelabs.domain.model.photo.Photo;
+import com.redwerk.likelabs.domain.model.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Image> getUserImages(long userId) {
+    public List<Photo> getUserPhotos(long userId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

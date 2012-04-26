@@ -2,7 +2,7 @@ package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.dto.CompanyData;
-import com.redwerk.likelabs.domain.model.Company;
+import com.redwerk.likelabs.domain.model.company.Company;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
