@@ -47,24 +47,22 @@ CREATE TABLE `company` (
      CONSTRAINT `UC_company_name` UNIQUE(`name`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `notification_interval`;
-CREATE TABLE `notification_interval` (
-     `company_id` BIGINT NOT NULL,
+DROP TABLE IF EXISTS `notification_intervals`;
+CREATE TABLE `notification_intervals` (
      `event_type` TINYINT NOT NULL,
-     `notification_type` TINYINT NOT NULL,
-     `interval_in_days` TINYINT,
-     CONSTRAINT `PK_notification_interval` PRIMARY KEY (`company_id`),
-     CONSTRAINT `UC_notification_interval` UNIQUE(`event_type`, `notification_type`),
+     `company_id` BIGINT NOT NULL,
+     `email_interval` INT NOT NULL,
+     `sms_interval` INT NOT NULL,
+     CONSTRAINT `PK_notification_interval` PRIMARY KEY (`event_type`, `company_id`),
      CONSTRAINT `FK_notification_interval_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `company_social_account`;
 CREATE TABLE `company_social_account` (
-     `id` BIGINT AUTO_INCREMENT NOT NULL,
+     `company_id` BIGINT NOT NULL,
      `type` TINYINT NOT NULL,
      `name` VARCHAR(100) NOT NULL,
-     `company_id` BIGINT NOT NULL,
-     CONSTRAINT `PK_company_social_account` PRIMARY KEY (`id`),
+     CONSTRAINT `PK_company_social_account` PRIMARY KEY (`company_id`, `type`, `name`),
      CONSTRAINT `FK_company_social_account_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 

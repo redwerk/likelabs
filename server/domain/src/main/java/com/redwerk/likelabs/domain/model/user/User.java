@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "user")
 public class User {
     
     private static final String ANONYMOUS_USER_NAME = "Anonymous";
@@ -161,7 +160,7 @@ public class User {
     }
 
     public void addAccount(UserSocialAccount socialAccount) {
-        assert !accounts.contains(socialAccount);
+        assert accountOfType(socialAccount.getType()) == null;
         accounts.add(socialAccount);
     }
 
