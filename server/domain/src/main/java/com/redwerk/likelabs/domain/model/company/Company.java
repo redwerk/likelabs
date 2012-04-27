@@ -29,7 +29,7 @@ public class Company {
 
     private String email;
 
-    private boolean moderateReviews;
+    private boolean moderateReviews = true;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
