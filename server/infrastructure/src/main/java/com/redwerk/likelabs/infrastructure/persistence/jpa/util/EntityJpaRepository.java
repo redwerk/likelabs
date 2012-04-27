@@ -3,6 +3,7 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa.util;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class EntityJpaRepository<T> {
 
     private final Class<T> entityClass;
 
-
+   
     @SuppressWarnings("unchecked")
     public EntityJpaRepository(EntityManager em) {
         this.em = em;
@@ -21,18 +22,21 @@ public class EntityJpaRepository<T> {
         this.entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
-    @SuppressWarnings("unchecked")
+    public T findById(Long id) {
+        return em.find(entityClass, id);
+    }
+    
     public T findSingleEntity(String queryString, Map<String, Object> parameters) {
         try {
-            Query query = em.createQuery(queryString);
-            for (Map.Entry<String, Object> p: parameters.entrySet()) {
-                query.setParameter(p.getKey(), p.getValue());
-            }
-            return (T) query.getSingleResult();
+            return getQuery(queryString, parameters).getSingleResult();
         }
         catch (NoResultException e) {
             return null;
         }
+    }
+
+    public List<T> findEntityList(String queryString, Map<String, Object> parameters) {
+        return getQuery(queryString, parameters).getResultList();
     }
 
     public List<T> findEntityList(String queryString) {
@@ -55,6 +59,14 @@ public class EntityJpaRepository<T> {
            em.remove(e);
         }
         em.flush();
+    }
+    
+    private TypedQuery<T> getQuery(String queryString, Map<String, Object> parameters) {
+        TypedQuery<T> query = em.createQuery(queryString, entityClass);
+        for (Map.Entry<String, Object> p: parameters.entrySet()) {
+            query.setParameter(p.getKey(), p.getValue());
+        }
+        return query;
     }
 
 }

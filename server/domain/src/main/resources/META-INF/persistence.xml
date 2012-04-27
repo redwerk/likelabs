@@ -9,5 +9,8 @@
         <class>com.redwerk.likelabs.domain.model.company.Company</class>
         <class>com.redwerk.likelabs.domain.model.company.CompanySocialAccount</class>
         <class>com.redwerk.likelabs.domain.model.company.NotificationIntervals</class>
+        <class>com.redwerk.likelabs.domain.model.point.Point</class>
+        <class>com.redwerk.likelabs.domain.model.point.Address</class>
+        <class>com.redwerk.likelabs.domain.model.tablet.Tablet</class>
     </persistence-unit>
 </persistence>

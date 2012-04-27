@@ -13,7 +13,6 @@ import javax.persistence.Enumerated;
 @Embeddable
 public class CompanySocialAccount implements SocialAccount, Comparable<CompanySocialAccount> {
 
-    @Enumerated(value = EnumType.ORDINAL)
     private SocialAccountType type;
 
     private String name;
@@ -73,6 +72,11 @@ public class CompanySocialAccount implements SocialAccount, Comparable<CompanySo
                 .append("type", type)
                 .append("name", name)
                 .toString();
+    }
+
+    // interface for JPA
+
+    protected CompanySocialAccount() {
     }
 
 }

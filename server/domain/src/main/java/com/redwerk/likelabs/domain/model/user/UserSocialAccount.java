@@ -75,4 +75,9 @@ public class UserSocialAccount implements SocialAccount, Comparable<UserSocialAc
                 .toString();
     }
 
+    // interface for JPA
+
+    protected UserSocialAccount() {
+    }
+
 }

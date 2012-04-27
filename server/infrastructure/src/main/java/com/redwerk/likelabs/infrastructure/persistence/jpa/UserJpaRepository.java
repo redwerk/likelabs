@@ -23,8 +23,14 @@ public class UserJpaRepository implements UserRepository {
     
     private EntityJpaRepository<User> entityRepository;
 
+
     @Override
-    public User findByPhone(String phone) {
+    public User find(Long id) {
+      return getEntityRepository().findById(id);
+    }
+
+    @Override
+    public User find(String phone) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("phone", phone);
         return getEntityRepository().findSingleEntity(GET_USER_BY_PHONE, parameters);

@@ -64,12 +64,20 @@ public class User {
          return accounts.size() == 0;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return isAnonymous() ? ANONYMOUS_USER_NAME : accounts.first().getName();
     }
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {
@@ -140,12 +148,11 @@ public class User {
 
     // social accounts
 
-    public UserSocialAccount getPrimaryAccount() {
-        assert !isAnonymous();
-        return accounts.first();
+    public List<UserSocialAccount> getAccounts() {
+        return Collections.unmodifiableList(new ArrayList<UserSocialAccount>(accounts));
     }
 
-    public UserSocialAccount accountOfType(SocialAccountType accountType) {
+    public UserSocialAccount findAccount(SocialAccountType accountType) {
         for (UserSocialAccount sa: accounts) {
             if (sa.getType() == accountType) {
                 return sa;
@@ -154,14 +161,14 @@ public class User {
         return null;
     }
 
-    public List<UserSocialAccount> getAllAccounts() {
+    public UserSocialAccount getPrimaryAccount() {
         assert !isAnonymous();
-        return Collections.unmodifiableList(new ArrayList<UserSocialAccount>(accounts));
+        return accounts.first();
     }
 
-    public void addAccount(UserSocialAccount socialAccount) {
-        assert accountOfType(socialAccount.getType()) == null;
-        accounts.add(socialAccount);
+    public void addAccount(UserSocialAccount newAccount) {
+        assert findAccount(newAccount.getType()) == null;
+        accounts.add(newAccount);
     }
 
     public void removeAccount(UserSocialAccount socialAccount) {

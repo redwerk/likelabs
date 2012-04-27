@@ -4,7 +4,9 @@ import java.util.List;
 
 public interface UserRepository {
 
-    User findByPhone(String phone);
+    User find(Long id);
+
+    User find(String phone);
 
     List<User> findAll();
 
