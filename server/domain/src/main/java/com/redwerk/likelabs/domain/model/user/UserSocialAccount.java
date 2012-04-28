@@ -1,7 +1,6 @@
 package com.redwerk.likelabs.domain.model.user;
 
-import com.redwerk.likelabs.domain.model.SocialAccount;
-import com.redwerk.likelabs.domain.model.SocialAccountType;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -11,31 +10,49 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Embeddable
-public class UserSocialAccount implements SocialAccount, Comparable<UserSocialAccount> {
+public class UserSocialAccount implements Comparable<UserSocialAccount> {
 
     @Enumerated(value = EnumType.ORDINAL)
-    private SocialAccountType type;
+    private SocialNetworkType type;
+
+    private String accountId;
+    
+    private String accessToken;
 
     private String name;
 
 
     // constructors
 
-    public UserSocialAccount(SocialAccountType type, String name) {
+    public UserSocialAccount(SocialNetworkType type, String accountId, String accessToken, String name) {
         this.type = type;
+        this.accountId =accountId;
+        this.accessToken = accessToken;
         this.name = name;
     }
 
-    // implementation of SocialAccount
+    // accessors
 
-    @Override
-    public SocialAccountType getType() {
+    public SocialNetworkType getType() {
         return type;
     }
 
-    @Override
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
     public String getName() {
         return name;
+    }
+
+    // modifiers
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     // implementation of Comparable<UserSocialAccount>
@@ -43,7 +60,7 @@ public class UserSocialAccount implements SocialAccount, Comparable<UserSocialAc
     @Override
     public int compareTo(UserSocialAccount other) {
         int res = type.compareTo(other.type);
-        return (res != 0) ? res: name.compareTo(other.name);
+        return (res != 0) ? res: accountId.compareTo(other.accountId);
     }
 
     // overrides
@@ -55,7 +72,7 @@ public class UserSocialAccount implements SocialAccount, Comparable<UserSocialAc
         UserSocialAccount other = (UserSocialAccount) obj;
         return new EqualsBuilder()
                 .append(type, other.type)
-                .append(name, other.name)
+                .append(accountId, other.accountId)
                 .isEquals();
     }
 
@@ -63,7 +80,7 @@ public class UserSocialAccount implements SocialAccount, Comparable<UserSocialAc
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(type)
-                .append(name)
+                .append(accountId)
                 .toHashCode();
     }
 
@@ -71,6 +88,8 @@ public class UserSocialAccount implements SocialAccount, Comparable<UserSocialAc
     public String toString() {
         return new ToStringBuilder(this)
                 .append("type", type)
+                .append("accountId", accountId)
+                .append("accessToken", accessToken)
                 .append("name", name)
                 .toString();
     }

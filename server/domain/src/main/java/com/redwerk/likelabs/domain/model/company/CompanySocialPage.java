@@ -1,48 +1,43 @@
 package com.redwerk.likelabs.domain.model.company;
 
-import com.redwerk.likelabs.domain.model.SocialAccount;
-import com.redwerk.likelabs.domain.model.SocialAccountType;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @Embeddable
-public class CompanySocialAccount implements SocialAccount, Comparable<CompanySocialAccount> {
+public class CompanySocialPage implements Comparable<CompanySocialPage> {
 
-    private SocialAccountType type;
+    private SocialNetworkType type;
 
-    private String name;
+    private String pageId;
 
 
     // constructors
 
-    public CompanySocialAccount(SocialAccountType type, String name) {
+    public CompanySocialPage(SocialNetworkType type, String pageId) {
         this.type = type;
-        this.name = name;
+        this.pageId = pageId;
     }
 
-    // implementation of SocialAccount
+    // accessors
 
-    @Override
-    public SocialAccountType getType() {
+    public SocialNetworkType getType() {
         return type;
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public String getPageId() {
+        return pageId;
     }
 
-    // implementation of Comparable<UserSocialAccount>
+    // implementation of Comparable<CompanySocialPage>
 
     @Override
-    public int compareTo(CompanySocialAccount other) {
+    public int compareTo(CompanySocialPage other) {
         int res = type.compareTo(other.type);
-        return (res != 0) ? res: name.compareTo(other.name);
+        return (res != 0) ? res: pageId.compareTo(other.pageId);
     }
 
     // overrides
@@ -51,10 +46,10 @@ public class CompanySocialAccount implements SocialAccount, Comparable<CompanySo
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        CompanySocialAccount other = (CompanySocialAccount) obj;
+        CompanySocialPage other = (CompanySocialPage) obj;
         return new EqualsBuilder()
                 .append(type, other.type)
-                .append(name, other.name)
+                .append(pageId, other.pageId)
                 .isEquals();
     }
 
@@ -62,7 +57,7 @@ public class CompanySocialAccount implements SocialAccount, Comparable<CompanySo
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(type)
-                .append(name)
+                .append(pageId)
                 .toHashCode();
     }
 
@@ -70,13 +65,13 @@ public class CompanySocialAccount implements SocialAccount, Comparable<CompanySo
     public String toString() {
         return new ToStringBuilder(this)
                 .append("type", type)
-                .append("name", name)
+                .append("pageId", pageId)
                 .toString();
     }
 
     // interface for JPA
 
-    protected CompanySocialAccount() {
+    protected CompanySocialPage() {
     }
 
 }

@@ -20,6 +20,8 @@ DROP TABLE IF EXISTS `user_social_account`;
 CREATE TABLE `user_social_account` (
      `user_id` BIGINT NOT NULL,
      `type` TINYINT NOT NULL,
+     `account_id` VARCHAR(20) NOT NULL,
+     `access_token` VARCHAR(255),
      `name` VARCHAR(100) NOT NULL,
      CONSTRAINT `PK_user_social_account` PRIMARY KEY (`user_id`, `type`),
      CONSTRAINT `FK_user_social_account_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
@@ -58,13 +60,14 @@ CREATE TABLE `notification_intervals` (
      CONSTRAINT `FK_notification_interval_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `company_social_account`;
-CREATE TABLE `company_social_account` (
+DROP TABLE IF EXISTS `company_social_page`;
+CREATE TABLE `company_social_page` (
      `company_id` BIGINT NOT NULL,
      `type` TINYINT NOT NULL,
+     `page_id` VARCHAR(20) NOT NULL,
      `name` VARCHAR(100) NOT NULL,
-     CONSTRAINT `PK_company_social_account` PRIMARY KEY (`company_id`, `type`, `name`),
-     CONSTRAINT `FK_company_social_account_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
+     CONSTRAINT `PK_company_social_page` PRIMARY KEY (`company_id`, `type`, `page_id`),
+     CONSTRAINT `FK_company_social_page_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `company_admin`;

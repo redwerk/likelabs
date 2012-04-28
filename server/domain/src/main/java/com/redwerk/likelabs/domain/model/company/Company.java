@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.domain.model.company;
 
-import com.redwerk.likelabs.domain.model.SocialAccountType;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.user.User;
@@ -39,7 +39,7 @@ public class Company {
     @ElementCollection
     @CollectionTable(name="company_social_account", joinColumns = @JoinColumn(name="company_id"))
     @Sort(type = SortType.NATURAL)
-    private SortedSet<CompanySocialAccount> accounts = new TreeSet<CompanySocialAccount>();
+    private SortedSet<CompanySocialPage> pages = new TreeSet<CompanySocialPage>();
 
     @ElementCollection
     @CollectionTable(name="notification_intervals", joinColumns = @JoinColumn(name="company_id"))
@@ -127,32 +127,32 @@ public class Company {
     
     // social accounts
 
-    public Set<CompanySocialAccount> getSocialAccounts() {
-        return Collections.unmodifiableSet(accounts);
+    public Set<CompanySocialPage> getSocialPages() {
+        return Collections.unmodifiableSet(pages);
     }
 
-    public Set<CompanySocialAccount> getSocialAccounts(SocialAccountType accountType) {
-        Set<CompanySocialAccount> typedAccounts = new HashSet<CompanySocialAccount>();
-        for (CompanySocialAccount sa: accounts) {
-            if (sa.getType() == accountType) {
-                typedAccounts.add(sa);
+    public Set<CompanySocialPage> getSocialPages(SocialNetworkType networkType) {
+        Set<CompanySocialPage> typedAccounts = new HashSet<CompanySocialPage>();
+        for (CompanySocialPage sp: pages) {
+            if (sp.getType() == networkType) {
+                typedAccounts.add(sp);
             }
         }
         return Collections.unmodifiableSet(typedAccounts);
     }
 
-    public void addSocialAccount(CompanySocialAccount socialAccount) {
-        assert !accounts.contains(socialAccount);
-        accounts.add(socialAccount);
+    public void addSocialPage(CompanySocialPage socialPage) {
+        assert !pages.contains(socialPage);
+        pages.add(socialPage);
     }
 
-    public void removeSocialAccount(CompanySocialAccount socialAccount) {
-        assert accounts.contains(socialAccount);
-        accounts.remove(socialAccount);
+    public void removeSocialPage(CompanySocialPage socialPage) {
+        assert pages.contains(socialPage);
+        pages.remove(socialPage);
     }
 
-    public void clearSocialAccounts() {
-        accounts.clear();
+    public void clearSocialPages() {
+        pages.clear();
     }
 
     // notification intervals
@@ -237,7 +237,7 @@ public class Company {
                 .append("email", email)
                 .append("moderateReviews", moderateReviews)
                 .append("hasLogo", logo != null)
-                .append("accounts", accounts)
+                .append("pages", pages)
                 .append("intervals", intervals)
                 .append("admins", admins)
                 .append("sampleReviews", sampleReviews)

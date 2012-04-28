@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.domain.model.user;
 
-import com.redwerk.likelabs.domain.model.SocialAccountType;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -155,9 +155,9 @@ public class User {
         return Collections.unmodifiableList(new ArrayList<UserSocialAccount>(accounts));
     }
 
-    public UserSocialAccount findAccount(SocialAccountType accountType) {
+    public UserSocialAccount findAccount(SocialNetworkType networkType) {
         for (UserSocialAccount sa: accounts) {
-            if (sa.getType() == accountType) {
+            if (sa.getType() == networkType) {
                 return sa;
             }
         }

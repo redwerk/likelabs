@@ -7,7 +7,7 @@
         <class>com.redwerk.likelabs.domain.model.user.User</class>
         <class>com.redwerk.likelabs.domain.model.user.UserSocialAccount</class>
         <class>com.redwerk.likelabs.domain.model.company.Company</class>
-        <class>com.redwerk.likelabs.domain.model.company.CompanySocialAccount</class>
+        <class>com.redwerk.likelabs.domain.model.company.CompanySocialPage</class>
         <class>com.redwerk.likelabs.domain.model.company.NotificationIntervals</class>
         <class>com.redwerk.likelabs.domain.model.point.Point</class>
         <class>com.redwerk.likelabs.domain.model.point.Address</class>

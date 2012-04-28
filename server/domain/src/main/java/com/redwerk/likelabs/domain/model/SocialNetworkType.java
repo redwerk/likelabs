@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.domain.model;
 
-public enum SocialAccountType {
+public enum SocialNetworkType {
 
     FACEBOOK, VKONTAKTE
 
