@@ -40,10 +40,6 @@ public class Tablet {
         return id;
     }
 
-    public Point getPoint() {
-        return point;
-    }
-
     public String getLogin() {
         return login;
     }
@@ -98,7 +94,7 @@ public class Tablet {
 
     // interface for JPA
 
-    public Tablet() {
+    protected Tablet() {
     }
 
 }

@@ -33,12 +33,15 @@ public class User {
     private boolean notifyIfClient = true;
 
     @Column(name = "created_dt")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDT = new Date();
 
     @Column(name = "activated_dt")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date activatedDT;
 
     @Column(name = "notified_dt")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date notifiedDT;
 
     @ElementCollection

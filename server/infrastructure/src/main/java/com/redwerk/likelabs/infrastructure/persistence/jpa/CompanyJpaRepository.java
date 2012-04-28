@@ -15,11 +15,12 @@ import java.util.Map;
 @Repository
 public class CompanyJpaRepository implements CompanyRepository {
 
-    private static final String GET_ALL_COMPANIES = "select c from Company c";
+    private static final String GET_ALL_COMPANIES = "select c from Company c order by c.name";
 
-    private static final String GET_COMPANY_BY_NAME = "select c from Company c where c.name = :name";
+    private static final String GET_COMPANY_BY_NAME = "select c from Company c where c.name = :name order by c.id";
 
-    private static final String GET_COMPANIES_BY_ADMIN = "select c from Company c where c.admins.id = :adminId";
+    private static final String GET_COMPANIES_BY_ADMIN =
+            "select c from Company c where c.admins.id = :adminId order by c.name";
 
     @PersistenceContext
     private EntityManager em;

@@ -15,7 +15,7 @@ import java.util.Map;
 @Repository
 public class SystemParameterJpaRepository implements SystemParameterRepository {
 
-    private static final String GET_ALL_PARAMETERS = "select p from SystemParameter p";
+    private static final String GET_ALL_PARAMETERS = "select p from SystemParameter p order by p.type";
 
     private static final String GET_PARAMETER_BY_TYPE = "select p from SystemParameter p where p.type = :type";
 

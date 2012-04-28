@@ -16,11 +16,11 @@ import java.util.Map;
 @Repository
 public class PointJpaRepository implements PointRepository {
 
-    private static final String GET_ALL_COMPANIES = "select c from Company c";
-
     private static final String GET_POINTS_FOR_COMPANY = "select p from Point p where p.company.id = :companyId";
 
-    private static final String GET_POINTS_BY_ADDRESS = GET_POINTS_FOR_COMPANY + " and p.address = :address";
+    private static final String GET_ORDERED_POINTS_FOR_COMPANY = GET_POINTS_FOR_COMPANY + " order by p.address";
+
+    private static final String GET_POINT_BY_ADDRESS = GET_POINTS_FOR_COMPANY + " and p.address = :address";
 
     @PersistenceContext
     private EntityManager em;
@@ -38,14 +38,14 @@ public class PointJpaRepository implements PointRepository {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
         parameters.put("address", address);
-        return getEntityRepository().findSingleEntity(GET_POINTS_BY_ADDRESS, parameters);
+        return getEntityRepository().findSingleEntity(GET_POINT_BY_ADDRESS, parameters);
     }
 
     @Override
     public List<Point> findAll(Company company) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_POINTS_FOR_COMPANY, parameters);
+        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters);
     }
 
     @Override

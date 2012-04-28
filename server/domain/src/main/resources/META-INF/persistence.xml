@@ -12,5 +12,10 @@
         <class>com.redwerk.likelabs.domain.model.point.Point</class>
         <class>com.redwerk.likelabs.domain.model.point.Address</class>
         <class>com.redwerk.likelabs.domain.model.tablet.Tablet</class>
+        <class>com.redwerk.likelabs.domain.model.settings.SystemParameter</class>
+        <class>com.redwerk.likelabs.domain.model.event.Event</class>
+        <class>com.redwerk.likelabs.domain.model.review.Review</class>
+        <class>com.redwerk.likelabs.domain.model.review.Recipient</class>
+        <class>com.redwerk.likelabs.domain.model.photo.Photo</class>
     </persistence-unit>
 </persistence>

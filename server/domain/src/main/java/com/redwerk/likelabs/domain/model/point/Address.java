@@ -99,7 +99,7 @@ public class Address {
 
     // interface for JPA
 
-    public Address() {
+    protected Address() {
     }
 
 }

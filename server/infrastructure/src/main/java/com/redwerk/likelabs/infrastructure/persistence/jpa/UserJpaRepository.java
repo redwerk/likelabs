@@ -14,7 +14,7 @@ import java.util.Map;
 @Repository
 public class UserJpaRepository implements UserRepository {
 
-    private static final String GET_ALL_USERS = "select u from User u";
+    private static final String GET_ALL_USERS = "select u from User u order by u.phone";
 
     private static final String GET_USER_BY_PHONE = "select u from User u where u.phone = :phone";
 

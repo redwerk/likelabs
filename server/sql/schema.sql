@@ -7,7 +7,7 @@ CREATE TABLE `user` (
      `password` VARCHAR(20) NOT NULL,
      `email` VARCHAR(40),
      `system_admin` TINYINT(1) NOT NULL,
-     `publish_reviews_in_sn` TINYINT(1) NOT NULL,
+     `publish_in_sn` TINYINT(1) NOT NULL,
      `notify_if_client` TINYINT(1) NOT NULL,
      `created_dt` DATETIME NOT NULL,
      `activated_dt` DATETIME NOT NULL,
@@ -22,17 +22,18 @@ CREATE TABLE `user_social_account` (
      `type` TINYINT NOT NULL,
      `name` VARCHAR(100) NOT NULL,
      CONSTRAINT `PK_user_social_account` PRIMARY KEY (`user_id`, `type`),
-     CONSTRAINT `FK_user_social_account_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+     CONSTRAINT `FK_user_social_account_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `photo`;
 CREATE TABLE `photo` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
-     `photo_data` BLOB NOT NULL,
+     `image` BLOB NOT NULL,
+     `created_dt` DATETIME NOT NULL,
      `status` TINYINT NOT NULL,
      `user_id` BIGINT NOT NULL,
      CONSTRAINT `PK_photo` PRIMARY KEY (`id`),
-     CONSTRAINT `FK_photo_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+     CONSTRAINT `FK_photo_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `company`;
@@ -49,12 +50,12 @@ CREATE TABLE `company` (
 
 DROP TABLE IF EXISTS `notification_intervals`;
 CREATE TABLE `notification_intervals` (
-     `event_type` TINYINT NOT NULL,
      `company_id` BIGINT NOT NULL,
+     `event_type` TINYINT NOT NULL,
      `email_interval` INT NOT NULL,
      `sms_interval` INT NOT NULL,
-     CONSTRAINT `PK_notification_interval` PRIMARY KEY (`event_type`, `company_id`),
-     CONSTRAINT `FK_notification_interval_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+     CONSTRAINT `PK_notification_interval` PRIMARY KEY (`company_id`, `event_type`),
+     CONSTRAINT `FK_notification_interval_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `company_social_account`;
@@ -63,7 +64,7 @@ CREATE TABLE `company_social_account` (
      `type` TINYINT NOT NULL,
      `name` VARCHAR(100) NOT NULL,
      CONSTRAINT `PK_company_social_account` PRIMARY KEY (`company_id`, `type`, `name`),
-     CONSTRAINT `FK_company_social_account_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+     CONSTRAINT `FK_company_social_account_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `company_admin`;
@@ -71,8 +72,8 @@ CREATE TABLE `company_admin` (
      `user_id` BIGINT NOT NULL,
      `company_id` BIGINT NOT NULL,
      CONSTRAINT `PK_company_admin` PRIMARY KEY (`user_id`, `company_id`),
-     CONSTRAINT `FK_company_admin_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-     CONSTRAINT `FK_company_admin_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+     CONSTRAINT `FK_company_admin_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+     CONSTRAINT `FK_company_admin_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `point`;
@@ -80,25 +81,21 @@ CREATE TABLE `point` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `phone` VARCHAR(20) NOT NULL,
      `company_id` BIGINT NOT NULL,
-     `tablet_login` VARCHAR(20) NOT NULL,
-     `tablet_password` VARCHAR(20) NOT NULL,
-     CONSTRAINT `PK_pointd` PRIMARY KEY (`id`),
-     CONSTRAINT `FK_point_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+     CONSTRAINT `PK_point` PRIMARY KEY (`id`),
+     CONSTRAINT `FK_point_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `point_address`;
 CREATE TABLE `point_address` (
-     `id` BIGINT AUTO_INCREMENT NOT NULL,
+     `point_id` BIGINT NOT NULL,
      `city` VARCHAR(80),
      `state` VARCHAR(80),
      `postal_code` VARCHAR(40),
      `country` VARCHAR(80),
      `address_line_1` VARCHAR(80),
      `address_line_2` VARCHAR(80),
-     `point_id` BIGINT NOT NULL,
-     CONSTRAINT `PK_point_address` PRIMARY KEY (`id`),
-     CONSTRAINT `UC_point_address_point` UNIQUE(`point_id`),
-     CONSTRAINT `FK_point_address_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`)
+     CONSTRAINT `PK_point_address` PRIMARY KEY (`point_id`),
+     CONSTRAINT `FK_point_address_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `tablet`;
@@ -109,36 +106,37 @@ CREATE TABLE `tablet` (
      `logout_password` VARCHAR(20) NOT NULL,
      `point_id` BIGINT NOT NULL,
      CONSTRAINT `PK_tablet` PRIMARY KEY (`id`),
-     CONSTRAINT `FK_tablet_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`)
+     CONSTRAINT `FK_tablet_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `review`;
 CREATE TABLE `review` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
-     `point_id` BIGINT NOT NULL,
      `message` TEXT,
      `photo_id` BIGINT,
      `author_id` BIGINT NOT NULL,
      `created_dt` DATETIME NOT NULL,
      `modified_dt` DATETIME,     
      `status` TINYINT NOT NULL,
-     `publish_in_company_sn` TINYINT(1) NOT NULL,
+     `published_in_company_sn` TINYINT(1) NOT NULL,
      `moderator_id` BIGINT,
      `moderated_dt` DATETIME,
+     `point_id` BIGINT NOT NULL,
      CONSTRAINT `PK_review` PRIMARY KEY (`id`),
-     CONSTRAINT `FK_review_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`),
-     CONSTRAINT `FK_review_photo` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`),
-     CONSTRAINT `FK_review_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`),
-     CONSTRAINT `FK_review_moderator` FOREIGN KEY (`moderator_id`) REFERENCES `user` (`id`)
+     CONSTRAINT `UC_review_author_created_dt` UNIQUE(`author_id`, `created_dt`),
+     CONSTRAINT `FK_review_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE,
+     CONSTRAINT `FK_review_photo` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`) ON DELETE SET NULL,
+     CONSTRAINT `FK_review_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+     CONSTRAINT `FK_review_moderator` FOREIGN KEY (`moderator_id`) REFERENCES `user` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `recipient`;
+DROP TABLE IF EXISTS `review_recipient`;
 CREATE TABLE `recipient` (
      `review_id` BIGINT AUTO_INCREMENT NOT NULL,
      `type` TINYINT(1) NOT NULL,
      `address` VARCHAR(40) NOT NULL,
      CONSTRAINT `PK_recipient` PRIMARY KEY (`review_id`),
-     CONSTRAINT `FK_recipient_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`)
+     CONSTRAINT `FK_recipient_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sample_review`;
@@ -146,8 +144,8 @@ CREATE TABLE `sample_review` (
      `review_id` BIGINT NOT NULL,
      `company_id` BIGINT NOT NULL,
      CONSTRAINT `PK_sample_review` PRIMARY KEY (`review_id`, `company_id`),
-     CONSTRAINT `FK_sample_review_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`),
-     CONSTRAINT `FK_sample_review_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`)
+     CONSTRAINT `FK_sample_review_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE,
+     CONSTRAINT `FK_sample_review_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `event`;
@@ -159,8 +157,8 @@ CREATE TABLE `event` (
      `user_id` BIGINT NOT NULL,
      `review_id` BIGINT NOT NULL,
      CONSTRAINT `PK_event` PRIMARY KEY (`id`),
-     CONSTRAINT `FK_event_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-     CONSTRAINT `FK_event_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`)
+     CONSTRAINT `FK_event_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+     CONSTRAINT `FK_event_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `system_parameter`;

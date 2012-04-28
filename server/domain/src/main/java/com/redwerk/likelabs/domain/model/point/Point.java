@@ -87,4 +87,9 @@ public class Point {
                 .toString();
     }
 
+    // interface for JPA
+
+    protected Point() {
+    }
+
 }

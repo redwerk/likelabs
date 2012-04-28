@@ -2,6 +2,7 @@ package com.redwerk.likelabs.domain.model.company;
 
 import com.redwerk.likelabs.domain.model.SocialAccountType;
 import com.redwerk.likelabs.domain.model.event.EventType;
+import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.user.User;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -53,10 +54,18 @@ public class Company {
     @ManyToMany
     @JoinTable(
             name = "company_admin",
-            joinColumns = @JoinColumn(name = "company_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "user_id", nullable = false)
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> admins;
+
+    @ManyToMany
+    @JoinTable(
+            name = "sample_review",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "review_id")
+    )
+    private Set<Review> sampleReviews = new HashSet<Review>();
 
 
     // constructors
@@ -163,7 +172,7 @@ public class Company {
     // administrators
 
     public Set<User> getAdmins() {
-        return Collections.unmodifiableSet(new HashSet<User>(admins));
+        return Collections.unmodifiableSet(admins);
     }
     
     public void addAdmin(User admin) {
@@ -178,6 +187,26 @@ public class Company {
 
     public void clearAdmins() {
         admins.clear();
+    }
+
+    // sample reviews
+
+    public Set<Review> getSampleReview(){
+        return Collections.unmodifiableSet(sampleReviews);
+    }
+
+    public void addSampleReview(Review review) {
+        assert !sampleReviews.contains(review);
+        sampleReviews.add(review);
+    }
+
+    public void removeSampleReview(Review review) {
+        assert sampleReviews.contains(review);
+        sampleReviews.remove(review);
+    }
+
+    public void clearSampleReviews() {
+        sampleReviews.clear();
     }
 
     // overrides
@@ -211,6 +240,7 @@ public class Company {
                 .append("accounts", accounts)
                 .append("intervals", intervals)
                 .append("admins", admins)
+                .append("sampleReviews", sampleReviews)
                 .toString();
     }
 

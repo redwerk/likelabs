@@ -15,7 +15,8 @@ import java.util.Map;
 @Repository
 public class TabletJpaRepository implements TabletRepository {
 
-    private static final String GET_TABLETS_FOR_POINT = "select t from Tablet t where t.point.id = :pointId";
+    private static final String GET_TABLETS_FOR_POINT =
+            "select t from Tablet t where t.point.id = :pointId order by t.login";
 
     private static final String GET_TABLET_BY_LOGIN = "select t from Tablet t where t.login = :login";
 
