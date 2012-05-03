@@ -23,6 +23,9 @@ public class User {
 
     private String password;
 
+    @Column(name = "is_active")
+    private boolean active;
+    
     private String email;
 
     private boolean systemAdmin = false;
@@ -36,10 +39,6 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDT = new Date();
 
-    @Column(name = "activated_dt")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date activatedDT;
-
     @Column(name = "notified_dt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date notifiedDT;
@@ -52,15 +51,16 @@ public class User {
 
     // constructors
 
-    public User(String phone, String password) {
+    protected User(String phone, String password, boolean active) {
         this.phone = phone;
         this.password = password;
+        this.active = active;
     }
 
     // accessors
     
     public boolean isActive() {
-        return activatedDT != null;
+        return active;
     }
     
     public boolean isAnonymous() {
@@ -107,15 +107,11 @@ public class User {
         return createdDT;
     }
 
-    public Date getActivatedDT() {
-        return activatedDT;
-    }
-
     // modifiers
 
     public void activate() {
-        assert activatedDT == null;
-        activatedDT = new Date();
+        assert !active;
+        active = true;
     }
 
     public void MarkAsNotified() {
@@ -126,11 +122,8 @@ public class User {
         this.phone = phone;
     }
 
-    public void setPassword(String oldPassword, String newPassword) {
-        if (!password.equals(oldPassword)) {
-            throw new WrongUserPasswordException(this, oldPassword);
-        }
-        this.password = newPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setEmail(String email) {
@@ -204,12 +197,12 @@ public class User {
                 .append("id", id)
                 .append("phone", phone)
                 .append("password", password)
+                .append("active", active)
                 .append("email", email)
                 .append("systemAdmin", systemAdmin)
                 .append("publishInSN", publishInSN)
                 .append("notifyIfClient", notifyIfClient)
                 .append("createdDT", createdDT)
-                .append("activatedDT", activatedDT)
                 .append("notifiedDT", notifiedDT)
                 .append("accounts", accounts)
                 .toString();

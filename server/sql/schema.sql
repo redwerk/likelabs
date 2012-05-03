@@ -5,12 +5,12 @@ CREATE TABLE `user` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `phone` VARCHAR(20) NOT NULL,
      `password` VARCHAR(20) NOT NULL,
+     `is_active` TINYINT(1) NOT NULL,
      `email` VARCHAR(40),
      `system_admin` TINYINT(1) NOT NULL,
      `publish_in_sn` TINYINT(1) NOT NULL,
      `notify_if_client` TINYINT(1) NOT NULL,
      `created_dt` DATETIME NOT NULL,
-     `activated_dt` DATETIME NOT NULL,
      `notified_dt` DATETIME NOT NULL,
      CONSTRAINT `PK_user` PRIMARY KEY (`id`),
      CONSTRAINT `UC_user_phone` UNIQUE(`phone`)
