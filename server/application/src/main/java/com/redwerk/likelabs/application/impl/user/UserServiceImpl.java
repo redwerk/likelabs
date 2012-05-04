@@ -12,6 +12,7 @@ import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,51 +39,53 @@ public class UserServiceImpl implements UserService {
         return userRepository.find(phone);
     }
 
-    /*
-    @Override
-    @Transactional
-    public User createUser(String phone, String password, String email, List<UserSocialAccountData> accounts) {
-        User user = new UserFactory().createActivatedUser(phone, passwordGenerator.getPassword());
-        user.setEmail(email);
-        for (UserSocialAccountData sa: accounts) {
-            user.addAccount(new UserSocialAccount(sa.getType(), sa.getAccountId(), sa.getAccessToken(), sa.getName()));
-        }
-        return user;
-    }
-
-    @Override
-    @Transactional
-    public User confirmUser(String phone, String password) {
-        User user = userRepository.find(phone);
-        if (!user.getPassword().equals(password)) {
-            return null;
-        }
-        user.activate();
-        return user;
-    }
-    */
-
     @Override
     @Transactional
     public void updateUser(long userId, UserData userData) {
         User user = userRepository.find(userId);
         user.setPhone(userData.getPhone());
         user.setPassword(userData.getPassword());
-        user.setEmail(userData.getEmail());
         user.setNotifyIfClient(userData.isNotifyIfClient());
         user.setPublishInSN(userData.isPublishInSN());
+        doEmailUpdate(user, userData.getEmail());
+    }
+
+    @Override
+    public void updateUserEmail(long userId, String email) {
+        doEmailUpdate(userRepository.find(userId), email);
+    }
+    
+    private void doEmailUpdate(User user, String email) {
+        if (StringUtils.equals(email, user.getEmail())) {
+            return;
+        }
+        if (StringUtils.isEmpty(email)) {
+            user.setEmail(null);
+            return;
+        }
+        // TODO: add implementation (send confirmation email)
     }
 
     @Override
     @Transactional
-    public void attachToSN(long userId, UserSocialAccountData account) {
-
+    public void attachToSN(long userId, UserSocialAccountData accountData) {
+        User user = userRepository.find(userId);
+        UserSocialAccount account = user.findAccount(accountData.getType());
+        if (account != null) {
+            throw new IllegalArgumentException("user with id = " + userId + " is already attached to network type " + accountData.getType());
+        }
+        user.addAccount(account);
     }
 
     @Override
     @Transactional
     public void detachFromSN(long userId, SocialNetworkType snType) {
-
+        User user = userRepository.find(userId);
+        UserSocialAccount account = user.findAccount(snType);
+        if (account == null) {
+            throw new IllegalArgumentException("user with id = " + userId + " is not attached to network type " + snType);
+        }
+        user.removeAccount(account);
     }
 
     @Override

@@ -18,7 +18,9 @@ public interface UserService {
 
     void updateUser(long userId, UserData userData);
 
-    void attachToSN(long userId, UserSocialAccountData account);
+    void updateUserEmail(long userId, String email);
+
+    void attachToSN(long userId, UserSocialAccountData accountData);
 
     void detachFromSN(long userId, SocialNetworkType snType);
 

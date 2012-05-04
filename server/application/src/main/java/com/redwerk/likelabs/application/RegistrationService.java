@@ -11,8 +11,6 @@ public interface RegistrationService {
     
     void activateUser(String phone, String password);
     
-    void setEmail(long userId, String email);
-    
-    void confirmEmail(long userId, String activationCode);
+    void confirmEmail(long userId, String confirmationCode);
 
 }

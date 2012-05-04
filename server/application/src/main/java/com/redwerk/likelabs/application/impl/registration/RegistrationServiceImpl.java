@@ -15,21 +15,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void createUser(String phone) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO: send SMS with generated password (based on phone) to specified phone number
     }
 
     @Override
     public void activateUser(String phone, String password) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO: regenerate password (by phone),
+        // compare it with specified password,
+        // invoke "new UserFactory().createActivatedUser(phone, password);" if all is correct
     }
 
     @Override
-    public void setEmail(long userId, String email) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void confirmEmail(long userId, String activationCode) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void confirmEmail(long userId, String confirmationCode) {
+        // TODO: extract email from confirmationCode,
+        // validate userId and email using confirmationCode,
+        // invoke "user.setEmail(email)" if all is correct
     }
 }
