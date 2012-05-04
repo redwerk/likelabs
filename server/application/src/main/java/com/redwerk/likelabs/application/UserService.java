@@ -1,7 +1,8 @@
 package com.redwerk.likelabs.application;
 
-import com.redwerk.likelabs.application.dto.UserCreateData;
-import com.redwerk.likelabs.application.dto.UserUpdateData;
+import com.redwerk.likelabs.application.dto.UserSocialAccountData;
+import com.redwerk.likelabs.application.dto.UserData;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.user.User;
@@ -15,12 +16,11 @@ public interface UserService {
     User getUser(String phone);
 
 
-    User createUser(UserCreateData userData);
+    void updateUser(long userId, UserData userData);
 
-    User confirmUser(String phone, String password);
+    void attachToSN(long userId, UserSocialAccountData account);
 
-
-    User updateUser(long userId, UserUpdateData userData);
+    void detachFromSN(long userId, SocialNetworkType snType);
 
 
     void deleteUser(long userId);

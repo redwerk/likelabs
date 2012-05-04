@@ -1,9 +1,10 @@
 package com.redwerk.likelabs.application.impl.user;
 
 import com.redwerk.likelabs.application.UserService;
-import com.redwerk.likelabs.application.dto.UserCreateData;
 import com.redwerk.likelabs.application.dto.UserSocialAccountData;
-import com.redwerk.likelabs.application.dto.UserUpdateData;
+import com.redwerk.likelabs.application.dto.UserData;
+import com.redwerk.likelabs.application.impl.registration.PasswordGenerator;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
@@ -26,9 +27,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PhotoRepository photoRepository;
 
-    @Autowired
-    private PasswordGenerator passwordGenerator;
-
 
     @Override
     public User getUser(long userId) {
@@ -40,14 +38,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.find(phone);
     }
 
+    /*
     @Override
     @Transactional
-    public User createUser(UserCreateData userData) {
-        User user = new UserFactory().createActivatedUser(userData.getPhone(), passwordGenerator.getPassword());
-        user.setEmail(userData.getEmail());
-        user.setNotifyIfClient(userData.isNotifyIfClient());
-        user.setPublishInSN(userData.isPublishInSN());
-        for (UserSocialAccountData sa: userData.getAccounts()) {
+    public User createUser(String phone, String password, String email, List<UserSocialAccountData> accounts) {
+        User user = new UserFactory().createActivatedUser(phone, passwordGenerator.getPassword());
+        user.setEmail(email);
+        for (UserSocialAccountData sa: accounts) {
             user.addAccount(new UserSocialAccount(sa.getType(), sa.getAccountId(), sa.getAccessToken(), sa.getName()));
         }
         return user;
@@ -63,20 +60,29 @@ public class UserServiceImpl implements UserService {
         user.activate();
         return user;
     }
+    */
 
     @Override
     @Transactional
-    public User updateUser(long userId, UserUpdateData userData) {
+    public void updateUser(long userId, UserData userData) {
         User user = userRepository.find(userId);
         user.setPhone(userData.getPhone());
         user.setPassword(userData.getPassword());
         user.setEmail(userData.getEmail());
         user.setNotifyIfClient(userData.isNotifyIfClient());
         user.setPublishInSN(userData.isPublishInSN());
-        for (UserSocialAccountData sa: userData.getAccounts()) {
-            user.addAccount(new UserSocialAccount(sa.getType(), sa.getAccountId(), sa.getAccessToken(), sa.getName()));
-        }
-        return user;
+    }
+
+    @Override
+    @Transactional
+    public void attachToSN(long userId, UserSocialAccountData account) {
+
+    }
+
+    @Override
+    @Transactional
+    public void detachFromSN(long userId, SocialNetworkType snType) {
+
     }
 
     @Override
