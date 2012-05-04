@@ -4,6 +4,7 @@ import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.UserSocialAccountData;
 import com.redwerk.likelabs.application.dto.UserData;
 import com.redwerk.likelabs.application.impl.registration.PasswordGenerator;
+import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
@@ -28,21 +29,33 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PhotoRepository photoRepository;
 
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public User getUser(long userId) {
-        return userRepository.find(userId);
+        User user = userRepository.find(userId);
+        if (user == null) {
+            throw new IllegalStateException("User with id = " + userId + " is not found");
+        }
+        return user;
     }
 
     @Override
-    public User getUser(String phone) {
+    public User findUser(String phone) {
         return userRepository.find(phone);
     }
 
     @Override
     @Transactional
     public void updateUser(long userId, UserData userData) {
+        if (userData == null) {
+            throw new IllegalArgumentException("userData cannot be null");
+        }
         User user = userRepository.find(userId);
+        if (user == null) {
+            throw new IllegalStateException("User with id = " + userId + " is not found");
+        }
         user.setPhone(userData.getPhone());
         user.setPassword(userData.getPassword());
         user.setNotifyIfClient(userData.isNotifyIfClient());
@@ -69,34 +82,46 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void attachToSN(long userId, UserSocialAccountData accountData) {
-        User user = userRepository.find(userId);
-        UserSocialAccount account = user.findAccount(accountData.getType());
-        if (account != null) {
-            throw new IllegalArgumentException("user with id = " + userId + " is already attached to network type " + accountData.getType());
+        if (accountData == null) {
+            throw new IllegalArgumentException("accountData cannot be null");
         }
-        user.addAccount(account);
+        User user = userRepository.find(userId);
+        if (user == null) {
+            throw new IllegalStateException("User with id = " + userId + " is not found");
+        }
+        user.addAccount(new UserSocialAccount(accountData.getType(), accountData.getAccountId(),
+                accountData.getAccessToken(), accountData.getName()));
     }
 
     @Override
     @Transactional
     public void detachFromSN(long userId, SocialNetworkType snType) {
-        User user = userRepository.find(userId);
-        UserSocialAccount account = user.findAccount(snType);
-        if (account == null) {
-            throw new IllegalArgumentException("user with id = " + userId + " is not attached to network type " + snType);
+        if (snType == null) {
+            throw new IllegalArgumentException("snType cannot be null");
         }
-        user.removeAccount(account);
+        User user = userRepository.find(userId);
+        if (user == null) {
+            throw new IllegalStateException("User with id = " + userId + " is not found");
+        }
+        user.removeAccount(snType);
     }
 
     @Override
     @Transactional
     public void deleteUser(long userId) {
-        userRepository.remove(userRepository.find(userId));
+        User user = userRepository.find(userId);
+        if (user == null) {
+            throw new IllegalStateException("User with id = " + userId + " is not found");
+        }
+        userRepository.remove(user);
     }
 
     @Override
     public List<Photo> getUserPhotos(long userId, PhotoStatus photoStatus) {
         User user = userRepository.find(userId);
+        if (user == null) {
+            throw new IllegalStateException("User with id = " + userId + " is not found");
+        }
         return photoRepository.findAll(user, photoStatus);
     }
 

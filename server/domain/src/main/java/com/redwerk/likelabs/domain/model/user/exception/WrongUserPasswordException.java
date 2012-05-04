@@ -1,4 +1,6 @@
-package com.redwerk.likelabs.domain.model.user;
+package com.redwerk.likelabs.domain.model.user.exception;
+
+import com.redwerk.likelabs.domain.model.user.User;
 
 public class WrongUserPasswordException extends RuntimeException {
     

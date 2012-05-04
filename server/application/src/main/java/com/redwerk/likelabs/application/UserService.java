@@ -13,7 +13,7 @@ public interface UserService {
 
     User getUser(long userId);
 
-    User getUser(String phone);
+    User findUser(String phone);
 
 
     void updateUser(long userId, UserData userData);

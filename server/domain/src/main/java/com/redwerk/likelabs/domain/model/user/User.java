@@ -1,6 +1,9 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
+import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -110,19 +113,27 @@ public class User {
     // modifiers
 
     public void activate() {
-        assert !active;
+        if (active) {
+            throw new IllegalStateException("user is already active");
+        }
         active = true;
     }
 
-    public void MarkAsNotified() {
+    public void markAsNotified() {
         notifiedDT = new Date();
     }
 
     public void setPhone(String phone) {
+        if (StringUtils.isEmpty(phone)) {
+            throw new IllegalArgumentException("phone cannot by empty");
+        }
         this.phone = phone;
     }
 
     public void setPassword(String password) {
+        if (StringUtils.isEmpty(password)) {
+            throw new IllegalArgumentException("password cannot by empty");
+        }
         this.password = password;
     }
 
@@ -158,18 +169,22 @@ public class User {
     }
 
     public UserSocialAccount getPrimaryAccount() {
-        assert !isAnonymous();
-        return accounts.first();
+        return isAnonymous() ? null : accounts.first();
     }
 
     public void addAccount(UserSocialAccount newAccount) {
-        assert findAccount(newAccount.getType()) == null;
+        if (findAccount(newAccount.getType()) != null) {
+            throw new DuplicatedAccountException(this, newAccount.getType());
+        }
         accounts.add(newAccount);
     }
 
-    public void removeAccount(UserSocialAccount socialAccount) {
-        assert accounts.contains(socialAccount);
-        accounts.remove(socialAccount);
+    public void removeAccount(SocialNetworkType networkType) {
+        UserSocialAccount account = findAccount(networkType);
+        if (account == null) {
+            throw new AccountNotExistsException(this, networkType);
+        }
+        accounts.remove(account);
     }
 
     // overrides

@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.application.impl.registration;
 
 import com.redwerk.likelabs.application.RegistrationService;
+import com.redwerk.likelabs.application.messaging.SmsService;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private PasswordGenerator passwordGenerator;
 
+    @Autowired
+    private SmsService smsService;
 
     @Override
     public void createUser(String phone) {
@@ -31,4 +34,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         // validate userId and email using confirmationCode,
         // invoke "user.setEmail(email)" if all is correct
     }
+
 }
