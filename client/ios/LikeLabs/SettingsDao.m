@@ -6,9 +6,9 @@ static NSString *const SOCIAL_COMMENTS = @"TextReviews";
 @implementation SettingsDao
 
 -(void)setTextReviews:(NSArray *)comments {
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    /*NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     [settings setObject:comments forKey:SOCIAL_COMMENTS];
-    [settings synchronize];
+    [settings synchronize];*/
 }
 
 -(NSArray *)getTextReviews { 

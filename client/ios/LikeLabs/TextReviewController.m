@@ -3,6 +3,7 @@
 #import "SettingsDao.h"
 #import "Review.h"
 #import "User.h"
+#import "RootController.h"
 
 static NSString *const GREETING = @"Start typing a message!";
 static NSString *const TEXT_CELL_IDENTIFIER = @"textCellIdeintifier";
@@ -11,6 +12,7 @@ static NSString *const bgPortrait = @"bg_portrait.png";
 
 
 @interface TextReviewController()
+@property (retain, nonatomic) RootController* rootController;
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 @end
 
@@ -28,14 +30,13 @@ BOOL textPlaseholderActive = true;
 
 @synthesize socialComments;
 @synthesize textView;
+@synthesize rootController = _rootController;
 
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+- (id)initWithRootController:(RootController *)rootController {
+    if (self = [super init]) {
+        self.rootController = rootController;
     }
     return self;
 }
@@ -54,25 +55,18 @@ BOOL textPlaseholderActive = true;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    //[socialComments setBackgroundColor:[UIColor clearColor]];
-    //[[socialComments backgroundView] setBackgroundColor:[UIColor clearColor]];
+    [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [socialComments setBackgroundView:nil];
     [socialComments setBackgroundView:[[[UIView alloc] init] autorelease]];
     [socialComments setBackgroundColor:[UIColor clearColor]];
     
-    
-    UIColor *background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgLandscape]] autorelease];
+    UIColor *background = [[UIColor alloc] initWithPatternImage:
+                           [UIImage imageNamed:UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
 
     textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
     textView.layer.borderWidth = BORDER_WIDTH;
-    textView.layer.cornerRadius = BORDER_CORNER_RADIUS;
-    
-    /*socialComments.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
-    socialComments.layer.borderWidth = BORDER_WIDTH;
-    socialComments.layer.cornerRadius = BORDER_CORNER_RADIUS;*/
-    
+    textView.layer.cornerRadius = BORDER_CORNER_RADIUS;    
     [textView becomeFirstResponder];
 }
 
@@ -80,6 +74,7 @@ BOOL textPlaseholderActive = true;
 {
     [self setSocialComments:nil];
     [self setTextView:nil];
+    [self setRootController:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -180,7 +175,6 @@ BOOL textPlaseholderActive = true;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [socialComments reloadData];
     UIColor *background;
     if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
         background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
@@ -188,6 +182,7 @@ BOOL textPlaseholderActive = true;
         background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgLandscape]] autorelease];
     }
     self.view.backgroundColor = background;
+    [self.socialComments reloadData];
 }
      
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font{
@@ -200,6 +195,10 @@ BOOL textPlaseholderActive = true;
 - (void)dealloc {
     [socialComments release];
     [textView release];
+    [_rootController release];
     [super dealloc];
+}
+- (IBAction)goHome:(id)sender {
+    [self.rootController switchToController:@"SplashScreenController"];
 }
 @end

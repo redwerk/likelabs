@@ -3,7 +3,7 @@
 @implementation LoginService
 
 - (BOOL)checkLogin:(NSString*)code andPassword:(NSString*)password {
-    return [code isEqualToString: @"admin"] && [password isEqualToString: @"admin"];
+    return [code isEqualToString: @""] && [password isEqualToString: @""];
 }
 
 @end

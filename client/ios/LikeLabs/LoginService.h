@@ -2,6 +2,6 @@
 
 @interface LoginService : NSObject
 
-- (BOOL)ccheckLogin:(NSString*)code andPassword:(NSString*)password;
+- (BOOL)checkLogin:(NSString*)code andPassword:(NSString*)password;
 
 @end

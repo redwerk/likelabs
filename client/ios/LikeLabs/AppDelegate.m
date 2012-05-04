@@ -4,14 +4,14 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize tabBarController = _tabBarController;
+@synthesize rootController = _rootController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];	
     // Override point for customization after application launch.
     [TestFlight takeOff:@"b295f3aa6f928fa6d0e7cc942ee0ac3c_ODQ2MzMyMDEyLTA0LTI2IDA3OjE0OjQ0LjQyMTQwNw"];
-    [self.window addSubview:self.tabBarController.view];
+    [self.window setRootViewController:self.rootController];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -57,7 +57,7 @@
 
 - (void)dealloc {
     [_window release];
-    [_tabBarController release];
+    [_rootController release];
     [super dealloc];
 }
 @end

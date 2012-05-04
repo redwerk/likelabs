@@ -1,14 +1,20 @@
-//
-//  TempDashboardController.m
-//  LikeLabs
-//
-//  Created by Dmitry Mishchenko on 4/23/12.
-//  Copyright (c) 2012 Redwerk. All rights reserved.
-//
+#import "SplashScreenController.h"
+#import "RootController.h"
 
-#import "TempDashboardController.h"
+@interface SplashScreenController()
+@property (retain, nonatomic) RootController* rootController;
+@end;
 
-@implementation TempDashboardController
+@implementation SplashScreenController
+
+@synthesize rootController = _rootController;
+
+- (id)initWithRootController:(RootController *)rootController {
+    if (self = [super init]) {
+        self.rootController = rootController;
+    }
+    return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,6 +46,12 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.rootController = nil;
+}
+
+- (void)dealloc {
+    [_rootController release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -48,11 +60,7 @@
 	return YES;
 }
 
-- (IBAction)showTextReviewScreen:(id)sender {
-    ((UITabBarController*)self.parentViewController).selectedIndex = 2;   
-}
-
-- (IBAction)showLoginScreen:(id)sender {
-    ((UITabBarController*)self.parentViewController).selectedIndex = 1;
+- (IBAction)showWelcomeScreen:(id)sender {
+    [self.rootController switchToController:@"WelcomeScreenController"];
 }
 @end

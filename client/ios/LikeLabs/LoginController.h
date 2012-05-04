@@ -1,11 +1,12 @@
 #import <UIKit/UIKit.h>
+#import "ChildController.h"
 
-@interface LoginController : UIViewController <UITextFieldDelegate>
+@interface LoginController : UIViewController <UITextFieldDelegate, ChildController>
 
-@property (strong, nonatomic) IBOutlet UITextField *inputCode;
-@property (strong, nonatomic) IBOutlet UITextField *inputPassword;
+@property (retain, nonatomic) IBOutlet UITextField *inputCode;
+@property (retain, nonatomic) IBOutlet UITextField *inputPassword;
 
-@property (strong, nonatomic) IBOutlet UIButton *submitButton;
+@property (retain, nonatomic) IBOutlet UIButton *submitButton;
 - (IBAction)formSubmit:(id)sender;
 
 @end
