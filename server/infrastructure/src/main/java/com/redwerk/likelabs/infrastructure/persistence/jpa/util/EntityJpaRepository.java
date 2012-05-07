@@ -3,8 +3,6 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa.util;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
@@ -12,57 +10,47 @@ public class EntityJpaRepository<T> {
 
     private final EntityManager em;
 
-    private final Class<T> entityClass;
-
-   
-    @SuppressWarnings("unchecked")
     public EntityJpaRepository(EntityManager em) {
         this.em = em;
-        ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
-        this.entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
-    public T findById(Long id) {
+    public T findById(Class<T> entityClass, Long id) {
         return em.find(entityClass, id);
     }
-    
+
+    @SuppressWarnings("unchecked")
     public T findSingleEntity(String queryString, Map<String, Object> parameters) {
         try {
-            return getQuery(queryString, parameters).getSingleResult();
+            return (T) getQuery(queryString, parameters).getSingleResult();
         }
         catch (NoResultException e) {
             return null;
         }
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> findEntityList(String queryString, Map<String, Object> parameters) {
         return getQuery(queryString, parameters).getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> findEntityList(String queryString) {
-        return em.createQuery(queryString, entityClass).getResultList();
+        return em.createQuery(queryString).getResultList();
     }
 
-    public void add(T entity) {
+     public void add(T entity) {
         em.persist(entity);
         em.flush();
         em.refresh(entity);
     }
 
-    public void remove(Object entity) {
+    public void remove(T entity) {
         em.remove(entity);
         em.flush();
     }
 
-    public void remove(Object[] entities) {
-        for (Object e: entities) {
-           em.remove(e);
-        }
-        em.flush();
-    }
-    
-    private TypedQuery<T> getQuery(String queryString, Map<String, Object> parameters) {
-        TypedQuery<T> query = em.createQuery(queryString, entityClass);
+    private Query getQuery(String queryString, Map<String, Object> parameters) {
+        Query query = em.createQuery(queryString);
         for (Map.Entry<String, Object> p: parameters.entrySet()) {
             query.setParameter(p.getKey(), p.getValue());
         }

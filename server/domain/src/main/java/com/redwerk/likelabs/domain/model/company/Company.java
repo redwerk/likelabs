@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@Table(name = "company")
 public class Company {
     
     private static final int DEFAULT_EMAIL_INTERVAL = 1;
@@ -30,6 +31,7 @@ public class Company {
 
     private String email;
 
+    @Column(name = "moderate_reviews")
     private boolean moderateReviews = true;
 
     @Lob

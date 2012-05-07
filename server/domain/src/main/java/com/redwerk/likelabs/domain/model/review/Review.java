@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "review")
 public class Review {
     
     private static final int MAX_RECIPIENTS_NUMBER = 5;
@@ -46,6 +47,7 @@ public class Review {
 
     private ReviewStatus status;
 
+    @Column(name = "published_in_company_sn")
     private boolean publishedInCompanySN;
     
     @ManyToOne

@@ -26,7 +26,7 @@ public class PhotoJpaRepository implements PhotoRepository {
 
     @Override
     public Photo find(Long id) {
-        return getEntityRepository().findById(id);
+        return getEntityRepository().findById(Photo.class, id);
     }
 
     @Override

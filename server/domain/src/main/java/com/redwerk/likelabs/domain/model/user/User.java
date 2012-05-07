@@ -14,8 +14,9 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@Table(name = "user")
 public class User {
-    
+
     private static final String ANONYMOUS_USER_NAME = "Anonymous";
 
     @Id
@@ -31,11 +32,13 @@ public class User {
     
     private String email;
 
+    @Column(name = "system_admin")
     private boolean systemAdmin = false;
 
     @Column(name = "publish_in_sn")
     private boolean publishInSN = true;
 
+    @Column(name = "notify_if_client")
     private boolean notifyIfClient = true;
 
     @Column(name = "created_dt")

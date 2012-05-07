@@ -35,7 +35,7 @@ public class ReviewJpaRepository implements ReviewRepository {
 
     @Override
     public Review find(Long id) {
-        return getEntityRepository().findById(id);
+        return getEntityRepository().findById(Review.class, id);
     }
 
     @Override

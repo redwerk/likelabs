@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PhotoRepository photoRepository;
 
-    @Autowired
-    private EmailService emailService;
+    //@Autowired
+    //private EmailService emailService;
 
     @Override
     public User getUser(long userId) {

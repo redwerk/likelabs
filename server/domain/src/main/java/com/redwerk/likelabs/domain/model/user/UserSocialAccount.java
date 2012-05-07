@@ -5,6 +5,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,8 +16,10 @@ public class UserSocialAccount implements Comparable<UserSocialAccount> {
     @Enumerated(value = EnumType.ORDINAL)
     private SocialNetworkType type;
 
+    @Column(name = "account_id")
     private String accountId;
-    
+
+    @Column(name = "access_token")
     private String accessToken;
 
     private String name;

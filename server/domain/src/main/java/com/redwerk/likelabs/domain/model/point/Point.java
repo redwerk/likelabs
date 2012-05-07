@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "point")
 public class Point {
 
     @Id

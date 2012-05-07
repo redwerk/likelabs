@@ -30,7 +30,7 @@ public class CompanyJpaRepository implements CompanyRepository {
 
     @Override
     public Company find(Long id) {
-        return getEntityRepository().findById(id);
+        return getEntityRepository().findById(Company.class, id);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class TabletJpaRepository implements TabletRepository {
 
     @Override
     public Tablet find(Long id) {
-        return getEntityRepository().findById(id);
+        return getEntityRepository().findById(Tablet.class, id);
     }
 
     @Override

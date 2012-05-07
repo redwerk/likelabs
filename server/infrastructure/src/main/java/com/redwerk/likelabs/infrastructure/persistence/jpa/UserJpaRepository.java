@@ -23,10 +23,9 @@ public class UserJpaRepository implements UserRepository {
     
     private EntityJpaRepository<User> entityRepository;
 
-
     @Override
     public User find(Long id) {
-      return getEntityRepository().findById(id);
+      return getEntityRepository().findById(User.class, id);
     }
 
     @Override

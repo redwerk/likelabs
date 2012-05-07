@@ -4,6 +4,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -15,10 +16,13 @@ public class Address {
 
     private String country;
 
+    @Column(name = "postal_code")
     private String postalCode;
 
+    @Column(name = "address_line_1")
     private String addressLine1;
 
+    @Column(name = "address_line_2")
     private String addressLine2;
 
 

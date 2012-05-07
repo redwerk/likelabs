@@ -12,8 +12,10 @@ public class NotificationIntervals {
 
     private EventType eventType;
 
+    @Column(name = "email_interval")
     private int emailInterval;
 
+    @Column(name = "sms_interval")
     private int smsInterval;
 
     public NotificationIntervals(EventType eventType, int emailInterval, int smsInterval) {

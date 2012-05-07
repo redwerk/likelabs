@@ -30,7 +30,7 @@ public class PointJpaRepository implements PointRepository {
 
     @Override
     public Point find(Long id) {
-        return getEntityRepository().findById(id);
+        return getEntityRepository().findById(Point.class, id);
     }
 
     @Override

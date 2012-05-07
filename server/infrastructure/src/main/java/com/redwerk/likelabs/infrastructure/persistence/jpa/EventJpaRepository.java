@@ -40,7 +40,7 @@ public class EventJpaRepository implements EventRepository {
 
     @Override
     public Event find(Long id) {
-        return getEntityRepository().findById(id);
+        return getEntityRepository().findById(Event.class, id);
     }
 
     @Override

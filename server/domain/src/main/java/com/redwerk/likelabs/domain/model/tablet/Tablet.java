@@ -8,6 +8,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "tablet")
 public class Tablet {
 
     @Id
@@ -16,8 +17,10 @@ public class Tablet {
 
     private String login;
 
+    @Column(name = "login_password")
     private String loginPassword;
 
+    @Column(name = "logout_password")
     private String logoutPassword;
 
     @ManyToOne

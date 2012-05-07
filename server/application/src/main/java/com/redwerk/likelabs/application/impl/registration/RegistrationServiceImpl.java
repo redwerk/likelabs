@@ -13,8 +13,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private PasswordGenerator passwordGenerator;
 
-    @Autowired
-    private SmsService smsService;
+    //@Autowired
+    //private SmsService smsService;
 
     @Override
     public void createUser(String phone) {
