@@ -29,9 +29,6 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewWillAppear:(BOOL)animated {
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -79,15 +76,15 @@
 - (void)switchToController:(NSString *)controllerName {
     UIViewController *vc = [self viewControllerByName:controllerName];
     [self addChildViewController:vc];
-//    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
+    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
         [self.currentViewController.view removeFromSuperview];
         vc.view.frame = self.view.bounds;
         [self.view addSubview:vc.view];
-//    } completion:^(BOOL finished) {
-//        [vc didMoveToParentViewController:self];
-//        [self.currentViewController removeFromParentViewController];
+    } completion:^(BOOL finished) {
+        [vc didMoveToParentViewController:self];
+        [self.currentViewController removeFromParentViewController];
         self.currentViewController = vc;
-//    }];
+    }];
 }
 
 @end

@@ -13,7 +13,10 @@ static NSString *const bgPortrait = @"bg_portrait.png";
 
 @interface TextReviewController()
 @property (retain, nonatomic) RootController* rootController;
+@property (retain, nonatomic) NSArray* reviews;
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
+- (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
+- (void) scrollComments;
 @end
 
 @implementation TextReviewController
@@ -25,18 +28,24 @@ const float FONT_SIZE = 14.0f;
 const float CELL_CONTENT_MARGIN = 10.0f;
 const float CELL_CONTENT_MARGIN_WIDTH = 10.0f;
 const float MIN_TEXT_HEIGHT = 44.0f;
+const int ANIMATION_DURATION = 5;
+const int ANIMATION_SPEED = 70;
+const int ROWS_ENDLESS = 1000;
 
 BOOL textPlaseholderActive = true;
+float commentsContentOffset = 0;
 
-@synthesize socialComments;
-@synthesize textView;
+@synthesize socialComments = _socialComments;
+@synthesize textView = _textView;
 @synthesize rootController = _rootController;
-
-
+@synthesize reviews = _reviews;
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
+        SettingsDao* dao = [[SettingsDao alloc] init];
+        self.reviews = [dao getTextReviews];
+        [dao release];
     }
     return self;
 }
@@ -51,23 +60,39 @@ BOOL textPlaseholderActive = true;
 
 #pragma mark - View lifecycle
 
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
+    [self scrollComments];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [socialComments setBackgroundView:nil];
-    [socialComments setBackgroundView:[[[UIView alloc] init] autorelease]];
-    [socialComments setBackgroundColor:[UIColor clearColor]];
+    [self.socialComments setBackgroundView:nil];
+    [self.socialComments setBackgroundView:[[[UIView alloc] init] autorelease]];
+    [self.socialComments setBackgroundColor:[UIColor clearColor]];
+    
     
     UIColor *background = [[UIColor alloc] initWithPatternImage:
                            [UIImage imageNamed:UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
+    [background release];
 
-    textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
-    textView.layer.borderWidth = BORDER_WIDTH;
-    textView.layer.cornerRadius = BORDER_CORNER_RADIUS;    
-    [textView becomeFirstResponder];
+    self.textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
+    self.textView.layer.borderWidth = BORDER_WIDTH;
+    self.textView.layer.cornerRadius = BORDER_CORNER_RADIUS;    
+    [self.textView becomeFirstResponder];    
+}
+
+- (void) scrollComments {   
+    [UIView animateWithDuration:ANIMATION_DURATION delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowAnimatedContent
+                     animations:^{
+                         commentsContentOffset +=ANIMATION_SPEED;
+                         [self.socialComments setContentOffset: CGPointMake(0, commentsContentOffset) animated:NO];
+                     } completion:^(BOOL finished) {}];
 }
 
 - (void)viewDidUnload
@@ -75,6 +100,8 @@ BOOL textPlaseholderActive = true;
     [self setSocialComments:nil];
     [self setTextView:nil];
     [self setRootController:nil];
+    [self setReviews:nil];
+    commentsContentOffset = 0;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -88,26 +115,23 @@ BOOL textPlaseholderActive = true;
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if (textPlaseholderActive) {
-        textView.text = @"";
-        textView.textColor = [UIColor blackColor];
+        self.textView.text = @"";
+        self.textView.textColor = [UIColor blackColor];
         textPlaseholderActive = false;
     } 
     return YES;
 }
 
 - (void)textViewDidChange:(UITextView* ) view {
-    if (textView.text.length == 0) {
-        textView.textColor = [UIColor lightGrayColor];
-        textView.text = GREETING;
+    if (self.textView.text.length == 0) {
+        self.textView.textColor = [UIColor lightGrayColor];
+        self.textView.text = GREETING;
         textPlaseholderActive = true;
     }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    SettingsDao* dao = [[SettingsDao alloc] init];
-    NSInteger count = (NSInteger)[dao getTextReviews].count;
-    [dao release];
-    return count;
+    return ROWS_ENDLESS;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -115,7 +139,8 @@ BOOL textPlaseholderActive = true;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TEXT_CELL_IDENTIFIER];
+    NSInteger i = [self getIndexFrom:indexPath.section dataSize:self.reviews.count];
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:TEXT_CELL_IDENTIFIER];
     UILabel* label = nil;
     UILabel* titleLabel = nil;
     if (cell == nil) {
@@ -140,6 +165,8 @@ BOOL textPlaseholderActive = true;
         
         [[cell contentView] addSubview:label];         
         [[cell contentView] addSubview:titleLabel];
+        [label release];
+        [titleLabel release];
     }         
     if (!label) {
         label = (UILabel*)[cell viewWithTag:1];
@@ -148,14 +175,12 @@ BOOL textPlaseholderActive = true;
         titleLabel = (UILabel*)[cell viewWithTag:2];
     }
     
-    SettingsDao* dao = [[SettingsDao alloc] init];
-    Review* review = [[dao getTextReviews] objectAtIndex:indexPath.section];
-    [dao release];    
+    Review* review = [self.reviews objectAtIndex:i];
 
     CGFloat textHeight = [self getTextHeight:review.text font:[UIFont systemFontOfSize:FONT_SIZE]];
     CGFloat titleHeight = [self getTextHeight:review.user.name font:[UIFont boldSystemFontOfSize:FONT_SIZE]];
     
-    CGFloat CELL_CONTENT_WIDTH = socialComments.frame.size.width - (CELL_CONTENT_MARGIN_WIDTH*2);
+    CGFloat CELL_CONTENT_WIDTH = self.socialComments.frame.size.width - (CELL_CONTENT_MARGIN_WIDTH*2);
     
     [label setText:review.text];
     [label setFrame:CGRectMake(CELL_CONTENT_MARGIN_WIDTH, CELL_CONTENT_MARGIN + titleHeight, CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN_WIDTH * 2), MAX(textHeight, MIN_TEXT_HEIGHT))];
@@ -166,16 +191,18 @@ BOOL textPlaseholderActive = true;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SettingsDao* dao = [[SettingsDao alloc] init];
-    Review* review = [[dao getTextReviews] objectAtIndex:indexPath.section];
-    [dao release];
+    Review* review = [self.reviews objectAtIndex:[self getIndexFrom:indexPath.section dataSize:self.reviews.count]];
     CGFloat titleHeight = [self getTextHeight:review.user.name font:[UIFont boldSystemFontOfSize:FONT_SIZE]];
     CGFloat textHeight = [self getTextHeight:review.text font:[UIFont systemFontOfSize:FONT_SIZE]];
-    return titleHeight + textHeight + (CELL_CONTENT_MARGIN * 2);    
+    return titleHeight + textHeight + (CELL_CONTENT_MARGIN * 2);
+}
+
+-(NSInteger)getIndexFrom:(NSInteger)infiniteScrollSectionIndex dataSize:(NSInteger)dataSize {
+    return infiniteScrollSectionIndex % dataSize;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    UIColor *background;
+    UIColor *background;    
     if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
         background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
     } else {
@@ -186,19 +213,36 @@ BOOL textPlaseholderActive = true;
 }
      
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font{
-    CGFloat CELL_CONTENT_WIDTH = socialComments.frame.size.width - (CELL_CONTENT_MARGIN*2);
+    CGFloat CELL_CONTENT_WIDTH = self.socialComments.frame.size.width - (CELL_CONTENT_MARGIN*2);
     CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
     CGSize size = [text sizeWithFont:font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     return size.height;
 }
 
 - (void)dealloc {
-    [socialComments release];
-    [textView release];
+    [_socialComments release];
+    [_textView release];
     [_rootController release];
+    [_reviews release];
     [super dealloc];
 }
+
 - (IBAction)goHome:(id)sender {
     [self.rootController switchToController:@"SplashScreenController"];
 }
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y == scrollView.contentSize.height - scrollView.frame.size.height) {
+        self.socialComments.contentOffset = CGPointMake(0, 0);
+    }
+}
+
+-(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.socialComments.layer removeAllAnimations];
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    commentsContentOffset = scrollView.contentOffset.y;
+}
+
 @end

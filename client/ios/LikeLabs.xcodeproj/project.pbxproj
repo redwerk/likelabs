@@ -42,6 +42,9 @@
 		E77C32C315503A070057A34F /* photo_take_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = E77C32BB15503A060057A34F /* photo_take_btn.png */; };
 		E77C32C61550496F0057A34F /* navigation_button_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = E77C32C41550496D0057A34F /* navigation_button_normal.png */; };
 		E77C32C71550496F0057A34F /* navigation_button_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = E77C32C51550496E0057A34F /* navigation_button_selected.png */; };
+		E7B7F1E61556CF0F00CF5876 /* TakePhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7B7F1E41556CF0E00CF5876 /* TakePhotoController.m */; };
+		E7B7F1E71556CF0F00CF5876 /* TakePhotoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7B7F1E51556CF0E00CF5876 /* TakePhotoController.xib */; };
+		E7B7F1E91556E95A00CF5876 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7B7F1E81556E95900CF5876 /* MobileCoreServices.framework */; };
 		E7D8C64915496819000650F1 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7D8C64515496819000650F1 /* libTestFlight.a */; };
 		E7D8C64A15496819000650F1 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7D8C64615496819000650F1 /* README.txt */; };
 		E7D8C64B15496819000650F1 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7D8C64715496819000650F1 /* release_notes.txt */; };
@@ -106,6 +109,11 @@
 		E77C32BB15503A060057A34F /* photo_take_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_take_btn.png; sourceTree = "<group>"; };
 		E77C32C41550496D0057A34F /* navigation_button_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigation_button_normal.png; sourceTree = "<group>"; };
 		E77C32C51550496E0057A34F /* navigation_button_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navigation_button_selected.png; sourceTree = "<group>"; };
+		E7B7F1DD1556C8F400CF5876 /* RootControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootControllerProtocol.h; path = LikeLabs/RootControllerProtocol.h; sourceTree = "<group>"; };
+		E7B7F1E31556CF0E00CF5876 /* TakePhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TakePhotoController.h; path = LikeLabs/TakePhotoController.h; sourceTree = "<group>"; };
+		E7B7F1E41556CF0E00CF5876 /* TakePhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TakePhotoController.m; path = LikeLabs/TakePhotoController.m; sourceTree = "<group>"; };
+		E7B7F1E51556CF0E00CF5876 /* TakePhotoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TakePhotoController.xib; path = LikeLabs/TakePhotoController.xib; sourceTree = "<group>"; };
+		E7B7F1E81556E95900CF5876 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E7D8C64515496819000650F1 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		E7D8C64615496819000650F1 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		E7D8C64715496819000650F1 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
@@ -125,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7B7F1E91556E95A00CF5876 /* MobileCoreServices.framework in Frameworks */,
 				E7D8C64E1549687D000650F1 /* libz.dylib in Frameworks */,
 				0A5D58C61545C6830037C062 /* QuartzCore.framework in Frameworks */,
 				0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */,
@@ -158,6 +167,7 @@
 		0AAB5576153F564E00649AB4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E7B7F1E81556E95900CF5876 /* MobileCoreServices.framework */,
 				0A5D58C51545C6830037C062 /* QuartzCore.framework */,
 				0AAB5577153F564E00649AB4 /* UIKit.framework */,
 				0AAB5579153F564E00649AB4 /* Foundation.framework */,
@@ -267,6 +277,10 @@
 				E77C32AF155037080057A34F /* PhotosController.h */,
 				E77C32B0155037080057A34F /* PhotosController.m */,
 				E77C32B1155037090057A34F /* PhotosController.xib */,
+				E7B7F1DD1556C8F400CF5876 /* RootControllerProtocol.h */,
+				E7B7F1E31556CF0E00CF5876 /* TakePhotoController.h */,
+				E7B7F1E41556CF0E00CF5876 /* TakePhotoController.m */,
+				E7B7F1E51556CF0E00CF5876 /* TakePhotoController.xib */,
 			);
 			name = Presentation;
 			path = ..;
@@ -356,6 +370,7 @@
 				E77C32C315503A070057A34F /* photo_take_btn.png in Resources */,
 				E77C32C61550496F0057A34F /* navigation_button_normal.png in Resources */,
 				E77C32C71550496F0057A34F /* navigation_button_selected.png in Resources */,
+				E7B7F1E71556CF0F00CF5876 /* TakePhotoController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +397,7 @@
 				E77C32A315500F1F0057A34F /* WelcomeScreenController.m in Sources */,
 				E77C32AC155012790057A34F /* RootController.m in Sources */,
 				E77C32B21550370A0057A34F /* PhotosController.m in Sources */,
+				E7B7F1E61556CF0F00CF5876 /* TakePhotoController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

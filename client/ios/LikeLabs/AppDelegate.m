@@ -10,7 +10,7 @@
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];	
     // Override point for customization after application launch.
-    [TestFlight takeOff:@"b295f3aa6f928fa6d0e7cc942ee0ac3c_ODQ2MzMyMDEyLTA0LTI2IDA3OjE0OjQ0LjQyMTQwNw"];
+    [TestFlight takeOff:@"c64efb5c4a86d134fcc09ee1e7693304_NDY4MjgyMDExLTEyLTE0IDAxOjAwOjExLjUwMDcwMg"];
     [self.window setRootViewController:self.rootController];
     [self.window makeKeyAndVisible];
     return YES;

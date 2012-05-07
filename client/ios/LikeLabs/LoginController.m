@@ -29,6 +29,7 @@ NSString *bgPortrait = @"bg_portrait.png";
     UIColor *background = [[UIColor alloc] initWithPatternImage:
                            [UIImage imageNamed:UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
+    [background release];
     self.inputCode.borderStyle = UITextBorderStyleRoundedRect;
     self.inputPassword.borderStyle = UITextBorderStyleRoundedRect;    
 }
@@ -79,7 +80,7 @@ NSString *bgPortrait = @"bg_portrait.png";
 - (IBAction)formSubmit:(id)sender {    
     LoginService *loginService = [[LoginService alloc] init];
     BOOL loginSuccessfull = [loginService checkLogin:self.inputCode.text andPassword:self.inputPassword.text];
-    [LoginService release];
+    [loginService release];
     
     if (loginSuccessfull) {
         [self.rootController switchToController:@"SplashScreenController"];
