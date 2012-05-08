@@ -11,7 +11,7 @@ CREATE TABLE `user` (
      `publish_in_sn` TINYINT(1) NOT NULL,
      `notify_if_client` TINYINT(1) NOT NULL,
      `created_dt` DATETIME NOT NULL,
-     `notified_dt` DATETIME NOT NULL,
+     `notified_dt` DATETIME,
      CONSTRAINT `PK_user` PRIMARY KEY (`id`),
      CONSTRAINT `UC_user_phone` UNIQUE(`phone`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;

@@ -20,7 +20,7 @@ public interface UserService {
 
     void updateUserEmail(long userId, String email);
 
-    void attachToSN(long userId, UserSocialAccountData accountData);
+    void attachToSN(long userId, SocialNetworkType snType, String accessCode);
 
     void detachFromSN(long userId, SocialNetworkType snType);
 

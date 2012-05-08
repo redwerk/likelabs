@@ -81,16 +81,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void attachToSN(long userId, UserSocialAccountData accountData) {
-        if (accountData == null) {
-            throw new IllegalArgumentException("accountData cannot be null");
-        }
+    public void attachToSN(long userId, SocialNetworkType snType, String accessCode) {
         User user = userRepository.find(userId);
         if (user == null) {
             throw new IllegalStateException("User with id = " + userId + " is not found");
         }
+        /*
         user.addAccount(new UserSocialAccount(accountData.getType(), accountData.getAccountId(),
                 accountData.getAccessToken(), accountData.getName()));
+        */
     }
 
     @Override
