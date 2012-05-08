@@ -8,6 +8,7 @@
 @property (retain, nonatomic) IBOutlet UIView *contentView;
 @property (retain, nonatomic) IBOutlet UIImageView *navigationBackground;
 @property (retain, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+@property (retain, nonatomic) IBOutlet UIView *headerView;
 - (IBAction)goHome:(id)sender;
 
 @end

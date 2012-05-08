@@ -21,6 +21,7 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 @synthesize contentView = _contentView;
 @synthesize navigationBackground = _navigationBackground;
 @synthesize segmentedControl = _segmentedControl;
+@synthesize headerView = _headerView;
 @synthesize rootController = _rootController;
 @synthesize currentViewController = _currentViewController;
 
@@ -85,6 +86,7 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
     [self setRootController:nil];
     [self setNavigationBackground:nil];
     [self setSegmentedControl:nil];
+    [self setHeaderView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -128,6 +130,7 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
     [_rootController release];
     [_navigationBackground release];
     [_segmentedControl release];
+    [_headerView release];
     [super dealloc];
 }
 

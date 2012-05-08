@@ -45,15 +45,21 @@
 		E7B7F1E61556CF0F00CF5876 /* TakePhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7B7F1E41556CF0E00CF5876 /* TakePhotoController.m */; };
 		E7B7F1E71556CF0F00CF5876 /* TakePhotoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E7B7F1E51556CF0E00CF5876 /* TakePhotoController.xib */; };
 		E7B7F1E91556E95A00CF5876 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7B7F1E81556E95900CF5876 /* MobileCoreServices.framework */; };
-		E7D8C64915496819000650F1 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7D8C64515496819000650F1 /* libTestFlight.a */; };
-		E7D8C64A15496819000650F1 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7D8C64615496819000650F1 /* README.txt */; };
-		E7D8C64B15496819000650F1 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = E7D8C64715496819000650F1 /* release_notes.txt */; };
 		E7D8C64E1549687D000650F1 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E7D8C64D1549687D000650F1 /* libz.dylib */; };
 		E9F81B831545A09200E0B41A /* LoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F81B821545A09200E0B41A /* LoginController.m */; };
 		E9F81B861545A14E00E0B41A /* LoginService.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F81B851545A14E00E0B41A /* LoginService.m */; };
 		E9F81B881545A21000E0B41A /* LoginController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B871545A21000E0B41A /* LoginController.xib */; };
 		E9F81B9715471A7100E0B41A /* bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9515471A7000E0B41A /* bg_landscape.png */; };
 		E9F81B9815471A7100E0B41A /* bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9615471A7000E0B41A /* bg_portrait.png */; };
+		FF87485D1559348A0010D272 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87485C1559348A0010D272 /* AVFoundation.framework */; };
+		FF87486B155947B90010D272 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486A155947B90010D272 /* CoreVideo.framework */; };
+		FF87486D155947C20010D272 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486C155947C20010D272 /* CoreMedia.framework */; };
+		FF87486F155947DB0010D272 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486E155947DB0010D272 /* AudioToolbox.framework */; };
+		FF8748B2155992FF0010D272 /* instruction_banner_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B1155992FF0010D272 /* instruction_banner_bg.png */; };
+		FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B3155996B60010D272 /* take_photo_btn.png */; };
+		FF9DF1561557DEB10002A658 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9DF1521557DEB10002A658 /* libTestFlight.a */; };
+		FF9DF1571557DEB10002A658 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1531557DEB10002A658 /* README.txt */; };
+		FF9DF1581557DEB10002A658 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1541557DEB10002A658 /* release_notes.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -114,10 +120,6 @@
 		E7B7F1E41556CF0E00CF5876 /* TakePhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TakePhotoController.m; path = LikeLabs/TakePhotoController.m; sourceTree = "<group>"; };
 		E7B7F1E51556CF0E00CF5876 /* TakePhotoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TakePhotoController.xib; path = LikeLabs/TakePhotoController.xib; sourceTree = "<group>"; };
 		E7B7F1E81556E95900CF5876 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		E7D8C64515496819000650F1 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		E7D8C64615496819000650F1 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		E7D8C64715496819000650F1 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
-		E7D8C64815496819000650F1 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		E7D8C64D1549687D000650F1 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		E9F81B811545A09200E0B41A /* LoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginController.h; path = LikeLabs/LoginController.h; sourceTree = "<group>"; };
 		E9F81B821545A09200E0B41A /* LoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginController.m; path = LikeLabs/LoginController.m; sourceTree = "<group>"; };
@@ -126,6 +128,16 @@
 		E9F81B871545A21000E0B41A /* LoginController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginController.xib; path = LikeLabs/LoginController.xib; sourceTree = "<group>"; };
 		E9F81B9515471A7000E0B41A /* bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_landscape.png; sourceTree = "<group>"; };
 		E9F81B9615471A7000E0B41A /* bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_portrait.png; sourceTree = "<group>"; };
+		FF87485C1559348A0010D272 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		FF87486A155947B90010D272 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		FF87486C155947C20010D272 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		FF87486E155947DB0010D272 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		FF8748B1155992FF0010D272 /* instruction_banner_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = instruction_banner_bg.png; sourceTree = "<group>"; };
+		FF8748B3155996B60010D272 /* take_photo_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = take_photo_btn.png; sourceTree = "<group>"; };
+		FF9DF1521557DEB10002A658 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		FF9DF1531557DEB10002A658 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		FF9DF1541557DEB10002A658 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
+		FF9DF1551557DEB10002A658 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,13 +145,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF87486F155947DB0010D272 /* AudioToolbox.framework in Frameworks */,
+				FF87486D155947C20010D272 /* CoreMedia.framework in Frameworks */,
+				FF87486B155947B90010D272 /* CoreVideo.framework in Frameworks */,
+				FF87485D1559348A0010D272 /* AVFoundation.framework in Frameworks */,
 				E7B7F1E91556E95A00CF5876 /* MobileCoreServices.framework in Frameworks */,
 				E7D8C64E1549687D000650F1 /* libz.dylib in Frameworks */,
 				0A5D58C61545C6830037C062 /* QuartzCore.framework in Frameworks */,
 				0AAB5578153F564E00649AB4 /* UIKit.framework in Frameworks */,
 				0AAB557A153F564E00649AB4 /* Foundation.framework in Frameworks */,
 				0AAB557C153F564E00649AB4 /* CoreGraphics.framework in Frameworks */,
-				E7D8C64915496819000650F1 /* libTestFlight.a in Frameworks */,
+				FF9DF1561557DEB10002A658 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +165,7 @@
 		0AAB5568153F564E00649AB4 = {
 			isa = PBXGroup;
 			children = (
+				FF9DF1511557DEB10002A658 /* TestFlightSDK1.0 */,
 				E7D8C64D1549687D000650F1 /* libz.dylib */,
 				0AAB557D153F564E00649AB4 /* LikeLabs */,
 				0AAB5576153F564E00649AB4 /* Frameworks */,
@@ -167,6 +184,10 @@
 		0AAB5576153F564E00649AB4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF87486E155947DB0010D272 /* AudioToolbox.framework */,
+				FF87486C155947C20010D272 /* CoreMedia.framework */,
+				FF87486A155947B90010D272 /* CoreVideo.framework */,
+				FF87485C1559348A0010D272 /* AVFoundation.framework */,
 				E7B7F1E81556E95900CF5876 /* MobileCoreServices.framework */,
 				0A5D58C51545C6830037C062 /* QuartzCore.framework */,
 				0AAB5577153F564E00649AB4 /* UIKit.framework */,
@@ -179,6 +200,8 @@
 		0AAB557D153F564E00649AB4 /* LikeLabs */ = {
 			isa = PBXGroup;
 			children = (
+				FF8748B3155996B60010D272 /* take_photo_btn.png */,
+				FF8748B1155992FF0010D272 /* instruction_banner_bg.png */,
 				E77C32C41550496D0057A34F /* navigation_button_normal.png */,
 				E77C32C51550496E0057A34F /* navigation_button_selected.png */,
 				E77C32B415503A010057A34F /* navigation_bar_bg.png */,
@@ -189,7 +212,6 @@
 				E77C32B915503A050057A34F /* navigation_home_btn.png */,
 				E77C32BA15503A050057A34F /* photo_selection_btn.png */,
 				E77C32BB15503A060057A34F /* photo_take_btn.png */,
-				E7D8C64415496819000650F1 /* TestFlightSDK1.0 */,
 				E9F81B9515471A7000E0B41A /* bg_landscape.png */,
 				E9F81B9615471A7000E0B41A /* bg_portrait.png */,
 				0AAB557E153F564E00649AB4 /* Supporting Files */,
@@ -286,13 +308,13 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
-		E7D8C64415496819000650F1 /* TestFlightSDK1.0 */ = {
+		FF9DF1511557DEB10002A658 /* TestFlightSDK1.0 */ = {
 			isa = PBXGroup;
 			children = (
-				E7D8C64515496819000650F1 /* libTestFlight.a */,
-				E7D8C64615496819000650F1 /* README.txt */,
-				E7D8C64715496819000650F1 /* release_notes.txt */,
-				E7D8C64815496819000650F1 /* TestFlight.h */,
+				FF9DF1521557DEB10002A658 /* libTestFlight.a */,
+				FF9DF1531557DEB10002A658 /* README.txt */,
+				FF9DF1541557DEB10002A658 /* release_notes.txt */,
+				FF9DF1551557DEB10002A658 /* TestFlight.h */,
 			);
 			path = TestFlightSDK1.0;
 			sourceTree = "<group>";
@@ -354,8 +376,6 @@
 				E9F81B881545A21000E0B41A /* LoginController.xib in Resources */,
 				E9F81B9715471A7100E0B41A /* bg_landscape.png in Resources */,
 				E9F81B9815471A7100E0B41A /* bg_portrait.png in Resources */,
-				E7D8C64A15496819000650F1 /* README.txt in Resources */,
-				E7D8C64B15496819000650F1 /* release_notes.txt in Resources */,
 				E77C329E15500D8B0057A34F /* SplashScreenController.xib in Resources */,
 				E77C32A415500F1F0057A34F /* WelcomeScreenController.xib in Resources */,
 				E77C32AD155012790057A34F /* RootController.xib in Resources */,
@@ -371,6 +391,10 @@
 				E77C32C61550496F0057A34F /* navigation_button_normal.png in Resources */,
 				E77C32C71550496F0057A34F /* navigation_button_selected.png in Resources */,
 				E7B7F1E71556CF0F00CF5876 /* TakePhotoController.xib in Resources */,
+				FF9DF1571557DEB10002A658 /* README.txt in Resources */,
+				FF9DF1581557DEB10002A658 /* release_notes.txt in Resources */,
+				FF8748B2155992FF0010D272 /* instruction_banner_bg.png in Resources */,
+				FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,7 +445,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Vladimir Bebeshko";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vladimir Bebeshko";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -435,7 +460,9 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PROVISIONING_PROFILE = "E2A608C7-5CF9-40B6-A5BD-D5C2334153F3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2A608C7-5CF9-40B6-A5BD-D5C2334153F3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -447,15 +474,18 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Vladimir Bebeshko";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vladimir Bebeshko";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "E2A608C7-5CF9-40B6-A5BD-D5C2334153F3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2A608C7-5CF9-40B6-A5BD-D5C2334153F3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -471,10 +501,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LikeLabs/LikeLabs-Prefix.pch";
 				INFOPLIST_FILE = "LikeLabs/LikeLabs-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/LikeLabs/TestFlightSDK1.0\"",
+					"\"$(SRCROOT)/TestFlightSDK1.0\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "4EA37E8C-89A5-4F72-96AA-10A0192A6D18";
@@ -492,10 +523,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LikeLabs/LikeLabs-Prefix.pch";
 				INFOPLIST_FILE = "LikeLabs/LikeLabs-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/LikeLabs/TestFlightSDK1.0\"",
+					"\"$(SRCROOT)/TestFlightSDK1.0\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "4EA37E8C-89A5-4F72-96AA-10A0192A6D18";
@@ -510,15 +542,18 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Vladimir Bebeshko";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Vladimir Bebeshko";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "E2A608C7-5CF9-40B6-A5BD-D5C2334153F3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2A608C7-5CF9-40B6-A5BD-D5C2334153F3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -534,10 +569,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LikeLabs/LikeLabs-Prefix.pch";
 				INFOPLIST_FILE = "LikeLabs/LikeLabs-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/LikeLabs/TestFlightSDK1.0\"",
+					"\"$(SRCROOT)/TestFlightSDK1.0\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "4EA37E8C-89A5-4F72-96AA-10A0192A6D18";

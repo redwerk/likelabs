@@ -28,8 +28,8 @@ const float FONT_SIZE = 14.0f;
 const float CELL_CONTENT_MARGIN = 10.0f;
 const float CELL_CONTENT_MARGIN_WIDTH = 10.0f;
 const float MIN_TEXT_HEIGHT = 44.0f;
-const int ANIMATION_DURATION = 5;
-const int ANIMATION_SPEED = 70;
+const float ANIMATION_DURATION = 0.02;
+const int ANIMATION_SPEED = 1;
 const int ROWS_ENDLESS = 1000;
 
 BOOL textPlaseholderActive = true;
@@ -87,12 +87,8 @@ float commentsContentOffset = 0;
 }
 
 - (void) scrollComments {   
-    [UIView animateWithDuration:ANIMATION_DURATION delay:0
-                        options:UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowAnimatedContent
-                     animations:^{
-                         commentsContentOffset +=ANIMATION_SPEED;
-                         [self.socialComments setContentOffset: CGPointMake(0, commentsContentOffset) animated:NO];
-                     } completion:^(BOOL finished) {}];
+     commentsContentOffset +=ANIMATION_SPEED;
+     [self.socialComments setContentOffset: CGPointMake(0, commentsContentOffset) animated:NO];
 }
 
 - (void)viewDidUnload
@@ -202,6 +198,7 @@ float commentsContentOffset = 0;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self.socialComments.layer removeAllAnimations];
     UIColor *background;    
     if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
         background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
@@ -210,6 +207,10 @@ float commentsContentOffset = 0;
     }
     self.view.backgroundColor = background;
     [self.socialComments reloadData];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self scrollComments];
 }
      
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font{
@@ -233,7 +234,10 @@ float commentsContentOffset = 0;
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y == scrollView.contentSize.height - scrollView.frame.size.height) {
+        [CATransaction begin];
+        [CATransaction disableActions];
         self.socialComments.contentOffset = CGPointMake(0, 0);
+        [CATransaction commit];
     }
 }
 
