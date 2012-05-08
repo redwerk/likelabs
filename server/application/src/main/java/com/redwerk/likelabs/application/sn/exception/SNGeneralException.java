@@ -10,7 +10,12 @@ public class SNGeneralException extends RuntimeException {
         super(cause);
     }
 
-    protected SNGeneralException() {
+    public SNGeneralException() {
+        super();
+    }
+
+    public SNGeneralException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 }
