@@ -49,7 +49,7 @@ public class Company {
     private Map<EventType, NotificationIntervals> intervals =
             new HashMap<EventType, NotificationIntervals>() {{
                 for (EventType et: EventType.values()) {
-                    put(et, new NotificationIntervals(et, DEFAULT_EMAIL_INTERVAL, DEFAULT_SMS_INTERVAL));
+                    put(et, new NotificationIntervals(DEFAULT_EMAIL_INTERVAL, DEFAULT_SMS_INTERVAL));
                 }
             }};
 
@@ -167,8 +167,8 @@ public class Company {
         return intervals.get(eventType);
     }
 
-    public void setNotificationIntervals(NotificationIntervals newIntervals) {
-        intervals.put(newIntervals.getEventType(), newIntervals);
+    public void setNotificationIntervals(EventType eventType, NotificationIntervals newIntervals) {
+        intervals.put(eventType, newIntervals);
     }
 
     // administrators

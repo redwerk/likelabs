@@ -10,22 +10,15 @@ import javax.persistence.*;
 @Embeddable
 public class NotificationIntervals {
 
-    private EventType eventType;
-
     @Column(name = "email_interval")
     private int emailInterval;
 
     @Column(name = "sms_interval")
     private int smsInterval;
 
-    public NotificationIntervals(EventType eventType, int emailInterval, int smsInterval) {
-        this.eventType = eventType;
+    public NotificationIntervals(int emailInterval, int smsInterval) {
         this.emailInterval = emailInterval;
         this.smsInterval = smsInterval;
-    }
-
-    public EventType getEventType() {
-        return eventType;
     }
 
     public int getEmailInterval() {
@@ -42,21 +35,22 @@ public class NotificationIntervals {
         if (obj == null || getClass() != obj.getClass()) return false;
         NotificationIntervals other = (NotificationIntervals) obj;
         return new EqualsBuilder()
-                .append(eventType, other.eventType)
+                .append(emailInterval, other.emailInterval)
+                .append(smsInterval, other.smsInterval)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(eventType)
+                .append(emailInterval)
+                .append(smsInterval)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("eventType", eventType)
                 .append("emailInterval", emailInterval)
                 .append("smsInterval", smsInterval)
                 .toString();
