@@ -3,39 +3,41 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa.util;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class EntityJpaRepository<T> {
+public class EntityJpaRepository<T, ID extends Serializable> {
 
     private final EntityManager em;
 
-    public EntityJpaRepository(EntityManager em) {
+    private final Class<T> entityClass;
+
+    public EntityJpaRepository(EntityManager em, Class<T> entityClass) {
         this.em = em;
+        this.entityClass = entityClass;
     }
 
-    public T findById(Class<T> entityClass, Long id) {
+    public T findById(ID id) {
         return em.find(entityClass, id);
     }
 
-    @SuppressWarnings("unchecked")
     public T findSingleEntity(String queryString, Map<String, Object> parameters) {
         try {
-            return (T) getQuery(queryString, parameters).getSingleResult();
+            return getQuery(queryString, parameters).getSingleResult();
         }
         catch (NoResultException e) {
             return null;
         }
     }
 
-    @SuppressWarnings("unchecked")
     public List<T> findEntityList(String queryString, Map<String, Object> parameters) {
         return getQuery(queryString, parameters).getResultList();
     }
 
-    @SuppressWarnings("unchecked")
     public List<T> findEntityList(String queryString) {
-        return em.createQuery(queryString).getResultList();
+        return em.createQuery(queryString, entityClass).getResultList();
     }
 
      public void add(T entity) {
@@ -49,8 +51,8 @@ public class EntityJpaRepository<T> {
         em.flush();
     }
 
-    private Query getQuery(String queryString, Map<String, Object> parameters) {
-        Query query = em.createQuery(queryString);
+    private TypedQuery<T> getQuery(String queryString, Map<String, Object> parameters) {
+        TypedQuery<T> query = em.createQuery(queryString, entityClass);
         for (Map.Entry<String, Object> p: parameters.entrySet()) {
             query.setParameter(p.getKey(), p.getValue());
         }

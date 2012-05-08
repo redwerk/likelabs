@@ -21,11 +21,11 @@ public class UserJpaRepository implements UserRepository {
     @PersistenceContext
     private EntityManager em;
     
-    private EntityJpaRepository<User> entityRepository;
+    private EntityJpaRepository<User, Long> entityRepository;
 
     @Override
     public User find(Long id) {
-      return getEntityRepository().findById(User.class, id);
+      return getEntityRepository().findById(id);
     }
 
     @Override
@@ -50,9 +50,9 @@ public class UserJpaRepository implements UserRepository {
         getEntityRepository().remove(user);
     }
 
-    private EntityJpaRepository<User> getEntityRepository() {
+    private EntityJpaRepository<User, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<User>(em);
+            entityRepository = new EntityJpaRepository<User, Long>(em, User.class);
         }
         return entityRepository;
     }

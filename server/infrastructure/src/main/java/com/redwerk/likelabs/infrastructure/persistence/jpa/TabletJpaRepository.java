@@ -23,11 +23,11 @@ public class TabletJpaRepository implements TabletRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<Tablet> entityRepository;
+    private EntityJpaRepository<Tablet, Long> entityRepository;
 
     @Override
     public Tablet find(Long id) {
-        return getEntityRepository().findById(Tablet.class, id);
+        return getEntityRepository().findById(id);
     }
 
     @Override
@@ -54,9 +54,9 @@ public class TabletJpaRepository implements TabletRepository {
         getEntityRepository().remove(tablet);
     }
 
-    private EntityJpaRepository<Tablet> getEntityRepository() {
+    private EntityJpaRepository<Tablet, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Tablet>(em);
+            entityRepository = new EntityJpaRepository<Tablet, Long>(em, Tablet.class);
         }
         return entityRepository;
     }

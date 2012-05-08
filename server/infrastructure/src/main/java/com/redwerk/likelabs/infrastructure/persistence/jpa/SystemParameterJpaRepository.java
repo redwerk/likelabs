@@ -22,7 +22,7 @@ public class SystemParameterJpaRepository implements SystemParameterRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<SystemParameter> entityRepository;
+    private EntityJpaRepository<SystemParameter, Long> entityRepository;
 
 
     @Override
@@ -47,9 +47,9 @@ public class SystemParameterJpaRepository implements SystemParameterRepository {
         getEntityRepository().remove(parameter);
     }
 
-    private EntityJpaRepository<SystemParameter> getEntityRepository() {
+    private EntityJpaRepository<SystemParameter, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<SystemParameter>(em);
+            entityRepository = new EntityJpaRepository<SystemParameter, Long>(em, SystemParameter.class);
         }
         return entityRepository;
     }

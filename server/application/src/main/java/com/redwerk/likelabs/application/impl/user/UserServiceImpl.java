@@ -38,12 +38,17 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new IllegalStateException("User with id = " + userId + " is not found");
         }
-        return user;
+        return getLoadedUser(user);
     }
 
     @Override
     public User findUser(String phone) {
-        return userRepository.find(phone);
+        return getLoadedUser(userRepository.find(phone));
+    }
+    
+    private User getLoadedUser(User user) {
+        user.getAccounts();
+        return user;
     }
 
     @Override

@@ -25,12 +25,12 @@ public class PointJpaRepository implements PointRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<Point> entityRepository;
+    private EntityJpaRepository<Point, Long> entityRepository;
 
 
     @Override
     public Point find(Long id) {
-        return getEntityRepository().findById(Point.class, id);
+        return getEntityRepository().findById(id);
     }
 
     @Override
@@ -58,9 +58,9 @@ public class PointJpaRepository implements PointRepository {
         getEntityRepository().remove(point);
     }
 
-    private EntityJpaRepository<Point> getEntityRepository() {
+    private EntityJpaRepository<Point, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Point>(em);
+            entityRepository = new EntityJpaRepository<Point, Long>(em, Point.class);
         }
         return entityRepository;
     }

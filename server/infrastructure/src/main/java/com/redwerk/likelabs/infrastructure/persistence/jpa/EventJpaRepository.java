@@ -35,12 +35,12 @@ public class EventJpaRepository implements EventRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<Event> entityRepository;
+    private EntityJpaRepository<Event, Long> entityRepository;
 
 
     @Override
     public Event find(Long id) {
-        return getEntityRepository().findById(Event.class, id);
+        return getEntityRepository().findById(id);
     }
 
     @Override
@@ -58,9 +58,9 @@ public class EventJpaRepository implements EventRepository {
         getEntityRepository().remove(event);
     }
 
-    private EntityJpaRepository<Event> getEntityRepository() {
+    private EntityJpaRepository<Event, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Event>(em);
+            entityRepository = new EntityJpaRepository<Event, Long>(em, Event.class);
         }
         return entityRepository;
     }

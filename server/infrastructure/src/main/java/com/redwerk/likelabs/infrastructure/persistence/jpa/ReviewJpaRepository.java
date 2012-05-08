@@ -31,11 +31,11 @@ public class ReviewJpaRepository implements ReviewRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<Review> entityRepository;
+    private EntityJpaRepository<Review, Long> entityRepository;
 
     @Override
     public Review find(Long id) {
-        return getEntityRepository().findById(Review.class, id);
+        return getEntityRepository().findById(id);
     }
 
     @Override
@@ -69,9 +69,9 @@ public class ReviewJpaRepository implements ReviewRepository {
         getEntityRepository().remove(review);
     }
 
-    private EntityJpaRepository<Review> getEntityRepository() {
+    private EntityJpaRepository<Review, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Review>(em);
+            entityRepository = new EntityJpaRepository<Review, Long>(em, Review.class);
         }
         return entityRepository;
     }

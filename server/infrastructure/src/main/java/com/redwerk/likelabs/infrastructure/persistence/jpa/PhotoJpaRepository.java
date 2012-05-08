@@ -22,11 +22,11 @@ public class PhotoJpaRepository implements PhotoRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<Photo> entityRepository;
+    private EntityJpaRepository<Photo, Long> entityRepository;
 
     @Override
     public Photo find(Long id) {
-        return getEntityRepository().findById(Photo.class, id);
+        return getEntityRepository().findById(id);
     }
 
     @Override
@@ -47,9 +47,9 @@ public class PhotoJpaRepository implements PhotoRepository {
         getEntityRepository().remove(photo);
     }
 
-    private EntityJpaRepository<Photo> getEntityRepository() {
+    private EntityJpaRepository<Photo, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Photo>(em);
+            entityRepository = new EntityJpaRepository<Photo, Long>(em, Photo.class);
         }
         return entityRepository;
     }

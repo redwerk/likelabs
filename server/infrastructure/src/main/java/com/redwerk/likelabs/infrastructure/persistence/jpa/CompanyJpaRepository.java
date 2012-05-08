@@ -25,12 +25,12 @@ public class CompanyJpaRepository implements CompanyRepository {
     @PersistenceContext
     private EntityManager em;
 
-    private EntityJpaRepository<Company> entityRepository;
+    private EntityJpaRepository<Company, Long> entityRepository;
 
 
     @Override
     public Company find(Long id) {
-        return getEntityRepository().findById(Company.class, id);
+        return getEntityRepository().findById(id);
     }
 
     @Override
@@ -62,9 +62,9 @@ public class CompanyJpaRepository implements CompanyRepository {
         getEntityRepository().remove(company);
     }
 
-    private EntityJpaRepository<Company> getEntityRepository() {
+    private EntityJpaRepository<Company, Long> getEntityRepository() {
         if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Company>(em);
+            entityRepository = new EntityJpaRepository<Company, Long>(em, Company.class);
         }
         return entityRepository;
     }
