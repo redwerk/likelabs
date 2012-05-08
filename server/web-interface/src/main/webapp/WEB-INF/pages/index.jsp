@@ -1,35 +1,24 @@
-<%@include file="header.jsp" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn"uri="http://java.sun.com/jsp/jstl/functions"  %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<jsp:include page="/WEB-INF/common/header.jsp" />
         <div class="row">
             <h4>Sign Up for Like Labs</h4>
-            <div style="width: 350px;" class="center">
+            <div style="width: 350px;">
                 <div class="field">
-                    Enter your phone:
-                </div>
-                <div class="field">
-                    <select id="countryCodeSelect" style="width: 140px" onchange="document.getElementById('phone').focus();"></select>
-                    <input type="text" style="width: 165px;font-family: Arial"id="phone"/>
-<script type="text/javascript" src="/scripts/phones.js"></script>
-<script>
-    var select = document.getElementById("countryCodeSelect");
-    var option;
-    for (var i=0; i < codes.length;i++) {
-        option = document.createElement("option");
-        option.innerHTML = codes[i][1];
-        option.value = codes[i][3];
-        select.appendChild(option);
-    }
-</script>
-                </div>
-                <div class="field" style="font-size: 10px;margin: 0; padding: 0">
-                    <span><input type="checkbox"/></span>
-                    <span>I agree to the <a href="TOS.txt" target="_blank">Terms of Service</a></span>
-                </div>
-                <div class="field">
-                    <input type="button" value="Sign Up" style="width: 187px;" onclick="signup();"/>
+                    <input type="button" value="Sign Up" style="width: 187px;" onclick="document.location.href='/signup/start'"/>
                 </div>
             </div>
+            <h1><c:if test="${action eq 'auth_failed'}" > You not register. Try Again. Or Sign Up  now </c:if></h1>
+            <h1><c:if test="${action eq 'need_login'}" > Please Sign in to Like Labs</c:if></h1>
         </div>
-        <div class="row">
+            <div class="row">
             <h4>What can you do on Like Labs</h4>
             <div class="text">
                 <p>
@@ -43,4 +32,4 @@
                 </p>
             </div>
         </div>
-<%@include file="footer.jsp" %>
+<jsp:include page="/WEB-INF/common/footer.jsp" />

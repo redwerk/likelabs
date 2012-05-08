@@ -1,3 +1,4 @@
+
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
@@ -10,54 +11,43 @@
     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-  <context:component-scan base-package="com.redwerk.likelabs" />
-
-  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-      <property name="useDefaultSuffixPattern" value="false" />
-  </bean>
-  
-  <tx:annotation-driven />
-
-  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-      p:driverClassName="${dataSource.driverClassName}"
-      p:url="${dataSource.url}"
-      p:username="${dataSource.username}"
-      p:password="${dataSource.password}"
-  />
-
-  <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-      p:database="MYSQL"
-      p:databasePlatform="org.hibernate.dialect.MySQLDialect"
-      p:generateDdl="false"
-      p:showSql="true"
-  />
-
-  <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-      p:dataSource-ref="dataSource"
-      p:jpaVendorAdapter-ref="jpaVendorAdapter"
-      p:persistenceUnitName="likelabs"
-  />
-
-  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-        p:entityManagerFactory-ref="entityManagerFactory" />
-
-
-  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:ignoreUnresolvablePlaceholders="true">
         <property name="locations">
             <list>
                 <value>classpath:/properties/*.properties</value>
             </list>
         </property>
+    </bean>
+
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+        p:basenames="classpath:/messages/messages,
+                     classpath:/properties/application"
+        p:defaultEncoding="UTF-8" />
+    
+    <bean id="exceptionResolver" class="com.redwerk.likelabs.web.common.RequestExceptionHandler" />
+ 
+    <bean class="org.springframework.mail.javamail.JavaMailSenderImpl"
+        p:host="${mail.host}"
+        p:port="${mail.port}"
+        p:username="${mail.username}"
+        p:password="${mail.password}">
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+            </props>
+        </property>
+    </bean>
+ 
+  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+      <property name="useDefaultSuffixPattern" value="false" />
   </bean>
 
-
-  <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-        p:basename="classpath:/messages/messages"
-        p:defaultEncoding="UTF-8"
-  />
-
-  <bean id="exceptionResolver" class="com.redwerk.likelabs.web.common.RequestExceptionHandler" />
+  <import resource="data-context.xml"/>
+  
+  <import resource="security-context.xml"/>
 
 </beans>
 

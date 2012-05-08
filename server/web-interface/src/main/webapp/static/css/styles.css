@@ -59,6 +59,13 @@ body {
     float: right;
 }
 
+.userName {
+    font-size: 22px;
+    font-style:  italic;
+    float: left;
+    padding: 25px 15px;
+}
+
 .logo {
     float: left;
     padding: 25px 15px;
@@ -91,4 +98,8 @@ a:hover{
 
 .signin_block input[type=text],[type=password] {
     width: 180px;
+}
+
+.errorblock{
+    color: red;
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+                     <!--use-expressions="true" in to tag http-->
+	<http auto-config="true" use-expressions="true" access-denied-page="/WEB-INF/error/access-denied.jsp">
+
+                <intercept-url pattern="/dashboard**" access="hasAnyRole('ROLE_USER,ROLE_SYSTEM_ADMIN')"/>
+                <intercept-url pattern="/admin**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
+                <intercept-url pattern="/signup/end**" access="hasAnyRole('ROLE_USER')"/>
+                <form-login login-page="/index?action=need_login"
+                            default-target-url="/dashboard"
+			    authentication-failure-url="/index?action=auth_failed"
+                            login-processing-url="/j_spring_security_check"/>
+		<logout invalidate-session="true"
+                        logout-url="/j_spring_security_logout"
+                        logout-success-url="/index" />
+		<anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />
+                <!-- Uncomment to limit the number of sessions a user can have -->
+                <session-management>
+                    <concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+                </session-management>
+		<!-- Supports multi session does not need to re-login -->
+                <remember-me key="LikeLabsWebSite"/>  
+                <!--basic authentication -->
+                <http-basic />
+                
+	</http>
+        <!-- for exemple auth-manager and providers 
+	<beans:bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder"/>
+        -->
+        <authentication-manager alias="authenticationManager">
+            <authentication-provider user-service-ref="securityUserDetailsService">
+               <!-- <password-encoder ref="passwordEncoder"/>  -->
+            </authentication-provider>
+        </authentication-manager>
+        
+        <!-- for test Springsecurity
+        <authentication-manager alias="authenticationManager">
+		<authentication-provider>
+			<user-service>
+				<user name="dron" password="dron" authorities="ROLE_USER" />
+                                <user name="1111" password="2222" authorities="ROLE_USER" />
+                                <user name="admin" password="admin" authorities="ROLE_ADMIN,ROLE_USER" />
+				<user name="user1" password="1111" authorities="ROLE_USER" />
+				<user name="user2" password="2222" authorities="ROLE_USER" />
+                                <user name="dima" password="dima" authorities="ROLE_ADMIN,ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+        -->
+</beans:beans>
