@@ -1,5 +1,7 @@
+#import <AVFoundation/AVFoundation.h>
 #import "PhotosController.h"
 #import "RootController.h"
+#import "PhotoPickerController.h"
 
 static NSString *const NAVBAR_BACKGROUND_IMG = @"navigation_bar_bg.png";
 static NSString *const NAVIGATION_BACKGROUND_IMG = @"navigation_bg.png";
@@ -11,8 +13,13 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 
 @interface PhotosController()
 @property (retain,nonatomic) RootController* rootController;
-@property (retain, nonatomic) UIViewController* currentViewController;
-- (UIViewController *)viewControllerByName:(NSString *)controllerName;
+@property (nonatomic, retain) AVCaptureSession *captureSession;
+@property (nonatomic, retain) AVCaptureVideoPreviewLayer *previewLayer;
+@property (nonatomic, retain) PhotoPickerController *photoPicker;
+@property (assign) NSInteger photoNumber;
+- (void) initCapture;
+- (void) pictureN;
+- (void) countDown;
 @end
 
 @implementation PhotosController
@@ -22,9 +29,13 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 @synthesize navigationBackground = _navigationBackground;
 @synthesize segmentedControl = _segmentedControl;
 @synthesize headerView = _headerView;
+@synthesize instructionalView = _instructionalView;
+@synthesize button = _button;
+@synthesize captureSession = _captureSession;
 @synthesize rootController = _rootController;
-@synthesize currentViewController = _currentViewController;
-
+@synthesize previewLayer = _previewLayer;
+@synthesize photoPicker = _photoPicker;
+@synthesize photoNumber = _photoNumber;
 
 -(id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -43,6 +54,12 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 
 #pragma mark - View lifecycle
 
+-(void)viewDidLayoutSubviews {
+    self.previewLayer.frame = self.contentView.bounds;
+    [self.contentView bringSubviewToFront:self.instructionalView];
+    [self.contentView bringSubviewToFront:self.button];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -59,24 +76,11 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
                                  forLeftSegmentState:UIControlStateSelected rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self.segmentedControl setDividerImage:[UIImage imageNamed:NAV_DIVIDER_NS_IMG] 
                                  forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
-    
-//    [self.segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
-//    [self.segmentedControl setContentMode:UIViewContentModeScaleToFill];
-//    [self.segmentedControl setWidth:197.0 forSegmentAtIndex:0];
-//    [self.segmentedControl setWidth:191.0 forSegmentAtIndex:6];
-    
-    /*
-     TakePhoto
-     GetReady
-     Picture#
-     Short
-     */
-    
-    UIViewController *vc = [self viewControllerByName:@"TakePhotoController"];
-    [self addChildViewController:vc];
-    vc.view.frame = self.contentView.frame;
-    [self.view addSubview:vc.view];
-    self.currentViewController = vc;
+       
+    self.instructionalView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"instruction_banner_bg.png"]];
+    self.photoNumber = 1;
+    [self initCapture];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveImageToPhotoAlbum) name:kImageCapturedSuccessfully object:nil];
 }
 
 - (void)viewDidUnload
@@ -87,6 +91,10 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
     [self setNavigationBackground:nil];
     [self setSegmentedControl:nil];
     [self setHeaderView:nil];
+    [self setInstructionalView:nil];
+    [self setButton:nil];
+    [self setCaptureSession:nil];
+    [self setPreviewLayer:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -98,30 +106,12 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 	return YES;
 }
 
-- (UIViewController *)viewControllerByName:(NSString *)controllerName {
-    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
-}
-
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self.currentViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [self.currentViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-}
-
-- (void)switchToController:(NSString *)controllerName {
-    UIViewController *vc = [self viewControllerByName:controllerName];
-    [self addChildViewController:vc];
-    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
-        [self.currentViewController.view removeFromSuperview];
-        vc.view.frame = self.contentView.frame;
-        [self.contentView addSubview:vc.view];
-    } completion:^(BOOL finished) {
-        [vc didMoveToParentViewController:self];
-        [self.currentViewController removeFromParentViewController];
-    self.currentViewController = vc;
-    }];
+    self.previewLayer.orientation = toInterfaceOrientation;
+    
+    CGSize viewSize = self.contentView.frame.size;
+    CGFloat viewOffset = self.contentView.frame.origin.y;
+    self.previewLayer.frame = CGRectMake(0, 0, viewSize.height + viewOffset , viewSize.width - viewOffset);
 }
 
 - (void)dealloc {
@@ -131,10 +121,97 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
     [_navigationBackground release];
     [_segmentedControl release];
     [_headerView release];
+    [_instructionalView release];
+    [_button release];
+    [_captureSession release];
+    [_previewLayer release];
     [super dealloc];
+}
+
+- (IBAction)takePhotos:(id)sender {
+    [UIView animateWithDuration:0.2 animations:^{
+        [self.instructionalView viewWithTag:1].alpha =
+        [self.instructionalView viewWithTag:2].alpha = 0;
+        
+        [self.instructionalView viewWithTag:3].alpha = 1;        
+    }];
+    
+    self.button.hidden = YES;
+    self.segmentedControl.selectedSegmentIndex++;
+    
+    [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(pictureN) userInfo:nil repeats:NO];
+}
+
+- (void)getReady {
+    if(!self.captureSession.isRunning) {
+        [self.captureSession startRunning];
+    }
+    ((UILabel*)[self.instructionalView viewWithTag:3]).text = @"Get Ready!";
+    self.segmentedControl.selectedSegmentIndex++;
+    [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(pictureN) userInfo:nil repeats:NO];
+}
+
+- (void)pictureN {
+    ((UILabel*)[self.instructionalView viewWithTag:3]).text = [NSString stringWithFormat: @"Picture %d of 5", self.photoNumber++];
+    [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(countDown) userInfo:nil repeats:NO];
+}
+
+- (void)countDown{
+    _photoPicker = [[PhotoPickerController alloc] init];
+    [self presentModalViewController:self.photoPicker animated:NO];
+    [self.captureSession stopRunning];
+}
+
+- (void)saveImageToPhotoAlbum 
+{
+    [self dismissModalViewControllerAnimated:NO];
+    UIImageWriteToSavedPhotosAlbum(self.photoPicker.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);    
+    self.photoPicker = nil;
+    [_photoPicker release];
+    if (self.photoNumber <= 5) {
+        [self getReady];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:[NSString stringWithFormat:@"%d images saved",self.photoNumber-1] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];        
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    if (error != NULL) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Image couldn't be saved" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];
+    }
 }
 
 - (IBAction)goHome:(id)sender {
     [self.rootController switchToController:@"SplashScreenController"];
+}
+
+- (void)initCapture {
+    [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSArray* devices = [AVCaptureDevice devices];
+    AVCaptureDevice* frontCamera = nil;
+    for (AVCaptureDevice* device in devices) {
+        if (device.position == AVCaptureDevicePositionFront) {
+            frontCamera = device;
+            break;
+        }
+    }
+	AVCaptureDeviceInput *captureInput = [AVCaptureDeviceInput deviceInputWithDevice:frontCamera error:nil];
+
+	_captureSession = [[AVCaptureSession alloc] init];
+	[self.captureSession addInput:captureInput];    
+    [self.captureSession setSessionPreset:AVCaptureSessionPresetMedium];
+    
+	self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession: self.captureSession];
+	self.previewLayer.frame = self.contentView.bounds;
+    self.previewLayer.orientation = [UIApplication sharedApplication].statusBarOrientation;
+	self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+	[self.contentView.layer addSublayer: self.previewLayer];
+    
+	[self.captureSession startRunning];	
 }
 @end

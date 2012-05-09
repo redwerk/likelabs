@@ -14,6 +14,7 @@ static NSString *const bgPortrait = @"bg_portrait.png";
 @interface TextReviewController()
 @property (retain, nonatomic) RootController* rootController;
 @property (retain, nonatomic) NSArray* reviews;
+@property (retain, nonatomic) NSTimer* timer;
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 - (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
 - (void) scrollComments;
@@ -39,6 +40,7 @@ float commentsContentOffset = 0;
 @synthesize textView = _textView;
 @synthesize rootController = _rootController;
 @synthesize reviews = _reviews;
+@synthesize timer = _timer;
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -62,9 +64,11 @@ float commentsContentOffset = 0;
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
+    commentsContentOffset = 0;
     [self scrollComments];
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -97,8 +101,7 @@ float commentsContentOffset = 0;
     [self setTextView:nil];
     [self setRootController:nil];
     [self setReviews:nil];
-    commentsContentOffset = 0;
-    [super viewDidUnload];
+    [super viewDidUnload];    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -229,6 +232,7 @@ float commentsContentOffset = 0;
 }
 
 - (IBAction)goHome:(id)sender {
+    [self.timer invalidate];
     [self.rootController switchToController:@"SplashScreenController"];
 }
 
