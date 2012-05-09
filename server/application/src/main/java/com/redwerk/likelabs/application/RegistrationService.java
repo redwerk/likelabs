@@ -13,5 +13,4 @@ public interface RegistrationService {
     
     void confirmEmail(long userId, String email, String confirmationCode);
 
-    void sendActivateEmail(long userId, String confirmationCode);
 }

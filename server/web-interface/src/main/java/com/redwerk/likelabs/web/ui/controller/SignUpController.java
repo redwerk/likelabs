@@ -187,7 +187,7 @@ public class SignUpController {
         }
         try {
             User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
-            registrationService.sendActivateEmail(user.getId(), email);
+            userService.updateUserEmail(user.getId(), email);
         } catch (MailSendException e) {
             log.error(e.getMessage());
             return endRedirect(PARAM_ERROR_NO_SEND_EMAIL);

@@ -66,15 +66,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         User user = userRepository.find(userId);
         user.setEmail(email);
     }
-
-    @Override
-    public void sendActivateEmail(long userId, String email){
-        try {        
-            
-            
-        } catch (Exception e) {
-            throw new NoSendMailException(email, userId);
-        }
-
-    }
 }
