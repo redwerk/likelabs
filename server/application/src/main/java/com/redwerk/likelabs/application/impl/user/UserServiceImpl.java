@@ -2,9 +2,10 @@ package com.redwerk.likelabs.application.impl.user;
 
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.UserData;
+import com.redwerk.likelabs.application.impl.registration.ActivateEmailCodeGenerator;
 import com.redwerk.likelabs.application.impl.registration.PasswordGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
-import com.redwerk.likelabs.application.messaging.MessageTemplates;
+import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
@@ -34,13 +35,16 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    ActivateEmailCodeGenerator activateEmailCodeGenerator;
+    
+    @Autowired
     private PhotoRepository photoRepository;
 
     @Autowired
     private EmailService emailService;
 
     @Autowired
-    private MessageTemplates messageTemplates;
+    private MessageTemplateService messageTemplateService;
 
     @Autowired
     private PasswordGenerator passwordGenerator;
@@ -89,10 +93,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserEmail(long userId, String email) {
-        String activateLink = MessageFormat.format(LINK_ACTIVATE_EMAIL_TEMPLATE, messageTemplates.getMessage(MSG_APP_DOMAIN),
-                                                               userId, email, passwordGenerator.getActivateEmailCode(email, userId));
-        emailService.sendMessage(email, messageTemplates.getMessage(MSG_EMAIL_FROM), messageTemplates.getMessage(MSG_EMAIL_SUBJECT),
-                                      messageTemplates.getMessage(MSG_EMAIL_BODY, activateLink));
+        String activateLink = MessageFormat.format(LINK_ACTIVATE_EMAIL_TEMPLATE, messageTemplateService.getMessage(MSG_APP_DOMAIN),
+                                                               userId, email, activateEmailCodeGenerator.getActivateEmailCode(email, userId));
+        emailService.sendMessage(email, messageTemplateService.getMessage(MSG_EMAIL_FROM), messageTemplateService.getMessage(MSG_EMAIL_SUBJECT),
+                                      messageTemplateService.getMessage(MSG_EMAIL_BODY, activateLink));
         doEmailUpdate(userRepository.find(userId), email);
     }
     

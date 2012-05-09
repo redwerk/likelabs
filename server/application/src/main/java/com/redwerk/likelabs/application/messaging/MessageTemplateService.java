@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.application.messaging;
 
 
-public interface MessageTemplates {
+public interface MessageTemplateService {
 
      public String getMessage(String messageName, String... parameters);
 

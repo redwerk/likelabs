@@ -3,10 +3,9 @@ package com.redwerk.likelabs.application.impl.registration;
 import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUserException;
 import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
-import com.redwerk.likelabs.application.impl.registration.exception.NoSendMailException;
 import com.redwerk.likelabs.application.impl.registration.exception.NoSendSmsException;
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
-import com.redwerk.likelabs.application.messaging.MessageTemplates;
+import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.SmsService;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
@@ -29,10 +28,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     private PasswordGenerator passwordGenerator;
 
     @Autowired
+    ActivateEmailCodeGenerator activateEmailCodeGenerator;
+
+    @Autowired
     private SmsService smsService;
 
     @Autowired
-    private MessageTemplates messageTemplates;
+    private MessageTemplateService messageTemplateService;
 
     @Override
     public void createUser(String phone) {
@@ -40,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (userRepository.find(phone) != null) {
             throw new DuplicatedUserException(phone);
         }
-        String msg = messageTemplates.getMessage(MSG_SMS_REG, messageTemplates.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));
+        String msg = messageTemplateService.getMessage(MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));
         if (!smsService.sendMessage(phone, msg)) {
             throw new NoSendSmsException(phone);
         }
@@ -60,7 +62,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Transactional
     public void confirmEmail(long userId, String email, String confirmationCode) {
 
-        if (!confirmationCode.equals(passwordGenerator.getActivateEmailCode(email, userId))) {
+        if (!confirmationCode.equals(activateEmailCodeGenerator.getActivateEmailCode(email, userId))) {
             throw new NotConfirmMailException(userId,email,confirmationCode);
         }
         User user = userRepository.find(userId);

@@ -4,6 +4,4 @@ public interface PasswordGenerator {
     
     String getPassword(String phone);
 
-    String getActivateEmailCode(String email, long userId);
-
 }

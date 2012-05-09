@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
+import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.application.sn.exception.AccessTokenExpiredException;
 import com.redwerk.likelabs.application.sn.exception.ResourceAccessDeniedException;
@@ -25,6 +26,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,8 +37,6 @@ public class FacebookGateway implements SocialNetworkGateway {
     private static final String GET_ACCESS_TOKEN_URL_TEMPLATE = "https://graph.facebook.com/oauth/access_token?client_id={0}&redirect_uri={1}&client_secret={2}&code={3}";
 
     private static final String clientId = "318389801547492";
-
-    private static final String redirectUri = "http://likelabs.local/signup/linkfacebook";
 
     private static final String clientSecret = "1a47d6bad9cbadef3ec3825edc231323";
     
@@ -55,6 +55,17 @@ public class FacebookGateway implements SocialNetworkGateway {
     private static final String API_POST_COMPANY_MESSAGE_TEMPLATE = API_URL + "{0}/feed";
     
     private static final String API_IS_ADMIN_TEMPLATE = API_URL + "{0}?fields=access_token&access_token={1}";
+
+    private static final String MSG_APP_DOMAIN =  "app.domain";
+
+    private String redirectUri;
+
+    @Autowired
+    MessageTemplateService messageTemplateService;
+
+    public void FacebookGateway() {
+        this.redirectUri = messageTemplateService.getMessage(MSG_APP_DOMAIN).concat("/signup/linkfacebook");
+    }
 
     @Override
     public UserSocialAccount getUserAccount(String code) {
