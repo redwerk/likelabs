@@ -6,11 +6,9 @@
             <div class="field">
                 Activation code was sent to your phone. Please enter received code here:
             </div>
-                <div class="field errorblock">
-                    ${error}
-                </div>
+            <div class="field errorblock">  ${error}</div>
             <div class="field">
-                <input name="password" type="text" style="width: 180px;"/>${error}
+                <input name="password" type="text" style="width: 180px;"/>
             </div>
             <div class="field">
                 <input type="submit" value="Register" style="width: 187px;"/>

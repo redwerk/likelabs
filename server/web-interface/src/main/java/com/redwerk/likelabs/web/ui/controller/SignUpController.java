@@ -224,7 +224,12 @@ public class SignUpController {
             log.error(e,e);
             return endRedirect(PARAM_ERROR_NO_SEND_EMAIL);
         }
-        model.addAttribute("email_success", "You will receive a letter");
+        model.addAttribute("email_success", "Activation email was sent to the specified address. ");
+        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<UserSocialAccount> accounts = user.getAccounts();
+        for (UserSocialAccount a : accounts) {
+            model.addAttribute(a.getType().toString(), true);
+        }
         return VIEW_SINGNUP_END;
     }
 

@@ -8,7 +8,7 @@
     </c:if>
     <div class="row">
         Edit TOS
-        <textarea name="tos" style="width: 900px; height: 300px;"><spring:message code="message.tos"/></textarea>
+        <textarea name="tos" style="width: 900px; height: 300px;"><spring:message code="message.registration.tos"/></textarea>
     </div>
     <div class="row">
         Edit e-mail text

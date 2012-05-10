@@ -22,8 +22,6 @@ public class SmsServiceImpl implements SmsService{
     @Value("#{applicationProperties['sms.service.password']}")
     private String password;
 
-    // = "http://sms2.cdyne.com/sms.svc/SimpleSMSsend?PhoneNumber=011{0}&Message={1}";
-    
     @Override
     public boolean sendMessage(String recipientPhone, String text) {
 

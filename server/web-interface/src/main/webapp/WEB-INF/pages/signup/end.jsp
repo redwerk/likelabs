@@ -43,11 +43,11 @@
 <div class="row">
     <h4>Connect Social Accounts: </h4>
     <div>Link your account to share your comments, videos and photos with your friends</div>
-    
+
     <div>
         <div class="field">
             <div class="fb-login-button"><a class="fb_button fb_button_medium" href="javascript:linkFacebook()"><span class="fb_button_text">Connect with Facebook</span></a>
-                
+
                 <c:if test="${FACEBOOK eq true}" >
                     Facebook is linked to Like Labs. <a style="color: red;" href="javascript:unlinkFacebook()">Unlink</a>
                 </c:if>
@@ -72,18 +72,19 @@
             ${errormail}
             ${email_success}
         </div>
-        
-        <div>
-            <div class="field">
-                <input name="email" type="text" />
+        <c:if test="${empty email_success}">
+            <div>
+                <div class="field">
+                    <input name="email" type="text" />
+                </div>
+                <div  class="field">
+                    <input type="submit" value="Link  Email"/>
+                </div>
             </div>
-            <div  class="field">
-                <input type="submit" value="Link  Email"/>
-            </div>
-        </div>
+        </c:if>
     </form>
-<div class="field">
-     <input type="button" value="Finish" style="width: 187px;" onclick="document.location.href='/dashboard'"/>
-</div>
+    <div class="field">
+        <input type="button" value="Finish" style="width: 187px;" onclick="document.location.href='/dashboard'"/>
+    </div>
 </div>
 <%@include  file="/WEB-INF/common/footer.jsp"%>
