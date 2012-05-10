@@ -28,13 +28,17 @@ public class RootController {
     private static final String ACTION_PARAM_NEED_LOGIN = "need_login";
     private static final String ACTION_PARAM_AUTH_FAILED = "auth_failed";
     private static final String VIEW_INDEX = "index";
-    private static final String VIEW_SINGNUP_VERIFYMAIL = "signup/verifymail";
+    private static final String VIEW_SINGNUP_VERIFYMAIL = "activatemail";
+
     private final Logger log = LogManager.getLogger(getClass());
+
     @Autowired
     @Qualifier("authenticationManager")
     private AuthenticationManager authenticationManager;
+
     @Autowired
     RegistrationService registrationService;
+
     @Autowired
     UserService userService;
 
@@ -67,7 +71,7 @@ public class RootController {
             model.addAttribute("error", "User with id = " + userId + " is not found");
         } catch (Exception e) {
             log.error(e.getMessage());
-            model.addAttribute("error", "Server error? e-mail not activate");
+            model.addAttribute("error", "Server error, e-mail not activate");
         } finally {
             return VIEW_SINGNUP_VERIFYMAIL;
         }

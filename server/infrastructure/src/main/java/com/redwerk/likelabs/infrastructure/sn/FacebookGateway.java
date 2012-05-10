@@ -36,10 +36,12 @@ public class FacebookGateway implements SocialNetworkGateway {
     
     private static final String GET_ACCESS_TOKEN_URL_TEMPLATE = "https://graph.facebook.com/oauth/access_token?client_id={0}&redirect_uri={1}&client_secret={2}&code={3}";
 
-    private static final String clientId = "318389801547492";
+    private static final String clientId = "app.facebook.clientid";
 
-    private static final String clientSecret = "1a47d6bad9cbadef3ec3825edc231323";
+    private static final String clientSecret = "app.facebook.secretkey";
     
+    private static final String redirectUri = "/signup/linkfacebook";
+
     private static final String API_URL = "https://graph.facebook.com/";
     
     private static final Pattern COMPANY_ID_URL_PATTERN = Pattern.compile("(?:facebook\\.com/)([^\\/\\?]+)");
@@ -58,18 +60,15 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     private static final String MSG_APP_DOMAIN =  "app.domain";
 
-    private String redirectUri;
-
+   
     @Autowired
     MessageTemplateService messageTemplateService;
 
-    public void FacebookGateway() {
-        this.redirectUri = messageTemplateService.getMessage(MSG_APP_DOMAIN).concat("/signup/linkfacebook");
-    }
-
     @Override
     public UserSocialAccount getUserAccount(String code) {
-        String url = MessageFormat.format(GET_ACCESS_TOKEN_URL_TEMPLATE, clientId, redirectUri, clientSecret, code);
+        String url = MessageFormat.format(GET_ACCESS_TOKEN_URL_TEMPLATE, messageTemplateService.getMessage(clientId), 
+                                         messageTemplateService.getMessage(MSG_APP_DOMAIN).concat(redirectUri),
+                                                          messageTemplateService.getMessage(clientSecret), code);
         String data = requestApiData(url);
         if (!data.contains("access_token")){
             throw new WrongAccessCodeException(code);

@@ -1,14 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn"uri="http://java.sun.com/jsp/jstl/functions"  %>
-<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
-<jsp:include page="/WEB-INF/common/header.jsp" />
-
+<%@include  file="/WEB-INF/common/header.jsp"%>
 <h4>Welkome To Admin DashBoard</h4><br><br>
 <form method="POST">
     <c:if test="${not empty error}">
@@ -33,4 +23,4 @@
         <input type="button" value="Don't save" style="width: 187px;" onclick="document.location.href='/index'" />
     </div>
 </form>
-<jsp:include page="/WEB-INF/common/footer.jsp" />
+<%@include  file="/WEB-INF/common/footer.jsp"%>

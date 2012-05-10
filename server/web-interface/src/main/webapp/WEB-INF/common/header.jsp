@@ -33,14 +33,14 @@
                 <div class="fRight signin_block">
                     <sec:authorize access="isAuthenticated()">
                         <div class="field">
-                            <input type="button" value="Logout" style="width: 187px;" onclick="document.location.href='/j_spring_security_logout'"/>
+                            <input type="button" value="Logout" style="width: 187px;" onclick="document.location.href='/logout'"/>
                             <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
                                 <input type="button" value="Admin Panel" style="width: 187px;" onclick="document.location.href='/admin/panel'"/>
                             </sec:authorize>
                         </div>
                     </sec:authorize>
                     <sec:authorize access="isAnonymous()" >
-                        <form id="loginForm" action="/j_spring_security_check" method="POST">
+                        <form id="loginForm" action="/login" method="POST">
                             <table cellspacing="0">
                                 <tr>
                                     <td>

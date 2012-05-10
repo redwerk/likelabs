@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
+import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.application.sn.exception.*;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
@@ -18,6 +19,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,9 +29,9 @@ public class VKontakteGateway implements SocialNetworkGateway {
     
     private static final String API_URL = "https://api.vk.com/method/";
 
-    private static final String clientId = "2794352";
+    private static final String clientId = "app.vkontakte.clientid";
 
-    private static final String clientSecret = "j6x0hAEOLkVzHUiQDJse";
+    private static final String clientSecret = "app.vkontakte.secretkey";
 
     private static final String GET_ACCESS_TOKEN_URL_TEMPLATE = "https://oauth.vk.com/access_token?client_id={0}&client_secret={1}&code={2}";
     
@@ -45,9 +47,12 @@ public class VKontakteGateway implements SocialNetworkGateway {
     
     private static final String API_IS_ADMIN_TEMPLATE = API_URL + "groups.getById?gid={0}&access_token={1}";
 
+    @Autowired
+    MessageTemplateService messageTemplateService;
+
     @Override
     public UserSocialAccount getUserAccount(String code) {
-        String url = MessageFormat.format(GET_ACCESS_TOKEN_URL_TEMPLATE, clientId, clientSecret, code);
+        String url = MessageFormat.format(GET_ACCESS_TOKEN_URL_TEMPLATE, messageTemplateService.getMessage(clientId), messageTemplateService.getMessage(clientSecret), code);
         String data = requestApiData(url);
 
         JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();

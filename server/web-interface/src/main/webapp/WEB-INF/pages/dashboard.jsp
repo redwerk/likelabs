@@ -1,17 +1,6 @@
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn"uri="http://java.sun.com/jsp/jstl/functions"  %>
-<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
-<jsp:include page="/WEB-INF/common/header.jsp" />
-<h1>Welkome To User Dashboard</h1><br><br>
-<h1>blind stopper</h1><br><br>
-
+<%@include  file="/WEB-INF/common/header.jsp"%>
+<h1>Welkome To User Dashboard</h1>
+<br>
 <br>
 <br>
 <p>
@@ -32,4 +21,4 @@
 <p>
     Vivamus commodo, augue et laoreet euismod, sem sapien tempor dolor, ac egestas sem ligula quis lacus. Donec vestibulum tortor ac lacus. Sed posuere vestibulum nisl. Curabitur eleifend fermentum justo. Nullam imperdiet. Integer sit amet mauris imperdiet risus sollicitudin rutrum. Ut vitae turpis. Nulla facilisi. Quisque tortor velit, scelerisque et, facilisis vel, tempor sed, urna. Vivamus nulla elit, vestibulum eget, semper et, scelerisque eget, lacus. Pellentesque viverra purus. Quisque elit. Donec ut dolor.
 </p>
-<jsp:include page="/WEB-INF/common/footer.jsp" />
+<%@include  file="/WEB-INF/common/footer.jsp"%>
