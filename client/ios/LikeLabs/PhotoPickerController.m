@@ -170,7 +170,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
             break; 
         }
 	}
-    
+    videoConnection.videoOrientation = [UIApplication sharedApplication].statusBarOrientation;
 	NSLog(@"about to request a capture from: %@", self.imageOutput);
 	[self.imageOutput captureStillImageAsynchronouslyFromConnection:videoConnection 
                                                          completionHandler:^(CMSampleBufferRef imageSampleBuffer, NSError *error) { 
@@ -181,7 +181,8 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
                                                                  NSLog(@"no attachments");
                                                              }
                                                              NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];    
-                                                             _image = [[UIImage alloc] initWithData:imageData];                                                             
+                                                             _image = [[UIImage alloc] initWithData:imageData];
+                                                             
                                                              [[NSNotificationCenter defaultCenter] postNotificationName:kImageCapturedSuccessfully object:nil];
                                                          }];
 }

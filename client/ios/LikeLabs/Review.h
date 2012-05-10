@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    Text,
-    Photo
+    ReviewTypeText,
+    ReviewTypePhoto
 } ReviewType;
 
 @class User;
@@ -10,11 +10,12 @@ typedef enum {
 @interface Review : NSObject
 
 @property (retain, nonatomic) User *user;
-@property NSInteger reviewPhotoIndex;
-@property(retain, nonatomic) NSArray *photos;
-@property(retain, nonatomic) NSString *text;
-@property ReviewType reviewType;
+@property (assign) NSInteger reviewPhotoIndex;
+@property (retain, nonatomic) NSMutableArray *photos;
+@property (retain, nonatomic) NSString *text;
+@property (assign) ReviewType reviewType;
 
-- (id)initWithUser:(User*)user andText:(NSString*)text;
+- (id)initWithReviewType: (ReviewType)reviewType;
+- (id)initWithUser: (User *)user andText: (NSString *)text;
 
 @end

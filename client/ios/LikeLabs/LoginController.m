@@ -27,7 +27,7 @@ NSString *bgPortrait = @"bg_portrait.png";
 -(void)viewDidLoad {   
     [super viewDidLoad];    
     UIColor *background = [[UIColor alloc] initWithPatternImage:
-                           [UIImage imageNamed:UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
+                           [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
     [background release];
     self.inputCode.borderStyle = UITextBorderStyleRoundedRect;

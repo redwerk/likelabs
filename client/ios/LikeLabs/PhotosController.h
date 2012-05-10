@@ -10,6 +10,9 @@
 @property (retain, nonatomic) IBOutlet UIView *headerView;
 @property (retain, nonatomic) IBOutlet UIView *instructionalView;
 @property (retain, nonatomic) IBOutlet UIButton *button;
+@property (retain, nonatomic) IBOutlet UILabel *whenYouAreReadyLabel;
+@property (retain, nonatomic) IBOutlet UILabel *photosWillBeTakenLabel;
+@property (retain, nonatomic) IBOutlet UILabel *getReadyLabel;
 - (IBAction)takePhotos:(id)sender;
 - (IBAction)goHome:(id)sender;
 

@@ -15,6 +15,7 @@ static NSString *const bgPortrait = @"bg_portrait.png";
 @property (retain, nonatomic) RootController* rootController;
 @property (retain, nonatomic) NSArray* reviews;
 @property (retain, nonatomic) NSTimer* timer;
+@property (assign) BOOL textPlaseholderActive;
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 - (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
 - (void) scrollComments;
@@ -33,7 +34,6 @@ const float ANIMATION_DURATION = 0.02;
 const int ANIMATION_SPEED = 1;
 const int ROWS_ENDLESS = 1000;
 
-BOOL textPlaseholderActive = true;
 float commentsContentOffset = 0;
 
 @synthesize socialComments = _socialComments;
@@ -41,6 +41,7 @@ float commentsContentOffset = 0;
 @synthesize rootController = _rootController;
 @synthesize reviews = _reviews;
 @synthesize timer = _timer;
+@synthesize textPlaseholderActive = _textPlaseholderActive;
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -80,13 +81,14 @@ float commentsContentOffset = 0;
     
     
     UIColor *background = [[UIColor alloc] initWithPatternImage:
-                           [UIImage imageNamed:UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
+                           [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
     [background release];
 
     self.textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
     self.textView.layer.borderWidth = BORDER_WIDTH;
     self.textView.layer.cornerRadius = BORDER_CORNER_RADIUS;    
+    self.textPlaseholderActive = true;
     [self.textView becomeFirstResponder];    
 }
 
@@ -113,10 +115,10 @@ float commentsContentOffset = 0;
 }
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if (textPlaseholderActive) {
+    if (self.textPlaseholderActive) {
         self.textView.text = @"";
         self.textView.textColor = [UIColor blackColor];
-        textPlaseholderActive = false;
+        self.textPlaseholderActive = false;
     } 
     return YES;
 }
@@ -125,7 +127,7 @@ float commentsContentOffset = 0;
     if (self.textView.text.length == 0) {
         self.textView.textColor = [UIColor lightGrayColor];
         self.textView.text = GREETING;
-        textPlaseholderActive = true;
+        self.textPlaseholderActive = true;
     }
 }
 

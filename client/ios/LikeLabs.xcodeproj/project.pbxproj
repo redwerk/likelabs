@@ -49,6 +49,7 @@
 		E9F81B881545A21000E0B41A /* LoginController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B871545A21000E0B41A /* LoginController.xib */; };
 		E9F81B9715471A7100E0B41A /* bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9515471A7000E0B41A /* bg_landscape.png */; };
 		E9F81B9815471A7100E0B41A /* bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9615471A7000E0B41A /* bg_portrait.png */; };
+		FF669B80155C5DC30097515A /* delete_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF669B7F155C5DC30097515A /* delete_btn.png */; };
 		FF87485D1559348A0010D272 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87485C1559348A0010D272 /* AVFoundation.framework */; };
 		FF87486B155947B90010D272 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486A155947B90010D272 /* CoreVideo.framework */; };
 		FF87486D155947C20010D272 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486C155947C20010D272 /* CoreMedia.framework */; };
@@ -58,6 +59,15 @@
 		FF9DF1561557DEB10002A658 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9DF1521557DEB10002A658 /* libTestFlight.a */; };
 		FF9DF1571557DEB10002A658 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1531557DEB10002A658 /* README.txt */; };
 		FF9DF1581557DEB10002A658 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1541557DEB10002A658 /* release_notes.txt */; };
+		FFC60FE0155BCC5E00F4368A /* PhotoSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */; };
+		FFC60FE1155BCC5E00F4368A /* PhotoSelectionController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */; };
+		FFC60FE4155BDDD700F4368A /* photo_selection_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FE3155BDDD700F4368A /* photo_selection_bg.png */; };
+		FFC60FE6155BE0D800F4368A /* photo_selection_bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FE5155BE0D800F4368A /* photo_selection_bg_portrait.png */; };
+		FFC60FE8155BE72500F4368A /* share_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FE7155BE72500F4368A /* share_btn.png */; };
+		FFC60FEC155C3CEB00F4368A /* PhotoMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFC60FEA155C3CEB00F4368A /* PhotoMessageController.m */; };
+		FFC60FED155C3CEB00F4368A /* PhotoMessageController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FEB155C3CEB00F4368A /* PhotoMessageController.xib */; };
+		FFC60FEF155C41D900F4368A /* photo_message_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FEE155C41D900F4368A /* photo_message_bg.png */; };
+		FFC60FF1155C442500F4368A /* next_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FF0155C442500F4368A /* next_btn.png */; };
 		FFD87809155A96D0008105E0 /* PhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFD87807155A96D0008105E0 /* PhotoPickerController.m */; };
 		FFD8780A155A96D0008105E0 /* PhotoPickerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFD87808155A96D0008105E0 /* PhotoPickerController.xib */; };
 		FFD8780C155AA1EF008105E0 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = FFD8780B155AA1EF008105E0 /* camera.png */; };
@@ -126,6 +136,7 @@
 		E9F81B871545A21000E0B41A /* LoginController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginController.xib; path = LikeLabs/LoginController.xib; sourceTree = "<group>"; };
 		E9F81B9515471A7000E0B41A /* bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_landscape.png; sourceTree = "<group>"; };
 		E9F81B9615471A7000E0B41A /* bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_portrait.png; sourceTree = "<group>"; };
+		FF669B7F155C5DC30097515A /* delete_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_btn.png; sourceTree = "<group>"; };
 		FF87485C1559348A0010D272 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FF87486A155947B90010D272 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		FF87486C155947C20010D272 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -136,6 +147,17 @@
 		FF9DF1531557DEB10002A658 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		FF9DF1541557DEB10002A658 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
 		FF9DF1551557DEB10002A658 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		FFC60FDD155BCC5E00F4368A /* PhotoSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSelectionController.h; path = LikeLabs/PhotoSelectionController.h; sourceTree = "<group>"; };
+		FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSelectionController.m; path = LikeLabs/PhotoSelectionController.m; sourceTree = "<group>"; };
+		FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoSelectionController.xib; path = LikeLabs/PhotoSelectionController.xib; sourceTree = "<group>"; };
+		FFC60FE3155BDDD700F4368A /* photo_selection_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_selection_bg.png; sourceTree = "<group>"; };
+		FFC60FE5155BE0D800F4368A /* photo_selection_bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_selection_bg_portrait.png; sourceTree = "<group>"; };
+		FFC60FE7155BE72500F4368A /* share_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_btn.png; sourceTree = "<group>"; };
+		FFC60FE9155C3CEB00F4368A /* PhotoMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoMessageController.h; path = LikeLabs/PhotoMessageController.h; sourceTree = "<group>"; };
+		FFC60FEA155C3CEB00F4368A /* PhotoMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoMessageController.m; path = LikeLabs/PhotoMessageController.m; sourceTree = "<group>"; };
+		FFC60FEB155C3CEB00F4368A /* PhotoMessageController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoMessageController.xib; path = LikeLabs/PhotoMessageController.xib; sourceTree = "<group>"; };
+		FFC60FEE155C41D900F4368A /* photo_message_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_message_bg.png; sourceTree = "<group>"; };
+		FFC60FF0155C442500F4368A /* next_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next_btn.png; sourceTree = "<group>"; };
 		FFD87806155A96CF008105E0 /* PhotoPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoPickerController.h; path = LikeLabs/PhotoPickerController.h; sourceTree = "<group>"; };
 		FFD87807155A96D0008105E0 /* PhotoPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoPickerController.m; path = LikeLabs/PhotoPickerController.m; sourceTree = "<group>"; };
 		FFD87808155A96D0008105E0 /* PhotoPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoPickerController.xib; path = LikeLabs/PhotoPickerController.xib; sourceTree = "<group>"; };
@@ -205,6 +227,12 @@
 		0AAB557D153F564E00649AB4 /* LikeLabs */ = {
 			isa = PBXGroup;
 			children = (
+				FF669B7F155C5DC30097515A /* delete_btn.png */,
+				FFC60FF0155C442500F4368A /* next_btn.png */,
+				FFC60FEE155C41D900F4368A /* photo_message_bg.png */,
+				FFC60FE7155BE72500F4368A /* share_btn.png */,
+				FFC60FE5155BE0D800F4368A /* photo_selection_bg_portrait.png */,
+				FFC60FE3155BDDD700F4368A /* photo_selection_bg.png */,
 				FFD8780B155AA1EF008105E0 /* camera.png */,
 				FF8748B3155996B60010D272 /* take_photo_btn.png */,
 				FF8748B1155992FF0010D272 /* instruction_banner_bg.png */,
@@ -308,6 +336,12 @@
 				FFD87806155A96CF008105E0 /* PhotoPickerController.h */,
 				FFD87807155A96D0008105E0 /* PhotoPickerController.m */,
 				FFD87808155A96D0008105E0 /* PhotoPickerController.xib */,
+				FFC60FDD155BCC5E00F4368A /* PhotoSelectionController.h */,
+				FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */,
+				FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */,
+				FFC60FE9155C3CEB00F4368A /* PhotoMessageController.h */,
+				FFC60FEA155C3CEB00F4368A /* PhotoMessageController.m */,
+				FFC60FEB155C3CEB00F4368A /* PhotoMessageController.xib */,
 			);
 			name = Presentation;
 			path = ..;
@@ -401,6 +435,14 @@
 				FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */,
 				FFD8780A155A96D0008105E0 /* PhotoPickerController.xib in Resources */,
 				FFD8780C155AA1EF008105E0 /* camera.png in Resources */,
+				FFC60FE1155BCC5E00F4368A /* PhotoSelectionController.xib in Resources */,
+				FFC60FE4155BDDD700F4368A /* photo_selection_bg.png in Resources */,
+				FFC60FE6155BE0D800F4368A /* photo_selection_bg_portrait.png in Resources */,
+				FFC60FE8155BE72500F4368A /* share_btn.png in Resources */,
+				FFC60FED155C3CEB00F4368A /* PhotoMessageController.xib in Resources */,
+				FFC60FEF155C41D900F4368A /* photo_message_bg.png in Resources */,
+				FFC60FF1155C442500F4368A /* next_btn.png in Resources */,
+				FF669B80155C5DC30097515A /* delete_btn.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,6 +470,8 @@
 				E77C32AC155012790057A34F /* RootController.m in Sources */,
 				E77C32B21550370A0057A34F /* PhotosController.m in Sources */,
 				FFD87809155A96D0008105E0 /* PhotoPickerController.m in Sources */,
+				FFC60FE0155BCC5E00F4368A /* PhotoSelectionController.m in Sources */,
+				FFC60FEC155C3CEB00F4368A /* PhotoMessageController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

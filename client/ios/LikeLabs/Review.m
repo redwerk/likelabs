@@ -8,8 +8,16 @@
 @synthesize photos = _photos;
 @synthesize text = _text;
 
-- (id)initWithUser:(User*)user andText:(NSString*)text {
+- (id)initWithReviewType:(ReviewType)reviewType {
     if (self = [super init]) {
+        self.reviewType = reviewType;
+        _photos = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
+- (id)initWithUser:(User*)user andText:(NSString*)text {
+    if (self = [self initWithReviewType: ReviewTypeText]) {
         self.user = user;
         self.text = text;
     }
@@ -20,6 +28,9 @@
     self.photos = nil;
     self.text = nil;
     self.user = nil;
+    [_photos release];
+    [_text release];
+    [_user release];
     [super dealloc];
 }
 

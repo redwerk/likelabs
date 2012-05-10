@@ -8,6 +8,7 @@
 
 @implementation RootController
 
+@synthesize review = _review;
 @synthesize currentViewController = _currentViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -62,11 +63,15 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self.currentViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    if ([self.currentViewController shouldAutorotateToInterfaceOrientation:toInterfaceOrientation]) {
+        [self.currentViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    }
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [self.currentViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    if ([self.currentViewController shouldAutorotateToInterfaceOrientation:fromInterfaceOrientation]) {
+        [self.currentViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    }
 }
 
 - (UIViewController *)viewControllerByName:(NSString *)controllerName {
