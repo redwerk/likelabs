@@ -3,6 +3,7 @@ package com.redwerk.likelabs.web.ui.controller;
 import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
+import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.user.User;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
@@ -20,15 +21,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 @Controller
 @RequestMapping(value = "/")
 public class RootController {
 
-    private static final String ACTION_PARAM = "action";
-    private static final String ACTION_PARAM_NEED_LOGIN = "need_login";
-    private static final String ACTION_PARAM_AUTH_FAILED = "auth_failed";
+    private static final String MSG_AUTH_FAILED = "message.auth.failed";
+    private static final String MSG_AUTH_FAILED_PHONE = "message.registration.invalid.phone";
+    
     private static final String VIEW_INDEX = "index";
     private static final String VIEW_SINGNUP_VERIFYMAIL = "activatemail";
+    private static final String VIEW_TOS = "tos";
 
     private final Logger log = LogManager.getLogger(getClass());
 
@@ -42,14 +45,25 @@ public class RootController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = {"/index", "/", ""}, method = RequestMethod.GET)
-    public String index(ModelMap model, @RequestParam(value = ACTION_PARAM, required = false) String action) {
+    @Autowired
+    MessageTemplateService messageTemplateService;
 
-        if (action != null) {
-            model.addAttribute(ACTION_PARAM, action);
-            log.fatal(action);
-        }
+    @RequestMapping(value = {"/index", "/", ""}, method = RequestMethod.GET)
+    public String index(ModelMap model, @RequestParam(value = "error", required = false) String error) {
+     
+        //TODO index logic
         return VIEW_INDEX;
+    }
+
+    @RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
+    public String loginfailed(ModelMap model) {
+        model.addAttribute("loginfailed", messageTemplateService.getMessage(MSG_AUTH_FAILED));
+        return VIEW_INDEX;
+    }
+
+    @RequestMapping(value = "/tos", method = RequestMethod.GET)
+    public String tos(ModelMap model) {
+        return VIEW_TOS;
     }
 
     @RequestMapping(value = "/activatemail", method = RequestMethod.GET)
@@ -64,14 +78,11 @@ public class RootController {
             User user = userService.getUser(id);
             authenticatUser(request, user.getPhone(), user.getPassword());
         } catch (NotConfirmMailException e) {
-            log.error(e.getMessage());
-            model.addAttribute("error", "not verify e-mail: " + email);
+            log.error(e,e);
+            model.addAttribute("error", true);
         } catch (IllegalStateException e) {
-            log.error(e.getMessage());
-            model.addAttribute("error", "User with id = " + userId + " is not found");
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            model.addAttribute("error", "Server error, e-mail not activate");
+            log.error(e,e);
+            model.addAttribute("error", true);
         } finally {
             return VIEW_SINGNUP_VERIFYMAIL;
         }

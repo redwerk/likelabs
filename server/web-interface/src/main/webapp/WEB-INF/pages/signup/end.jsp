@@ -41,25 +41,24 @@
     </div>
 </div>
 <div class="row">
-    <h4>Connect Social Accounts:</h4>
+    <h4>Connect Social Accounts: </h4>
     <div>Link your account to share your comments, videos and photos with your friends</div>
-    <c:if test="${not empty error}">
-        <div class="field errorblock">
-            ${error}
-        </div>
-    </c:if>
+    
     <div>
         <div class="field">
-            <div class="fb-login-button"><a class="fb_button fb_button_medium" href="javascript:linkFacebook()"><span class="fb_button_text">Connect with Facebook</span></a></div>
-            <c:if test="${FACEBOOK eq true}" >
-                <a style="color: red;" href="javascript:unlinkFacebook()">Unlink Facebook</a>
-            </c:if>
+            <div class="fb-login-button"><a class="fb_button fb_button_medium" href="javascript:linkFacebook()"><span class="fb_button_text">Connect with Facebook</span></a>
+                
+                <c:if test="${FACEBOOK eq true}" >
+                    Facebook is linked to Like Labs. <a style="color: red;" href="javascript:unlinkFacebook()">Unlink</a>
+                </c:if>
+            </div>    
         </div>
         <div  class="field">
-            <div class="fb-login-button"><a class="fb_button" style="font-size: 11px;line-height: 14px;width: 178px;" href="javascript:linkVKontacte()"><span class="fb_button_text">Connect with VK</span></a></div>
-            <c:if test="${VKONTAKTE eq true}" >
-                <a style="color: red;" href="javascript:unlinkVKontacte()">Unlink VKontakte</a>
-            </c:if>
+            <div class="fb-login-button"><a class="fb_button" style="font-size: 11px;line-height: 14px;width: 178px;" href="javascript:linkVKontacte()"><span class="fb_button_text">Connect with VK</span></a>
+                <c:if test="${VKONTAKTE eq true}" >
+                    VK is linked to Like Labs. <a style="color: red;" href="javascript:unlinkVKontacte()">Unlink</a>
+                </c:if>
+            </div>    
         </div>
 
     </div>
@@ -69,6 +68,11 @@
           <h4>Link Email:</h4>
         <div>Link email for receiving notifications</div>
         <div>In the message you receive, please link provided there</div>
+        <div class="field errorblock">
+            ${errormail}
+            ${email_success}
+        </div>
+        
         <div>
             <div class="field">
                 <input name="email" type="text" />
@@ -78,5 +82,8 @@
             </div>
         </div>
     </form>
+<div class="field">
+     <input type="button" value="Finish" style="width: 187px;" onclick="document.location.href='/dashboard'"/>
+</div>
 </div>
 <%@include  file="/WEB-INF/common/footer.jsp"%>

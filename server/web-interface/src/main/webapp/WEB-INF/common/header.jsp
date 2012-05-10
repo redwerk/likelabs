@@ -48,6 +48,7 @@
                                     </td>
                                     <td>
                                         Password:
+                                        
                                     </td>
                                 </tr>
                                 <tr>
@@ -64,9 +65,10 @@
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="_spring_security_remember_me" />
+                                        Remember me
                                     </td>
                                     <td>
-                                        Remember me
+                                        <div class="errorblock">${loginfailed}</div>
                                     </td>
                                 </tr>
                             </table>
