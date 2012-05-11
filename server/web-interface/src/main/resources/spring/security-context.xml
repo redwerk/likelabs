@@ -12,7 +12,8 @@
 
         <form-login login-page="/index"
                             default-target-url="/dashboard"
-			    authentication-failure-url="/loginfailed"
+                            authentication-success-handler-ref="authSuccessHandler"
+                            authentication-failure-handler-ref="authFailureHandler"
                             login-processing-url="/login"/>
         <logout invalidate-session="true"
                         logout-url="/logout"
@@ -24,5 +25,4 @@
     <authentication-manager alias="authenticationManager">
         <authentication-provider user-service-ref="securityUserDetailsService"/>
     </authentication-manager>
-
 </beans:beans>

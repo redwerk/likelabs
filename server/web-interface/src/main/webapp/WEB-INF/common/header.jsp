@@ -14,6 +14,39 @@
         <style type="text/css">
             @import "/static/css/styles.css";
         </style>
+        <script src="/static/scripts/jquery-min.js"></script>
+        <sec:authorize access="not isAuthenticated()">
+            <script type="text/javascript">
+                function signIn() {
+                    var data = {
+                        "j_username":$('#username').val(),
+                        "j_password":$('#password').val(),
+                        "_spring_security_remember_me":$('#mem').val()};
+                    $.ajax({
+                        url: "/login",
+                        async: false,
+                        global: true,
+                        type: "POST",
+                        processData: true,
+                        dataType: "text",
+                        data: data,
+                        success: function(data){
+                            if (data == "true") {
+                                window.location.href = "/dashboard";
+                            } else {
+                                $('#password').val("");
+                                $('#authfailed').html('<spring:message code="message.auth.failed"/>');
+                            }
+                        },
+                        error: function(){
+                            $('#password').val("");
+                            $('#authfailed').html('<spring:message code="message.auth.failed"/>');
+                        }
+                    })
+                    return false;
+                }
+            </script>
+        </sec:authorize>
     </head>
     <%-- end body tag in footer --%>
     <body>
@@ -40,7 +73,7 @@
                         </div>
                     </sec:authorize>
                     <sec:authorize access="isAnonymous()" >
-                        <form id="loginForm" action="/login" method="POST">
+                        <form onsubmit="return signIn();" id="loginForm" >
                             <table cellspacing="0">
                                 <tr>
                                     <td>
@@ -48,15 +81,14 @@
                                     </td>
                                     <td>
                                         Password:
-                                        
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input name="j_username" type="text" />
+                                        <input id="username" name="j_username" type="text" />
                                     </td>
                                     <td>
-                                        <input name="j_password" type="password" />
+                                        <input id="password" name="j_password" type="password" />
                                     </td>
                                     <td>
                                         <input type="submit" value="Sign in"/>
@@ -64,11 +96,11 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="_spring_security_remember_me" />
+                                        <input id="mem" type="checkbox" name="_spring_security_remember_me" />
                                         Remember me
                                     </td>
                                     <td>
-                                        <div class="errorblock">${loginfailed}</div>
+                                        <div id="authfailed" class="errorblock"></div>
                                     </td>
                                 </tr>
                             </table>

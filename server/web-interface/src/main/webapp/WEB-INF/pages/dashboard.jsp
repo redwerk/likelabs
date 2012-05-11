@@ -1,5 +1,5 @@
 <%@include  file="/WEB-INF/common/header.jsp"%>
-<h1>Welkome To User Dashboard</h1>
+<h1>Welcome To User Dashboard</h1>
 <br>
 <br>
 <br>
