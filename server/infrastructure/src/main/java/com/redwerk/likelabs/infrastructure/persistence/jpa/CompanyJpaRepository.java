@@ -20,7 +20,7 @@ public class CompanyJpaRepository implements CompanyRepository {
     private static final String GET_COMPANY_BY_NAME = "select c from Company c where c.name = :name order by c.id";
 
     private static final String GET_COMPANIES_BY_ADMIN =
-            "select c from Company c where c.admins.id = :adminId order by c.name";
+            "select c from Company c join c.admins a where a.id = :adminId order by c.name";
 
     @PersistenceContext
     private EntityManager em;

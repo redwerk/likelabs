@@ -8,7 +8,7 @@ import java.util.jar.Attributes.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component(value="gatewayFactory")
+@Component
 public class GatewayFactoryImpl implements GatewayFactory {
 
     @Autowired

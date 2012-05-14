@@ -2,7 +2,7 @@ package com.redwerk.likelabs.application.impl.user;
 
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.UserData;
-import com.redwerk.likelabs.application.impl.registration.ActivateEmailCodeGenerator;
+import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.impl.registration.PasswordGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    ActivateEmailCodeGenerator activateEmailCodeGenerator;
+    CodeGenerator codeGenerator;
     
     @Autowired
     private PhotoRepository photoRepository;
@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService {
     private PasswordGenerator passwordGenerator;
 
     @Autowired
-    @Qualifier(value="gatewayFactory")
     GatewayFactory gatewayFactory;
 
     @Override
@@ -109,7 +108,7 @@ public class UserServiceImpl implements UserService {
         Long userId = user.getId();
         String activateLink = MessageFormat.format(LINK_ACTIVATE_EMAIL_TEMPLATE,
                 messageTemplateService.getMessage(MSG_APP_DOMAIN), userId, email,
-                activateEmailCodeGenerator.getActivateEmailCode(email, userId));
+                codeGenerator.getConfirmEmailCode(email, userId));
         emailService.sendMessage(email, messageTemplateService.getMessage(MSG_EMAIL_FROM),
                 messageTemplateService.getMessage(MSG_EMAIL_SUBJECT),
                 messageTemplateService.getMessage(MSG_EMAIL_BODY, activateLink));

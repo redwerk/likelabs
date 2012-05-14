@@ -6,9 +6,9 @@
 <script type="text/javascript">
     var id_VKontakte = <spring:message code="app.vkontakte.clientid"/>;
     var id_Facebook = <spring:message code="app.facebook.clientid"/>;
-    var redirect_url_fasebook =  window.location.protocol+ '//' + window.location.host + '/signup/linkfacebook';
-    var redirect_url_vkontakte =  window.location.protocol+ '//' + window.location.host + '/signup/linkvkontakte';
-    var unlink_url = window.location.protocol+ '//' + window.location.host + '/signup/unlinkaccount';
+    var redirect_url_fasebook =  window.location.protocol+ '//' + window.location.host + '/admincompany/linkfacebook';
+    var redirect_url_vkontakte =  window.location.protocol+ '//' + window.location.host + '/admincompany/linkvkontakte';
+    var unlink_url = window.location.protocol+ '//' + window.location.host + '/admincompany/unlinkaccount';
 
     function linkFacebook() {
         document.location.href="https://www.facebook.com/dialog/oauth?client_id=" + id_Facebook + "&redirect_uri=" + redirect_url_fasebook + "&scope=email,publish_stream,manage_pages";// + "&display=popup";
@@ -46,7 +46,7 @@
 
     <div>
         <div class="field errorblock">
-            ${errorlink}
+            ${error_not_admin}
         </div>
         <div class="field">
             <div class="fb-login-button"><a class="fb_button fb_button_medium" href="javascript:linkFacebook()"><span class="fb_button_text">Connect with Facebook</span></a>
@@ -54,40 +54,23 @@
                 <c:if test="${FACEBOOK eq true}" >
                     Facebook is linked to Like Labs. <a style="color: red;" href="javascript:unlinkFacebook()">Unlink</a>
                 </c:if>
-            </div>    
+            </div>
         </div>
         <div  class="field">
             <div class="fb-login-button"><a class="fb_button" style="font-size: 11px;line-height: 14px;width: 178px;" href="javascript:linkVKontacte()"><span class="fb_button_text">Connect with VK</span></a>
                 <c:if test="${VKONTAKTE eq true}" >
                     VK is linked to Like Labs. <a style="color: red;" href="javascript:unlinkVKontacte()">Unlink</a>
                 </c:if>
-            </div>    
+            </div>
         </div>
 
     </div>
 </div>
 <div class="row">
-    <form action="/signup/sendmail" method="POST" onsubmit="return validateMail();"
-          <h4>Link Email:</h4>
-        <div>Link email for receiving notifications</div>
-        <div>In the message you receive, please link provided there</div>
-        <div class="field errorblock">
-            ${errormail}
-            ${email_success}
+    <form action="/admincompany/profile" method="POST">
+        <div class="field">
+            <input type="submit" value="Save"/>
         </div>
-        <c:if test="${empty email_success}">
-            <div>
-                <div class="field">
-                    <input name="email" type="text" />
-                </div>
-                <div  class="field">
-                    <input type="submit" value="Link  Email"/>
-                </div>
-            </div>
-        </c:if>
     </form>
-    <div class="field">
-        <input type="button" value="Finish" style="width: 187px;" onclick="document.location.href='/dashboard'"/>
-    </div>
-</div>
+</div>    
 <%@include  file="/WEB-INF/common/footer.jsp"%>

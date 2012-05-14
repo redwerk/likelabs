@@ -51,7 +51,7 @@ public class Review {
     private boolean publishedInCompanySN;
     
     @ManyToOne
-    @JoinColumn(name = "moderator_id_id")
+    @JoinColumn(name = "moderator_id")
     private User moderator;
 
     @Column(name = "moderated_dt")

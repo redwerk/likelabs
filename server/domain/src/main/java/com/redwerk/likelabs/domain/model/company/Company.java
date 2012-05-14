@@ -39,7 +39,7 @@ public class Company {
     private byte[] logo;
 
     @ElementCollection
-    @CollectionTable(name="company_social_account", joinColumns = @JoinColumn(name="company_id"))
+    @CollectionTable(name="company_social_page", joinColumns = @JoinColumn(name="company_id"))
     @Sort(type = SortType.NATURAL)
     private SortedSet<CompanySocialPage> pages = new TreeSet<CompanySocialPage>();
 

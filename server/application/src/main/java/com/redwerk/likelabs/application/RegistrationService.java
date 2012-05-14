@@ -8,4 +8,10 @@ public interface RegistrationService {
     
     void confirmEmail(long userId, String email, String confirmationCode);
 
+    void activateAdminCompany(long userId);
+
+    boolean validateAdminCode(long id, String activateCode);
+
+    boolean validateAdminPassword(long id, String password);
+
 }

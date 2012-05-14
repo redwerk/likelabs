@@ -73,13 +73,13 @@ public class SignUpController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    RegistrationService registrationService;
+    private RegistrationService registrationService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    MessageTemplateService messageTemplateService;
+    private MessageTemplateService messageTemplateService;
 
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     public String start(ModelMap model, HttpServletRequest request, @RequestParam(value = "error", required = false) String error) {

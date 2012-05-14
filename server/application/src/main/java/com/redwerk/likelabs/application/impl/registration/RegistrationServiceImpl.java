@@ -4,12 +4,24 @@ import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUserException;
 import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
 import com.redwerk.likelabs.application.impl.registration.exception.NoSendSmsException;
+import com.redwerk.likelabs.application.impl.registration.exception.AbsentSocialAccountException;
+import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
+import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.SmsService;
+import com.redwerk.likelabs.application.sn.GatewayFactory;
+import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.company.Company;
+import com.redwerk.likelabs.domain.model.company.CompanyRepository;
+import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
+import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +37,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     private UserRepository userRepository;
 
     @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
     private PasswordGenerator passwordGenerator;
 
     @Autowired
-    ActivateEmailCodeGenerator activateEmailCodeGenerator;
+    CodeGenerator codeGenerator;
+
+    @Autowired
+    GatewayFactory gatewayFactory;
 
     @Autowired
     private SmsService smsService;
@@ -62,10 +80,49 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Transactional
     public void confirmEmail(long userId, String email, String confirmationCode) {
 
-        if (!confirmationCode.equals(activateEmailCodeGenerator.getActivateEmailCode(email, userId))) {
-            throw new NotConfirmMailException(userId,email,confirmationCode);
+        if (!confirmationCode.equals(codeGenerator.getConfirmEmailCode(email, userId))) {
+            throw new NotConfirmMailException(userId, email, confirmationCode);
         }
         User user = userRepository.find(userId);
         user.setEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public void activateAdminCompany(long userId) {
+
+        User user = userRepository.find(userId);
+        List<UserSocialAccount> accounts = user.getAccounts();
+        if (accounts == null) {
+            throw new AbsentSocialAccountException(user);
+        }
+        List<Company> companies = companyRepository.findAll(user);
+        if (companies == null) {
+            throw new AbsentCompanyException(user);
+        }
+        for (Company company : companies) {
+            for (UserSocialAccount account : accounts) {
+                Set<CompanySocialPage> pages = company.getSocialPages(account.getType());
+                for (CompanySocialPage page : pages) {
+                    if (!gatewayFactory.getGateway(account.getType()).isAdminFor(account, page)) {
+                        throw new PageAccessLevelException(user, page);
+                    }
+                }
+            }
+        }
+        user.activate();
+    }
+
+    @Override
+    public boolean validateAdminCode(long id, String activateCode) {
+        User user = userRepository.find(id);
+        return activateCode.equals(codeGenerator.getActivateAdminCode(id, user.getEmail(), user.getPhone()));
+
+    }
+
+    @Override
+    public boolean validateAdminPassword(long id, String password) {
+        User user = userRepository.find(id);
+        return password.equals(passwordGenerator.getPassword(user.getPhone()));
     }
 }
