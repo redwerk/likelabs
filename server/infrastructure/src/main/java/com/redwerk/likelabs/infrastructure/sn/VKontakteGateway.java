@@ -46,6 +46,8 @@ public class VKontakteGateway implements SocialNetworkGateway {
     private static final String API_POST_COMPANY_MESSAGE_TEMPLATE = API_URL + "wall.post?owner_id={0}&message={1}&access_token={2}";
     
     private static final String API_IS_ADMIN_TEMPLATE = API_URL + "groups.getById?gid={0}&access_token={1}";
+    
+    private static final String VK_COMPANY_URL_PATTERN = "http://vk.com/{0}";
 
     @Autowired
     MessageTemplateService messageTemplateService;
@@ -73,6 +75,12 @@ public class VKontakteGateway implements SocialNetworkGateway {
         if (companyIdMatcher.find()) {
             JSONObject json = requestApiDataJson(MessageFormat.format(API_COMPANY_PAGE_TEMPLATE, companyIdMatcher.group(1)));
             if (json.containsKey("gid")) {
+                if (json.containsKey("screen_name")) {
+                    String screenName = json.getString("screen_name");
+                    if (StringUtils.isNotBlank(screenName)) {
+                        pageUrl = MessageFormat.format(VK_COMPANY_URL_PATTERN, screenName);
+                    }
+                }
                 return new CompanySocialPage(SocialNetworkType.VKONTAKTE, json.getString("gid"), pageUrl);
             }
         }

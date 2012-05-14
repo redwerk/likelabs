@@ -96,6 +96,14 @@ public class FacebookGateway implements SocialNetworkGateway {
         if (!json.containsKey("id")) {
             throw new WrongPageUrlException(pageUrl);
         }
+        
+        if (json.containsKey("link")) {
+            String link = json.getString("link");
+            if (StringUtils.isNotBlank(link)) {
+                pageUrl = link;
+            }
+        }
+        
         return new CompanySocialPage(SocialNetworkType.FACEBOOK, json.getString("id"), pageUrl);
     }
 
