@@ -14,8 +14,8 @@
 @implementation PhotoPickerController
 
 static const float PADDING = 20;
+static const int COUNTER_LENGTH = 1;
 NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
-//int seconds = 3;
 
 @synthesize label = _label;
 @synthesize img = _img;
@@ -47,7 +47,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
     [self initCapture];
     [self.view bringSubviewToFront:self.img];
     [self.view bringSubviewToFront:self.label];
-    self.seconds = 3;
+    self.seconds = COUNTER_LENGTH;
     _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
 }
 
@@ -87,7 +87,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return YES;
+    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {

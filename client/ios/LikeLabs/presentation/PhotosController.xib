@@ -99,7 +99,7 @@
 							<object class="IBUISegmentedControl" id="15180205">
 								<reference key="NSNextResponder" ref="255496976"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{95, 25}, {882, 44}}</string>
+								<string key="NSFrame">{{82, 25}, {909, 44}}</string>
 								<reference key="NSSuperview" ref="255496976"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="196865847"/>
@@ -179,6 +179,7 @@
 								<string key="NSFrame">{{436, 481}, {152, 153}}</string>
 								<reference key="NSSuperview" ref="196865847"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -237,6 +238,7 @@
 										<string key="NSFrame">{{0, 35}, {1024, 39}}</string>
 										<reference key="NSSuperview" ref="724655437"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="124382386"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -308,6 +310,7 @@
 						<string key="NSFrame">{{0, 94}, {1024, 654}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="724655437"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MAA</bytes>
@@ -373,14 +376,6 @@
 						<reference key="destination" ref="498828729"/>
 					</object>
 					<int key="connectionID">17</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">headerView</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="255496976"/>
-					</object>
-					<int key="connectionID">21</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -582,7 +577,6 @@
 						<string key="button">UIButton</string>
 						<string key="contentView">UIView</string>
 						<string key="getReadyLabel">UILabel</string>
-						<string key="headerView">UIView</string>
 						<string key="instructionalView">UIView</string>
 						<string key="navBar">UIView</string>
 						<string key="navigationBackground">UIImageView</string>
@@ -602,10 +596,6 @@
 						<object class="IBToOneOutletInfo" key="getReadyLabel">
 							<string key="name">getReadyLabel</string>
 							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="headerView">
-							<string key="name">headerView</string>
-							<string key="candidateClassName">UIView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="instructionalView">
 							<string key="name">instructionalView</string>
