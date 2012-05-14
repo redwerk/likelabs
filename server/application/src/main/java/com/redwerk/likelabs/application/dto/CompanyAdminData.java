@@ -1,23 +1,14 @@
 package com.redwerk.likelabs.application.dto;
 
-import com.redwerk.likelabs.domain.model.point.Address;
-
-public class PointData {
- 
-    private final Address address;
+public class CompanyAdminData {
     
     private final String phone;
-
+    
     private final String email;
 
-    public PointData(Address address, String phone, String email) {
-        this.address = address;
+    public CompanyAdminData(String phone, String email) {
         this.phone = phone;
         this.email = email;
-    }
-
-    public Address getAddress() {
-        return address;
     }
 
     public String getEmail() {
@@ -27,5 +18,5 @@ public class PointData {
     public String getPhone() {
         return phone;
     }
-
+    
 }

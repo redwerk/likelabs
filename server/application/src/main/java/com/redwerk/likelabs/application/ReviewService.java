@@ -1,23 +1,49 @@
 package com.redwerk.likelabs.application;
 
+import com.redwerk.likelabs.application.dto.*;
 import com.redwerk.likelabs.domain.model.review.Review;
+import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 
 import java.util.List;
 
 public interface ReviewService {
 
+    List<Review> getPublicReviews(long companyId, ReviewQuery query);
+    
+    List<Review> getCompanyReviews(long companyId, ReviewStatus status, ReviewQuery query);
+    
+    List<Review> getModeratorReviews(long moderatorId, ReviewStatus status, ReviewQuery query);
+    
+    List<Review> getUserReviews(long userId, List<Long> companyIds, ReviewQuery query);
+    
+/*
+    List<Review> getReviews(long authorId, long moderatorId, 
+            List<Long> companyIds, List<Long> pointIds,
+            DateFilter dates, ReviewType type, ReviewStatus status,
+            PagerFilter pager, SortingRule sortingRule);
+
+*/
+
     Review getReview(long reviewId);
+    
+    
+    Review createReview(long userId, long tabletId, String text,
+            List<PhotoData> photos, List<RecipientData> recipients);
 
-    List<Review> getReviewsForPoint(long pointId);
+    
+    void updateReview(long userId, long reviewId, String text);
 
-    List<Review> getReviewsByUser(long userId);
+    void updateStatus(long userId, long reviewId, ReviewStatus status,
+            boolean useAsPromo, boolean publishOnCompanyPage);
+    
+    void updateStatus(long userId, long reviewId, ReviewStatus status);
+    
+    void updatePromoStatus(long userId, long reviewId, boolean useAsPromo);
+    
+    void publishOnCompanyPage(long userId, long reviewId);
 
-    Review createReview(long companyId, long userId, String text, byte[] imageData);
-
-    void deleteReview(long pointId);
-
-    Review updateReview(long reviewId, long userId, String text, byte[] imageData);
-
-    Review moderateReview(long reviewId, long userId, boolean isApproved);
-
+    
+    void deleteReview(long reviewId);
+    
 }
+

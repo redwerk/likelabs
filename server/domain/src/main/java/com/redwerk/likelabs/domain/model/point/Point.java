@@ -24,13 +24,16 @@ public class Point {
 
     private String phone;
 
+    private String email;
+    
 
     // constructors
     
-    public Point(Company company,  Address address, String phone) {
+    public Point(Company company,  Address address, String phone, String email) {
         this.company = company;
         this.address = address;
         this.phone = phone;
+        this.email = email;
     }
 
     // accessors
@@ -51,12 +54,24 @@ public class Point {
         return phone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     // modifiers
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     // overrides
 
     @Override
@@ -85,6 +100,7 @@ public class Point {
                 .append("company", company)
                 .append("address", address)
                 .append("phone", phone)
+                .append("email", email)
                 .toString();
     }
 

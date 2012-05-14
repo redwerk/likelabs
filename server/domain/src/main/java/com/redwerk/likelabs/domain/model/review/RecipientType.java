@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.domain.model.review;
 
-public enum RecipientAddressType {
+public enum RecipientType {
 
     EMAIL, SMS
 

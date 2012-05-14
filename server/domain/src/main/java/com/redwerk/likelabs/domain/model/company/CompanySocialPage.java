@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.domain.model.company;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import javax.persistence.Column;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -12,14 +13,17 @@ public class CompanySocialPage implements Comparable<CompanySocialPage> {
 
     private SocialNetworkType type;
 
+    @Column(name = "page_id")
     private String pageId;
 
-
+    private String url;
+    
     // constructors
 
-    public CompanySocialPage(SocialNetworkType type, String pageId) {
+    public CompanySocialPage(SocialNetworkType type, String pageId, String url) {
         this.type = type;
         this.pageId = pageId;
+        this.url = url;
     }
 
     // accessors
@@ -32,6 +36,10 @@ public class CompanySocialPage implements Comparable<CompanySocialPage> {
         return pageId;
     }
 
+    public String getUrl() {
+        return url;
+    }
+    
     // implementation of Comparable<CompanySocialPage>
 
     @Override
@@ -50,6 +58,7 @@ public class CompanySocialPage implements Comparable<CompanySocialPage> {
         return new EqualsBuilder()
                 .append(type, other.type)
                 .append(pageId, other.pageId)
+                .append(url, other.url)
                 .isEquals();
     }
 

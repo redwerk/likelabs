@@ -73,7 +73,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
         if (companyIdMatcher.find()) {
             JSONObject json = requestApiDataJson(MessageFormat.format(API_COMPANY_PAGE_TEMPLATE, companyIdMatcher.group(1)));
             if (json.containsKey("gid")) {
-                return new CompanySocialPage(SocialNetworkType.VKONTAKTE, json.getString("gid"));
+                return new CompanySocialPage(SocialNetworkType.VKONTAKTE, json.getString("gid"), pageUrl);
             }
         }
         throw new WrongPageUrlException(pageUrl);

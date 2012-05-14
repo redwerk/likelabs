@@ -9,16 +9,16 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Recipient {
 
-    private RecipientAddressType type;
+    private RecipientType type;
     
     private String address;
 
-    public Recipient(RecipientAddressType type, String address) {
+    public Recipient(RecipientType type, String address) {
         this.type = type;
         this.address = address;
     }
 
-    public RecipientAddressType getType() {
+    public RecipientType getType() {
         return type;
     }
 

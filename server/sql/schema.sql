@@ -65,7 +65,7 @@ CREATE TABLE `company_social_page` (
      `company_id` BIGINT NOT NULL,
      `type` TINYINT NOT NULL,
      `page_id` VARCHAR(20) NOT NULL,
-     `name` VARCHAR(100) NOT NULL,
+     `url` VARCHAR(100) NOT NULL,
      CONSTRAINT `PK_company_social_page` PRIMARY KEY (`company_id`, `type`, `page_id`),
      CONSTRAINT `FK_company_social_page_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
@@ -83,6 +83,7 @@ DROP TABLE IF EXISTS `point`;
 CREATE TABLE `point` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `phone` VARCHAR(20) NOT NULL,
+     `email` VARCHAR(40) NOT NULL,
      `company_id` BIGINT NOT NULL,
      CONSTRAINT `PK_point` PRIMARY KEY (`id`),
      CONSTRAINT `FK_point_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE

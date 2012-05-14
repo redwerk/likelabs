@@ -14,6 +14,8 @@ import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import java.text.MessageFormat;
+
+import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,11 +94,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserEmail(long userId, String email) {
-        String activateLink = MessageFormat.format(LINK_ACTIVATE_EMAIL_TEMPLATE, messageTemplateService.getMessage(MSG_APP_DOMAIN),
-                                                               userId, email, activateEmailCodeGenerator.getActivateEmailCode(email, userId));
-        emailService.sendMessage(email, messageTemplateService.getMessage(MSG_EMAIL_FROM), messageTemplateService.getMessage(MSG_EMAIL_SUBJECT),
-                                      messageTemplateService.getMessage(MSG_EMAIL_BODY, activateLink));
+    public void updateEmail(long userId, String email) {
         doEmailUpdate(userRepository.find(userId), email);
     }
     
@@ -108,21 +106,30 @@ public class UserServiceImpl implements UserService {
             user.setEmail(null);
             return;
         }
+        Long userId = user.getId();
+        String activateLink = MessageFormat.format(LINK_ACTIVATE_EMAIL_TEMPLATE,
+                messageTemplateService.getMessage(MSG_APP_DOMAIN), userId, email,
+                activateEmailCodeGenerator.getActivateEmailCode(email, userId));
+        emailService.sendMessage(email, messageTemplateService.getMessage(MSG_EMAIL_FROM),
+                messageTemplateService.getMessage(MSG_EMAIL_SUBJECT),
+                messageTemplateService.getMessage(MSG_EMAIL_BODY, activateLink));
     }
 
     @Override
     @Transactional
-    public void attachToSN(long userId, SocialNetworkType snType, String accessCode) {
+    public UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode) {
         User user = userRepository.find(userId);
         if (user == null) {
             throw new IllegalStateException("User with id = " + userId + " is not found");
         }
-        user.addAccount(gatewayFactory.getGateway(snType).getUserAccount(accessCode));
+        UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccount(accessCode);
+        user.addAccount(account);
+        return account;
     }
 
     @Override
     @Transactional
-    public void detachFromSN(long userId, SocialNetworkType snType) {
+    public void detachAccount(long userId, SocialNetworkType snType) {
         if (snType == null) {
             throw new IllegalArgumentException("snType cannot be null");
         }
@@ -144,12 +151,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Photo> getUserPhotos(long userId, PhotoStatus photoStatus) {
+    public List<Photo> getPhotos(long userId, PhotoStatus photoStatus) {
         User user = userRepository.find(userId);
         if (user == null) {
             throw new IllegalStateException("User with id = " + userId + " is not found");
         }
         return photoRepository.findAll(user, photoStatus);
+    }
+
+    @Override
+    public void updatePhoto(long photoId, PhotoStatus photoStatus) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

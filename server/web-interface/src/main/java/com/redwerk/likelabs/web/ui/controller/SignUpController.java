@@ -180,7 +180,7 @@ public class SignUpController {
             return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
         }
         User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.attachToSN(user.getId(), SocialNetworkType.FACEBOOK, code);
+        userService.attachAccount(user.getId(), SocialNetworkType.FACEBOOK, code);
         return endRedirect(null);
     }
 
@@ -194,7 +194,7 @@ public class SignUpController {
             return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
         }
         User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.attachToSN(user.getId(), SocialNetworkType.VKONTAKTE, code);
+        userService.attachAccount(user.getId(), SocialNetworkType.VKONTAKTE, code);
         return endRedirect(null);
     }
 
@@ -204,10 +204,10 @@ public class SignUpController {
         User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
         List<UserSocialAccount> accounts = user.getAccounts();
         if (account.equals(PARAM_FACEBOOK_ACCOUNT)) {
-            userService.detachFromSN(user.getId(), SocialNetworkType.FACEBOOK);
+            userService.detachAccount(user.getId(), SocialNetworkType.FACEBOOK);
         }
         if (account.equals(PARAM_VKONTACTE_ACCOUNT)) {
-            userService.detachFromSN(user.getId(), SocialNetworkType.VKONTAKTE);
+            userService.detachAccount(user.getId(), SocialNetworkType.VKONTAKTE);
         }
         return endRedirect(null);
     }
@@ -219,7 +219,7 @@ public class SignUpController {
         }
         try {
             User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
-            userService.updateUserEmail(user.getId(), email);
+            userService.updateEmail(user.getId(), email);
         } catch (MailSendException e) {
             log.error(e,e);
             return endRedirect(PARAM_ERROR_NO_SEND_EMAIL);
