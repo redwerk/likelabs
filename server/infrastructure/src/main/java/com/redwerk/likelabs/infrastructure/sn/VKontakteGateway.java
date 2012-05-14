@@ -111,7 +111,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     @Override
     public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message) {
         try {
-            String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE,  page.getPageId(), URLEncoder.encode(message, "UTF-8"), publisher.getAccessToken());
+            String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE,  "-" + page.getPageId(), URLEncoder.encode(message, "UTF-8"), publisher.getAccessToken());
             String data = requestApiData(url);
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
             
