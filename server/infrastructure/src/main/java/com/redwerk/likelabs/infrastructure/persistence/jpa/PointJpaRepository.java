@@ -4,6 +4,7 @@ import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.point.Address;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.point.PointRepository;
+import com.redwerk.likelabs.domain.model.point.exception.PointNotFoundException;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -29,8 +30,12 @@ public class PointJpaRepository implements PointRepository {
 
 
     @Override
-    public Point find(Long id) {
-        return getEntityRepository().findById(id);
+    public Point get(long id) {
+        Point point = getEntityRepository().findById(id);
+        if (point == null) {
+            throw new PointNotFoundException(id);
+        }
+        return point;
     }
 
     @Override
@@ -42,10 +47,10 @@ public class PointJpaRepository implements PointRepository {
     }
 
     @Override
-    public List<Point> findAll(Company company) {
+    public List<Point> findAll(Company company, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters);
+        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters, offset, count);
     }
 
     @Override

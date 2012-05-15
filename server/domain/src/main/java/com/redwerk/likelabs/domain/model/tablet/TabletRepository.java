@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface TabletRepository {
 
-    Tablet find(Long id);
+    Tablet get(long id);
 
     Tablet find(String login);
 
-    List<Tablet> findAll(Point point);
+    List<Tablet> findAll(Point point, int offset, int count);
 
     void add(Tablet tablet);
 

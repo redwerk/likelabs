@@ -4,6 +4,7 @@ import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
+import com.redwerk.likelabs.domain.model.review.exception.ReviewNotFoundException;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -34,29 +35,33 @@ public class ReviewJpaRepository implements ReviewRepository {
     private EntityJpaRepository<Review, Long> entityRepository;
 
     @Override
-    public Review find(Long id) {
-        return getEntityRepository().findById(id);
+    public Review get(long id) {
+        Review review = getEntityRepository().findById(id);
+        if (review == null) {
+            throw new ReviewNotFoundException(id);
+        }
+        return review;
     }
 
     @Override
-    public List<Review> findAll(User author) {
+    public List<Review> findAll(User author, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("authorId", author.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_BY_AUTHOR, parameters);
+        return getEntityRepository().findEntityList(GET_REVIEWS_BY_AUTHOR, parameters, offset, count);
     }
 
     @Override
-    public List<Review> findAll(Point point) {
+    public List<Review> findAll(Point point, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_POINT, parameters);
+        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_POINT, parameters, offset, count);
     }
 
     @Override
-    public List<Review> findAll(Company company) {
+    public List<Review> findAll(Company company, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_COMPANY, parameters);
+        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_COMPANY, parameters, offset, count);
     }
 
     @Override

@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface CompanyRepository {
 
-    Company find(Long id);
+    Company get(long id);
     
     Company find(String name);
     
-    List<Company> findAll();
+    List<Company> findAll(int offset, int count);
 
-    List<Company> findAll(User admin);
+    List<Company> findAll(User admin, int offset, int count);
 
     void add(Company company);
 

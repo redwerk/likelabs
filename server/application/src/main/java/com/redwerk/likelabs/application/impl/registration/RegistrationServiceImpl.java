@@ -82,19 +82,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!confirmationCode.equals(codeGenerator.getConfirmEmailCode(email, userId))) {
             throw new NotConfirmMailException(userId, email, confirmationCode);
         }
-        User user = userRepository.find(userId);
+        User user = userRepository.get(userId);
         user.setEmail(email);
     }
 
     @Override
     @Transactional
     public void activateCompanyAdmin(long userId) {
-        User user = userRepository.find(userId);
+        User user = userRepository.get(userId);
         List<UserSocialAccount> accounts = user.getAccounts();
         if (accounts.size() == 0) {
             throw new AbsentSocialAccountException(user);
         }
-        List<Company> companies = companyRepository.findAll(user);
+        List<Company> companies = companyRepository.findAll(user, -1, -1);
         if (companies.size() == 0) {
             throw new AbsentCompanyException(user);
         }
@@ -113,14 +113,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public boolean validateAdminCode(long userId, String activateCode) {
-        User user = userRepository.find(userId);
+        User user = userRepository.get(userId);
         return activateCode.equals(codeGenerator.getActivateAdminCode(userId, user.getEmail(), user.getPhone()));
 
     }
 
     @Override
     public boolean validateAdminPassword(long userId, String password) {
-        User user = userRepository.find(userId);
+        User user = userRepository.get(userId);
         return password.equals(user.getPassword());
     }
 }

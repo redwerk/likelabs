@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface PhotoRepository {
 
-    Photo find(Long id);
+    Photo get(long id);
 
-    List<Photo> findAll(User user, PhotoStatus status);
+    List<Photo> findAll(User user, PhotoStatus status, int offset, int count);
 
     void add(Photo photo);
 

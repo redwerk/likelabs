@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface ReviewRepository {
 
-    Review find(Long id);
+    Review get(long id);
 
-    List<Review> findAll(User author);
+    List<Review> findAll(User author, int offset, int count);
     
-    List<Review> findAll(Point point);
+    List<Review> findAll(Point point, int offset, int count);
 
-    List<Review> findAll(Company company);
+    List<Review> findAll(Company company, int offset, int count);
 
     void add(Review review);
 

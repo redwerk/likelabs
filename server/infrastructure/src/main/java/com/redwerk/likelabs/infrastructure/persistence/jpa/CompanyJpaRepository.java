@@ -2,6 +2,7 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
+import com.redwerk.likelabs.domain.model.company.exception.CompanyNotFoundException;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -29,8 +30,12 @@ public class CompanyJpaRepository implements CompanyRepository {
 
 
     @Override
-    public Company find(Long id) {
-        return getEntityRepository().findById(id);
+    public Company get(long id) {
+        Company company = getEntityRepository().findById(id);
+        if (company == null) {
+            throw new CompanyNotFoundException(id);
+        }
+        return company;
     }
 
     @Override
@@ -41,15 +46,15 @@ public class CompanyJpaRepository implements CompanyRepository {
     }
 
     @Override
-    public List<Company> findAll() {
-        return getEntityRepository().findEntityList(GET_ALL_COMPANIES);
+    public List<Company> findAll(int offset, int count) {
+        return getEntityRepository().findEntityList(GET_ALL_COMPANIES, offset, count);
     }
 
     @Override
-    public List<Company> findAll(User admin) {
+    public List<Company> findAll(User admin, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("adminId", admin.getId());
-        return getEntityRepository().findEntityList(GET_COMPANIES_BY_ADMIN, parameters);
+        return getEntityRepository().findEntityList(GET_COMPANIES_BY_ADMIN, parameters, offset, count);
     }
 
     @Override

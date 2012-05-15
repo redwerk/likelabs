@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface PointRepository {
     
-    Point find(Long id);
+    Point get(long id);
 
     Point find(Company company, Address address);
 
-    List<Point> findAll(Company company);
+    List<Point> findAll(Company company, int offset, int count);
 
     void add(Point point);
 

@@ -4,11 +4,11 @@ import java.util.List;
 
 public interface UserRepository {
 
-    User find(Long id);
+    User get(long id);
 
     User find(String phone);
 
-    List<User> findAll();
+    List<User> findAll(int offset, int count);
 
     void add(User user);
 

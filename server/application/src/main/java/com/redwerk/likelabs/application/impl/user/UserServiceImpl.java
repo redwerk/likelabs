@@ -56,17 +56,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User getUser(long userId) {
-        User user = userRepository.find(userId);
-        if (user == null) {
-            throw new IllegalStateException("User with id = " + userId + " is not found");
-        }
+        User user = userRepository.get(userId);
         return getLoadedUser(user);
     }
 
     @Override
     @Transactional
     public User findUser(String phone) {
-        return getLoadedUser(userRepository.find(phone));
+        User user = userRepository.find(phone);
+        return (user != null) ? getLoadedUser(user) : null;
     }
     
     private User getLoadedUser(User user) {
@@ -80,10 +78,7 @@ public class UserServiceImpl implements UserService {
         if (userData == null) {
             throw new IllegalArgumentException("userData cannot be null");
         }
-        User user = userRepository.find(userId);
-        if (user == null) {
-            throw new IllegalStateException("User with id = " + userId + " is not found");
-        }
+        User user = userRepository.get(userId);
         user.setPhone(userData.getPhone());
         user.setPassword(userData.getPassword());
         user.setEnabledEvents(userData.getEnabledEvents());
@@ -93,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateEmail(long userId, String email) {
-        doEmailUpdate(userRepository.find(userId), email);
+        doEmailUpdate(userRepository.get(userId), email);
     }
     
     private void doEmailUpdate(User user, String email) {
@@ -116,10 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode) {
-        User user = userRepository.find(userId);
-        if (user == null) {
-            throw new IllegalStateException("User with id = " + userId + " is not found");
-        }
+        User user = userRepository.get(userId);
         UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccount(accessCode);
         user.addAccount(account);
         return account;
@@ -131,30 +123,21 @@ public class UserServiceImpl implements UserService {
         if (snType == null) {
             throw new IllegalArgumentException("snType cannot be null");
         }
-        User user = userRepository.find(userId);
-        if (user == null) {
-            throw new IllegalStateException("User with id = " + userId + " is not found");
-        }
+        User user = userRepository.get(userId);
         user.removeAccount(snType);
     }
 
     @Override
     @Transactional
     public void deleteUser(long userId) {
-        User user = userRepository.find(userId);
-        if (user == null) {
-            throw new IllegalStateException("User with id = " + userId + " is not found");
-        }
+        User user = userRepository.get(userId);
         userRepository.remove(user);
     }
 
     @Override
     public List<Photo> getPhotos(long userId, PhotoStatus photoStatus) {
-        User user = userRepository.find(userId);
-        if (user == null) {
-            throw new IllegalStateException("User with id = " + userId + " is not found");
-        }
-        return photoRepository.findAll(user, photoStatus);
+        User user = userRepository.get(userId);
+        return photoRepository.findAll(user, photoStatus, -1, -1);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
 import com.redwerk.likelabs.domain.model.photo.Photo;
+import com.redwerk.likelabs.domain.model.photo.PhotoNotFoundException;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.user.User;
@@ -25,16 +26,20 @@ public class PhotoJpaRepository implements PhotoRepository {
     private EntityJpaRepository<Photo, Long> entityRepository;
 
     @Override
-    public Photo find(Long id) {
-        return getEntityRepository().findById(id);
+    public Photo get(long id) {
+        Photo photo = getEntityRepository().findById(id);
+        if (photo == null) {
+            throw new PhotoNotFoundException(id);
+        }
+        return photo;
     }
 
     @Override
-    public List<Photo> findAll(User user, PhotoStatus status) {
+    public List<Photo> findAll(User user, PhotoStatus status, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("userId", user.getId());
         parameters.put("status", status);
-        return getEntityRepository().findEntityList(GET_PHOTOS_BY_USER_AND_STATUS, parameters);
+        return getEntityRepository().findEntityList(GET_PHOTOS_BY_USER_AND_STATUS, parameters, offset, count);
     }
 
     @Override

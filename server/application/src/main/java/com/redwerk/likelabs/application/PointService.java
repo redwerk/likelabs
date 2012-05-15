@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PointService {
 
-    List<Point> getPoints(long companyId, Pager filter);
+    List<Point> getPoints(long companyId, Pager pager);
     
     Point getPoint(long pointId);
     

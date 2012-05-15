@@ -6,9 +6,7 @@ import java.util.List;
 
 public interface EventRepository {
 
-    Event find(Long id);
-
-    List<Event> findAll(User user, EventStatus status);
+    List<Event> findAll(User user, EventStatus status, int offset, int count);
 
     void add(Event event);
 

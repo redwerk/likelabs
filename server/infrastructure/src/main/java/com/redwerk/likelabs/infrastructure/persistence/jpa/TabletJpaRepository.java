@@ -3,6 +3,7 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
+import com.redwerk.likelabs.domain.model.tablet.exception.TabletNotFoundException;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +27,12 @@ public class TabletJpaRepository implements TabletRepository {
     private EntityJpaRepository<Tablet, Long> entityRepository;
 
     @Override
-    public Tablet find(Long id) {
-        return getEntityRepository().findById(id);
+    public Tablet get(long id) {
+        Tablet tablet = getEntityRepository().findById(id);
+        if (tablet == null) {
+            throw new TabletNotFoundException(id);
+        }
+        return tablet;
     }
 
     @Override
@@ -38,10 +43,10 @@ public class TabletJpaRepository implements TabletRepository {
     }
 
     @Override
-    public List<Tablet> findAll(Point point) {
+    public List<Tablet> findAll(Point point, int offset, int count) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters);
+        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters, offset, count);
     }
 
     @Override

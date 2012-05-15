@@ -32,15 +32,25 @@ public class EntityJpaRepository<T, ID extends Serializable> {
         }
     }
 
-    public List<T> findEntityList(String queryString, Map<String, Object> parameters) {
-        return getQuery(queryString, parameters).getResultList();
+    public List<T> findEntityList(String queryString, Map<String, Object> parameters, int offset, int count) {
+        return getQueryWithInterval(getQuery(queryString, parameters), offset, count).getResultList();
+    }
+    
+    public List<T> findEntityList(String queryString, int offset, int count) {
+        return getQueryWithInterval(em.createQuery(queryString, entityClass), offset, count).getResultList();
     }
 
-    public List<T> findEntityList(String queryString) {
-        return em.createQuery(queryString, entityClass).getResultList();
+    private TypedQuery<T> getQueryWithInterval(TypedQuery<T> query, int offset, int count) {
+        if (offset >= 0) {
+            query.setFirstResult(offset);
+        }
+        if (count >= 0) {
+            query.setMaxResults(count);
+        }
+        return query;
     }
 
-     public void add(T entity) {
+    public void add(T entity) {
         em.persist(entity);
         em.flush();
         em.refresh(entity);

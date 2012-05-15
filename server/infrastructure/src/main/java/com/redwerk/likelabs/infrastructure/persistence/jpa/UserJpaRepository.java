@@ -2,6 +2,7 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
+import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +25,12 @@ public class UserJpaRepository implements UserRepository {
     private EntityJpaRepository<User, Long> entityRepository;
 
     @Override
-    public User find(Long id) {
-      return getEntityRepository().findById(id);
+    public User get(long id) {
+        User user = getEntityRepository().findById(id);
+        if (user == null) {
+            throw new UserNotFoundException(id);
+        }
+        return user;
     }
 
     @Override
@@ -36,8 +41,8 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        return getEntityRepository().findEntityList(GET_ALL_USERS);
+    public List<User> findAll(int offset, int count) {
+        return getEntityRepository().findEntityList(GET_ALL_USERS, offset, count);
     }
 
     @Override
