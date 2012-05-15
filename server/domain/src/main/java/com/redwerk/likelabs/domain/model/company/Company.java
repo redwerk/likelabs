@@ -169,7 +169,7 @@ public class Company {
 
     // sample reviews
 
-    public Set<Review> getSampleReview(){
+    public Set<Review> getSampleReviews(){
         return Collections.unmodifiableSet(sampleReviews);
     }
 

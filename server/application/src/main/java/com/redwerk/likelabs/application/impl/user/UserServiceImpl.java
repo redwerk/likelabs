@@ -36,9 +36,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    CodeGenerator codeGenerator;
-    
-    @Autowired
     private PhotoRepository photoRepository;
 
     @Autowired
@@ -48,10 +45,11 @@ public class UserServiceImpl implements UserService {
     private MessageTemplateService messageTemplateService;
 
     @Autowired
-    private PasswordGenerator passwordGenerator;
+    GatewayFactory gatewayFactory;
 
     @Autowired
-    GatewayFactory gatewayFactory;
+    CodeGenerator codeGenerator;
+
 
     @Override
     @Transactional

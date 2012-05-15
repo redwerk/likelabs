@@ -58,7 +58,6 @@ public class CompanySocialPage implements Comparable<CompanySocialPage> {
         return new EqualsBuilder()
                 .append(type, other.type)
                 .append(pageId, other.pageId)
-                .append(url, other.url)
                 .isEquals();
     }
 
@@ -75,6 +74,7 @@ public class CompanySocialPage implements Comparable<CompanySocialPage> {
         return new ToStringBuilder(this)
                 .append("type", type)
                 .append("pageId", pageId)
+                .append("url", url)
                 .toString();
     }
 

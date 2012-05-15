@@ -3,37 +3,61 @@ package com.redwerk.likelabs.application.impl;
 import com.redwerk.likelabs.application.TabletService;
 import com.redwerk.likelabs.application.dto.Pager;
 import com.redwerk.likelabs.application.dto.TabletData;
+import com.redwerk.likelabs.domain.model.point.Point;
+import com.redwerk.likelabs.domain.model.point.PointRepository;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
+import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class TabletServiceImpl implements TabletService {
 
+    @Autowired
+    private TabletRepository tabletRepository;
+
+    @Autowired
+    private PointRepository pointRepository;
+
+
     @Override
+    @Transactional(readOnly = true)
     public List<Tablet> getTablets(long pointId, Pager pager) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Point point = pointRepository.get(pointId);
+        return tabletRepository.findAll(point, pager.getOffset(), pager.getCount());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Tablet getTablet(long tabletId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return  tabletRepository.get(tabletId);
     }
 
     @Override
+    @Transactional
     public Tablet createTablet(long pointId, TabletData tabletData) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Point point = pointRepository.get(pointId);
+        Tablet tablet = new Tablet(point, tabletData.getLogin(), tabletData.getLoginPassword(), tabletData.getLogoutPassword());
+        tabletRepository.add(tablet);
+        return tablet;
     }
 
     @Override
+    @Transactional
     public void updateTablet(long tabletId, TabletData tabletData) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Tablet tablet = tabletRepository.get(tabletId);
+        tablet.setLoginPassword(tabletData.getLoginPassword());
+        tablet.setLogoutPassword(tabletData.getLogoutPassword());
     }
 
     @Override
+    @Transactional
     public void deleteTablet(long tabletId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Tablet tablet = tabletRepository.get(tabletId);
+        tabletRepository.remove(tablet);
     }
 
 }

@@ -30,7 +30,7 @@ public interface CompanyService {
     
     void createAdmin(long companyId, CompanyAdminData admin);
     
-    void removeAdmin(long companyId, String userId);
+    void removeAdmin(long companyId, long adminId);
     
     
     void deleteCompany(long companyId);
