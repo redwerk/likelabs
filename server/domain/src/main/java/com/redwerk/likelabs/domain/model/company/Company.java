@@ -43,16 +43,6 @@ public class Company {
     @Sort(type = SortType.NATURAL)
     private SortedSet<CompanySocialPage> pages = new TreeSet<CompanySocialPage>();
 
-    @ElementCollection
-    @CollectionTable(name="notification_intervals", joinColumns = @JoinColumn(name="company_id"))
-    @MapKeyColumn(name = "event_type")
-    private Map<EventType, NotificationIntervals> intervals =
-            new HashMap<EventType, NotificationIntervals>() {{
-                for (EventType et: EventType.values()) {
-                    put(et, new NotificationIntervals(DEFAULT_EMAIL_INTERVAL, DEFAULT_SMS_INTERVAL));
-                }
-            }};
-
     @ManyToMany
     @JoinTable(
             name = "company_admin",
@@ -157,20 +147,6 @@ public class Company {
         pages.clear();
     }
 
-    // notification intervals
-
-    public Set<NotificationIntervals> getAllNotificationIntervals() {
-        return Collections.unmodifiableSet(new HashSet<NotificationIntervals>(intervals.values()));
-    }
-
-    public NotificationIntervals getNotificationIntervals(EventType eventType) {
-        return intervals.get(eventType);
-    }
-
-    public void setNotificationIntervals(EventType eventType, NotificationIntervals newIntervals) {
-        intervals.put(eventType, newIntervals);
-    }
-
     // administrators
 
     public Set<User> getAdmins() {
@@ -240,7 +216,6 @@ public class Company {
                 .append("moderateReviews", moderateReviews)
                 .append("hasLogo", logo != null)
                 .append("pages", pages)
-                .append("intervals", intervals)
                 .append("admins", admins)
                 .append("sampleReviews", sampleReviews)
                 .toString();

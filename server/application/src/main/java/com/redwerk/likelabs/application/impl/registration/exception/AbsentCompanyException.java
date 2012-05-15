@@ -4,7 +4,7 @@ import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.user.User;
 
 
-public class AbsentCompanyException extends Exception {
+public class AbsentCompanyException extends RuntimeException {
     
     private final User user;
     

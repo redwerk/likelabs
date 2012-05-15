@@ -1,5 +1,9 @@
 package com.redwerk.likelabs.application.dto;
 
+import com.redwerk.likelabs.domain.model.event.EventType;
+
+import java.util.Set;
+
 public class UserData {
 
     private final String phone;
@@ -10,14 +14,15 @@ public class UserData {
 
     private final boolean publishInSN;
 
-    private final boolean notifyIfClient;
+    private final Set<EventType> enabledEvents;
 
-    public UserData(String phone, String password, String email, boolean publishInSN, boolean notifyIfClient) {
+    public UserData(String phone, String password, String email, boolean publishInSN, boolean notifyIfClient,
+                    Set<EventType> enabledEvents) {
         this.phone = phone;
         this.password = password;
         this.email = email;
         this.publishInSN = publishInSN;
-        this.notifyIfClient = notifyIfClient;
+        this.enabledEvents = enabledEvents;
     }
 
     public String getPhone() {
@@ -36,8 +41,8 @@ public class UserData {
         return publishInSN;
     }
 
-    public boolean isNotifyIfClient() {
-        return notifyIfClient;
+    public Set<EventType> getEnabledEvents() {
+        return enabledEvents;
     }
 
 }

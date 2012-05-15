@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setPhone(userData.getPhone());
         user.setPassword(userData.getPassword());
-        user.setNotifyIfClient(userData.isNotifyIfClient());
+        user.setEnabledEvents(userData.getEnabledEvents());
         user.setPublishInSN(userData.isPublishInSN());
         doEmailUpdate(user, userData.getEmail());
     }

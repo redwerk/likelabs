@@ -9,7 +9,6 @@ CREATE TABLE `user` (
      `email` VARCHAR(40),
      `system_admin` TINYINT(1) NOT NULL,
      `publish_in_sn` TINYINT(1) NOT NULL,
-     `notify_if_client` TINYINT(1) NOT NULL,
      `created_dt` DATETIME NOT NULL,
      `notified_dt` DATETIME,
      CONSTRAINT `PK_user` PRIMARY KEY (`id`),
@@ -25,6 +24,14 @@ CREATE TABLE `user_social_account` (
      `name` VARCHAR(100) NOT NULL,
      CONSTRAINT `PK_user_social_account` PRIMARY KEY (`user_id`, `type`),
      CONSTRAINT `FK_user_social_account_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `user_event_type`;
+CREATE TABLE `user_event_type` (
+     `user_id` BIGINT NOT NULL,
+     `event_type` TINYINT NOT NULL,
+     CONSTRAINT `PK_user_event_type` PRIMARY KEY (`user_id`, `event_type`),
+     CONSTRAINT `FK_user_event_type_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `photo`;
@@ -48,16 +55,6 @@ CREATE TABLE `company` (
      `logo` BLOB,
      CONSTRAINT `PK_company` PRIMARY KEY (`id`),
      CONSTRAINT `UC_company_name` UNIQUE(`name`)
-) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `notification_intervals`;
-CREATE TABLE `notification_intervals` (
-     `company_id` BIGINT NOT NULL,
-     `event_type` TINYINT NOT NULL,
-     `email_interval` INT NOT NULL,
-     `sms_interval` INT NOT NULL,
-     CONSTRAINT `PK_notification_interval` PRIMARY KEY (`company_id`, `event_type`),
-     CONSTRAINT `FK_notification_interval_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `company_social_page`;
@@ -165,11 +162,14 @@ CREATE TABLE `event` (
      CONSTRAINT `FK_event_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `system_parameter`;
-CREATE TABLE `system_parameter` (
+DROP TABLE IF EXISTS `notification_interval`;
+CREATE TABLE `notification_interval` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
-     `type` INT NOT NULL,
-     `value` VARCHAR(100) NOT NULL,
-     CONSTRAINT `PK_system_parameter` PRIMARY KEY (`id`)
+     `event_type` TINYINT NOT NULL,
+     `warning_type` TINYINT NOT NULL,
+     `email_interval` INT NOT NULL,
+     `sms_interval` INT NOT NULL,
+     CONSTRAINT `PK_notification_interval` PRIMARY KEY (`id`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
 

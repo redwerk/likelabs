@@ -88,8 +88,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
-    public void activateCompanyAdmin(long userId)
-            throws AbsentSocialAccountException, AbsentCompanyException, PageAccessLevelException {
+    public void activateCompanyAdmin(long userId) {
         User user = userRepository.find(userId);
         List<UserSocialAccount> accounts = user.getAccounts();
         if (accounts.size() == 0) {

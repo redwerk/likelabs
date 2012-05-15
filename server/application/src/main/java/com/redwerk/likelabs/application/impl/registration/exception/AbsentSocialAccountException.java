@@ -3,7 +3,7 @@ package com.redwerk.likelabs.application.impl.registration.exception;
 import com.redwerk.likelabs.domain.model.user.User;
 
 
-public class AbsentSocialAccountException extends Exception {
+public class AbsentSocialAccountException extends RuntimeException {
 
     private final User user;
 

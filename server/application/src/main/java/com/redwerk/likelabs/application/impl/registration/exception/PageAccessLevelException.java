@@ -4,7 +4,7 @@ import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.User;
 
 
-public class PageAccessLevelException extends Exception {
+public class PageAccessLevelException extends RuntimeException {
 
     private final User user;
     

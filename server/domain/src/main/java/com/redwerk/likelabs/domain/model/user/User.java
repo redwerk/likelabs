@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountException;
 import org.apache.commons.lang.StringUtils;
@@ -38,9 +39,6 @@ public class User {
     @Column(name = "publish_in_sn")
     private boolean publishInSN = true;
 
-    @Column(name = "notify_if_client")
-    private boolean notifyIfClient = true;
-
     @Column(name = "created_dt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDT = new Date();
@@ -54,6 +52,10 @@ public class User {
     @Sort(type = SortType.NATURAL)
     private SortedSet<UserSocialAccount> accounts = new TreeSet<UserSocialAccount>();
 
+    @ElementCollection
+    @CollectionTable(name="user_event_type", joinColumns = @JoinColumn(name="user_id"))
+    @Column(name = "event_type")
+    private Set<EventType> enabledEvents;
 
     // constructors
 
@@ -61,6 +63,10 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.active = active;
+        this.enabledEvents =  new HashSet<EventType>();
+        for (EventType et: EventType.values()) {
+            enabledEvents.add(et);
+        }
     }
 
     // accessors
@@ -101,10 +107,6 @@ public class User {
         return publishInSN;
     }
 
-    public boolean isNotifyIfClient() {
-        return notifyIfClient;
-    }
-
     public Date getNotifiedDT() {
         return notifiedDT;
     }
@@ -113,6 +115,10 @@ public class User {
         return createdDT;
     }
 
+    public Set<EventType> getEnabledEvents() {
+        return Collections.unmodifiableSet(enabledEvents);
+    }
+    
     // modifiers
 
     public void activate() {
@@ -152,8 +158,11 @@ public class User {
         this.publishInSN = publishInSN;
     }
 
-    public void setNotifyIfClient(boolean notifyIfClient) {
-        this.notifyIfClient = notifyIfClient;
+    public void setEnabledEvents(Set<EventType> enabledEvents) {
+        this.enabledEvents.clear();
+        for (EventType et: enabledEvents) {
+            this.enabledEvents.add(et);
+        }
     }
 
     // social accounts
@@ -219,10 +228,10 @@ public class User {
                 .append("email", email)
                 .append("systemAdmin", systemAdmin)
                 .append("publishInSN", publishInSN)
-                .append("notifyIfClient", notifyIfClient)
                 .append("createdDT", createdDT)
                 .append("notifiedDT", notifiedDT)
                 .append("accounts", accounts)
+                .append("enabledEvents", enabledEvents)
                 .toString();
     }
 

@@ -16,6 +16,6 @@ public interface RegistrationService {
 
     boolean validateAdminPassword(long userId, String password);
 
-    void activateCompanyAdmin(long userId) throws AbsentSocialAccountException, AbsentCompanyException, PageAccessLevelException;
+    void activateCompanyAdmin(long userId);
 
 }
