@@ -1,9 +1,9 @@
 #import <UIKit/UIKit.h>
 #import "Review.h"
+#import "ContainerController.h"
 
-@interface RootController : UIViewController
+@interface RootController : UIViewController <ContainerController>
 
 @property (nonatomic, retain) Review *review;
-- (void) switchToController:(NSString *) controllerName;
 
 @end

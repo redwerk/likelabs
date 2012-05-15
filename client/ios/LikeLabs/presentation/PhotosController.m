@@ -13,7 +13,7 @@ static NSString *const NAV_DIVIDER_SN_IMG = @"navigation_divider_sn.png";
 static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 static NSString *const GET_READY_MSG = @"Get Ready!";
 static NSString *const PHOTO_N_OF_5_MSG = @"Picture %d of 5";
-static int const TIMER_DELAY = 0.3;
+static float const TIMER_DELAY = 0.3;
 
 @interface PhotosController()
 @property (retain,nonatomic) RootController* rootController;
@@ -48,6 +48,9 @@ static int const TIMER_DELAY = 0.3;
 @synthesize photoNumber = _photoNumber;
 @synthesize customSegmentedControl = _customSegmentedControl;
 
+
+#pragma mark - Initialization
+
 -(id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
@@ -55,16 +58,6 @@ static int const TIMER_DELAY = 0.3;
     }
     return self;
 }
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-#pragma mark - View lifecycle
 
 -(void)viewDidLayoutSubviews {
     self.previewLayer.frame = self.contentView.bounds;
@@ -80,9 +73,9 @@ static int const TIMER_DELAY = 0.3;
     self.navBar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:NAVBAR_BACKGROUND_IMG]];
     self.navigationBackground.image = [[UIImage imageNamed:NAVIGATION_BACKGROUND_IMG] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     [self.navigationBackground setContentMode:UIViewContentModeScaleToFill];       
-
+    
     self.segmentedControl.alpha = 0;
-    _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:[self getWidths] dividers:[self getDividersDictionary] dividerWidth:22 delegate:self];
+    self.customSegmentedControl = [[[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:[self getWidths] dividers:[self getDividersDictionary] dividerWidth:22 delegate:self] autorelease];
     [self.customSegmentedControl setAutoresizingMask:UIViewAutoresizingFlexibleWidth] ;
     self.customSegmentedControl.selectedSegmentIndex = 1;
     self.customSegmentedControl.userInteractionEnabled = NO;
@@ -96,6 +89,47 @@ static int const TIMER_DELAY = 0.3;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveImageToPhotoAlbum) name:kImageCapturedSuccessfully object:nil];
 }
 
+#pragma mark - Memory management
+
+- (void)viewDidUnload
+{
+    [self setNavBar:nil];
+    [self setContentView:nil];
+    [self setRootController:nil];
+    [self setNavigationBackground:nil];
+    [self setSegmentedControl:nil];
+    [self setInstructionalView:nil];
+    [self setButton:nil];
+    [self setCaptureSession:nil];
+    [self setPreviewLayer:nil];
+    [self setWhenYouAreReadyLabel:nil];
+    [self setPhotosWillBeTakenLabel:nil];
+    [self setGetReadyLabel:nil];
+    [self setCustomSegmentedControl:nil];
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+    [_navBar release];
+    [_contentView release];
+    [_rootController release];
+    [_navigationBackground release];
+    [_segmentedControl release];
+    [_instructionalView release];
+    [_button release];
+    [_captureSession release];
+    [_previewLayer release];
+    [_whenYouAreReadyLabel release];
+    [_photosWillBeTakenLabel release];
+    [_getReadyLabel release];
+    [_customSegmentedControl release];
+    [super dealloc];
+}
+
+#pragma mark - CustomSegmentedControl population
+
 - (NSMutableArray*) getWidths {
     return [[[NSMutableArray alloc] initWithObjects:
              [NSNumber numberWithFloat:174],
@@ -106,7 +140,6 @@ static int const TIMER_DELAY = 0.3;
              [NSNumber numberWithFloat:0],
              [NSNumber numberWithFloat:168], nil] autorelease];
 }
-
 
 - (NSMutableArray*) getButtons {
     NSMutableArray* buttons = [[[NSMutableArray alloc] initWithCapacity:5] autorelease];
@@ -139,8 +172,6 @@ static int const TIMER_DELAY = 0.3;
         
         [buttons addObject:btn];
     }
-    [imgSelected release];
-    [imgDisabled release];
     
     UIButton* lastBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage* lastImg = [[UIImage imageNamed:@"btn_last_bg_disabled.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
@@ -180,30 +211,12 @@ static int const TIMER_DELAY = 0.3;
     return dividers;
 }
 
-- (void)viewDidUnload
-{
-    [self setNavBar:nil];
-    [self setContentView:nil];
-    [self setRootController:nil];
-    [self setNavigationBackground:nil];
-    [self setSegmentedControl:nil];
-    [self setInstructionalView:nil];
-    [self setButton:nil];
-    [self setCaptureSession:nil];
-    [self setPreviewLayer:nil];
-    [self setWhenYouAreReadyLabel:nil];
-    [self setPhotosWillBeTakenLabel:nil];
-    [self setGetReadyLabel:nil];
-    [self setCustomSegmentedControl:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
+#pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+	return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -214,22 +227,7 @@ static int const TIMER_DELAY = 0.3;
     self.previewLayer.frame = CGRectMake(0, 0, viewSize.height + viewOffset , viewSize.width - viewOffset);
 }
 
-- (void)dealloc {
-    [_navBar release];
-    [_contentView release];
-    [_rootController release];
-    [_navigationBackground release];
-    [_segmentedControl release];
-    [_instructionalView release];
-    [_button release];
-    [_captureSession release];
-    [_previewLayer release];
-    [_whenYouAreReadyLabel release];
-    [_photosWillBeTakenLabel release];
-    [_getReadyLabel release];
-    [_customSegmentedControl release];
-    [super dealloc];
-}
+#pragma mark - Photo taking process
 
 - (void)selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl *)sender {
     if (oldSegmentIndex > 0) {
@@ -283,7 +281,7 @@ static int const TIMER_DELAY = 0.3;
     if (self.photoNumber <= 5) {
         [self getReady];
     } else {
-        [self.rootController switchToController:@"PhotoSelectionController"];
+        [self.rootController switchToController:@"RootPhotoController"];
     }
 }
 
@@ -294,10 +292,6 @@ static int const TIMER_DELAY = 0.3;
         [alert show];
         [alert release];
     }
-}
-
-- (IBAction)goHome:(id)sender {
-    [self.rootController switchToController:@"SplashScreenController"];
 }
 
 - (void)initCapture {
@@ -323,6 +317,12 @@ static int const TIMER_DELAY = 0.3;
 	[self.contentView.layer addSublayer: self.previewLayer];
     
 	[self.captureSession startRunning];	
+}
+
+#pragma mark - Actions
+
+- (IBAction)goHome:(id)sender {
+    [self.rootController switchToController:@"SplashScreenController"];
 }
 
 @end

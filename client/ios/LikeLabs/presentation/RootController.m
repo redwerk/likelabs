@@ -11,24 +11,7 @@
 @synthesize review = _review;
 @synthesize currentViewController = _currentViewController;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-#pragma mark - View lifecycle
+#pragma mark - Initialization
 
 - (void)viewDidLoad
 {
@@ -36,12 +19,15 @@
     // Do any additional setup after loading the view from its nib.
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    
     UIViewController *vc = [self viewControllerByName:@"LoginController"];
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
     self.currentViewController = vc;
 }
+
+#pragma mark - Memory management
 
 - (void)viewDidUnload
 {
@@ -56,10 +42,12 @@
     [super dealloc];
 }
 
+#pragma mark - Rotation
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+	return YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -73,6 +61,8 @@
         [self.currentViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     }
 }
+
+#pragma mark - ContainerController implementation
 
 - (UIViewController *)viewControllerByName:(NSString *)controllerName {
     return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];

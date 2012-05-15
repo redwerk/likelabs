@@ -1,15 +1,18 @@
-#import "PhotoSharingController.h"
+#import "RootPhotoController.h"
 
-@interface PhotoSharingController ()
-@property (nonatomic, retain) RootController* rootController;
+@interface RootPhotoController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
+@property (nonatomic, retain) UIViewController* currentViewController;
 @end
 
-@implementation PhotoSharingController
+@implementation RootPhotoController
 @synthesize segmentedControl = _segmentedControl;
 @synthesize headerView = _headerView;
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
+@synthesize currentViewController = _currentViewController;
+
+#pragma mark - Initialization
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -24,12 +27,41 @@
     // Do any additional setup after loading the view from its nib.
     
     self.segmentedControl.alpha = 0;
-    self.customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
+    _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
     [self.headerView addSubview:self.customSegmentedControl];
+    
+    UIViewController *vc = [self viewControllerByName:@"PhotoSelectionController"];
+    [self addChildViewController:vc];
+    vc.view.frame = self.view.bounds;
+    [self.view addSubview:vc.view];
+    self.currentViewController = vc;
+    
+    [self.view bringSubviewToFront:self.headerView];
 }
 
+#pragma mark - Memory management
+
+- (void)viewDidUnload
+{
+    [self setSegmentedControl:nil];
+    [self setHeaderView:nil];
+    [self setCustomSegmentedControl:nil];
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+    [_customSegmentedControl release];
+    [_segmentedControl release];
+    [_headerView release];
+    [super dealloc];
+}
+
+#pragma mark - CustomSegmentedControl population
+
 - (NSMutableArray*) getButtons {
-    NSMutableArray* bt2 = [[NSMutableArray alloc] initWithCapacity:4];
+    NSMutableArray* bt2 = [[[NSMutableArray alloc] initWithCapacity:4] autorelease];
     UIButton* selectPhotoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage* firstImgSelected = [[UIImage imageNamed:@"btn_first_bg_selected.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
     UIImage* firstImgNormal = [[UIImage imageNamed:@"btn_first_bg_normal.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
@@ -41,9 +73,6 @@
     NSString* selectTitle = @"  Select Photo to Share";
     [selectPhotoBtn setTitle:selectTitle forState:UIControlStateNormal];
     [selectPhotoBtn setTitle:selectTitle forState:UIControlStateSelected];
-    UIColor* whiteColor = [UIColor whiteColor];
-    [selectPhotoBtn setTitleColor:whiteColor forState:UIControlStateNormal];
-    [selectPhotoBtn setTitleColor:whiteColor forState:UIControlStateSelected];
     [bt2 addObject:selectPhotoBtn];
     
     
@@ -62,9 +91,6 @@
     [writeMsgBtn setTitle:writeMsgTitle forState:UIControlStateNormal];
     [writeMsgBtn setTitle:writeMsgTitle forState:UIControlStateSelected];
     [writeMsgBtn setTitle:writeMsgTitle forState:UIControlStateDisabled];
-    [writeMsgBtn setTitleColor:whiteColor forState:UIControlStateNormal];
-    [writeMsgBtn setTitleColor:whiteColor forState:UIControlStateSelected];
-    [writeMsgBtn setTitleColor:whiteColor forState:UIControlStateDisabled];
     [bt2 addObject:writeMsgBtn];
     
     
@@ -80,9 +106,6 @@
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateNormal];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateDisabled];
-    [enterInfoBtn setTitleColor:whiteColor forState:UIControlStateNormal];
-    [enterInfoBtn setTitleColor:whiteColor forState:UIControlStateSelected];
-    [enterInfoBtn setTitleColor:whiteColor forState:UIControlStateDisabled];
     [bt2 addObject:enterInfoBtn];
     
     UIButton* finishedBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -92,56 +115,106 @@
     [finishedBtn setBackgroundImage:finishedSelectedImg forState:UIControlStateSelected];
     [finishedBtn setBackgroundImage:finishedNormalImg forState:UIControlStateNormal];
     [finishedBtn setBackgroundImage:finishedDisabledImg forState:UIControlStateDisabled];
-    NSString* finishedTitle = @"  Finished";
+    NSString* finishedTitle = @"Finished";
     [finishedBtn setTitle:finishedTitle forState:UIControlStateNormal];
     [finishedBtn setTitle:finishedTitle forState:UIControlStateSelected];
     [finishedBtn setTitle:finishedTitle forState:UIControlStateDisabled];
-    [finishedBtn setTitleColor:whiteColor forState:UIControlStateNormal];
-    [finishedBtn setTitleColor:whiteColor forState:UIControlStateSelected];
-    [finishedBtn setTitleColor:whiteColor forState:UIControlStateDisabled];
     [bt2 addObject:finishedBtn];    
+    
+    UIColor* whiteColor = [UIColor whiteColor];
+    for (NSUInteger i=0; i<bt2.count; i++) {
+        UIButton* btn = [bt2 objectAtIndex:i];
+        btn.enabled = btn.selected = (i==0);
+        
+        [btn setTitleColor:whiteColor forState:UIControlStateNormal];
+        [btn setTitleColor:whiteColor forState:UIControlStateSelected];
+        [btn setTitleColor:whiteColor forState:UIControlStateDisabled];
+    }
     return bt2;
 }
 
 - (NSMutableDictionary*) getDividers {
     NSMutableDictionary* div2 = [[[NSMutableDictionary alloc] initWithCapacity:3] autorelease];
     
-    NSMutableDictionary* ln = [[NSMutableDictionary alloc] initWithCapacity:2];
+    NSMutableDictionary* ln = [[NSMutableDictionary alloc] initWithCapacity:3];
     [ln setObject:[UIImage imageNamed:@"divider_nn.png"] forKey:[NSNumber numberWithUnsignedInt:UIControlStateNormal]];
     [ln setObject:[UIImage imageNamed:@"divider_ns.png"] forKey:[NSNumber numberWithUnsignedInt:UIControlStateSelected]];
+    [ln setObject:[UIImage imageNamed:@"divider_nd.png"] forKey:[NSNumber numberWithUnsignedInt:UIControlStateDisabled]];
     [div2 setObject:ln forKey:[NSNumber numberWithUnsignedInt:UIControlStateNormal]];
+    [ln release];
     
-    NSMutableDictionary* ls = [[NSMutableDictionary alloc] initWithCapacity:1];
+    NSMutableDictionary* ls = [[NSMutableDictionary alloc] initWithCapacity:2];
     [ls setObject:[UIImage imageNamed:@"divider_sd.png"] forKey:[NSNumber numberWithUnsignedInt:UIControlStateDisabled]];
+    [ls setObject:[UIImage imageNamed:@"divider_sn.png"] forKey:[NSNumber numberWithUnsignedInt:UIControlStateNormal]];
     [div2 setObject:ls forKey:[NSNumber numberWithUnsignedInt:UIControlStateSelected]];
+    [ls release];
     
     NSMutableDictionary* ld = [[NSMutableDictionary alloc] initWithCapacity:1];
     [ld setObject:[UIImage imageNamed:@"divider_dd.png"] forKey:[NSNumber numberWithUnsignedInt:UIControlStateDisabled]];    
     [div2 setObject:ld forKey:[NSNumber numberWithUnsignedInt:UIControlStateDisabled]];
+    [ld release];
     return div2;
 }
 
-- (void)viewDidUnload
-{
-    [self setSegmentedControl:nil];
-    [self setHeaderView:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
+#pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+    return YES;
 }
+
+#pragma mark - ContainerController implementation
+
+- (UIViewController *)viewControllerByName:(NSString *)controllerName {
+    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
+}
+
+- (void)switchToController:(NSString *)controllerName {
+    UIViewController *vc = [self viewControllerByName:controllerName];
+    [self addChildViewController:vc];
+    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
+        [self.currentViewController.view removeFromSuperview];
+        vc.view.frame = self.view.bounds;
+        [self.view addSubview:vc.view];
+        [self.view bringSubviewToFront:self.headerView];
+    } completion:^(BOOL finished) {
+        [vc didMoveToParentViewController:self];
+        [self.currentViewController removeFromParentViewController];
+        self.currentViewController = vc;
+    }];
+}
+
+#pragma mark - CustomSegmentedControlDelegate implementation
+
+- (void)selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl *)sender {
+    UIButton* selectedBtn = [self.customSegmentedControl.buttons objectAtIndex:newSegmentIndex];
+    selectedBtn.enabled = YES;
+    
+    switch (newSegmentIndex) {
+        case 0:
+            [self switchToController:@"PhotoSelectionController"];
+            break;
+        case 1:
+            [self switchToController:@"PhotoMessageController"];
+            break;
+        case 2:
+            [self switchToController:@"PhotoInformationController"];
+            break;
+        case 3:
+            [self switchToController:@"PhotoFinishedController"];
+        default:
+            break;
+    }
+}
+
+#pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
     [self.rootController switchToController:@"SplashScreenController"];
 }
 
-- (void)dealloc {
-    [_segmentedControl release];
-    [_headerView release];
-    [super dealloc];
+- (void)step {
+    self.customSegmentedControl.selectedSegmentIndex++;
 }
+
 @end

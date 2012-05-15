@@ -71,14 +71,15 @@
 		FF853CA9156170F2003F0374 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = FF853CA6156170F1003F0374 /* 2.png */; };
 		FF853CAA156170F2003F0374 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = FF853CA7156170F1003F0374 /* 3.png */; };
 		FF853CAC1561722C003F0374 /* btn_bg_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = FF853CAB1561722B003F0374 /* btn_bg_highlighted.png */; };
-		FF853CB0156191E0003F0374 /* PhotoSharingController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF853CAE156191DF003F0374 /* PhotoSharingController.m */; };
-		FF853CB1156191E0003F0374 /* PhotoSharingController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF853CAF156191E0003F0374 /* PhotoSharingController.xib */; };
+		FF853CB0156191E0003F0374 /* RootPhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF853CAE156191DF003F0374 /* RootPhotoController.m */; };
+		FF853CB1156191E0003F0374 /* RootPhotoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF853CAF156191E0003F0374 /* RootPhotoController.xib */; };
 		FF87485D1559348A0010D272 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87485C1559348A0010D272 /* AVFoundation.framework */; };
 		FF87486B155947B90010D272 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486A155947B90010D272 /* CoreVideo.framework */; };
 		FF87486D155947C20010D272 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486C155947C20010D272 /* CoreMedia.framework */; };
 		FF87486F155947DB0010D272 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486E155947DB0010D272 /* AudioToolbox.framework */; };
 		FF8748B2155992FF0010D272 /* instruction_banner_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B1155992FF0010D272 /* instruction_banner_bg.png */; };
 		FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B3155996B60010D272 /* take_photo_btn.png */; };
+		FF8B67661562A92500BC6BEA /* divider_nd.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8B67651562A92500BC6BEA /* divider_nd.png */; };
 		FF9DF1561557DEB10002A658 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9DF1521557DEB10002A658 /* libTestFlight.a */; };
 		FF9DF1571557DEB10002A658 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1531557DEB10002A658 /* README.txt */; };
 		FF9DF1581557DEB10002A658 /* release_notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1541557DEB10002A658 /* release_notes.txt */; };
@@ -182,15 +183,18 @@
 		FF853CA6156170F1003F0374 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		FF853CA7156170F1003F0374 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
 		FF853CAB1561722B003F0374 /* btn_bg_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_bg_highlighted.png; sourceTree = "<group>"; };
-		FF853CAD156191DF003F0374 /* PhotoSharingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSharingController.h; path = LikeLabs/presentation/PhotoSharingController.h; sourceTree = "<group>"; };
-		FF853CAE156191DF003F0374 /* PhotoSharingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSharingController.m; path = LikeLabs/presentation/PhotoSharingController.m; sourceTree = "<group>"; };
-		FF853CAF156191E0003F0374 /* PhotoSharingController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoSharingController.xib; path = LikeLabs/presentation/PhotoSharingController.xib; sourceTree = "<group>"; };
+		FF853CAD156191DF003F0374 /* RootPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootPhotoController.h; path = LikeLabs/presentation/RootPhotoController.h; sourceTree = "<group>"; };
+		FF853CAE156191DF003F0374 /* RootPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootPhotoController.m; path = LikeLabs/presentation/RootPhotoController.m; sourceTree = "<group>"; };
+		FF853CAF156191E0003F0374 /* RootPhotoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootPhotoController.xib; path = LikeLabs/presentation/RootPhotoController.xib; sourceTree = "<group>"; };
+		FF853CB21561A704003F0374 /* LikeLabs.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = LikeLabs.entitlements; sourceTree = "<group>"; };
 		FF87485C1559348A0010D272 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FF87486A155947B90010D272 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		FF87486C155947C20010D272 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		FF87486E155947DB0010D272 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FF8748B1155992FF0010D272 /* instruction_banner_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instruction_banner_bg.png; path = LikeLabs/resources/instruction_banner_bg.png; sourceTree = "<group>"; };
 		FF8748B3155996B60010D272 /* take_photo_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = take_photo_btn.png; path = LikeLabs/resources/take_photo_btn.png; sourceTree = "<group>"; };
+		FF8B676415628E2000BC6BEA /* ContainerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContainerController.h; path = LikeLabs/presentation/ContainerController.h; sourceTree = "<group>"; };
+		FF8B67651562A92500BC6BEA /* divider_nd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divider_nd.png; sourceTree = "<group>"; };
 		FF9DF1521557DEB10002A658 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		FF9DF1531557DEB10002A658 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		FF9DF1541557DEB10002A658 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
@@ -275,6 +279,7 @@
 		0AAB557D153F564E00649AB4 /* LikeLabs */ = {
 			isa = PBXGroup;
 			children = (
+				FF853CB21561A704003F0374 /* LikeLabs.entitlements */,
 				FFC05FD7155D3F510057A670 /* Resources */,
 				0AAB557E153F564E00649AB4 /* Supporting Files */,
 				0AAB5586153F564E00649AB4 /* AppDelegate.h */,
@@ -372,9 +377,10 @@
 				FFC60FE9155C3CEB00F4368A /* PhotoMessageController.h */,
 				FFC60FEA155C3CEB00F4368A /* PhotoMessageController.m */,
 				FFC60FEB155C3CEB00F4368A /* PhotoMessageController.xib */,
-				FF853CAD156191DF003F0374 /* PhotoSharingController.h */,
-				FF853CAE156191DF003F0374 /* PhotoSharingController.m */,
-				FF853CAF156191E0003F0374 /* PhotoSharingController.xib */,
+				FF853CAD156191DF003F0374 /* RootPhotoController.h */,
+				FF853CAE156191DF003F0374 /* RootPhotoController.m */,
+				FF853CAF156191E0003F0374 /* RootPhotoController.xib */,
+				FF8B676415628E2000BC6BEA /* ContainerController.h */,
 			);
 			name = Presentation;
 			path = ..;
@@ -398,6 +404,7 @@
 				FF853C8D15616C61003F0374 /* divider_dd.png */,
 				FF853C8E15616C61003F0374 /* divider_dh.png */,
 				FF853C8F15616C61003F0374 /* divider_hd.png */,
+				FF8B67651562A92500BC6BEA /* divider_nd.png */,
 				FF853C9015616C61003F0374 /* divider_nn.png */,
 				FF853C9115616C61003F0374 /* divider_ns.png */,
 				FF853C9215616C61003F0374 /* divider_sd.png */,
@@ -554,7 +561,8 @@
 				FF853CA9156170F2003F0374 /* 2.png in Resources */,
 				FF853CAA156170F2003F0374 /* 3.png in Resources */,
 				FF853CAC1561722C003F0374 /* btn_bg_highlighted.png in Resources */,
-				FF853CB1156191E0003F0374 /* PhotoSharingController.xib in Resources */,
+				FF853CB1156191E0003F0374 /* RootPhotoController.xib in Resources */,
+				FF8B67661562A92500BC6BEA /* divider_nd.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,7 +593,7 @@
 				FFC60FE0155BCC5E00F4368A /* PhotoSelectionController.m in Sources */,
 				FFC60FEC155C3CEB00F4368A /* PhotoMessageController.m in Sources */,
 				FF853C82156164C5003F0374 /* CustomizableSegmentedControl.m in Sources */,
-				FF853CB0156191E0003F0374 /* PhotoSharingController.m in Sources */,
+				FF853CB0156191E0003F0374 /* RootPhotoController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

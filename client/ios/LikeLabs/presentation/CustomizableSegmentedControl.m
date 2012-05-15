@@ -13,6 +13,8 @@
 @synthesize dividerWidth = _dividerWidth;
 @synthesize defaultButtonWidth = _defaultButtonWidth;
 
+#pragma mark - Initializatioin
+
 - (id)initWithFrame:(CGRect)frame buttons:(NSMutableArray *)buttons widths:(NSMutableArray *)widths dividers:(NSMutableDictionary *)dividers dividerWidth:(CGFloat)dividerWidth delegate:(NSObject<CustomizableSegmentedControlDelegate> *)customizableSegmentedControlDelegate {
     if (widths && widths.count != buttons.count) {
         [NSException raise:NSInvalidArgumentException format:@"The number of widths must to be equal to the number of buttons."];
@@ -53,6 +55,22 @@
     return self;
 }
 
+#pragma mark - Memory management
+
+- (void)dealloc
+{   
+    self.buttons = nil;
+    self.widths = nil;
+    self.dividers = nil;
+    
+    [_buttons release];
+    [_widths release];
+    [_dividers release];
+    [super dealloc];
+}
+
+#pragma mark - Layout
+
 - (void)layoutButtons {
     if (self.subviews.count > 0) {
         for (UIView* subview in self.subviews) {
@@ -83,6 +101,15 @@
     }
 }
 
+-(void) dimAllButtonsExcept:(UIButton*)selectedButton
+{
+    for (UIButton* button in self.buttons) {
+        button.selected = (button == selectedButton);
+    }
+}
+
+#pragma mark - Actions
+
 - (void)setSelectedSegmentIndex:(NSInteger)selectedSegmentIndex {
     NSUInteger oldIndex = _selectedSegmentIndex;
     _selectedSegmentIndex = selectedSegmentIndex;
@@ -96,49 +123,25 @@
     [self layoutButtons];
 }
 
--(void) dimAllButtonsExcept:(UIButton*)selectedButton
-{
-    for (UIButton* button in self.buttons) {
-        button.selected = (button == selectedButton);
-    }
-}
-
 - (void)touchDownAction:(UIButton*)button
 {
-    [self dimAllButtonsExcept:button];
-
-    if ([delegate respondsToSelector:@selector(touchDownAtSegmentIndex:sender:)])
-        [delegate touchDownAtSegmentIndex:[self.buttons indexOfObject:button] sender:self];
-    [self layoutButtons];
+    self.selectedSegmentIndex = [self.buttons indexOfObject:button];
+//
+//    if ([delegate respondsToSelector:@selector(touchDownAtSegmentIndex:sender:)])
+//        [delegate touchDownAtSegmentIndex:[self.buttons indexOfObject:button] sender:self];
 }
 
 - (void)touchUpInsideAction:(UIButton*)button
 {
-    [self dimAllButtonsExcept:button];
-
-    if ([delegate respondsToSelector:@selector(touchUpInsideSegmentIndex:sender:)])
-        [delegate touchUpInsideSegmentIndex:[self.buttons indexOfObject:button] sender:self];
-    [self layoutButtons];
+    self.selectedSegmentIndex = [self.buttons indexOfObject:button];
+//
+//    if ([delegate respondsToSelector:@selector(touchUpInsideSegmentIndex:sender:)])
+//        [delegate touchUpInsideSegmentIndex:[self.buttons indexOfObject:button] sender:self];
 }
 
 - (void)otherTouchesAction:(UIButton*)button
 {
-    [self dimAllButtonsExcept:button];
-    [self layoutButtons];
+    self.selectedSegmentIndex = [self.buttons indexOfObject:button];
 }
-
-
-- (void)dealloc
-{   
-//    self.buttons = nil;
-    self.widths = nil;
-    self.dividers = nil;
-    
-//    [_buttons release];
-    [_widths release];
-    [_dividers release];
-    [super dealloc];
-}
-
 
 @end

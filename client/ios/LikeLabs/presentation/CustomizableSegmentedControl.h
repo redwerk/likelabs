@@ -2,8 +2,8 @@
 
 @protocol CustomizableSegmentedControlDelegate
 @optional
-- (void) touchUpInsideSegmentIndex:(NSUInteger)segmentIndex sender:(CustomizableSegmentedControl*)sender;
-- (void) touchDownAtSegmentIndex:(NSUInteger)segmentIndex sender:(CustomizableSegmentedControl*)sender;
+//- (void) touchUpInsideSegmentIndex:(NSUInteger)segmentIndex sender:(CustomizableSegmentedControl*)sender;
+//- (void) touchDownAtSegmentIndex:(NSUInteger)segmentIndex sender:(CustomizableSegmentedControl*)sender;
 - (void) selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl*)sender;
 @end
 

@@ -40,7 +40,7 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIButton" id="863374624">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">-2147483356</int>
 						<string key="NSFrame">{{20, 20}, {50, 50}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
@@ -77,7 +77,7 @@
 					</object>
 					<object class="IBUIImageView" id="1007314173">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">290</int>
+						<int key="NSvFlags">-2147483358</int>
 						<string key="NSFrame">{{87, 20}, {917, 51}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
@@ -94,7 +94,7 @@
 					</object>
 					<object class="IBUISegmentedControl" id="326360451">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">290</int>
+						<int key="NSvFlags">-2147483358</int>
 						<string key="NSFrame">{{105, 23}, {882, 44}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
@@ -285,15 +285,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">goHome:</string>
-						<reference key="source" ref="863374624"/>
-						<reference key="destination" ref="841351856"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">7</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">navigationChaned:</string>
 						<reference key="source" ref="326360451"/>
 						<reference key="destination" ref="841351856"/>
@@ -406,20 +397,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">PhotoMessageController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="goHome:">id</string>
-						<string key="navigationChaned:">UISegmentedControl</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="goHome:">
-							<string key="name">goHome:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="navigationChaned:">
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">navigationChaned:</string>
+						<string key="NS.object.0">UISegmentedControl</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">navigationChaned:</string>
+						<object class="IBActionInfo" key="NS.object.0">
 							<string key="name">navigationChaned:</string>
 							<string key="candidateClassName">UISegmentedControl</string>
 						</object>
-					</dictionary>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="imageView">UIImageView</string>
 						<string key="navigationBackground">UIImageView</string>

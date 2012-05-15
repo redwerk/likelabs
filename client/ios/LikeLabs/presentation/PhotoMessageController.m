@@ -1,9 +1,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import "PhotoMessageController.h"
 #import "RootController.h"
+#import "RootPhotoController.h"
 
 @interface PhotoMessageController ()
-@property (nonatomic,retain) RootController *rootController;
+@property (nonatomic,retain) RootPhotoController *rootController;
 @property (assign) BOOL textPlaseholderActive;
 @end
 
@@ -26,7 +27,9 @@ static NSString *const GREETING = @"Start typing a message!";
 @synthesize rootController = _rootController;
 @synthesize textPlaseholderActive = _textPlaseholderActive;
 
--(id)initWithRootController:(RootController *)rootController {
+
+#pragma mark - Initialization
+-(id)initWithRootController:(RootPhotoController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
     }
@@ -43,30 +46,21 @@ static NSString *const GREETING = @"Start typing a message!";
     [background release];
     self.navigationBackground.image = [[UIImage imageNamed:NAVIGATION_BACKGROUND_IMG] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     [self.navigationBackground setContentMode:UIViewContentModeScaleToFill];
-    [self.segmentedControl setBackgroundImage:[UIImage imageNamed:NAV_BTN_NORMAL_IMG] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [self.segmentedControl setBackgroundImage:[UIImage imageNamed:NAV_BTN_SELECTED_IMG] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
-    [self.segmentedControl setDividerImage:[UIImage imageNamed:NAV_DIVIDER_NN_IMG] 
-                       forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [self.segmentedControl setDividerImage:[UIImage imageNamed:NAV_DIVIDER_SN_IMG] 
-                       forLeftSegmentState:UIControlStateSelected rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [self.segmentedControl setDividerImage:[UIImage imageNamed:NAV_DIVIDER_NS_IMG] 
-                       forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
-    [self.segmentedControl setEnabled:NO forSegmentAtIndex:3];
-    self.segmentedControl.selectedSegmentIndex = 1;
     
     self.textPlaseholderActive = true;
     self.textView.layer.borderColor = [UIColor blackColor].CGColor;
     self.textView.layer.borderWidth = 1;
     self.textView.layer.cornerRadius = 10;    
-    [self.textView becomeFirstResponder];
+    [self.textView becomeFirstResponder];    
     
-    
-    [self setPhoto:[self.rootController.review.photos objectAtIndex:self.rootController.review.reviewPhotoIndex]];
+    [self setPhoto:[self.rootController.rootController.review.photos objectAtIndex:self.rootController.rootController.review.reviewPhotoIndex]];
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOffset = CGSizeMake(5, 5);
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowRadius = 10;
 }
+
+#pragma mark - Review management
 
 - (void) setPhoto: (UIImage *)photo {
     CGSize maxPhotoSize = CGSizeMake(409, 296);
@@ -79,6 +73,8 @@ static NSString *const GREETING = @"Start typing a message!";
     self.imageView.frame = CGRectMake(0, 0, photo.size.width, photo.size.height);
     self.imageView.center = oldCenter;
 }
+
+# pragma mark - Memory management
 
 - (void)viewDidUnload
 {
@@ -101,10 +97,7 @@ static NSString *const GREETING = @"Start typing a message!";
     [super dealloc];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
-}
+#pragma mark - TextViewDelegate implementation
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if (self.textPlaseholderActive) {
@@ -123,13 +116,18 @@ static NSString *const GREETING = @"Start typing a message!";
     }
 }
 
+#pragma mark - Rotation
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
+#pragma mark - Actions
+
 - (IBAction)navigationChaned:(UISegmentedControl *)sender {
     if (sender.selectedSegmentIndex == 0) {
         [self.rootController switchToController:@"PhotoSelectionController"];
     }
-}
-
-- (IBAction)goHome:(id)sender {
-    [self.rootController switchToController:@"SplashScreenController"];
 }
 @end

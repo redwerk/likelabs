@@ -1,8 +1,8 @@
 #import <Foundation/Foundation.h>
-#import "RootController.h"
+#import "ContainerController.h"
 
 @protocol ChildController <NSObject>
 
-- (id) initWithRootController:(RootController *) rootController;
+- (id) initWithRootController:(UIViewController<ContainerController> *) rootController;
 
 @end
