@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationServiceImpl implements RegistrationService {
 
     private static final String MSG_SMS_REG = "message.sms.registration";
+
     private static final String MSG_APP_DOMAIN =  "app.domain";
 
     @Autowired
@@ -56,11 +57,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void createUser(String phone) {
-
         if (userRepository.find(phone) != null) {
             throw new DuplicatedUserException(phone);
         }
-        String msg = messageTemplateService.getMessage(MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));
+        String msg = messageTemplateService.getMessage(
+                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));
         if (!smsService.sendMessage(phone, msg)) {
             throw new NoSendSmsException(phone);
         }
@@ -69,7 +70,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public void activateUser(String phone, String password) {
-
         if (!password.equals(passwordGenerator.getPassword(phone))) {
             throw new IncorrectPasswordException(phone, password);
         }
@@ -79,7 +79,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public void confirmEmail(long userId, String email, String confirmationCode) {
-
         if (!confirmationCode.equals(codeGenerator.getConfirmEmailCode(email, userId))) {
             throw new NotConfirmMailException(userId, email, confirmationCode);
         }
@@ -89,15 +88,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
-    public void activateAdminCompany(long userId) {
-
+    public void activateCompanyAdmin(long userId)
+            throws AbsentSocialAccountException, AbsentCompanyException, PageAccessLevelException {
         User user = userRepository.find(userId);
         List<UserSocialAccount> accounts = user.getAccounts();
-        if (accounts == null) {
+        if (accounts.size() == 0) {
             throw new AbsentSocialAccountException(user);
         }
         List<Company> companies = companyRepository.findAll(user);
-        if (companies == null) {
+        if (companies.size() == 0) {
             throw new AbsentCompanyException(user);
         }
         for (Company company : companies) {
@@ -114,15 +113,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public boolean validateAdminCode(long id, String activateCode) {
-        User user = userRepository.find(id);
-        return activateCode.equals(codeGenerator.getActivateAdminCode(id, user.getEmail(), user.getPhone()));
+    public boolean validateAdminCode(long userId, String activateCode) {
+        User user = userRepository.find(userId);
+        return activateCode.equals(codeGenerator.getActivateAdminCode(userId, user.getEmail(), user.getPhone()));
 
     }
 
     @Override
-    public boolean validateAdminPassword(long id, String password) {
-        User user = userRepository.find(id);
-        return password.equals(passwordGenerator.getPassword(user.getPhone()));
+    public boolean validateAdminPassword(long userId, String password) {
+        User user = userRepository.find(userId);
+        return password.equals(user.getPassword());
     }
 }

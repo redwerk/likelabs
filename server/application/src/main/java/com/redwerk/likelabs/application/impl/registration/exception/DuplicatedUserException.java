@@ -5,7 +5,6 @@ public class DuplicatedUserException extends RuntimeException {
 
     private final String phone;
 
-
     public DuplicatedUserException(String phone) {
         this.phone = phone;
     }

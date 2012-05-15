@@ -6,6 +6,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "point")
@@ -19,8 +21,9 @@ public class Point {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @Embedded
-    private Address address;
+    @ElementCollection
+    @CollectionTable(name="point_address", joinColumns = @JoinColumn(name="point_id"))
+    private Set<Address> addresses;
 
     private String phone;
 
@@ -29,9 +32,11 @@ public class Point {
 
     // constructors
     
-    public Point(Company company,  Address address, String phone, String email) {
+    public Point(Company company, final Address address, String phone, String email) {
         this.company = company;
-        this.address = address;
+        this.addresses = new HashSet<Address>() {{
+            add(address);
+        }};
         this.phone = phone;
         this.email = email;
     }
@@ -47,7 +52,7 @@ public class Point {
     }
 
     public Address getAddress() {
-        return address;
+        return addresses.iterator().next();
     }
 
     public String getPhone() {
@@ -61,7 +66,8 @@ public class Point {
     // modifiers
 
     public void setAddress(Address address) {
-        this.address = address;
+        addresses.clear();
+        addresses.add(address);
     }
 
     public void setPhone(String phone) {
@@ -81,7 +87,7 @@ public class Point {
         Point other = (Point) obj;
         return new EqualsBuilder()
                 .append(company, other.company)
-                .append(address, other.address)
+                .append(getAddress(), other.getAddress())
                 .isEquals();
     }
 
@@ -89,7 +95,7 @@ public class Point {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(company)
-                .append(address)
+                .append(getAddress())
                 .toHashCode();
     }
 
@@ -98,7 +104,7 @@ public class Point {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("company", company)
-                .append("address", address)
+                .append("address", getAddress())
                 .append("phone", phone)
                 .append("email", email)
                 .toString();

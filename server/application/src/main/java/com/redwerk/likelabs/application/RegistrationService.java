@@ -1,5 +1,9 @@
 package com.redwerk.likelabs.application;
 
+import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
+import com.redwerk.likelabs.application.impl.registration.exception.AbsentSocialAccountException;
+import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
+
 public interface RegistrationService {
 
     void createUser(String phone);
@@ -8,10 +12,10 @@ public interface RegistrationService {
     
     void confirmEmail(long userId, String email, String confirmationCode);
 
-    void activateAdminCompany(long userId);
+    boolean validateAdminCode(long userId, String activateCode);
 
-    boolean validateAdminCode(long id, String activateCode);
+    boolean validateAdminPassword(long userId, String password);
 
-    boolean validateAdminPassword(long id, String password);
+    void activateCompanyAdmin(long userId) throws AbsentSocialAccountException, AbsentCompanyException, PageAccessLevelException;
 
 }

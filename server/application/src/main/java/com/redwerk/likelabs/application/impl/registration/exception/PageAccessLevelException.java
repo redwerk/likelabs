@@ -4,20 +4,15 @@ import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.User;
 
 
-public class PageAccessLevelException extends  RuntimeException {
+public class PageAccessLevelException extends Exception {
 
-    private User user;
+    private final User user;
     
-    private CompanySocialPage page;
+    private final CompanySocialPage page;
 
     public PageAccessLevelException(User user, CompanySocialPage companySocialPage) {
         this.user = user;
         this.page = companySocialPage;
-    }
-
-    @Override
-    public String getMessage() {
-        return "user: " + user.getPhone() + " not admin for page: " + page.toString();
     }
 
     public CompanySocialPage getCompanySocialPage() {
@@ -27,4 +22,5 @@ public class PageAccessLevelException extends  RuntimeException {
     public User getUser() {
         return user;
     }
+
 }

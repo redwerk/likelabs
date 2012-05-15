@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "/admincompany")
-public class AdminCompanyController {
+public class CompanyAdminController {
 
     private static final String VIEW_ADMIN_PROFILE = "admincompany/profile";
     private static final String VIEW_SUCCESS = "admincompany/successactivate";
@@ -98,16 +98,13 @@ public class AdminCompanyController {
             HttpSession session = request.getSession(true);
             Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
             User user = userService.getUser(id);
-            registrationService.activateAdminCompany(user.getId());
+            registrationService.activateCompanyAdmin(user.getId());
             authenticatUser(request,user.getPhone(), user.getPassword());
         } catch (AbsentSocialAccountException e) {
-            log.error(e,e);
             return profileRedirect(PARAM_ERROR_NOT_ADMIN);
         } catch (AbsentCompanyException e) {
-            log.error(e,e);
             return profileRedirect(PARAM_ERROR_NOT_ADMIN);
         } catch (PageAccessLevelException e) {
-            log.error(e,e);
             return profileRedirect(PARAM_ERROR_NOT_ADMIN);
         }
         return "redirect:/admincompany/success";

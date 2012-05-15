@@ -7,7 +7,6 @@ public class IncorrectPasswordException extends RuntimeException {
 
     private final String password;
 
-
     public IncorrectPasswordException(String phone, String password) {
         this.phone = phone;
         this.password = password;
