@@ -13,7 +13,7 @@ static NSString *const NAV_DIVIDER_SN_IMG = @"navigation_divider_sn.png";
 static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 static NSString *const GET_READY_MSG = @"Get Ready!";
 static NSString *const PHOTO_N_OF_5_MSG = @"Picture %d of 5";
-static float const TIMER_DELAY = 0.3;
+static float const TIMER_DELAY = 2;
 
 @interface PhotosController()
 @property (retain,nonatomic) RootController* rootController;
@@ -63,6 +63,8 @@ static float const TIMER_DELAY = 0.3;
     self.previewLayer.frame = self.contentView.bounds;
     [self.contentView bringSubviewToFront:self.instructionalView];
     [self.contentView bringSubviewToFront:self.button];
+    
+    [self setPhotoTitlesForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
 }
 
 - (void)viewDidLoad
@@ -76,7 +78,7 @@ static float const TIMER_DELAY = 0.3;
     
     self.segmentedControl.alpha = 0;
     self.customSegmentedControl = [[[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:[self getWidths] dividers:[self getDividersDictionary] dividerWidth:22 delegate:self] autorelease];
-    [self.customSegmentedControl setAutoresizingMask:UIViewAutoresizingFlexibleWidth] ;
+    self.customSegmentedControl.autoresizingMask = self.segmentedControl.autoresizingMask;
     self.customSegmentedControl.selectedSegmentIndex = 1;
     self.customSegmentedControl.userInteractionEnabled = NO;
     [self.navBar addSubview:self.customSegmentedControl];
@@ -225,6 +227,17 @@ static float const TIMER_DELAY = 0.3;
     CGSize viewSize = self.contentView.frame.size;
     CGFloat viewOffset = self.contentView.frame.origin.y;
     self.previewLayer.frame = CGRectMake(0, 0, viewSize.height + viewOffset , viewSize.width - viewOffset);
+
+    [self setPhotoTitlesForInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (void) setPhotoTitlesForInterfaceOrientation: (UIInterfaceOrientation) orientation {
+    for (NSUInteger i=0; i<5; i++) {
+        UIButton* btn = [self.customSegmentedControl.buttons objectAtIndex:i+1];
+        NSString* title = [NSString stringWithFormat:((UIInterfaceOrientationIsPortrait(orientation)) ? @"%d" : @"Photo %d"), i+1];
+        [btn setTitle:title forState:UIControlStateSelected];
+        [btn setTitle:title forState:UIControlStateDisabled];
+    }
 }
 
 #pragma mark - Photo taking process

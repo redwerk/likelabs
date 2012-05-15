@@ -71,7 +71,29 @@
 
 #pragma mark - Layout
 
+- (void) recalculateButtonsWidths {
+    CGFloat distinctWidthsSum = 0;
+    NSUInteger distinctWidthCount = 0;
+    if (self.widths) {
+        for (NSUInteger i=0; i<self.widths.count; i++) {
+            CGFloat width = ((NSNumber*)[self.widths objectAtIndex:i]).floatValue;
+            if (width > 0) {
+                distinctWidthsSum += width;
+                distinctWidthCount ++;
+            }
+        }
+    }
+    self.defaultButtonWidth = (self.frame.size.width - distinctWidthsSum - self.dividerWidth*(self.buttons.count-1))/(self.buttons.count - distinctWidthCount);
+}
+
+- (void)layoutSubviews {
+    [self layoutButtons]; 
+}
+
 - (void)layoutButtons {
+    
+    [self recalculateButtonsWidths];
+    
     if (self.subviews.count > 0) {
         for (UIView* subview in self.subviews) {
             if ([subview respondsToSelector:@selector(removeFromSuperview)]) {
@@ -126,17 +148,11 @@
 - (void)touchDownAction:(UIButton*)button
 {
     self.selectedSegmentIndex = [self.buttons indexOfObject:button];
-//
-//    if ([delegate respondsToSelector:@selector(touchDownAtSegmentIndex:sender:)])
-//        [delegate touchDownAtSegmentIndex:[self.buttons indexOfObject:button] sender:self];
 }
 
 - (void)touchUpInsideAction:(UIButton*)button
 {
     self.selectedSegmentIndex = [self.buttons indexOfObject:button];
-//
-//    if ([delegate respondsToSelector:@selector(touchUpInsideSegmentIndex:sender:)])
-//        [delegate touchUpInsideSegmentIndex:[self.buttons indexOfObject:button] sender:self];
 }
 
 - (void)otherTouchesAction:(UIButton*)button
