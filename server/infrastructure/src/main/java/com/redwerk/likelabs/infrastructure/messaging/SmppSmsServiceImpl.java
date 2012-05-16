@@ -3,7 +3,6 @@ package com.redwerk.likelabs.infrastructure.messaging;
 
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,27 +29,26 @@ import org.jsmpp.session.DataSmResult;
 import org.jsmpp.session.MessageReceiverListener;
 import org.jsmpp.session.SMPPSession;
 import org.jsmpp.session.Session;
-import org.jsmpp.util.AbsoluteTimeFormatter;
 import org.jsmpp.util.InvalidDeliveryReceiptException;
-import org.jsmpp.util.TimeFormatter;
+import org.jsmpp.util.RelativeTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import com.redwerk.likelabs.application.messaging.SmsService;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException.DeliveryStatus;
 
-@Component
+//@Component
 public class SmppSmsServiceImpl implements SmsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SmppSmsServiceImpl.class);
 	
-    private static final long SESSION_INACTIVE_TIMEOUT_MS = 10 * 60000;	//SMPP session is closed if no activity detected for this time
+    private static final long SESSION_INACTIVE_TIMEOUT_MS = 15 * 60000;	//SMPP session is closed if no activity detected for this time
 	private static final long SESSION_CHECK_INTERVAL_MS = 2000;	//period of checking for SMPP session state
 	private static final long SMSC_TIMEOUT_MS = 2000;	//timeout for low-level SMMP transactions
-	
+	private static final int SM_VALIDITY_PERIOD_MIN = 10;	//after expiration of this period SMSC should discard not delivered messages 
+
     @Value("#{applicationProperties['sms.service.smpp.username']}")
     private String username;
 
@@ -71,7 +69,6 @@ public class SmppSmsServiceImpl implements SmsService {
    
     
     private String addressRangeBindTo = sourceAddress;	//regex of addresses to listen for incoming messages    
-    private final TimeFormatter timeFormatter = new AbsoluteTimeFormatter();      
     private final Object smppSessionLock = new Object();
     private SMPPSession smppSession;
     
@@ -96,8 +93,8 @@ public class SmppSmsServiceImpl implements SmsService {
 	            		phone, 
 	            		new ESMClass(), 
 	            		(byte)0, (byte)1,  
-	            		timeFormatter.format(new Date()), 
-	            		null, 
+	            		null,	//sheduled delivery time 
+	            		RelativeTimeFormatter.format(0, 0, 0, 0, SM_VALIDITY_PERIOD_MIN, 0),	//validity period
 	            		new RegisteredDelivery(SMSCDeliveryReceipt.SUCCESS_FAILURE), 
 	            		(byte)0, 
 	            		new GeneralDataCoding(Alphabet.ALPHA_DEFAULT, MessageClass.CLASS1, false), 
