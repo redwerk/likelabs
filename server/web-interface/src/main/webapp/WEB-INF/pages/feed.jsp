@@ -53,27 +53,59 @@
     var test_data = [
         {
             message: "test test test1",
-            photo: "/static/images/feed_photo.png"
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
+            point: "Bla bla bla"
         },
         {
             message: "test test test2",
-            photo: "/static/images/feed_photo.png"
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
+            point: "Bla bla bla"
         },
         {
             message: "test test test3",
-            photo: "/static/images/feed_photo.png"
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
+            point: "Bla bla bla"
         },
         {
             message: "test test test4",
-            photo: "/static/images/feed_photo.png"
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
+            point: "Bla bla bla"
         },
         {
             message: "test test test5",
-            photo: "/static/images/feed_photo.png"
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
+            point: "Bla bla bla"
         },
         {
             message: "test test test6",
-            photo: "/static/images/feed_photo.png"
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.random() * 1000,
+            point: "Bla bla bla"
+        },
+        {
+            message: "test test test5",
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
+            point: "Bla bla bla"
+        },
+        {
+            message: "test test test6",
+            photo: "/static/images/feed_photo.png",
+            name: "Vasya " + Math.ceil(Math.random() * 1000),
+            date: (new Date()).getTime() + Math.random() * 1000,
+            point: "Bla bla bla"
         }
     ];
     
@@ -104,14 +136,21 @@
         options.page_number = 0;
         options.sort_by = $("#sort_by").val();
     }
-    
+function show_hint(target) {
+    $(target).prev().removeClass('hidden');
+    console.warn("show");
+}
+function hide_hint(target) {
+    console.warn("hide");
+    $(target).addClass('hidden');
+}
 </script>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%;" summary="" class="content_block">
                                     <tr>
                                         <td style="height: 85px;">
                                             <div class="title" style="position: relative; float: left;">Feeds for {CompanyName}</div>
-                                            <div style="position: relative; float: right;">
-                                                <select onchange="changeSort()" id="sort_by">
+                                            <div style="position: relative; float: right; padding-right: 5px;">
+                                                <select onchange="changeSort()" id="sort_by" style="width: 150px">
                                                     <option value="">Sort By</option>
                                                     <option value="date">Date</option>
                                                     <option value="point">Point</option>

@@ -178,7 +178,7 @@ a:hover {
 
 .feed_container {
     width: 292px;
-    height: 316px;
+    height: 313px;
     padding: 12px;
     border: solid 1px #d1d1d1;
     background: url("/static/images/background_inner_light.png") transparent;
@@ -270,4 +270,73 @@ a:hover {
 
 .contact_form input[type=submit] {
     width: 150px;
+}
+
+.left {
+    position: relative;
+    float: left;
+}
+
+.right {
+    position: relative;
+    float: right;
+}
+
+.logo {
+    width: 217px;
+    height: 226px;
+    background: url("/static/images/photo_background.png") no-repeat;
+    padding: 10px 15px
+}
+
+.button_upload {
+    background: url("/static/images/upload_photo_btn.png") no-repeat;
+    width: 236px;
+    height: 47px;
+    margin-left: 5px; 
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.field {
+    margin: 5px 0 15px 0;
+}
+
+.field input[type=text] {
+    width: 295px;
+    height: 25px;
+    color: #455172;
+    padding: 0 10px;
+}
+.hidden {
+    display: none;
+}
+
+.hint {
+    position: absolute;
+    
+    background: url("/static/images/feed_hint_background.png") no-repeat transparent -5px -2px;
+    width: 330px;
+    height: 352px;
+    padding-left: 13px;
+    padding-top: 13px;
+    color: #ffffff;
+    
+}
+
+.hint td {
+    padding: 10px;
+    height: 30px;
+}
+
+.black_10 {
+    background: url("/static/images/black_10.png");
+}
+
+.black_20 {
+    background: url("/static/images/black_20.png");
 }
