@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "/admincompany")
-public class CompanyAdminController {
+public class CompanyAdminActivationController {
 
     private static final String VIEW_ADMIN_PROFILE = "admincompany/profile";
     private static final String VIEW_SUCCESS = "admincompany/successactivate";
