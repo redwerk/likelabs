@@ -1,18 +1,22 @@
 package com.redwerk.likelabs.application.impl.registration;
 
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.redwerk.likelabs.application.RegistrationService;
+import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
+import com.redwerk.likelabs.application.impl.registration.exception.AbsentSocialAccountException;
 import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUserException;
 import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
-import com.redwerk.likelabs.application.impl.registration.exception.NoSendSmsException;
-import com.redwerk.likelabs.application.impl.registration.exception.AbsentSocialAccountException;
-import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
-import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
+import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.SmsService;
 import com.redwerk.likelabs.application.sn.GatewayFactory;
-import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
-import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
@@ -21,11 +25,6 @@ import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
-import java.util.List;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -62,10 +61,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DuplicatedUserException(phone);
         }
         String msg = messageTemplateService.getMessage(
-                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));
-        if (!smsService.sendMessage(phone, msg)) {
-            throw new NoSendSmsException(phone);
-        }
+                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));        
+        smsService.sendMessage(phone, msg);
     }
 
     @Override

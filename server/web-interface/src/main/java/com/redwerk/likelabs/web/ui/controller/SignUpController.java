@@ -1,20 +1,10 @@
 package com.redwerk.likelabs.web.ui.controller;
 
-import com.redwerk.likelabs.application.RegistrationService;
-import com.redwerk.likelabs.application.UserService;
-import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUserException;
-import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
-import com.redwerk.likelabs.application.impl.registration.exception.NoSendSmsException;
-import com.redwerk.likelabs.application.messaging.MessageTemplateService;
-import com.redwerk.likelabs.domain.model.SocialNetworkType;
-import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
-import com.redwerk.likelabs.web.ui.validator.EmailValidator;
-import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
-import com.redwerk.likelabs.web.ui.validator.Validator;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -28,12 +18,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.redwerk.likelabs.application.RegistrationService;
+import com.redwerk.likelabs.application.UserService;
+import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUserException;
+import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
+import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import com.redwerk.likelabs.web.ui.validator.EmailValidator;
+import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
+import com.redwerk.likelabs.web.ui.validator.Validator;
 
 @Controller
 @RequestMapping(value = "/signup")
@@ -113,7 +113,7 @@ public class SignUpController {
         } catch (DuplicatedUserException e) {
             log.error(e.getMessage());
             return startRedirect(PARAM_ERROR_DUPLICATED_USER);
-        } catch (NoSendSmsException e) {
+        } catch (SmsMessagingException e) {
             log.error(e.getMessage());
             return startRedirect(PARAM_ERROR_NO_SEND_SMS);
         }

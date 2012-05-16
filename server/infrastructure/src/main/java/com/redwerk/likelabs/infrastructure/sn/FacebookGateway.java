@@ -158,7 +158,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     public boolean isAdminFor(UserSocialAccount account, CompanySocialPage page) {
         JSONObject json = requestApiDataJson(MessageFormat.format(API_IS_ADMIN_TEMPLATE, page.getPageId(), account.getAccessToken()));
         if (json.containsKey("error")) {
-            throw new SNGeneralException("Unknown error occured while checking isAdmin");
+            throw new SNGeneralException();
         }
         return json.containsKey("access_token");
     }
@@ -188,7 +188,7 @@ public class FacebookGateway implements SocialNetworkGateway {
                 if (errorCode == 190) {
                     throw new AccessTokenExpiredException(null);
                 }
-                throw new SNGeneralException("Unknown exception");
+                throw new SNGeneralException();
             }
         } catch (JSONException ex) {
             throw new SNGeneralException(ex);
