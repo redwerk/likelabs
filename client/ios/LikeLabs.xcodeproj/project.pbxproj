@@ -137,7 +137,7 @@
 		E77C32A9155012790057A34F /* RootController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootController.h; path = LikeLabs/presentation/RootController.h; sourceTree = "<group>"; };
 		E77C32AA155012790057A34F /* RootController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootController.m; path = LikeLabs/presentation/RootController.m; sourceTree = "<group>"; };
 		E77C32AB155012790057A34F /* RootController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootController.xib; path = LikeLabs/presentation/RootController.xib; sourceTree = "<group>"; };
-		E77C32AE155018330057A34F /* ChildController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChildController.h; path = LikeLabs/presentation/ChildController.h; sourceTree = "<group>"; };
+		E77C32AE155018330057A34F /* ChildController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChildController.h; path = LikeLabs/presentation/protocols/ChildController.h; sourceTree = "<group>"; };
 		E77C32AF155037080057A34F /* PhotosController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosController.h; path = LikeLabs/presentation/photo/PhotosController.h; sourceTree = "<group>"; };
 		E77C32B0155037080057A34F /* PhotosController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosController.m; path = LikeLabs/presentation/photo/PhotosController.m; sourceTree = "<group>"; };
 		E77C32B1155037090057A34F /* PhotosController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotosController.xib; path = LikeLabs/presentation/photo/PhotosController.xib; sourceTree = "<group>"; };
@@ -161,8 +161,8 @@
 		E9F81B9515471A7000E0B41A /* bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg_landscape.png; path = LikeLabs/resources/bg_landscape.png; sourceTree = "<group>"; };
 		E9F81B9615471A7000E0B41A /* bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg_portrait.png; path = LikeLabs/resources/bg_portrait.png; sourceTree = "<group>"; };
 		FF669B7F155C5DC30097515A /* delete_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete_btn.png; path = LikeLabs/resources/delete_btn.png; sourceTree = "<group>"; };
-		FF853C80156164C5003F0374 /* CustomizableSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomizableSegmentedControl.h; path = LikeLabs/presentation/CustomizableSegmentedControl.h; sourceTree = "<group>"; };
-		FF853C81156164C5003F0374 /* CustomizableSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomizableSegmentedControl.m; path = LikeLabs/presentation/CustomizableSegmentedControl.m; sourceTree = "<group>"; };
+		FF853C80156164C5003F0374 /* CustomizableSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomizableSegmentedControl.h; path = LikeLabs/presentation/controls/CustomizableSegmentedControl.h; sourceTree = "<group>"; };
+		FF853C81156164C5003F0374 /* CustomizableSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomizableSegmentedControl.m; path = LikeLabs/presentation/controls/CustomizableSegmentedControl.m; sourceTree = "<group>"; };
 		FF853C8515616C61003F0374 /* btn_bg_disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_bg_disabled.png; sourceTree = "<group>"; };
 		FF853C8615616C61003F0374 /* btn_bg_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_bg_normal.png; sourceTree = "<group>"; };
 		FF853C8715616C61003F0374 /* btn_bg_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_bg_selected.png; sourceTree = "<group>"; };
@@ -193,7 +193,7 @@
 		FF87486E155947DB0010D272 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FF8748B1155992FF0010D272 /* instruction_banner_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instruction_banner_bg.png; path = LikeLabs/resources/instruction_banner_bg.png; sourceTree = "<group>"; };
 		FF8748B3155996B60010D272 /* take_photo_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = take_photo_btn.png; path = LikeLabs/resources/take_photo_btn.png; sourceTree = "<group>"; };
-		FF8B676415628E2000BC6BEA /* ContainerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContainerController.h; path = LikeLabs/presentation/ContainerController.h; sourceTree = "<group>"; };
+		FF8B676415628E2000BC6BEA /* ContainerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContainerController.h; path = LikeLabs/presentation/protocols/ContainerController.h; sourceTree = "<group>"; };
 		FF8B67651562A92500BC6BEA /* divider_nd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divider_nd.png; sourceTree = "<group>"; };
 		FF9DF1521557DEB10002A658 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		FF9DF1531557DEB10002A658 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -347,8 +347,9 @@
 		0AAB55A6153F57D100649AB4 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				FF853C80156164C5003F0374 /* CustomizableSegmentedControl.h */,
-				FF853C81156164C5003F0374 /* CustomizableSegmentedControl.m */,
+				FF32DBA7156383D20020357B /* controls */,
+				FF32DBA61563830D0020357B /* protocols */,
+				FF32DBA5156381A10020357B /* photo */,
 				E9F81B811545A09200E0B41A /* LoginController.h */,
 				E9F81B821545A09200E0B41A /* LoginController.m */,
 				E9F81B871545A21000E0B41A /* LoginController.xib */,
@@ -364,9 +365,6 @@
 				E77C32A9155012790057A34F /* RootController.h */,
 				E77C32AA155012790057A34F /* RootController.m */,
 				E77C32AB155012790057A34F /* RootController.xib */,
-				E77C32AE155018330057A34F /* ChildController.h */,
-				FF32DBA5156381A10020357B /* photo */,
-				FF8B676415628E2000BC6BEA /* ContainerController.h */,
 			);
 			name = Presentation;
 			path = ..;
@@ -392,6 +390,24 @@
 				FF853CAF156191E0003F0374 /* RootPhotoController.xib */,
 			);
 			name = photo;
+			sourceTree = "<group>";
+		};
+		FF32DBA61563830D0020357B /* protocols */ = {
+			isa = PBXGroup;
+			children = (
+				E77C32AE155018330057A34F /* ChildController.h */,
+				FF8B676415628E2000BC6BEA /* ContainerController.h */,
+			);
+			name = protocols;
+			sourceTree = "<group>";
+		};
+		FF32DBA7156383D20020357B /* controls */ = {
+			isa = PBXGroup;
+			children = (
+				FF853C80156164C5003F0374 /* CustomizableSegmentedControl.h */,
+				FF853C81156164C5003F0374 /* CustomizableSegmentedControl.m */,
+			);
+			name = controls;
 			sourceTree = "<group>";
 		};
 		FF853C8415616C61003F0374 /* navigation */ = {
