@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.application;
 
-import com.redwerk.likelabs.application.dto.UserData;
+import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;

@@ -1,5 +1,7 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa.util;
 
+import com.redwerk.likelabs.domain.model.query.Pager;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -35,24 +37,25 @@ public class EntityJpaRepository<T, ID extends Serializable> {
     }
 
     public int getCount() {
-        String query = String.format(COUNT_QUERY, entityClass.getName());
-        return ((Long) em.createQuery(query).getSingleResult()).intValue();
+        return getCount(String.format(COUNT_QUERY, entityClass.getName()));
     }
 
-    public List<T> findEntityList(String queryString, Map<String, Object> parameters, int offset, int count) {
-        return getQueryWithInterval(getQuery(queryString, parameters), offset, count).getResultList();
+    public int getCount(String query) {
+         return ((Long) em.createQuery(query).getSingleResult()).intValue();
+    }
+
+    public List<T> findEntityList(String queryString, Map<String, Object> parameters, Pager pager) {
+        return getQueryWithInterval(getQuery(queryString, parameters), pager).getResultList();
     }
     
-    public List<T> findEntityList(String queryString, int offset, int count) {
-        return getQueryWithInterval(em.createQuery(queryString, entityClass), offset, count).getResultList();
+    public List<T> findEntityList(String queryString, Pager pager) {
+        return getQueryWithInterval(em.createQuery(queryString, entityClass), pager).getResultList();
     }
 
-    private TypedQuery<T> getQueryWithInterval(TypedQuery<T> query, int offset, int count) {
-        if (offset >= 0) {
-            query.setFirstResult(offset);
-        }
-        if (count >= 0) {
-            query.setMaxResults(count);
+    private TypedQuery<T> getQueryWithInterval(TypedQuery<T> query, Pager pager) {
+        if (!Pager.ALL_RECORDS.equals(pager)) {
+            query.setFirstResult(pager.getOffset());
+            query.setMaxResults(pager.getLimit());
         }
         return query;
     }

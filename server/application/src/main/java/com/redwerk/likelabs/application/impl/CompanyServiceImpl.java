@@ -5,7 +5,7 @@ import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
-import com.redwerk.likelabs.application.dto.Pager;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -40,22 +41,21 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(readOnly = true)
     public Report<CompanyReportItem> getCompanies(Pager pager) {
-        return getReport(companyRepository.findAll(pager.getOffset(), pager.getLimit()));
+        return getReport(companyRepository.findAll(pager));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Report<CompanyReportItem> getCompanies(long adminId, Pager pager) {
         User admin = userRepository.get(adminId);
-        return getReport(companyRepository.findAll(admin, pager.getOffset(), pager.getLimit()));
+        return getReport(companyRepository.findAll(admin, pager));
     }
 
     private Report<CompanyReportItem> getReport(List<Company> companies) {
         List<CompanyReportItem> items = new ArrayList<CompanyReportItem>(companies.size());
         for (Company c: companies) {
-            // TODO: make separate queries
-            int pointsNum = pointRepository.findAll(c, -1, -1).size();
-            int reviewsNum = reviewRepository.findAll(c, -1, -1).size();
+            int pointsNum = pointRepository.getCount(c);
+            int reviewsNum = reviewRepository.getQuery().setCompanyIds(Arrays.asList(c.getId())).getCount();
             items.add(new CompanyReportItem(c, pointsNum, reviewsNum));
         }
         return new Report<CompanyReportItem>(items, companyRepository.getCount());

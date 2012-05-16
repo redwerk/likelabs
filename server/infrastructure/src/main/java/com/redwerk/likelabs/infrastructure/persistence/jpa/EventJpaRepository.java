@@ -3,6 +3,7 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa;
 import com.redwerk.likelabs.domain.model.event.Event;
 import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.event.EventStatus;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -38,8 +39,8 @@ public class EventJpaRepository implements EventRepository {
     private EntityJpaRepository<Event, Long> entityRepository;
 
     @Override
-    public List<Event> findAll(User user, EventStatus status, int offset, int limit) {
-        return getEntityRepository().findEntityList(queries.get(status), offset, limit);
+    public List<Event> findAll(User user, EventStatus status) {
+        return getEntityRepository().findEntityList(queries.get(status), Pager.ALL_RECORDS);
     }
 
     @Override

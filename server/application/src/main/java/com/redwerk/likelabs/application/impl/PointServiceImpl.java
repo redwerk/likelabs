@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.PointService;
-import com.redwerk.likelabs.application.dto.Pager;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.point.PointData;
 import com.redwerk.likelabs.domain.model.company.Company;
@@ -11,8 +11,6 @@ import com.redwerk.likelabs.domain.model.point.PointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class PointServiceImpl implements PointService {
@@ -29,8 +27,8 @@ public class PointServiceImpl implements PointService {
     public Report<Point> getPoints(long companyId, Pager pager) {
         Company company = companyRepository.get(companyId);
         return new Report<Point>(
-                pointRepository.findAll(company, pager.getOffset(), pager.getLimit()),
-                pointRepository.getCount());
+                pointRepository.findAll(company, pager),
+                pointRepository.getCount(company));
     }
 
     @Override

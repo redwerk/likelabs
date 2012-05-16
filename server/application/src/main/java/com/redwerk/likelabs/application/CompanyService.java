@@ -3,7 +3,7 @@ package com.redwerk.likelabs.application;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
-import com.redwerk.likelabs.application.dto.Pager;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;

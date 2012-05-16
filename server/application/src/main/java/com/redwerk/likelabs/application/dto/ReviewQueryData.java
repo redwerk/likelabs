@@ -1,9 +1,13 @@
 package com.redwerk.likelabs.application.dto;
 
+import com.redwerk.likelabs.domain.model.query.Pager;
+import com.redwerk.likelabs.domain.model.query.SortingRule;
+import com.redwerk.likelabs.domain.model.review.ReviewContentType;
+
 import java.util.Date;
 import java.util.List;
 
-public class ReviewQuery {
+public class ReviewQueryData {
     
     private final List<Long> pointIds;
     
@@ -11,13 +15,13 @@ public class ReviewQuery {
     
     private final Date toDate;
     
-    private final ReviewType type;
+    private final ReviewContentType type;
     
     private final Pager pager;
     
     private final SortingRule sortingRule;
 
-    public ReviewQuery(List<Long> pointIds, Date fromDate, Date toDate, ReviewType type, Pager pager, SortingRule sortingRule) {
+    public ReviewQueryData(List<Long> pointIds, Date fromDate, Date toDate, ReviewContentType type, Pager pager, SortingRule sortingRule) {
         this.pointIds = pointIds;
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -46,7 +50,7 @@ public class ReviewQuery {
         return toDate;
     }
 
-    public ReviewType getType() {
+    public ReviewContentType getType() {
         return type;
     }
     

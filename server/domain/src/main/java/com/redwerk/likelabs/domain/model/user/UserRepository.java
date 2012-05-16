@@ -1,5 +1,7 @@
 package com.redwerk.likelabs.domain.model.user;
 
+import com.redwerk.likelabs.domain.model.query.Pager;
+
 import java.util.List;
 
 public interface UserRepository {
@@ -8,7 +10,9 @@ public interface UserRepository {
 
     User find(String phone);
 
-    List<User> findAll(int offset, int limit);
+    List<User> findAll(Pager pager);
+    
+    int getCount();
 
     void add(User user);
 

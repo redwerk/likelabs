@@ -1,9 +1,8 @@
 package com.redwerk.likelabs.application.impl.user;
 
 import com.redwerk.likelabs.application.UserService;
-import com.redwerk.likelabs.application.dto.UserData;
+import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
-import com.redwerk.likelabs.application.impl.registration.PasswordGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.sn.GatewayFactory;
@@ -11,6 +10,7 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import java.text.MessageFormat;
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Photo> getPhotos(long userId, PhotoStatus photoStatus) {
         User user = userRepository.get(userId);
-        return photoRepository.findAll(user, photoStatus, -1, -1);
+        return photoRepository.findAll(user, photoStatus, Pager.ALL_RECORDS);
     }
 
     @Override

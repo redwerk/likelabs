@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
 import com.redwerk.likelabs.domain.model.point.Point;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.tablet.exception.TabletNotFoundException;
@@ -16,8 +17,11 @@ import java.util.Map;
 @Repository
 public class TabletJpaRepository implements TabletRepository {
 
-    private static final String GET_TABLETS_FOR_POINT =
-            "select t from Tablet t where t.point.id = :pointId order by t.login";
+    private static final String POINT_FILTER = "from Tablet t where t.point.id = :pointId";
+
+    private static final String GET_TABLETS_FOR_POINT = "select t " + POINT_FILTER + " order by t.login";
+
+    private static final String GET_TABLETS_COUNT_FOR_POINT = "select count(t) " + POINT_FILTER;
 
     private static final String GET_TABLET_BY_LOGIN = "select t from Tablet t where t.login = :login";
 
@@ -43,10 +47,15 @@ public class TabletJpaRepository implements TabletRepository {
     }
 
     @Override
-    public List<Tablet> findAll(Point point, int offset, int limit) {
+    public List<Tablet> findAll(Point point, Pager pager) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters, offset, limit);
+        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters,pager);
+    }
+
+    @Override
+    public int getCount(Point point) {
+        return getEntityRepository().getCount(GET_TABLETS_COUNT_FOR_POINT);
     }
 
     @Override

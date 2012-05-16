@@ -5,6 +5,7 @@ import com.redwerk.likelabs.domain.model.point.Address;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.point.PointRepository;
 import com.redwerk.likelabs.domain.model.point.exception.PointNotFoundException;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,11 @@ import java.util.Map;
 @Repository
 public class PointJpaRepository implements PointRepository {
 
-    private static final String GET_POINTS_FOR_COMPANY = "select p from Point p where p.company.id = :companyId";
+    private static final String COMPANY_FILTER = "from Point p where p.company.id = :companyId";
+
+    private static final String GET_POINTS_FOR_COMPANY = "select p " + COMPANY_FILTER;
+
+    private static final String GET_POINTS_COUNT_FOR_COMPANY = "select count(*) " + COMPANY_FILTER;
 
     private static final String GET_ORDERED_POINTS_FOR_COMPANY = GET_POINTS_FOR_COMPANY + " order by p.address";
 
@@ -47,15 +52,15 @@ public class PointJpaRepository implements PointRepository {
     }
 
     @Override
-    public List<Point> findAll(Company company, int offset, int limit) {
+    public List<Point> findAll(Company company, Pager pager) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters, offset, limit);
+        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters, pager);
     }
 
     @Override
-    public int getCount() {
-        return getEntityRepository().getCount();
+    public int getCount(Company company) {
+        return getEntityRepository().getCount(GET_POINTS_COUNT_FOR_COMPANY);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.TabletService;
-import com.redwerk.likelabs.application.dto.Pager;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.application.dto.TabletData;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.point.PointRepository;
@@ -27,7 +27,7 @@ public class TabletServiceImpl implements TabletService {
     @Transactional(readOnly = true)
     public List<Tablet> getTablets(long pointId, Pager pager) {
         Point point = pointRepository.get(pointId);
-        return tabletRepository.findAll(point, pager.getOffset(), pager.getLimit());
+        return tabletRepository.findAll(point, pager);
     }
 
     @Override

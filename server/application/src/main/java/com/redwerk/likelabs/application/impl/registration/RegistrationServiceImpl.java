@@ -16,6 +16,7 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
@@ -94,7 +95,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (accounts.size() == 0) {
             throw new AbsentSocialAccountException(user);
         }
-        List<Company> companies = companyRepository.findAll(user, -1, -1);
+        List<Company> companies = companyRepository.findAll(user, Pager.ALL_RECORDS);
         if (companies.size() == 0) {
             throw new AbsentCompanyException(user);
         }

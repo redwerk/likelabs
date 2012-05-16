@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.application;
 
-import com.redwerk.likelabs.application.dto.Pager;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.application.dto.TabletData;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import java.util.List;

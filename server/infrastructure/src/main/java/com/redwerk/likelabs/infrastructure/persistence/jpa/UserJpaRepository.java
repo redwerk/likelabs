@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
@@ -41,8 +42,13 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(int offset, int limit) {
-        return getEntityRepository().findEntityList(GET_ALL_USERS, offset, limit);
+    public List<User> findAll(Pager pager) {
+        return getEntityRepository().findEntityList(GET_ALL_USERS, pager);
+    }
+
+    @Override
+    public int getCount() {
+        return getEntityRepository().getCount();
     }
 
     @Override

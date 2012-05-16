@@ -8,15 +8,9 @@ import java.util.List;
 
 public interface ReviewRepository {
 
+    ReviewQuery getQuery();
+
     Review get(long id);
-
-    List<Review> findAll(User author, int offset, int limit);
-    
-    List<Review> findAll(Point point, int offset, int limit);
-
-    List<Review> findAll(Company company, int offset, int limit);
-    
-    int getCount();
 
     void add(Review review);
 
