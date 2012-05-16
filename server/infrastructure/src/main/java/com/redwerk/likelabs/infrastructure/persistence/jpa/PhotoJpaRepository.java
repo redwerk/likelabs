@@ -35,11 +35,11 @@ public class PhotoJpaRepository implements PhotoRepository {
     }
 
     @Override
-    public List<Photo> findAll(User user, PhotoStatus status, int offset, int count) {
+    public List<Photo> findAll(User user, PhotoStatus status, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("userId", user.getId());
         parameters.put("status", status);
-        return getEntityRepository().findEntityList(GET_PHOTOS_BY_USER_AND_STATUS, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_PHOTOS_BY_USER_AND_STATUS, parameters, offset, limit);
     }
 
     @Override

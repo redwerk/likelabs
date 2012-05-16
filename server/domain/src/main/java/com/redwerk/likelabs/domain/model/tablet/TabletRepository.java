@@ -10,7 +10,7 @@ public interface TabletRepository {
 
     Tablet find(String login);
 
-    List<Tablet> findAll(Point point, int offset, int count);
+    List<Tablet> findAll(Point point, int offset, int limit);
 
     void add(Tablet tablet);
 

@@ -6,18 +6,18 @@ public class Pager {
     
     private final int offset;
     
-    private final int count;
+    private final int limit;
 
-    public Pager(int offset, int count) {
-        if (offset < 0 || count < 0) {
+    public Pager(int offset, int limit) {
+        if (offset < 0 || limit < 0) {
             throw new IllegalArgumentException();
         }
         this.offset = offset;
-        this.count = count;
+        this.limit = limit;
     }
 
-    public int getCount() {
-        return count;
+    public int getLimit() {
+        return limit;
     }
 
     public int getOffset() {

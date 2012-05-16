@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface ReviewService {
 
-    List<Review> getPublicReviews(long companyId, ReviewQuery query);
-    
-    List<Review> getCompanyReviews(long companyId, ReviewStatus status, ReviewQuery query);
-    
-    List<Review> getModeratorReviews(long moderatorId, ReviewStatus status, ReviewQuery query);
-    
-    List<Review> getUserReviews(long userId, List<Long> companyIds, ReviewQuery query);
+    Report<Review> getPublicReviews(long companyId, ReviewQuery query);
+
+    Report<Review> getCompanyReviews(long companyId, ReviewStatus status, ReviewQuery query);
+
+    Report<Review> getModeratorReviews(long moderatorId, ReviewStatus status, ReviewQuery query);
+
+    Report<Review> getUserReviews(long userId, List<Long> companyIds, ReviewQuery query);
     
 /*
     List<Review> getReviews(long authorId, long moderatorId, 

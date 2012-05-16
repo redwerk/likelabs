@@ -8,7 +8,7 @@ public interface PhotoRepository {
 
     Photo get(long id);
 
-    List<Photo> findAll(User user, PhotoStatus status, int offset, int count);
+    List<Photo> findAll(User user, PhotoStatus status, int offset, int limit);
 
     void add(Photo photo);
 

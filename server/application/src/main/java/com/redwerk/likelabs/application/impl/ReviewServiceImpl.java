@@ -3,6 +3,7 @@ package com.redwerk.likelabs.application.impl;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.dto.PhotoData;
 import com.redwerk.likelabs.application.dto.RecipientData;
+import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQuery;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
@@ -22,25 +23,25 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Review> getPublicReviews(long companyId, ReviewQuery query) {
+    public Report<Review> getPublicReviews(long companyId, ReviewQuery query) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Review> getCompanyReviews(long companyId, ReviewStatus status, ReviewQuery query) {
+    public Report<Review> getCompanyReviews(long companyId, ReviewStatus status, ReviewQuery query) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Review> getModeratorReviews(long moderatorId, ReviewStatus status, ReviewQuery query) {
+    public Report<Review> getModeratorReviews(long moderatorId, ReviewStatus status, ReviewQuery query) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Review> getUserReviews(long userId, List<Long> companyIds, ReviewQuery query) {
+    public Report<Review> getUserReviews(long userId, List<Long> companyIds, ReviewQuery query) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

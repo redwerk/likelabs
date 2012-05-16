@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class EntityJpaRepository<T, ID extends Serializable> {
 
+    private static final String COUNT_QUERY = "select count(e) from %s e";
+
     private final EntityManager em;
 
     private final Class<T> entityClass;
@@ -30,6 +32,11 @@ public class EntityJpaRepository<T, ID extends Serializable> {
         catch (NoResultException e) {
             return null;
         }
+    }
+
+    public int getCount() {
+        String query = String.format(COUNT_QUERY, entityClass.getName());
+        return ((Long) em.createQuery(query).getSingleResult()).intValue();
     }
 
     public List<T> findEntityList(String queryString, Map<String, Object> parameters, int offset, int count) {

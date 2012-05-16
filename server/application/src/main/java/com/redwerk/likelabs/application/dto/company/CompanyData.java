@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.dto;
+package com.redwerk.likelabs.application.dto.company;
 
 public class CompanyData {
     

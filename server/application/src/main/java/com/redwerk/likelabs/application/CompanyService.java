@@ -1,9 +1,10 @@
 package com.redwerk.likelabs.application;
 
-import com.redwerk.likelabs.application.dto.CompanyAdminData;
-import com.redwerk.likelabs.application.dto.CompanyData;
-import com.redwerk.likelabs.application.dto.CompanyExtendedData;
+import com.redwerk.likelabs.application.dto.Report;
+import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
+import com.redwerk.likelabs.application.dto.company.CompanyData;
 import com.redwerk.likelabs.application.dto.Pager;
+import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.point.Point;
@@ -12,9 +13,9 @@ import java.util.List;
 
 public interface CompanyService {
 
-    List<CompanyExtendedData> getCompanies(Pager pager);
-    
-    List<CompanyExtendedData> getCompanies(long adminId, Pager pager);
+    Report<CompanyReportItem> getCompanies(Pager pager);
+
+    Report<CompanyReportItem> getCompanies(long adminId, Pager pager);
     
     Company getCompany(long companyId);
     

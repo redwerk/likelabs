@@ -43,10 +43,10 @@ public class TabletJpaRepository implements TabletRepository {
     }
 
     @Override
-    public List<Tablet> findAll(Point point, int offset, int count) {
+    public List<Tablet> findAll(Point point, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters, offset, limit);
     }
 
     @Override

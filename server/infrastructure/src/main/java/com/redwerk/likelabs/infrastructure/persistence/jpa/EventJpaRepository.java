@@ -38,8 +38,8 @@ public class EventJpaRepository implements EventRepository {
     private EntityJpaRepository<Event, Long> entityRepository;
 
     @Override
-    public List<Event> findAll(User user, EventStatus status, int offset, int count) {
-        return getEntityRepository().findEntityList(queries.get(status), offset, count);
+    public List<Event> findAll(User user, EventStatus status, int offset, int limit) {
+        return getEntityRepository().findEntityList(queries.get(status), offset, limit);
     }
 
     @Override

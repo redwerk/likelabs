@@ -41,8 +41,8 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll(int offset, int count) {
-        return getEntityRepository().findEntityList(GET_ALL_USERS, offset, count);
+    public List<User> findAll(int offset, int limit) {
+        return getEntityRepository().findEntityList(GET_ALL_USERS, offset, limit);
     }
 
     @Override

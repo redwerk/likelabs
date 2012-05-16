@@ -44,24 +44,29 @@ public class ReviewJpaRepository implements ReviewRepository {
     }
 
     @Override
-    public List<Review> findAll(User author, int offset, int count) {
+    public List<Review> findAll(User author, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("authorId", author.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_BY_AUTHOR, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_REVIEWS_BY_AUTHOR, parameters, offset, limit);
     }
 
     @Override
-    public List<Review> findAll(Point point, int offset, int count) {
+    public List<Review> findAll(Point point, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_POINT, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_POINT, parameters, offset, limit);
     }
 
     @Override
-    public List<Review> findAll(Company company, int offset, int count) {
+    public List<Review> findAll(Company company, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_COMPANY, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_COMPANY, parameters, offset, limit);
+    }
+
+    @Override
+    public int getCount() {
+        return getEntityRepository().getCount();
     }
 
     @Override

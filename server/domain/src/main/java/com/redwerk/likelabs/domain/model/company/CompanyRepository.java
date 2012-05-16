@@ -10,9 +10,11 @@ public interface CompanyRepository {
     
     Company find(String name);
     
-    List<Company> findAll(int offset, int count);
+    List<Company> findAll(int offset, int limit);
 
-    List<Company> findAll(User admin, int offset, int count);
+    List<Company> findAll(User admin, int offset, int limit);
+    
+    int getCount();
 
     void add(Company company);
 

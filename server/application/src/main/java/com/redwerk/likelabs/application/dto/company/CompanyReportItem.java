@@ -1,8 +1,8 @@
-package com.redwerk.likelabs.application.dto;
+package com.redwerk.likelabs.application.dto.company;
 
 import com.redwerk.likelabs.domain.model.company.Company;
 
-public class CompanyExtendedData {
+public class CompanyReportItem {
 
     private final Company company;
     
@@ -10,7 +10,7 @@ public class CompanyExtendedData {
     
     private final int reviewsNumber;
 
-    public CompanyExtendedData(Company company, int pointsNumber, int reviewsNumber) {
+    public CompanyReportItem(Company company, int pointsNumber, int reviewsNumber) {
         this.company = company;
         this.pointsNumber = pointsNumber;
         this.reviewsNumber = reviewsNumber;

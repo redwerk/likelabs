@@ -27,7 +27,7 @@ public class TabletServiceImpl implements TabletService {
     @Transactional(readOnly = true)
     public List<Tablet> getTablets(long pointId, Pager pager) {
         Point point = pointRepository.get(pointId);
-        return tabletRepository.findAll(point, pager.getOffset(), pager.getCount());
+        return tabletRepository.findAll(point, pager.getOffset(), pager.getLimit());
     }
 
     @Override

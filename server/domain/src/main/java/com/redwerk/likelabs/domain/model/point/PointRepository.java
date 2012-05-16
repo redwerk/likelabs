@@ -10,7 +10,9 @@ public interface PointRepository {
 
     Point find(Company company, Address address);
 
-    List<Point> findAll(Company company, int offset, int count);
+    List<Point> findAll(Company company, int offset, int limit);
+    
+    int getCount();
 
     void add(Point point);
 

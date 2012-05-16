@@ -46,15 +46,20 @@ public class CompanyJpaRepository implements CompanyRepository {
     }
 
     @Override
-    public List<Company> findAll(int offset, int count) {
-        return getEntityRepository().findEntityList(GET_ALL_COMPANIES, offset, count);
+    public List<Company> findAll(int offset, int limit) {
+        return getEntityRepository().findEntityList(GET_ALL_COMPANIES, offset, limit);
     }
 
     @Override
-    public List<Company> findAll(User admin, int offset, int count) {
+    public List<Company> findAll(User admin, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("adminId", admin.getId());
-        return getEntityRepository().findEntityList(GET_COMPANIES_BY_ADMIN, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_COMPANIES_BY_ADMIN, parameters, offset, limit);
+    }
+
+    @Override
+    public int getCount() {
+        return getEntityRepository().getCount();
     }
 
     @Override

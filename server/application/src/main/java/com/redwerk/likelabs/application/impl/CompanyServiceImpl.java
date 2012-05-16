@@ -1,9 +1,10 @@
 package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.CompanyService;
-import com.redwerk.likelabs.application.dto.CompanyAdminData;
-import com.redwerk.likelabs.application.dto.CompanyData;
-import com.redwerk.likelabs.application.dto.CompanyExtendedData;
+import com.redwerk.likelabs.application.dto.Report;
+import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
+import com.redwerk.likelabs.application.dto.company.CompanyData;
+import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.application.dto.Pager;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
@@ -38,26 +39,26 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CompanyExtendedData> getCompanies(Pager pager) {
-        return getExtCompanies(companyRepository.findAll(pager.getOffset(), pager.getCount()));
+    public Report<CompanyReportItem> getCompanies(Pager pager) {
+        return getReport(companyRepository.findAll(pager.getOffset(), pager.getLimit()));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CompanyExtendedData> getCompanies(long adminId, Pager pager) {
+    public Report<CompanyReportItem> getCompanies(long adminId, Pager pager) {
         User admin = userRepository.get(adminId);
-        return getExtCompanies(companyRepository.findAll(admin, pager.getOffset(), pager.getCount()));
+        return getReport(companyRepository.findAll(admin, pager.getOffset(), pager.getLimit()));
     }
 
-    private List<CompanyExtendedData> getExtCompanies(List<Company> companies) {
-        List<CompanyExtendedData> extCompanies = new ArrayList<CompanyExtendedData>(companies.size());
+    private Report<CompanyReportItem> getReport(List<Company> companies) {
+        List<CompanyReportItem> items = new ArrayList<CompanyReportItem>(companies.size());
         for (Company c: companies) {
             // TODO: make separate queries
             int pointsNum = pointRepository.findAll(c, -1, -1).size();
             int reviewsNum = reviewRepository.findAll(c, -1, -1).size();
-            extCompanies.add(new CompanyExtendedData(c, pointsNum, reviewsNum));
+            items.add(new CompanyReportItem(c, pointsNum, reviewsNum));
         }
-        return extCompanies;
+        return new Report<CompanyReportItem>(items, companyRepository.getCount());
     }
 
     @Override

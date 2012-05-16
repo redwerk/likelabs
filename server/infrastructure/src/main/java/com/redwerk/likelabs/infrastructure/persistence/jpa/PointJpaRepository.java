@@ -47,10 +47,15 @@ public class PointJpaRepository implements PointRepository {
     }
 
     @Override
-    public List<Point> findAll(Company company, int offset, int count) {
+    public List<Point> findAll(Company company, int offset, int limit) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters, offset, count);
+        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters, offset, limit);
+    }
+
+    @Override
+    public int getCount() {
+        return getEntityRepository().getCount();
     }
 
     @Override

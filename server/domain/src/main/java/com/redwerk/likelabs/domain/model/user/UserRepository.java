@@ -8,7 +8,7 @@ public interface UserRepository {
 
     User find(String phone);
 
-    List<User> findAll(int offset, int count);
+    List<User> findAll(int offset, int limit);
 
     void add(User user);
 
