@@ -138,9 +138,9 @@
 		E77C32AA155012790057A34F /* RootController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootController.m; path = LikeLabs/presentation/RootController.m; sourceTree = "<group>"; };
 		E77C32AB155012790057A34F /* RootController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootController.xib; path = LikeLabs/presentation/RootController.xib; sourceTree = "<group>"; };
 		E77C32AE155018330057A34F /* ChildController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChildController.h; path = LikeLabs/presentation/ChildController.h; sourceTree = "<group>"; };
-		E77C32AF155037080057A34F /* PhotosController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosController.h; path = LikeLabs/presentation/PhotosController.h; sourceTree = "<group>"; };
-		E77C32B0155037080057A34F /* PhotosController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosController.m; path = LikeLabs/presentation/PhotosController.m; sourceTree = "<group>"; };
-		E77C32B1155037090057A34F /* PhotosController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotosController.xib; path = LikeLabs/presentation/PhotosController.xib; sourceTree = "<group>"; };
+		E77C32AF155037080057A34F /* PhotosController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotosController.h; path = LikeLabs/presentation/photo/PhotosController.h; sourceTree = "<group>"; };
+		E77C32B0155037080057A34F /* PhotosController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotosController.m; path = LikeLabs/presentation/photo/PhotosController.m; sourceTree = "<group>"; };
+		E77C32B1155037090057A34F /* PhotosController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotosController.xib; path = LikeLabs/presentation/photo/PhotosController.xib; sourceTree = "<group>"; };
 		E77C32B415503A010057A34F /* navigation_bar_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = navigation_bar_bg.png; path = LikeLabs/resources/navigation_bar_bg.png; sourceTree = "<group>"; };
 		E77C32B515503A020057A34F /* navigation_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = navigation_bg.png; path = LikeLabs/resources/navigation_bg.png; sourceTree = "<group>"; };
 		E77C32B615503A030057A34F /* navigation_divider_nn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = navigation_divider_nn.png; path = LikeLabs/resources/navigation_divider_nn.png; sourceTree = "<group>"; };
@@ -183,9 +183,9 @@
 		FF853CA6156170F1003F0374 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		FF853CA7156170F1003F0374 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
 		FF853CAB1561722B003F0374 /* btn_bg_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_bg_highlighted.png; sourceTree = "<group>"; };
-		FF853CAD156191DF003F0374 /* RootPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootPhotoController.h; path = LikeLabs/presentation/RootPhotoController.h; sourceTree = "<group>"; };
-		FF853CAE156191DF003F0374 /* RootPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootPhotoController.m; path = LikeLabs/presentation/RootPhotoController.m; sourceTree = "<group>"; };
-		FF853CAF156191E0003F0374 /* RootPhotoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootPhotoController.xib; path = LikeLabs/presentation/RootPhotoController.xib; sourceTree = "<group>"; };
+		FF853CAD156191DF003F0374 /* RootPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootPhotoController.h; path = LikeLabs/presentation/photo/RootPhotoController.h; sourceTree = "<group>"; };
+		FF853CAE156191DF003F0374 /* RootPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootPhotoController.m; path = LikeLabs/presentation/photo/RootPhotoController.m; sourceTree = "<group>"; };
+		FF853CAF156191E0003F0374 /* RootPhotoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootPhotoController.xib; path = LikeLabs/presentation/photo/RootPhotoController.xib; sourceTree = "<group>"; };
 		FF853CB21561A704003F0374 /* LikeLabs.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = LikeLabs.entitlements; sourceTree = "<group>"; };
 		FF87485C1559348A0010D272 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FF87486A155947B90010D272 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -199,20 +199,20 @@
 		FF9DF1531557DEB10002A658 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		FF9DF1541557DEB10002A658 /* release_notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.txt; sourceTree = "<group>"; };
 		FF9DF1551557DEB10002A658 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
-		FFC60FDD155BCC5E00F4368A /* PhotoSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSelectionController.h; path = LikeLabs/presentation/PhotoSelectionController.h; sourceTree = "<group>"; };
-		FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSelectionController.m; path = LikeLabs/presentation/PhotoSelectionController.m; sourceTree = "<group>"; };
-		FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoSelectionController.xib; path = LikeLabs/presentation/PhotoSelectionController.xib; sourceTree = "<group>"; };
+		FFC60FDD155BCC5E00F4368A /* PhotoSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSelectionController.h; path = LikeLabs/presentation/photo/PhotoSelectionController.h; sourceTree = "<group>"; };
+		FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSelectionController.m; path = LikeLabs/presentation/photo/PhotoSelectionController.m; sourceTree = "<group>"; };
+		FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoSelectionController.xib; path = LikeLabs/presentation/photo/PhotoSelectionController.xib; sourceTree = "<group>"; };
 		FFC60FE3155BDDD700F4368A /* photo_selection_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_selection_bg.png; path = LikeLabs/resources/photo_selection_bg.png; sourceTree = "<group>"; };
 		FFC60FE5155BE0D800F4368A /* photo_selection_bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_selection_bg_portrait.png; path = LikeLabs/resources/photo_selection_bg_portrait.png; sourceTree = "<group>"; };
 		FFC60FE7155BE72500F4368A /* share_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share_btn.png; path = LikeLabs/resources/share_btn.png; sourceTree = "<group>"; };
-		FFC60FE9155C3CEB00F4368A /* PhotoMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoMessageController.h; path = LikeLabs/presentation/PhotoMessageController.h; sourceTree = "<group>"; };
-		FFC60FEA155C3CEB00F4368A /* PhotoMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoMessageController.m; path = LikeLabs/presentation/PhotoMessageController.m; sourceTree = "<group>"; };
-		FFC60FEB155C3CEB00F4368A /* PhotoMessageController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoMessageController.xib; path = LikeLabs/presentation/PhotoMessageController.xib; sourceTree = "<group>"; };
+		FFC60FE9155C3CEB00F4368A /* PhotoMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoMessageController.h; path = LikeLabs/presentation/photo/PhotoMessageController.h; sourceTree = "<group>"; };
+		FFC60FEA155C3CEB00F4368A /* PhotoMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoMessageController.m; path = LikeLabs/presentation/photo/PhotoMessageController.m; sourceTree = "<group>"; };
+		FFC60FEB155C3CEB00F4368A /* PhotoMessageController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoMessageController.xib; path = LikeLabs/presentation/photo/PhotoMessageController.xib; sourceTree = "<group>"; };
 		FFC60FEE155C41D900F4368A /* photo_message_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_message_bg.png; path = LikeLabs/resources/photo_message_bg.png; sourceTree = "<group>"; };
 		FFC60FF0155C442500F4368A /* next_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = next_btn.png; path = LikeLabs/resources/next_btn.png; sourceTree = "<group>"; };
-		FFD87806155A96CF008105E0 /* PhotoPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoPickerController.h; path = LikeLabs/presentation/PhotoPickerController.h; sourceTree = "<group>"; };
-		FFD87807155A96D0008105E0 /* PhotoPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoPickerController.m; path = LikeLabs/presentation/PhotoPickerController.m; sourceTree = "<group>"; };
-		FFD87808155A96D0008105E0 /* PhotoPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoPickerController.xib; path = LikeLabs/presentation/PhotoPickerController.xib; sourceTree = "<group>"; };
+		FFD87806155A96CF008105E0 /* PhotoPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoPickerController.h; path = LikeLabs/presentation/photo/PhotoPickerController.h; sourceTree = "<group>"; };
+		FFD87807155A96D0008105E0 /* PhotoPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoPickerController.m; path = LikeLabs/presentation/photo/PhotoPickerController.m; sourceTree = "<group>"; };
+		FFD87808155A96D0008105E0 /* PhotoPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoPickerController.xib; path = LikeLabs/presentation/photo/PhotoPickerController.xib; sourceTree = "<group>"; };
 		FFD8780B155AA1EF008105E0 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = camera.png; path = LikeLabs/resources/camera.png; sourceTree = "<group>"; };
 		FFD87815155AE4D8008105E0 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -365,6 +365,16 @@
 				E77C32AA155012790057A34F /* RootController.m */,
 				E77C32AB155012790057A34F /* RootController.xib */,
 				E77C32AE155018330057A34F /* ChildController.h */,
+				FF32DBA5156381A10020357B /* photo */,
+				FF8B676415628E2000BC6BEA /* ContainerController.h */,
+			);
+			name = Presentation;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		FF32DBA5156381A10020357B /* photo */ = {
+			isa = PBXGroup;
+			children = (
 				E77C32AF155037080057A34F /* PhotosController.h */,
 				E77C32B0155037080057A34F /* PhotosController.m */,
 				E77C32B1155037090057A34F /* PhotosController.xib */,
@@ -380,10 +390,8 @@
 				FF853CAD156191DF003F0374 /* RootPhotoController.h */,
 				FF853CAE156191DF003F0374 /* RootPhotoController.m */,
 				FF853CAF156191E0003F0374 /* RootPhotoController.xib */,
-				FF8B676415628E2000BC6BEA /* ContainerController.h */,
 			);
-			name = Presentation;
-			path = ..;
+			name = photo;
 			sourceTree = "<group>";
 		};
 		FF853C8415616C61003F0374 /* navigation */ = {
