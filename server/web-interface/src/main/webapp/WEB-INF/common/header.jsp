@@ -12,7 +12,7 @@
     <head>
         <title>Like Labs</title>
         <style type="text/css">
-            @import "/static/css/styles.css";
+            @import "/static/css/styles_1.css";
         </style>
         <script src="/static/scripts/jquery-min.js"></script>
         <sec:authorize access="not isAuthenticated()">

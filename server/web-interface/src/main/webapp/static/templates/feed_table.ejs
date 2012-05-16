@@ -1,0 +1,13 @@
+<% 
+    for (var key=0; key<feeds.length;key++) {
+        var feed = feeds[key];
+%>
+
+<div class="feed_container <%= key%2==0? "feed_left_block" : "" %>">
+
+    <div class="photo"><img src="<%= feed.photo %>" width="292" height="254" alt=""/></div>
+    <div class="description"><%= feed.message %></div>
+</div>
+<%
+    }
+%>

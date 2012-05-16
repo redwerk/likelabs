@@ -1,0 +1,23 @@
+<table cellpadding="0" cellspacing="1" style="width: 100%; border: solid 1px #d2d9df" summary="" class="content_table">
+    <thead style="height: 30px;">
+        <tr style="background-color: #efefef">
+            <th>Logo</th>
+            <th>Name</th>
+            <th>Points</th>
+            <th>Reviews</th>
+        </tr>
+    </thead>
+<% 
+    for (var key=0; key<companies.length;key++) {
+        var company = companies[key];
+%>
+    <tr style="background-color: #<%= key % 2 == 0? "fdfeff" : "efefef" %>">
+        <td width="60"><img src="<%= company.logo %>" width="32" height="32" alt=""/></td>
+        <td><%= company.name %></td>
+        <td><a href="/company/<%= company.id %>/points/"><%= company.points %></a></td>
+        <td><a href="/company/<%= company.id %>/feed/"><%= company.comments %></a></td>
+    </tr>
+<% 
+    }
+%>
+</table>
