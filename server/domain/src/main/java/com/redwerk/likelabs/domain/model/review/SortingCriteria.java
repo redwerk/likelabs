@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.domain.model.query;
+package com.redwerk.likelabs.domain.model.review;
 
 public enum SortingCriteria {
     

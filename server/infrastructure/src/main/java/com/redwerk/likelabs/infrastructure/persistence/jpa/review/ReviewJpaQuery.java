@@ -1,126 +1,183 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa.review;
 
-import com.redwerk.likelabs.domain.model.company.Company;
-import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.model.query.SortingRule;
-import com.redwerk.likelabs.domain.model.review.Review;
-import com.redwerk.likelabs.domain.model.review.ReviewContentType;
-import com.redwerk.likelabs.domain.model.review.ReviewQuery;
-import com.redwerk.likelabs.domain.model.review.ReviewStatus;
-import com.redwerk.likelabs.domain.model.review.exception.ReviewNotFoundException;
-import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.review.SortingCriteria;
+import com.redwerk.likelabs.domain.model.review.SortingOrder;
+import com.redwerk.likelabs.domain.model.review.SortingRule;
+import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
+import org.apache.commons.lang.time.DateUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.MessageFormat;
+import java.util.*;
 
 public class ReviewJpaQuery implements ReviewQuery {
 
-    private static final String ORDER_BY = " order by r.createdDT desc, r.id";
+    private static final SortingRule DEFAULT_SORTING_RULE =
+            new SortingRule(SortingCriteria.DATE, SortingOrder.DESCENDING);
 
-    private static final String GET_REVIEWS_BY_AUTHOR =
-            "select r from Review r where r.author.id = :authorId" + ORDER_BY;
+    private static final Map<ReviewContentType, String> TYPE_SUB_FILTERS = new HashMap<ReviewContentType, String>() {{
+        put(ReviewContentType.PHOTO_ONLY, "r.message is null and r.photo is not null");
+        put(ReviewContentType.TEXT_ONLY, "r.message is not null and r.photo is null");
+        put(ReviewContentType.TEXT_PHOTO, "r.message is not null and r.photo is not null");
+    }};
 
-    private static final String GET_REVIEWS_FOR_POINT =
-            "select r from Review r where r.point.id = :pointId" + ORDER_BY;
+    private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
+        put(SortingCriteria.DATE, "r.createdDT {0}");
+        put(SortingCriteria.POINT, "r.point.company.name {0}, r.point.address {0}");
+        put(SortingCriteria.REVIEW_STATUS, "r.status {0}");
+        put(SortingCriteria.REVIEW_TYPE, "r.photo {0}, r.message {0}");
+    }};
 
-    private static final String GET_REVIEWS_FOR_COMPANY =
-            "select r from Review r where r.point.company.id = :companyId" + ORDER_BY;
+    private static final Map<SortingOrder, String> SORTING_ORDER_EXPRESSIONS = new HashMap<SortingOrder, String>() {{
+        put(SortingOrder.ASCENDING, "asc");
+        put(SortingOrder.DESCENDING, "desc");
+    }};
+
+    private static final String REVIEWS_FILTER =
+            "from Review r where ((:authorId is null or r.author.id = :authorId) and " +
+                    "(:moderatorId is null or r.moderator.id = :moderatorId) and " +
+                    "(:companyIds is null or r.point.company.id in :companyIds) and " +
+                    "(:pointIds is null or r.point.id in :pointIds) and " +
+                    "(:fromDate is null or r.createdDT >= fromDate) and " +
+                    "(:toDate is null or r.createdDT <= toDate) and " +
+                    "(:status is null or r.status = :status))";
+
+    private static final String REVIEWS_QUERY = "select r {0} {1}";
+
+    private static final String REVIEWS_COUNT_QUERY = "select count(r) {0}";
+
 
     private EntityJpaRepository<Review, Long> entityRepository;
+
+    private long authorId;
+
+    private long moderatorId;
+
+    private List<Long> companyIds;
+
+    private List<Long> pointIds;
+
+    private Date fromDate;
+
+    private Date toDate;
+
+    private ReviewContentType contentType;
+
+    private ReviewStatus status;
+
+    private Pager pager;
+
+    private SortingRule sortingRule;
 
 
     public ReviewJpaQuery(EntityJpaRepository<Review, Long> entityRepository) {
         this.entityRepository = entityRepository;
     }
 
-    /*
-    @Override
-    public List<Review> findAll(User author, int offset, int limit) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("authorId", author.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_BY_AUTHOR, parameters, offset, limit);
-    }
-
-    @Override
-    public List<Review> findAll(Point point, int offset, int limit) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_POINT, parameters, offset, limit);
-    }
-
-    @Override
-    public List<Review> findAll(Company company, int offset, int limit) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_REVIEWS_FOR_COMPANY, parameters, offset, limit);
-    }
-
-    private EntityJpaRepository<Review, Long> getEntityRepository() {
-        if (entityRepository == null) {
-            entityRepository = new EntityJpaRepository<Review, Long>(em, Review.class);
-        }
-        return entityRepository;
-    }
-    */
-
     @Override
     public ReviewQuery setAuthorId(long authorId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.authorId = authorId;
+        return this;
     }
 
     @Override
     public ReviewQuery setModeratorId(long moderatorId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.moderatorId = moderatorId;
+        return this;
     }
 
     @Override
     public ReviewQuery setCompanyIds(List<Long> companyIds) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.companyIds = companyIds;
+        return this;
     }
 
     @Override
     public ReviewQuery setPointIds(List<Long> pointIds) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.pointIds = pointIds;
+        return this;
     }
 
     @Override
     public ReviewQuery setDateRange(Date fromDate, Date toDate) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.fromDate = DateUtils.truncate(fromDate, Calendar.DATE);
+        this.toDate = DateUtils.truncate(toDate, Calendar.DATE);
+        return this;
     }
 
     @Override
     public ReviewQuery setContentType(ReviewContentType contentType) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.contentType = contentType;
+        return this;
     }
 
     @Override
     public ReviewQuery setStatus(ReviewStatus status) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.status = status;
+        return this;
     }
 
     @Override
     public ReviewQuery setPager(Pager pager) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.pager = pager;
+        return this;
     }
 
     @Override
     public ReviewQuery setSortingRule(SortingRule sortingRule) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        this.sortingRule = sortingRule;
+        return this;
     }
 
     @Override
     public List<Review> findReviews() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String query = MessageFormat.format(REVIEWS_QUERY, getQueryString(), getOrderByStatement());
+        return entityRepository.findEntityList(query, getParameters(), (pager != null) ? pager : Pager.ALL_RECORDS);
     }
 
     @Override
     public int getCount() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        String query = MessageFormat.format(REVIEWS_COUNT_QUERY, getQueryString());
+        return entityRepository.getCount(query);
     }
+    
+    private Map<String, Object> getParameters() {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("authorId", authorId);
+        parameters.put("moderatorId", moderatorId);
+        parameters.put("companyIds", companyIds);
+        parameters.put("pointIds", pointIds);
+        parameters.put("fromDate", fromDate);
+        parameters.put("toDate", toDate);
+        parameters.put("status", status);
+        return parameters;
+    }
+    
+    private String getQueryString() {
+        return (contentType == null) ?
+                REVIEWS_FILTER :
+                MessageFormat.format("{0} and {1}", REVIEWS_FILTER, TYPE_SUB_FILTERS.get(contentType));
+    }
+
+    private String getOrderByStatement() {
+        if (sortingRule == null) {
+            sortingRule = DEFAULT_SORTING_RULE;
+        }
+        StringBuilder result = new StringBuilder("order by ");
+        result.append(getOrderBySubExpression(sortingRule));
+        if (sortingRule.getCriteria() != SortingCriteria.DATE) {
+            result.append(", ").append(getOrderBySubExpression(DEFAULT_SORTING_RULE));
+        }
+        result.append(", r.id desc");
+        return result.toString();
+    }
+
+    private String getOrderBySubExpression(SortingRule subRule) {
+        return MessageFormat.format(
+                ORDER_BY_EXPRESSIONS.get(subRule.getCriteria()),
+                SORTING_ORDER_EXPRESSIONS.get(subRule.getOrder())
+        );
+    }
+
 }

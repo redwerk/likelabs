@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.application.dto;
 
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.model.query.SortingRule;
+import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.ReviewContentType;
 
 import java.util.Date;
