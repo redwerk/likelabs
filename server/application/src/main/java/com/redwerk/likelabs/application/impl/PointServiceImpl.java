@@ -8,6 +8,7 @@ import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.point.PointRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +28,15 @@ public class PointServiceImpl implements PointService {
     public Report<Point> getPoints(long companyId, Pager pager) {
         Company company = companyRepository.get(companyId);
         return new Report<Point>(
-                pointRepository.findAll(company, pager),
+                getLoadedPoints(pointRepository.findAll(company, pager)),
                 pointRepository.getCount(company));
+    }
+
+    private List<Point> getLoadedPoints(List<Point> points) {
+        for (Point p: points) {
+            p.getAddress();
+        }
+        return points;
     }
 
     @Override

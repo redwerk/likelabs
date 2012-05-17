@@ -19,15 +19,16 @@ import java.util.Map;
 @Repository
 public class PointJpaRepository implements PointRepository {
 
-    private static final String COMPANY_FILTER = "from Point p where p.company.id = :companyId";
+   private static final String COMPANY_FILTER = "from Point p join p.addresses a where p.company.id = :companyId";
 
     private static final String GET_POINTS_FOR_COMPANY = "select p " + COMPANY_FILTER;
 
     private static final String GET_POINTS_COUNT_FOR_COMPANY = "select count(*) " + COMPANY_FILTER;
 
-    private static final String GET_ORDERED_POINTS_FOR_COMPANY = GET_POINTS_FOR_COMPANY + " order by p.address";
+    private static final String GET_ORDERED_POINTS_FOR_COMPANY =
+            GET_POINTS_FOR_COMPANY + " order by a.country, a.state, a.city, a.addressLine1, a.addressLine2";
 
-    private static final String GET_POINT_BY_ADDRESS = GET_POINTS_FOR_COMPANY + " and p.address = :address";
+    private static final String GET_POINT_BY_ADDRESS = GET_POINTS_FOR_COMPANY + " and a = :address"; 
 
     @PersistenceContext
     private EntityManager em;

@@ -22,9 +22,10 @@ public class ReviewJpaQuery implements ReviewQuery {
         put(ReviewContentType.TEXT_PHOTO, "r.message is not null and r.photo is not null");
     }};
 
-    private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
+     private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
         put(SortingCriteria.DATE, "r.createdDT {0}");
-        put(SortingCriteria.POINT, "r.point.company.name {0}, r.point.address {0}");
+        put(SortingCriteria.POINT,
+                "r.point.company.name {0}, a.country {0}, a.state {0}, a.city {0}, a.addressLine1 {0}, a.addressLine2 {0}");
         put(SortingCriteria.REVIEW_STATUS, "r.status {0}");
         put(SortingCriteria.REVIEW_TYPE, "r.photo {0}, r.message {0}");
     }};
@@ -35,13 +36,13 @@ public class ReviewJpaQuery implements ReviewQuery {
     }};
 
     private static final String REVIEWS_FILTER =
-            "from Review r where ((:authorId is null or r.author.id = :authorId) and " +
+            "from Review r join r.point.addresses a where ((:authorId is null or r.author.id = :authorId) and " +
                     "(:moderatorId is null or r.moderator.id = :moderatorId) and " +
                     "(:companyIds is null or r.point.company.id in :companyIds) and " +
                     "(:pointIds is null or r.point.id in :pointIds) and " +
-                    "(:fromDate is null or r.createdDT >= fromDate) and " +
-                    "(:toDate is null or r.createdDT <= toDate) and " +
-                    "(:status is null or r.status = :status))";
+                    "(:fromDate is null or r.createdDT >= :fromDate) and " +
+                    "(:toDate is null or r.createdDT <= :toDate) and " +
+                    "(:status is null or r.status = :status))"; 
 
     private static final String REVIEWS_QUERY = "select r {0} {1}";
 
