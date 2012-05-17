@@ -44,7 +44,7 @@ public class ReviewJpaRepository extends ReviewRepository {
     }
 
     @Override
-    public void remove(Review review) {
+    public void removeInternal(Review review) {
         getEntityRepository().remove(review);
     }
 
