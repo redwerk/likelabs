@@ -173,14 +173,12 @@ public class Company {
         return Collections.unmodifiableSet(sampleReviews);
     }
 
-    public void addSampleReview(Review review) {
-        assert !sampleReviews.contains(review);
-        sampleReviews.add(review);
+    public boolean addSampleReview(Review review) {
+        return sampleReviews.add(review);
     }
 
-    public void removeSampleReview(Review review) {
-        assert sampleReviews.contains(review);
-        sampleReviews.remove(review);
+    public boolean removeSampleReview(Review review) {
+        return sampleReviews.remove(review);
     }
 
     public void clearSampleReviews() {

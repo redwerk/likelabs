@@ -26,14 +26,7 @@ public interface ReviewService {
     void updateReview(long userId, long reviewId, String text);
 
     void updateStatus(long userId, long reviewId, ReviewStatus status,
-            boolean useAsPromo, boolean publishOnCompanyPage);
-    
-    void updateStatus(long userId, long reviewId, ReviewStatus status);
-    
-    void updatePromoStatus(long userId, long reviewId, boolean useAsPromo);
-    
-    void publishOnCompanyPage(long userId, long reviewId);
-
+            boolean useAsSample, boolean publishOnCompanyPage);
     
     void deleteReview(long reviewId);
     

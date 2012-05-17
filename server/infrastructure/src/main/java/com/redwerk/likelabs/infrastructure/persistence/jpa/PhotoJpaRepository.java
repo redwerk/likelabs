@@ -52,7 +52,10 @@ public class PhotoJpaRepository implements PhotoRepository {
 
     @Override
     public int getCount(User user, PhotoStatus status) {
-        return getEntityRepository().getCount(GET_PHOTOS_COUNT_BY_USER_AND_STATUS);
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("userId", user.getId());
+        parameters.put("status", status);
+        return getEntityRepository().getCount(GET_PHOTOS_COUNT_BY_USER_AND_STATUS, parameters);
     }
 
     @Override

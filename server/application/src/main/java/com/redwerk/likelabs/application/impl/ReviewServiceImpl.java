@@ -7,6 +7,8 @@ import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
+import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -81,31 +86,21 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void updateReview(long userId, long reviewId, String text) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        User user = userRepository.get(userId);
+        Review review = reviewRepository.get(reviewId);
+        review.setMessage(text, user);
     }
 
     @Override
     @Transactional
-    public void updateStatus(long userId, long reviewId, ReviewStatus status, boolean useAsPromo, boolean publishOnCompanyPage) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    @Transactional
-    public void updateStatus(long userId, long reviewId, ReviewStatus status) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    @Transactional
-    public void updatePromoStatus(long userId, long reviewId, boolean useAsPromo) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    @Transactional
-    public void publishOnCompanyPage(long userId, long reviewId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void updateStatus(long userId, long reviewId, ReviewStatus status, boolean useAsSample, boolean publishOnCompanyPage) {
+        User user = userRepository.get(userId);
+        Review review = reviewRepository.get(reviewId);
+        review.setStatus(status, user);
+        if (publishOnCompanyPage) {
+            review.publishInCompanySN(user);
+        }
+        review.setSampleStatus(useAsSample, user);
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +57,10 @@ public class CompanyJpaRepository implements CompanyRepository {
 
     @Override
     public List<Company> findAll(User admin, Pager pager) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("adminId", admin.getId());
-        return getEntityRepository().findEntityList(GET_COMPANIES_BY_ADMIN, parameters, pager);
+        return getEntityRepository().findEntityList(
+                GET_COMPANIES_BY_ADMIN,
+                Collections.<String, Object>singletonMap("adminId", admin.getId()),
+                pager);
     }
 
     @Override
@@ -68,7 +70,9 @@ public class CompanyJpaRepository implements CompanyRepository {
 
     @Override
     public int getCount(User admin) {
-        return getEntityRepository().getCount(GET_COMPANIES_COUNT_BY_ADMIN);
+        return getEntityRepository().getCount(
+                GET_COMPANIES_COUNT_BY_ADMIN,
+                Collections.<String, Object>singletonMap("adminId", admin.getId()));
     }
 
     @Override

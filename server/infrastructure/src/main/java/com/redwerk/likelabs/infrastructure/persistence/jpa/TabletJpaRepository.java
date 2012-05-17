@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,14 +49,17 @@ public class TabletJpaRepository implements TabletRepository {
 
     @Override
     public List<Tablet> findAll(Point point, Pager pager) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("pointId", point.getId());
-        return getEntityRepository().findEntityList(GET_TABLETS_FOR_POINT, parameters,pager);
+        return getEntityRepository().findEntityList(
+                GET_TABLETS_FOR_POINT,
+                Collections.<String, Object>singletonMap("pointId", point.getId()),
+                pager);
     }
 
     @Override
     public int getCount(Point point) {
-        return getEntityRepository().getCount(GET_TABLETS_COUNT_FOR_POINT);
+        return getEntityRepository().getCount(
+                GET_TABLETS_COUNT_FOR_POINT,
+                Collections.<String, Object>singletonMap("pointId", point.getId()));
     }
 
     @Override

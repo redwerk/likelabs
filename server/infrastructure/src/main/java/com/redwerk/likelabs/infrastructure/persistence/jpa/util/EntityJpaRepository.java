@@ -7,6 +7,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +38,12 @@ public class EntityJpaRepository<T, ID extends Serializable> {
     }
 
     public int getCount() {
-        return getCount(String.format(COUNT_QUERY, entityClass.getName()));
+        return getCount(String.format(COUNT_QUERY, entityClass.getName()), Collections.<String, Object>emptyMap());
     }
 
-    public int getCount(String query) {
-         return ((Long) em.createQuery(query).getSingleResult()).intValue();
+    public int getCount(String queryString, Map<String, Object> parameters) {
+        TypedQuery<T> query = getQuery(queryString, parameters);
+        return ((Long) query.getSingleResult()).intValue();
     }
 
     public List<T> findEntityList(String queryString, Map<String, Object> parameters, Pager pager) {

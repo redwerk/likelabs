@@ -139,7 +139,7 @@ public class ReviewJpaQuery implements ReviewQuery {
     @Override
     public int getCount() {
         String query = MessageFormat.format(REVIEWS_COUNT_QUERY, getQueryString());
-        return entityRepository.getCount(query);
+        return entityRepository.getCount(query, getParameters());
     }
     
     private Map<String, Object> getParameters() {

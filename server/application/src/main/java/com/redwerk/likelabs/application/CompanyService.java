@@ -16,7 +16,11 @@ public interface CompanyService {
     Report<CompanyReportItem> getCompanies(Pager pager);
 
     Report<CompanyReportItem> getCompanies(long adminId, Pager pager);
-    
+
+    int getCompaniesCount();
+
+    int getCompaniesCount(long adminId);
+
     Company getCompany(long companyId);
     
     

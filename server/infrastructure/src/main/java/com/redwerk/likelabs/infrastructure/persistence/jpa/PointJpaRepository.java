@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,14 +54,17 @@ public class PointJpaRepository implements PointRepository {
 
     @Override
     public List<Point> findAll(Company company, Pager pager) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("companyId", company.getId());
-        return getEntityRepository().findEntityList(GET_ORDERED_POINTS_FOR_COMPANY, parameters, pager);
+        return getEntityRepository().findEntityList(
+                GET_ORDERED_POINTS_FOR_COMPANY,
+                Collections.<String, Object>singletonMap("companyId", company.getId()),
+                pager);
     }
 
     @Override
     public int getCount(Company company) {
-        return getEntityRepository().getCount(GET_POINTS_COUNT_FOR_COMPANY);
+        return getEntityRepository().getCount(
+                GET_POINTS_COUNT_FOR_COMPANY,
+                Collections.<String, Object>singletonMap("companyId", company.getId()));
     }
 
     @Override

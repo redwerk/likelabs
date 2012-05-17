@@ -1,17 +1,17 @@
 package com.redwerk.likelabs.domain.model.review;
 
+import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.point.Point;
+import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
+import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "review")
@@ -131,24 +131,58 @@ public class Review {
 
     // modifiers
 
-    public void setMessage(String message) {
+    public boolean setMessage(String message, User user) {
+        if (!author.equals(user)) {
+            throw new NotAuthorizedReviewUpdateException(user, this, UpdateType.UPDATE_MESSAGE);
+        }
+        if (message.equals(this.message)) {
+            return false;
+        }
         this.message = message;
         this.modifiedDT = new Date();
+        return true;
     }
 
-    public void setStatus(ReviewStatus status, User moderator) {
+    public boolean setStatus(ReviewStatus status, User moderator) {
+        if (!canModerate(moderator)) {
+            throw new NotAuthorizedReviewUpdateException(moderator, this, UpdateType.UPDATE_STATUS);
+        }
+        if (this.status.equals(status)) {
+            return false;
+        }
         this.status = status;
         markAsModerated(moderator);
+        return true;
     }
 
-    public void setPublishedInCompanySN(boolean publishedInCompanySN) {
-        this.publishedInCompanySN = publishedInCompanySN;
+    public boolean publishInCompanySN(User moderator) {
+        if (!canModerate(moderator)) {
+            throw new NotAuthorizedReviewUpdateException(moderator, this, UpdateType.APPROVE_FOR_COMPANY_PAGE);
+        }
+        if (publishedInCompanySN) {
+            return false;
+        }
+        // TODO: publish on company pages
+        publishedInCompanySN = true;
         markAsModerated(moderator);
+        return true;
+    }
+
+    public boolean setSampleStatus(boolean useAsSample, User moderator) {
+        if (!canModerate(moderator)) {
+            throw new NotAuthorizedReviewUpdateException(moderator, this, UpdateType.UPDATE_STATUS);
+        }
+        Company company = point.getCompany();
+        return useAsSample ? company.addSampleReview(this) : company.removeSampleReview(this);
     }
 
     private void markAsModerated(User moderator) {
         this.moderator = moderator;
         this.moderatedDT = new Date();
+    }
+    
+    private boolean canModerate(User user) {
+        return point.getCompany().getAdmins().contains(moderator);
     }
 
     // overrides

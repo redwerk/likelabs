@@ -61,4 +61,5 @@ public class PointServiceImpl implements PointService {
         Point point = pointRepository.get(pointId);
         pointRepository.remove(point);
     }
+
 }

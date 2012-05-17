@@ -63,6 +63,19 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
+    public int getCompaniesCount() {
+        return companyRepository.getCount();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getCompaniesCount(long adminId) {
+        User admin = userRepository.get(adminId);
+        return companyRepository.getCount(admin);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Company getCompany(long companyId) {
         return getLoadedCompany(companyRepository.get(companyId));
     }
