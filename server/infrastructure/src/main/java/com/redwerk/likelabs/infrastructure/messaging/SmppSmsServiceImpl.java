@@ -69,7 +69,7 @@ public class SmppSmsServiceImpl implements SmsService {
     private String systemType;	//optional by specification (some SMSC may require)
    
     
-    private String addressRangeBindTo = sourceAddress;	//regex of addresses to listen for incoming messages    
+    private String addressRangeBindTo;	//regex of addresses to listen for incoming messages    
     private final Object smppSessionLock = new Object();
     private SMPPSession smppSession;
     
@@ -80,15 +80,11 @@ public class SmppSmsServiceImpl implements SmsService {
     @Override
     public void sendMessage(String phone, String msgText) {
     	synchronized(smppSessionLock) {
-	        try {	        	
-	        	startSmppSessionIfNotExists();
-	        } catch (IOException e) {
-	            throw new SmsMessagingException(DeliveryStatus.GENERAL_ERROR, phone, "Starting SMPP session failed", e);
-	        }
+    		startSmppSessionIfNotExists();
 	        try {	        	
 	        	LOG.debug("Submitting message: phone= '{}'", phone);
 	            String messageId = smppSession.submitShortMessage("CMT", 
-	            		TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, 
+	            		TypeOfNumber.ALPHANUMERIC, NumberingPlanIndicator.UNKNOWN, 
 	            		sourceAddress, 
 	            		TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, 
 	            		phone, 
@@ -119,17 +115,23 @@ public class SmppSmsServiceImpl implements SmsService {
     
     
     
-    private void startSmppSessionIfNotExists() throws IOException {
+    private void startSmppSessionIfNotExists() {
  		if(smppSession == null) {
- 			smppSession = new SMPPSession();
- 	        DeliveryReceiptListener deliveryListener = new DeliveryReceiptListener();
-        	BindParameter bindParam = new BindParameter(BindType.BIND_TRX, username, password, systemType, TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN, addressRangeBindTo);        
- 	        smppSession.setMessageReceiverListener(deliveryListener);
- 	        smppSession.setTransactionTimer(SMSC_TIMEOUT_MS);
-        	LOG.debug("Starting SMPP session");
-        	smppSession.connectAndBind(remoteHost, remotePort, bindParam, SMSC_TIMEOUT_MS);
-        	LOG.debug("SMPP session connected and binded: sessionId={}", smppSession.getSessionId());
-        	new SessionActivityMonitor().start();
+	        try {
+	        	smppSession = new SMPPSession();
+	 	        DeliveryReceiptListener deliveryListener = new DeliveryReceiptListener();
+	        	BindParameter bindParam = new BindParameter(BindType.BIND_TRX, username, password, systemType, 
+	        			TypeOfNumber.INTERNATIONAL, NumberingPlanIndicator.UNKNOWN,	addressRangeBindTo != null ? addressRangeBindTo : sourceAddress);        
+	 	        smppSession.setMessageReceiverListener(deliveryListener);
+	 	        smppSession.setTransactionTimer(SMSC_TIMEOUT_MS);
+	        	LOG.debug("Starting SMPP session");
+	        	smppSession.connectAndBind(remoteHost, remotePort, bindParam, SMSC_TIMEOUT_MS);
+	        	LOG.debug("SMPP session connected and binded: sessionId={}", smppSession.getSessionId());
+	        	new SessionActivityMonitor().start();
+	        } catch (IOException e) {
+	        	smppSession = null;
+	            throw new SmsMessagingException(DeliveryStatus.GENERAL_ERROR, null, "Starting SMPP session failed", e);
+	        }
     	}   	
     }
     
@@ -187,8 +189,8 @@ public class SmppSmsServiceImpl implements SmsService {
 				try {
 					DeliveryReceipt deliveryReceipt = deliverSm.getShortMessageAsDeliveryReceipt();
 					if(LOG.isInfoEnabled()) {
-						LOG.info("Received delivery receipt: messageId={} from '{}' to '{}' : {}", 
-								new Object[]{deliveryReceipt.getId(), deliverSm.getSourceAddr(), deliverSm.getDestAddress(), deliveryReceipt});
+						LOG.info("Received delivery receipt: messageId={}, status : {}, src: '{}', dest: '{}'", 
+								new Object[]{deliveryReceipt.getId(), deliveryReceipt.getFinalStatus(), deliverSm.getSourceAddr(), deliverSm.getDestAddress()});
 					}
 				} catch (InvalidDeliveryReceiptException e) {
 					LOG.error("Invalid delivery receipt", e);
