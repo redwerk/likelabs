@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ReviewQuery {
 
-    ReviewQuery setAuthorId(long authorId);
+    ReviewQuery setAuthorId(Long authorId);
     
-    ReviewQuery setModeratorId(long moderatorId);
+    ReviewQuery setModeratorId(Long moderatorId);
 
     ReviewQuery setCompanyIds(List<Long> companyIds);
 

@@ -31,7 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public Report<Review> getPublicReviews(long companyId, ReviewQueryData queryData) {
         ReviewQuery query = getQuery(queryData).setCompanyIds(Arrays.asList(companyId));
-        return new Report<Review>(query.findReviews(), query.getCount());
+        return new Report<Review>(getLoadedReviews(query.findReviews()), query.getCount());
     }
 
     private ReviewQuery getQuery(ReviewQueryData queryData) {
@@ -50,7 +50,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewQuery query = getQuery(queryData)
                 .setCompanyIds(Arrays.asList(companyId))
                 .setStatus(status);
-        return new Report<Review>(query.findReviews(), query.getCount());
+        return new Report<Review>(getLoadedReviews(query.findReviews()), query.getCount());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewQuery query = getQuery(queryData)
                 .setModeratorId(moderatorId)
                 .setStatus(status);
-        return new Report<Review>(query.findReviews(), query.getCount());
+        return new Report<Review>(getLoadedReviews(query.findReviews()), query.getCount());
     }
 
     @Override
@@ -68,7 +68,15 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewQuery query = getQuery(queryData)
                 .setAuthorId(authorId)
                 .setCompanyIds(companyIds);
-        return new Report<Review>(query.findReviews(), query.getCount());
+        return new Report<Review>(getLoadedReviews(query.findReviews()), query.getCount());
+    }
+
+    private List<Review> getLoadedReviews(List<Review> reviews) {
+        for (Review r: reviews) {
+            r.getAuthor().getAccounts();
+            r.getPoint().getAddress();
+        }
+        return reviews;
     }
 
     @Override

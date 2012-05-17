@@ -42,7 +42,7 @@ public class ReviewJpaQuery implements ReviewQuery {
                     "(:pointIds is null or r.point.id in :pointIds) and " +
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
                     "(:toDate is null or r.createdDT <= :toDate) and " +
-                    "(:status is null or r.status = :status))"; 
+                    "(:status is null or r.status = :status))";
 
     private static final String REVIEWS_QUERY = "select r {0} {1}";
 
@@ -51,9 +51,9 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     private EntityJpaRepository<Review, Long> entityRepository;
 
-    private long authorId;
+    private Long authorId;
 
-    private long moderatorId;
+    private Long moderatorId;
 
     private List<Long> companyIds;
 
@@ -77,33 +77,35 @@ public class ReviewJpaQuery implements ReviewQuery {
     }
 
     @Override
-    public ReviewQuery setAuthorId(long authorId) {
+    public ReviewQuery setAuthorId(Long authorId) {
         this.authorId = authorId;
         return this;
     }
 
     @Override
-    public ReviewQuery setModeratorId(long moderatorId) {
+    public ReviewQuery setModeratorId(Long moderatorId) {
         this.moderatorId = moderatorId;
         return this;
     }
 
     @Override
     public ReviewQuery setCompanyIds(List<Long> companyIds) {
-        this.companyIds = companyIds;
+        this.companyIds =
+                (companyIds != null && companyIds.isEmpty()) ? null : companyIds;
         return this;
     }
 
     @Override
     public ReviewQuery setPointIds(List<Long> pointIds) {
-        this.pointIds = pointIds;
+        this.pointIds =
+                (pointIds != null && companyIds.isEmpty()) ? null : pointIds;
         return this;
     }
 
     @Override
     public ReviewQuery setDateRange(Date fromDate, Date toDate) {
-        this.fromDate = DateUtils.truncate(fromDate, Calendar.DATE);
-        this.toDate = DateUtils.truncate(toDate, Calendar.DATE);
+        this.fromDate = (fromDate != null) ? DateUtils.truncate(fromDate, Calendar.DATE) : null;
+        this.toDate = (toDate != null) ? DateUtils.truncate(toDate, Calendar.DATE) : null;
         return this;
     }
 
@@ -158,7 +160,7 @@ public class ReviewJpaQuery implements ReviewQuery {
     private String getQueryString() {
         return (contentType == null) ?
                 REVIEWS_FILTER :
-                MessageFormat.format("{0} and {1}", REVIEWS_FILTER, TYPE_SUB_FILTERS.get(contentType));
+                MessageFormat.format("{0} and ({1})", REVIEWS_FILTER, TYPE_SUB_FILTERS.get(contentType));
     }
 
     private String getOrderByStatement() {
