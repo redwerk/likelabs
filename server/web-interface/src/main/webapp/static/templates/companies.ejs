@@ -1,0 +1,10 @@
+<% 
+    for (var i=0, len=companies.length ; i<len ;++i ) {
+    var company = companies[i];
+%>
+        
+    <li><a href="/company/<%=company.id%>"> <img width="<%=company.logoWidth%>" height="<%=company.logoHeight%>" src="<%=company.logo%>" /><%=company.name%></a></li>
+<% 
+    }
+%>
+         

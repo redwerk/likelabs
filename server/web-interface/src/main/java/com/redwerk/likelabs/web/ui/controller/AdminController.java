@@ -2,6 +2,7 @@ package com.redwerk.likelabs.web.ui.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,5 +36,20 @@ public class AdminController {
         }
 */
         return "redirect:/index";
+    }
+    
+    @RequestMapping(value = "/list/{pageId:\\d}", method = RequestMethod.GET)
+    public String companyListPaged(ModelMap model, @PathVariable int pageId) {
+        return "";
+    }
+    
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String companyList(ModelMap model) {
+        return "companies";
+    }
+    
+    @RequestMapping(value = "/feed", method = RequestMethod.GET)
+    public String companyFeed(ModelMap model) {
+        return "company_feed";
     }
 }

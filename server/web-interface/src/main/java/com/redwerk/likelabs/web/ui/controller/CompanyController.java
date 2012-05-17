@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/company")
@@ -27,4 +26,16 @@ public class CompanyController {
     public String feed(ModelMap model) {
         return "feed";
     }
+    
+    @RequestMapping(value = {"/profile"}, method = RequestMethod.GET)
+    public String profile(ModelMap model) {
+        return "profile";
+    }
+    
+    @RequestMapping(value = {"/logo"}, method = RequestMethod.POST)
+    public String logo(ModelMap model) {
+        return "companies";
+    }
+    
+    
 }
