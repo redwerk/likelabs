@@ -34,12 +34,13 @@ import org.jsmpp.util.RelativeTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.redwerk.likelabs.application.messaging.SmsService;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException.DeliveryStatus;
 
-//@Component
+
 public class SmppSmsServiceImpl implements SmsService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SmppSmsServiceImpl.class);
