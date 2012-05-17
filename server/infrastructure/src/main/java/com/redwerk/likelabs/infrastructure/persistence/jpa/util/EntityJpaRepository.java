@@ -30,7 +30,7 @@ public class EntityJpaRepository<T, ID extends Serializable> {
 
     public T findSingleEntity(String queryString, Map<String, Object> parameters) {
         try {
-            return getQuery(queryString, parameters).getSingleResult();
+            return getEntityQuery(queryString, parameters).getSingleResult();
         }
         catch (NoResultException e) {
             return null;
@@ -42,12 +42,12 @@ public class EntityJpaRepository<T, ID extends Serializable> {
     }
 
     public int getCount(String queryString, Map<String, Object> parameters) {
-        TypedQuery<T> query = getQuery(queryString, parameters);
+        Query query = getQuery(queryString, parameters);
         return ((Long) query.getSingleResult()).intValue();
     }
 
     public List<T> findEntityList(String queryString, Map<String, Object> parameters, Pager pager) {
-        return getQueryWithInterval(getQuery(queryString, parameters), pager).getResultList();
+        return getQueryWithInterval(getEntityQuery(queryString, parameters), pager).getResultList();
     }
     
     public List<T> findEntityList(String queryString, Pager pager) {
@@ -73,12 +73,22 @@ public class EntityJpaRepository<T, ID extends Serializable> {
         em.flush();
     }
 
-    private TypedQuery<T> getQuery(String queryString, Map<String, Object> parameters) {
+    private TypedQuery<T> getEntityQuery(String queryString, Map<String, Object> parameters) {
         TypedQuery<T> query = em.createQuery(queryString, entityClass);
+        setParameters(query, parameters);
+        return query;
+    }
+
+    private Query getQuery(String queryString, Map<String, Object> parameters) {
+        Query query = em.createQuery(queryString);
+        setParameters(query, parameters);
+        return query;
+    }
+    
+    private void setParameters(Query query, Map<String, Object> parameters) {
         for (Map.Entry<String, Object> p: parameters.entrySet()) {
             query.setParameter(p.getKey(), p.getValue());
         }
-        return query;
     }
 
 }

@@ -6,14 +6,14 @@ import com.redwerk.likelabs.domain.model.user.User;
 
 import java.util.List;
 
-public interface ReviewRepository {
+public abstract class ReviewRepository {
 
-    ReviewQuery getQuery();
+    public abstract ReviewQuery getQuery();
 
-    Review get(long id);
+    public abstract Review get(long id);
 
-    void add(Review review);
+    public abstract void add(Review review);
 
-    void remove(Review review);
+    public abstract void remove(Review review);
 
 }

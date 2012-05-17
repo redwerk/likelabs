@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ReviewJpaRepository implements ReviewRepository {
+public class ReviewJpaRepository extends ReviewRepository {
 
     @PersistenceContext
     private EntityManager em;

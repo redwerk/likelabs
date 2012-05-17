@@ -106,7 +106,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void deleteReview(long reviewId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        reviewRepository.remove(reviewRepository.get(reviewId));
     }
 
 }
