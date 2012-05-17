@@ -1,13 +1,15 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    Phone,
-    Email
+    ContactTypePhone,
+    ContactTypeEmail
 } ContactType;
 
 @interface Contact : NSObject
 
-@property ContactType contactType;
-@property(strong) NSString *contactString;
+@property (nonatomic, assign) ContactType contactType;
+@property (nonatomic, retain) NSString *contactString;
+
+- (id) initWithContactType:(ContactType)contactType andContactString:(NSString*)contactString;
 
 @end

@@ -14,7 +14,8 @@
 @implementation PhotoPickerController
 
 static const float PADDING = 20;
-static const int COUNTER_LENGTH = 3;
+static const int COUNTER_LENGTH = 1;
+static const float TIMER_INTERVAL = 0.2;
 NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
 
 @synthesize label = _label;
@@ -48,7 +49,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
     [self.view bringSubviewToFront:self.img];
     [self.view bringSubviewToFront:self.label];
     self.seconds = COUNTER_LENGTH;
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
 }
 
 - (void) onTimer {

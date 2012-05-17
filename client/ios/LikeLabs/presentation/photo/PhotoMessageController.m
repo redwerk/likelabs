@@ -2,10 +2,12 @@
 #import "PhotoMessageController.h"
 #import "RootController.h"
 #import "RootPhotoController.h"
+#import "Review.h"
 
 @interface PhotoMessageController ()
 @property (nonatomic,retain) RootPhotoController *rootController;
-@property (assign) BOOL textPlaseholderActive;
+@property (nonatomic, assign) BOOL textPlaseholderActive;
+@property (nonatomic, assign) Review* review;
 @end
 
 @implementation PhotoMessageController
@@ -13,6 +15,7 @@
 @synthesize navigationBackground = _navigationBackground;
 @synthesize textView = _textView;
 @synthesize imageView = _imageView;
+@synthesize review = _review;
 
 static NSString *const bgLandscape = @"bg_landscape.png";
 static NSString *const bgPortrait = @"bg_portrait.png";
@@ -32,6 +35,7 @@ static NSString *const GREETING = @"Start typing a message!";
 -(id)initWithRootController:(RootPhotoController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
+        self.review = rootController.rootController.review;
     }
     return self;
 }
@@ -47,17 +51,26 @@ static NSString *const GREETING = @"Start typing a message!";
     self.navigationBackground.image = [[UIImage imageNamed:NAVIGATION_BACKGROUND_IMG] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     [self.navigationBackground setContentMode:UIViewContentModeScaleToFill];
     
-    self.textPlaseholderActive = true;
-    self.textView.layer.borderColor = [UIColor blackColor].CGColor;
-    self.textView.layer.borderWidth = 1;
-    self.textView.layer.cornerRadius = 10;    
-    [self.textView becomeFirstResponder];    
-    
-    [self setPhoto:[self.rootController.rootController.review.photos objectAtIndex:self.rootController.rootController.review.reviewPhotoIndex]];
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOffset = CGSizeMake(5, 5);
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowRadius = 10;
+    
+    self.textPlaseholderActive = YES;
+    self.textView.layer.borderColor = [UIColor blackColor].CGColor;
+    self.textView.layer.borderWidth = 1;
+    self.textView.layer.cornerRadius = 10;
+    
+    if (self.review.text && self.review.text.length) {
+        self.textView.text = self.review.text;
+        self.textView.textColor = [UIColor blackColor];
+    } else {
+        self.textView.text = GREETING;
+        self.textView.textColor = [UIColor lightGrayColor];
+    }
+    [self.textView becomeFirstResponder];    
+    
+    [self setPhoto:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]];
 }
 
 #pragma mark - Review management
@@ -114,6 +127,7 @@ static NSString *const GREETING = @"Start typing a message!";
         self.textView.text = GREETING;
         self.textPlaseholderActive = true;
     }
+    self.review.text = (self.textPlaseholderActive) ? @"" : self.textView.text;
 }
 
 #pragma mark - Rotation
@@ -125,9 +139,7 @@ static NSString *const GREETING = @"Start typing a message!";
 
 #pragma mark - Actions
 
-- (IBAction)navigationChaned:(UISegmentedControl *)sender {
-    if (sender.selectedSegmentIndex == 0) {
-        [self.rootController switchToController:@"PhotoSelectionController"];
-    }
+- (IBAction)next:(id)sender {
+    [self.rootController step];
 }
 @end

@@ -8,6 +8,7 @@
 @property (retain, nonatomic) RootController* rootController;
 @property (retain, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (retain, nonatomic) IBOutlet UIView *headerView;
+@property (retain, nonatomic) IBOutlet UIImageView *navigationBackground;
 
 - (IBAction)goHome:(id)sender;
 - (void)step;

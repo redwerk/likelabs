@@ -1,4 +1,5 @@
 #import "RootPhotoController.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface RootPhotoController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
@@ -8,6 +9,7 @@
 @implementation RootPhotoController
 @synthesize segmentedControl = _segmentedControl;
 @synthesize headerView = _headerView;
+@synthesize navigationBackground = _navigationBackground;
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
 @synthesize currentViewController = _currentViewController;
@@ -26,8 +28,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.navigationBackground.image = [[UIImage imageNamed:@"navigation_bg.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+    self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
     self.segmentedControl.alpha = 0;
     _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
+    self.customSegmentedControl.autoresizingMask = self.segmentedControl.autoresizingMask;
     [self.headerView addSubview:self.customSegmentedControl];
     
     UIViewController *vc = [self viewControllerByName:@"PhotoSelectionController"];
@@ -46,6 +52,7 @@
     [self setSegmentedControl:nil];
     [self setHeaderView:nil];
     [self setCustomSegmentedControl:nil];
+    [self setNavigationBackground:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -55,6 +62,7 @@
     [_customSegmentedControl release];
     [_segmentedControl release];
     [_headerView release];
+    [_navigationBackground release];
     [super dealloc];
 }
 
@@ -63,8 +71,8 @@
 - (NSMutableArray*) getButtons {
     NSMutableArray* bt2 = [[[NSMutableArray alloc] initWithCapacity:4] autorelease];
     UIButton* selectPhotoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage* firstImgSelected = [[UIImage imageNamed:@"btn_first_bg_selected.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
-    UIImage* firstImgNormal = [[UIImage imageNamed:@"btn_first_bg_normal.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
+    UIImage* firstImgSelected = [[UIImage imageNamed:@"btn_first_bg_selected.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+    UIImage* firstImgNormal = [[UIImage imageNamed:@"btn_first_bg_normal.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     UIImage* oneImg = [UIImage imageNamed:@"1.png"];
     [selectPhotoBtn setBackgroundImage: firstImgNormal forState:UIControlStateNormal];
     [selectPhotoBtn setBackgroundImage:firstImgSelected forState:UIControlStateSelected];
@@ -198,7 +206,7 @@
             [self switchToController:@"PhotoMessageController"];
             break;
         case 2:
-            [self switchToController:@"PhotoInformationController"];
+            [self switchToController:@"PhotoShareController"];
             break;
         case 3:
             [self switchToController:@"PhotoFinishedController"];

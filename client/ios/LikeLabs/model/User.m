@@ -6,6 +6,15 @@
 @synthesize phoneNumber = _phoneNumber;
 @synthesize password = _password;
 
+- (id) init {
+    if (self = [super init]) {
+        _name = [[NSString alloc] init];
+        _phoneNumber = [[NSString alloc] init];
+        _password = [[NSString alloc] init];
+    }
+    return self;
+}
+
 - (id) initWtithName:(NSString *) name phone:(NSString *)phone andPassword:(NSString *)password {
     if (self = [super init]) {
         self.name = name;

@@ -2,9 +2,11 @@
 #import "PhotoSelectionController.h"
 #import "RootController.h"
 #import "RootPhotoController.h"
+#import "Review.h"
 
 @interface PhotoSelectionController ()
 @property (nonatomic, retain) RootPhotoController *rootController;
+@property (nonatomic, assign) Review *review;
 - (void) populateWithPhotos;
 - (void) setPhoto: (UIImage *)photo;
 - (void) resetThumbnails;
@@ -30,11 +32,13 @@ const float deletedPhotoAlpha = 0.5;
 @synthesize imageView = _imageView;
 @synthesize thumbnailsView = _thumbnailsView;
 @synthesize rootController = _rootController;
+@synthesize review = _review;
 
 #pragma mark - Initialization
 - (id)initWithRootController:(RootPhotoController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
+        self.review = rootController.rootController.review;
     }
     return self;
 }
@@ -86,7 +90,7 @@ const float deletedPhotoAlpha = 0.5;
 #pragma mark - Photo management
 
 - (void)populateWithPhotos {
-    NSMutableArray *photos = self.rootController.rootController.review.photos;
+    NSMutableArray *photos = self.review.photos;
     CGPoint photosOffset = CGPointMake(0, 0);
     CGSize maxPhotoSize = CGSizeMake(128.0, 114.0);
     int photosPadding = 10;
@@ -108,7 +112,7 @@ const float deletedPhotoAlpha = 0.5;
         [tapGesture release];
         [self.thumbnailsView addSubview:imageView];
     }
-    [self selectThumbnail:[self.thumbnailsView.subviews objectAtIndex:self.rootController.rootController.review.reviewPhotoIndex]];
+    [self selectThumbnail:[self.thumbnailsView.subviews objectAtIndex:self.review.reviewPhotoIndex]];
 }
 
 - (void) previewTouched: (UITapGestureRecognizer*) gesture {   
@@ -122,8 +126,8 @@ const float deletedPhotoAlpha = 0.5;
 - (void) selectThumbnail:(UIView*) thumbnail {
     UIView* tappedImage = thumbnail;
     [self resetThumbnails];
-    [self setPhoto:[self.rootController.rootController.review.photos objectAtIndex:tappedImage.tag - 1]];
-    self.rootController.rootController.review.reviewPhotoIndex = tappedImage.tag - 1;        
+    [self setPhoto:[self.review.photos objectAtIndex:tappedImage.tag - 1]];
+    self.review.reviewPhotoIndex = tappedImage.tag - 1;        
     
     CGPoint oldCenter = tappedImage.center;
     tappedImage.frame = CGRectMake(0, 0, tappedImage.frame.size.width * selectedScaleFactor, tappedImage.frame.size.height * selectedScaleFactor);

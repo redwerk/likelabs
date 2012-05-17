@@ -15,7 +15,7 @@ static NSString *const bgPortrait = @"bg_portrait.png";
 @property (retain, nonatomic) RootController* rootController;
 @property (retain, nonatomic) NSArray* reviews;
 @property (retain, nonatomic) NSTimer* timer;
-@property (assign) BOOL textPlaseholderActive;
+@property (assign, nonatomic) BOOL textPlaceholderActive;
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 - (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
 - (void) scrollComments;
@@ -41,7 +41,7 @@ float commentsContentOffset = 0;
 @synthesize rootController = _rootController;
 @synthesize reviews = _reviews;
 @synthesize timer = _timer;
-@synthesize textPlaseholderActive = _textPlaseholderActive;
+@synthesize textPlaceholderActive = _textPlaceholderActive;
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -88,7 +88,7 @@ float commentsContentOffset = 0;
     self.textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
     self.textView.layer.borderWidth = BORDER_WIDTH;
     self.textView.layer.cornerRadius = BORDER_CORNER_RADIUS;    
-    self.textPlaseholderActive = true;
+    self.textPlaceholderActive = true;
     [self.textView becomeFirstResponder];    
 }
 
@@ -115,10 +115,10 @@ float commentsContentOffset = 0;
 }
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if (self.textPlaseholderActive) {
+    if (self.textPlaceholderActive) {
         self.textView.text = @"";
         self.textView.textColor = [UIColor blackColor];
-        self.textPlaseholderActive = false;
+        self.textPlaceholderActive = false;
     } 
     return YES;
 }
@@ -127,7 +127,7 @@ float commentsContentOffset = 0;
     if (self.textView.text.length == 0) {
         self.textView.textColor = [UIColor lightGrayColor];
         self.textView.text = GREETING;
-        self.textPlaseholderActive = true;
+        self.textPlaceholderActive = true;
     }
 }
 
