@@ -89,7 +89,7 @@
 </script>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
                                     <tr>
-                                        <td class="title">Points List for {CompanyName}</td>
+                                        <td class="title">List of Points for {CompanyName}</td>
                                     </tr>
                                     <tr>
                                         <td class="body">

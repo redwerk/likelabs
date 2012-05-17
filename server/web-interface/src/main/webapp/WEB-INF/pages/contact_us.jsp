@@ -23,7 +23,7 @@
                                                     <td><input type="text"></td>
                                                 </tr>
                                                 <tr>
-                                                    <td><label for="">Mesasge: </label></td>
+                                                    <td><label for="">Message: </label></td>
                                                     <td><textarea rows="5" cols="40"></textarea></td>
                                                 </tr>
                                                 <tr>

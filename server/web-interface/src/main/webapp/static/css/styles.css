@@ -242,7 +242,7 @@ a:hover {
 .filter .title {
     display: inline-block;
 /*    margin: 0 20px;*/
-    margin: 7px 0 0 15px;
+    margin: 7px 0 0 8px;
 }
 
 .filter .title select {

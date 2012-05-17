@@ -97,7 +97,7 @@
 </script>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
                                     <tr>
-                                        <td class="title">Companies List</td>
+                                        <td class="title">List of Companies</td>
                                     </tr>
                                     <tr>
                                         <td class="body">

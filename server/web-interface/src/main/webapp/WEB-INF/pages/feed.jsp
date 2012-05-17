@@ -148,13 +148,13 @@ function hide_hint(target) {
                                 <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%;" summary="" class="content_block">
                                     <tr>
                                         <td style="height: 85px;">
-                                            <div class="title" style="position: relative; float: left;">Feeds for {CompanyName}</div>
+                                            <div class="title" style="position: relative; float: left;">Feed for {CompanyName}</div>
                                             <div style="position: relative; float: right; padding-right: 5px;">
                                                 <select onchange="changeSort()" id="sort_by" style="width: 150px">
                                                     <option value="">Sort By</option>
                                                     <option value="date">Date</option>
                                                     <option value="point">Point</option>
-                                                    <option value="feed_type">Feed type</option>
+                                                    <option value="feed_type">Review type</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -163,7 +163,7 @@ function hide_hint(target) {
                                         <td>
                                             <div class="filter">
                                                 <div class="title">
-                                                    <div style="display: inline-block">Feed type :</div>
+                                                    <div style="display: inline-block">Review type :</div>
                                                     <div style="display: inline-block">
                                                         <select onchange="changeFilter()" id="feed_type">
                                                             <option value="">All</option>
@@ -189,6 +189,7 @@ function hide_hint(target) {
                                                     <div style="display: inline-block">Date :</div>
                                                     <div style="display: inline-block">
                                                         <input type="text" id="filter_date_from" onchange="changeFilter()" />
+                                                        -
                                                         <input type="text" id="filter_date_to" onchange="changeFilter()" />
                                                     </div>
                                                 </div>
