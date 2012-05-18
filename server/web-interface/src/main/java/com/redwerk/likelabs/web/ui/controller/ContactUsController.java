@@ -23,12 +23,12 @@ import org.springframework.web.bind.support.SessionStatus;
 @RequestMapping(value = "/contact")
 public class ContactUsController {
 
-    ContactUsMailValidator validator = new ContactUsMailValidator();
+    private ContactUsMailValidator validator = new ContactUsMailValidator();
 
     private final Logger log = LogManager.getLogger(getClass());
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Autowired
     private MessageTemplateService messageTemplateService;

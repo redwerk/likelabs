@@ -50,7 +50,7 @@ public class CompanyController {
     public static final int ITEMS_PER_PAGE_COMPANY = 3;
     public static final int ITEMS_PER_PAGE_POINT = 5;
     public static final int ITEMS_PER_PAGE_REVIEW = 8;
-    private static final String LOGO_LINk_TEMPLATE = "/company/{0}/logo";
+    private static final String LOGO_LINK_TEMPLATE = "/company/{0}/logo";
     private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/company/review/{0}/photo";
     private static final String VIEW_COMPANY_LIST = "companies_list";
     private static final String VIEW_POINTS_LIST = "points_list";
@@ -88,7 +88,7 @@ public class CompanyController {
                 Map<String, String> map = new HashMap<String, String>();
                 Company company = reportItem.getCompany();
                 map.put("id", String.valueOf(company.getId()));
-                map.put("logo", MessageFormat.format(LOGO_LINk_TEMPLATE, String.valueOf(company.getId())));
+                map.put("logo", MessageFormat.format(LOGO_LINK_TEMPLATE, String.valueOf(company.getId())));
                 map.put("name", company.getName());
                 map.put("points", String.valueOf(reportItem.getPointsNumber()));
                 map.put("comments", String.valueOf(reportItem.getReviewsNumber()));
