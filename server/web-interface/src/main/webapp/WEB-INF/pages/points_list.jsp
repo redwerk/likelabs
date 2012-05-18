@@ -1,10 +1,11 @@
 <%@include file="./header.jsp" %>
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript" >
+    var companyid = <c:out value="${company.id}"/>;
     var pager_options = {
-        items_count: 122,
+        items_count: <c:out value="${count}"/>,
         config: {
-            items_per_page : 5,
+            items_per_page : <c:out value="${items_per_page}"/>,
             next_text : "&gt;",
             num_display_entries : 6,
             num_edge_entries : 2,
@@ -34,54 +35,27 @@
     
     function pageSelectCallback(page_index, jq) {
         options.page_number = page_index;
-        updateData();
+        if (force_update)
+            updateData();
         return false;
     }
+
+    var force_update = true;
     
     function updateData() {
-        $.get("/company/ajax/feed/", options);
-        fillTable(test_data);
+        $.get("/company/" + companyid + "/points/data", options, function(response){
+            if (response.error) {
+                console.warn(response.error);
+                return;
+            }
+            pager_options.items_count = response.count;
+            force_update = false;
+            initPager(options.page_number);
+            force_update = true;
+            fillTable(response.data);
+        });
     }
-    
-    var test_data = [
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        },
-        {
-            address: "test test test1",
-            phone: "+1(123)123-45-67"
-        }
-    ];
-    
+   
     function fillTable(data) {
         var template = new EJS({url: "/static/templates/point_list.ejs"}).render({points: data});
         $("#point_list_table").html(template);
@@ -89,7 +63,7 @@
 </script>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
                                     <tr>
-                                        <td class="title">List of Points for {CompanyName}</td>
+                                        <td class="title">List of Points for ${company.name}</td>
                                     </tr>
                                     <tr>
                                         <td class="body">

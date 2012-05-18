@@ -1,7 +1,7 @@
-<%@include file="header.jsp" %>
+<%@include file="./header.jsp" %>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
                                     <tr>
-                                        <td class="title">About Us</td>
+                                        <td class="title">FAQ</td>
                                     </tr>
                                     <tr>
                                         <td class="body">
@@ -24,4 +24,4 @@
                                         </td>
                                     </tr>
                                 </table>
-<%@include file="footer.jsp" %>
+<%@include file="./footer.jsp" %>

@@ -1,11 +1,11 @@
 <%@include file="./header.jsp" %>
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript">
-    
+    var companyId = <c:out value="${company.id}"/>;
     var pager_options = {
-        items_count: 122,
+        items_count: <c:out value="${count}"/>,
         config: {
-            items_per_page : 5,
+            items_per_page : <c:out value="${items_per_page}"/>,
             next_text : "&gt;",
             num_display_entries : 6,
             num_edge_entries : 2,
@@ -41,76 +41,27 @@
     
     function pageSelectCallback(page_index, jq) {
         options.page_number = page_index;
-        updateData();
+        if (force_update)
+            updateData();
         return false;
     }
-    
+    var force_update = true;
     function updateData() {
-        $.get("/company/ajax/feed/", options);
-        fillTable();
+        $.get("/company/" + companyId + "/reviews/data", options, function(response){
+            if (response.error) {
+                console.warn(response.error);
+                return;
+            }
+            pager_options.items_count = response.count;
+            force_update = false;
+            initPager(options.page_number);
+            force_update = true;
+            fillTable(response.data);
+        });
     }
-    
-    var test_data = [
-        {
-            message: "test test test1",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test2",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test3",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test4",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test5",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test6",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.random() * 1000,
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test5",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.ceil(Math.random() * 10000000000),
-            point: "Bla bla bla"
-        },
-        {
-            message: "test test test6",
-            photo: "/static/images/feed_photo.png",
-            name: "Vasya " + Math.ceil(Math.random() * 1000),
-            date: (new Date()).getTime() + Math.random() * 1000,
-            point: "Bla bla bla"
-        }
-    ];
-    
+
     function fillTable(data) {
-        var template = new EJS({url: "/static/templates/feed_table.ejs"}).render({feeds: test_data});
+        var template = new EJS({url: "/static/templates/feed_table.ejs"}).render({feeds: data});
         $("#feeds_table").html(template);
     }
     
@@ -136,25 +87,17 @@
         options.page_number = 0;
         options.sort_by = $("#sort_by").val();
     }
-function show_hint(target) {
-    $(target).prev().removeClass('hidden');
-    console.warn("show");
-}
-function hide_hint(target) {
-    console.warn("hide");
-    $(target).addClass('hidden');
-}
 </script>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%;" summary="" class="content_block">
                                     <tr>
                                         <td style="height: 85px;">
-                                            <div class="title" style="position: relative; float: left;">Feed for {CompanyName}</div>
+                                            <div class="title" style="position: relative; float: left;">Feed for ${company.name}</div>
                                             <div style="position: relative; float: right; padding-right: 5px;">
                                                 <select onchange="changeSort()" id="sort_by" style="width: 150px">
                                                     <option value="">Sort By</option>
                                                     <option value="date">Date</option>
                                                     <option value="point">Point</option>
-                                                    <option value="feed_type">Review type</option>
+                                                    <option value="review_type">Review type</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -167,9 +110,9 @@ function hide_hint(target) {
                                                     <div style="display: inline-block">
                                                         <select onchange="changeFilter()" id="feed_type">
                                                             <option value="">All</option>
-                                                            <option value="text">Text</option>
-                                                            <option value="photo">Photo</option>
-                                                            <option value="text_photo">Text with Photo</option>
+                                                            <option value="contains_text">Text</option>
+                                                            <option value="contains_photo">Photo</option>
+                                                            <option value="contains_text_and_photo">Text with Photo</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -178,9 +121,9 @@ function hide_hint(target) {
                                                     <div style="display: inline-block">
                                                         <select onchange="changeFilter()" id="point">
                                                             <option value="">All</option>
-                                                            <option value="1">Point 1</option>
-                                                            <option value="2">Point 2</option>
-                                                            <option value="3">Point 3</option>
+                                                            <c:forEach varStatus="status" var="point" items="${points}">
+                                                                <option value="${point.id}">${point.address.addressLine1}</option>
+                                                            </c:forEach> 
                                                         </select>
                                                     </div>
                                                 </div>
@@ -215,7 +158,7 @@ function hide_hint(target) {
                                     <tr>
                                         <td class="body" style="width: 100%;">
                                             <div id="feeds_table"></div>
-                                            <div id="pager" class="pagination" style="position: relative; float: right;"></div>
+                                            <div id="pager" class="pagination" style="position: relative; float: right;">asd</div>
                                         </td>
                                     </tr>
                                 </table>

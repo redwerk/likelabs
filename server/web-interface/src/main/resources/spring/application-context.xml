@@ -33,10 +33,10 @@
     <bean id="exceptionResolver" class="com.redwerk.likelabs.web.common.RequestExceptionHandler" />
  
     <bean class="org.springframework.mail.javamail.JavaMailSenderImpl"
-        p:host="${mail.host}"
-        p:port="${mail.port}"
-        p:username="${mail.username}"
-        p:password="${mail.password}">
+        p:host="${app.mail.host}"
+        p:port="${app.mail.port}"
+        p:username="${app.mail.username}"
+        p:password="${app.mail.password}">
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.auth">false</prop>
@@ -45,10 +45,6 @@
         </property>
     </bean>
  
-  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-      <property name="useDefaultSuffixPattern" value="false" />
-  </bean>
-
   <import resource="data-context.xml"/>
   
   <import resource="security-context.xml"/>

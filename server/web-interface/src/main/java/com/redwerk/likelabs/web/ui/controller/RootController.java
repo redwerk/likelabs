@@ -137,6 +137,19 @@ public class RootController {
         return VIEW_ACTIVATE_ADMIN;
     }
 
+    @RequestMapping(value = {"/about", "/about/"}, method = RequestMethod.GET)
+    public String aboutUs() {
+
+        return "about";
+    }
+
+    @RequestMapping(value = {"/faq", "/faq/"}, method = RequestMethod.GET)
+    public String faq() {
+
+        return "faq";
+    }
+
+
     private void authenticatUser(HttpServletRequest request, String phone, String password) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);

@@ -1,3 +1,11 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn"uri="http://java.sun.com/jsp/jstl/functions"  %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -30,12 +38,12 @@
                             <td class="left_menu" style="vertical-align: top;">
                                 <div class="menu_item active"><a href="/company/list">COMPANIES</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/static/about">ABOUT US</a></div>
+                                <div class="menu_item"><a href="/about">ABOUT US</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/static/about">TERMS OF SERVICE</a></div>
+                                <div class="menu_item"><a href="/tos">TERMS OF SERVICE</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/static/about">FAQ</a></div>
+                                <div class="menu_item"><a href="/faq">FAQ</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/static/contact">CONTACT US</a></div>
+                                <div class="menu_item"><a href="/contact">CONTACT US</a></div>
                             </td>
                             <td class="content" style="vertical-align: top;">
