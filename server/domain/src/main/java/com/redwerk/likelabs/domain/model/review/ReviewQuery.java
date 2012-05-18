@@ -17,7 +17,7 @@ public interface ReviewQuery {
 
     ReviewQuery setDateRange(Date fromDate, Date toDate);
 
-    ReviewQuery setContentType(ReviewContentType contentType);
+    ReviewQuery setContentType(ContentTypeFilter contentType);
 
     ReviewQuery setStatus(ReviewStatus status);
 

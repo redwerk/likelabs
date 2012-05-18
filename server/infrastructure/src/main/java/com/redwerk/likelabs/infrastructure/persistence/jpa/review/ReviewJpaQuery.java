@@ -16,10 +16,10 @@ public class ReviewJpaQuery implements ReviewQuery {
     private static final SortingRule DEFAULT_SORTING_RULE =
             new SortingRule(SortingCriteria.DATE, SortingOrder.DESCENDING);
 
-    private static final Map<ReviewContentType, String> TYPE_SUB_FILTERS = new HashMap<ReviewContentType, String>() {{
-        put(ReviewContentType.PHOTO_ONLY, "r.message is null and r.photo is not null");
-        put(ReviewContentType.TEXT_ONLY, "r.message is not null and r.photo is null");
-        put(ReviewContentType.TEXT_PHOTO, "r.message is not null and r.photo is not null");
+    private static final Map<ContentTypeFilter, String> TYPE_SUB_FILTERS = new HashMap<ContentTypeFilter, String>() {{
+        put(ContentTypeFilter.CONTAINS_PHOTO, "r.photo is not null");
+        put(ContentTypeFilter.CONTAINS_TEXT, "r.message is not null");
+        put(ContentTypeFilter.CONTAINS_TEXT_AND_PHOTO, "r.message is not null and r.photo is not null");
     }};
 
      private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
@@ -63,7 +63,7 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     private Date toDate;
 
-    private ReviewContentType contentType;
+    private ContentTypeFilter contentType;
 
     private ReviewStatus status;
 
@@ -110,7 +110,7 @@ public class ReviewJpaQuery implements ReviewQuery {
     }
 
     @Override
-    public ReviewQuery setContentType(ReviewContentType contentType) {
+    public ReviewQuery setContentType(ContentTypeFilter contentType) {
         this.contentType = contentType;
         return this;
     }
