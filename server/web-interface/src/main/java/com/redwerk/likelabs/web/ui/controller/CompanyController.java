@@ -72,6 +72,7 @@ public class CompanyController {
 
         model.addAttribute("count", companyService.getCompaniesCount());
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_COMPANY);
+        model.addAttribute("page", "company");
         return VIEW_COMPANY_LIST;
     }
 
@@ -110,6 +111,7 @@ public class CompanyController {
         model.addAttribute("company", company);
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_POINT);
         model.addAttribute("count", pointService.getPoints(company.getId(), Pager.ALL_RECORDS).getCount());
+        model.addAttribute("page", "company");
         return VIEW_POINTS_LIST;
     }
 
@@ -148,6 +150,7 @@ public class CompanyController {
         model.addAttribute("company", company);
         model.addAttribute("count", report.getCount());
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_REVIEW);
+        model.addAttribute("page", "company");
         return VIEW_REVIEWS_LIST;
     }
 
@@ -168,12 +171,8 @@ public class CompanyController {
             List<Map> data = new ArrayList<Map>();
             for (Review review : report.getItems()) {
                 Map<String, Object> map = new HashMap<String, Object>();
-                if (query.getType() != ContentTypeFilter.CONTAINS_TEXT) {
-                    map.put("photo", MessageFormat.format(PHOTO_REVIEW_LINK_TEMPLATE, String.valueOf(review.getId())));
-                }
-                if (query.getType() != ContentTypeFilter.CONTAINS_PHOTO) {
-                    map.put("message", review.getMessage());
-                }
+                map.put("photo", MessageFormat.format(PHOTO_REVIEW_LINK_TEMPLATE, String.valueOf(review.getId())));
+                map.put("message", review.getMessage());
                 map.put("name", review.getAuthor().getName());
                 map.put("date", review.getCreatedDT());
                 map.put("point", review.getPoint().getAddress().getAddressLine1());

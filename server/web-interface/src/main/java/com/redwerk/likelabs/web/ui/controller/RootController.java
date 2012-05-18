@@ -61,6 +61,7 @@ public class RootController {
 
     @RequestMapping(value = "/tos", method = RequestMethod.GET)
     public String tos(ModelMap model) {
+        model.addAttribute("page", "tos");
         return VIEW_TOS;
     }
 
@@ -136,14 +137,14 @@ public class RootController {
     }
 
     @RequestMapping(value = {"/about", "/about/"}, method = RequestMethod.GET)
-    public String aboutUs() {
-
+    public String aboutUs(ModelMap model) {
+        model.addAttribute("page", "about");
         return "about";
     }
 
     @RequestMapping(value = {"/faq", "/faq/"}, method = RequestMethod.GET)
-    public String faq() {
-
+    public String faq(ModelMap model) {
+        model.addAttribute("page", "faq");
         return "faq";
     }
 

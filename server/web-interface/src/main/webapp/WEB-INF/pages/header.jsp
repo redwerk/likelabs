@@ -36,14 +36,14 @@
                     <table cellpadding="0" cellspacing="0" style="height: 100%; background: url('/static/images/shadow_tb.png') repeat-x transparent;" summary="">
                         <tr>
                             <td class="left_menu" style="vertical-align: top;">
-                                <div class="menu_item active"><a href="/company/list">COMPANIES</a></div>
+                                <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/list">COMPANIES</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/about">ABOUT US</a></div>
+                                <div  class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/tos">TERMS OF SERVICE</a></div>
+                                <div class="menu_item <c:if test="${page eq 'tos'}">active</c:if>"><a href="/tos">TERMS OF SERVICE</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/faq">FAQ</a></div>
+                                <div class="menu_item <c:if test="${page eq 'faq'}">active</c:if>"><a href="/faq">FAQ</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item"><a href="/contact">CONTACT US</a></div>
+                                <div class="menu_item <c:if test="${page eq 'contact'}">active</c:if>"><a href="/contact">CONTACT US</a></div>
                             </td>
                             <td class="content" style="vertical-align: top;">

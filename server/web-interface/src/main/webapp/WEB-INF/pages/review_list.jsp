@@ -88,7 +88,7 @@
         options.sort_by = $("#sort_by").val();
     }
 </script>
-                                <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%;" summary="" class="content_block">
+                                <table cellpadding="0" cellspacing="0" style="width: 100%;" summary="" class="content_block">
                                     <tr>
                                         <td style="height: 85px;">
                                             <div class="title" style="position: relative; float: left;">Feed for ${company.name}</div>
@@ -103,16 +103,16 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style="height:100px">
                                             <div class="filter">
                                                 <div class="title">
-                                                    <div style="display: inline-block">Review type :</div>
+                                                    <div style="display: inline-block">Contains :</div>
                                                     <div style="display: inline-block">
                                                         <select onchange="changeFilter()" id="feed_type">
-                                                            <option value="">All</option>
+                                                            <option value="">Not selected</option>
                                                             <option value="contains_text">Text</option>
                                                             <option value="contains_photo">Photo</option>
-                                                            <option value="contains_text_and_photo">Text with Photo</option>
+                                                            <option value="contains_text_and_photo">Text and Photo</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -158,6 +158,7 @@
                                     <tr>
                                         <td class="body" style="width: 100%;">
                                             <div id="feeds_table"></div>
+                                            <div style="clear: both"></div>
                                             <div id="pager" class="pagination" style="position: relative; float: right;">asd</div>
                                         </td>
                                     </tr>
