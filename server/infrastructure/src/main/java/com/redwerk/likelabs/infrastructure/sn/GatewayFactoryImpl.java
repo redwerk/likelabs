@@ -17,17 +17,13 @@ public class GatewayFactoryImpl implements GatewayFactory {
     @Autowired
     VKontakteGateway vKontakteGateway;
 
-
-   
     @Override
     public SocialNetworkGateway getGateway(SocialNetworkType type) {
-
         switch (type){
             case FACEBOOK:  return facebookGateway;
-
             case VKONTAKTE: return vKontakteGateway;
-            
-            default: throw new IllegalArgumentException();
+            default: throw new IllegalArgumentException("unknown social network type");
         }
     }
+
 }

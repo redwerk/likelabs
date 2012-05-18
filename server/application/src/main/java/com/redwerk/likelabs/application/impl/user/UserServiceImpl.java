@@ -27,10 +27,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private static final String LINK_ACTIVATE_EMAIL_TEMPLATE = "{0}/activatemail?id={1}&email={2}&activatecode={3}";
-    private static final String MSG_EMAIL_BODY = "message.email.registration.body";
-    private static final String MSG_EMAIL_SUBJECT = "message.email.registration.subject";
-    private static final String MSG_EMAIL_FROM = "message.email.registration.mailfrom";
-    private static final String MSG_APP_DOMAIN =  "app.domain";
+
+    private static final String EMAIL_ACTIVATION_BODY_MSG = "message.email.registration.user.body";
+    private static final String EMAIL_ACTIVATION_SUBJECT_MSG = "message.email.registration.user.subject";
+    private static final String EMAIL_ACTIVATION_FROM_MSG = "message.email.registration.from";
+
+    private static final String APP_DOMAIN_MSG =  "app.domain";
 
     @Autowired
     private UserRepository userRepository;
@@ -45,10 +47,10 @@ public class UserServiceImpl implements UserService {
     private MessageTemplateService messageTemplateService;
 
     @Autowired
-    GatewayFactory gatewayFactory;
+    private GatewayFactory gatewayFactory;
 
     @Autowired
-    CodeGenerator codeGenerator;
+    private CodeGenerator codeGenerator;
 
 
     @Override
@@ -99,16 +101,19 @@ public class UserServiceImpl implements UserService {
         }
         Long userId = user.getId();
         String activateLink = MessageFormat.format(LINK_ACTIVATE_EMAIL_TEMPLATE,
-                messageTemplateService.getMessage(MSG_APP_DOMAIN), userId, email,
-                codeGenerator.getConfirmEmailCode(email, userId));
-        emailService.sendMessage(email, messageTemplateService.getMessage(MSG_EMAIL_FROM),
-                messageTemplateService.getMessage(MSG_EMAIL_SUBJECT),
-                messageTemplateService.getMessage(MSG_EMAIL_BODY, activateLink));
+                messageTemplateService.getMessage(APP_DOMAIN_MSG), userId, email,
+                codeGenerator.getEmailConfirmationCode(email, userId));
+        emailService.sendMessage(email, messageTemplateService.getMessage(EMAIL_ACTIVATION_FROM_MSG),
+                messageTemplateService.getMessage(EMAIL_ACTIVATION_SUBJECT_MSG),
+                messageTemplateService.getMessage(EMAIL_ACTIVATION_BODY_MSG, activateLink));
     }
 
     @Override
     @Transactional
     public UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode) {
+        if (snType == null) {
+            throw new IllegalArgumentException("snType cannot be null");
+        }
         User user = userRepository.get(userId);
         UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccount(accessCode);
         user.addAccount(account);

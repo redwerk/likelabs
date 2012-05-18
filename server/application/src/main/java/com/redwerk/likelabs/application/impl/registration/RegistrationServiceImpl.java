@@ -61,7 +61,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DuplicatedUserException(phone);
         }
         String msg = messageTemplateService.getMessage(
-                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN) ,passwordGenerator.getPassword(phone));        
+                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN), passwordGenerator.getPassword(phone));
         smsService.sendMessage(phone, msg);
     }
 
@@ -77,7 +77,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public void confirmEmail(long userId, String email, String confirmationCode) {
-        if (!confirmationCode.equals(codeGenerator.getConfirmEmailCode(email, userId))) {
+        if (!confirmationCode.equals(codeGenerator.getEmailConfirmationCode(email, userId))) {
             throw new NotConfirmMailException(userId, email, confirmationCode);
         }
         User user = userRepository.get(userId);
@@ -112,7 +112,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public boolean validateAdminCode(long userId, String activateCode) {
         User user = userRepository.get(userId);
-        return activateCode.equals(codeGenerator.getActivateAdminCode(userId, user.getEmail(), user.getPhone()));
+        return activateCode.equals(codeGenerator.getAdminActivationCode(userId, user.getEmail(), user.getPhone()));
 
     }
 

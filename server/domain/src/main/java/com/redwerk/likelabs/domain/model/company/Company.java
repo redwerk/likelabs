@@ -4,6 +4,7 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserRepository;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -16,10 +17,6 @@ import java.util.*;
 @Entity
 @Table(name = "company")
 public class Company {
-    
-    private static final int DEFAULT_EMAIL_INTERVAL = 1;
-
-    private static final int DEFAULT_SMS_INTERVAL = 7;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,14 +130,12 @@ public class Company {
         return Collections.unmodifiableSet(typedAccounts);
     }
 
-    public void addSocialPage(CompanySocialPage socialPage) {
-        assert !pages.contains(socialPage);
-        pages.add(socialPage);
+    public boolean addSocialPage(CompanySocialPage socialPage) {
+        return pages.add(socialPage);
     }
 
-    public void removeSocialPage(CompanySocialPage socialPage) {
-        assert pages.contains(socialPage);
-        pages.remove(socialPage);
+    public boolean removeSocialPage(CompanySocialPage socialPage) {
+        return pages.remove(socialPage);
     }
 
     public void clearSocialPages() {
@@ -153,14 +148,18 @@ public class Company {
         return Collections.unmodifiableSet(admins);
     }
     
-    public void addAdmin(User admin) {
-        assert !admins.contains(admin);
-        admins.add(admin);
+    public boolean addAdmin(User admin) {
+        return admins.add(admin);
     }
 
-    public void removeAdmin(User admin) {
-        assert admins.contains(admin);
-        admins.remove(admin);
+    public boolean removeAdmin(User admin, CompanyRepository companyRepository, UserRepository userRepository) {
+        boolean isRemoved = admins.remove(admin);
+        if (isRemoved) {
+            if (companyRepository.getCount(admin) == 0) {
+                userRepository.remove(admin);
+            }
+        }
+        return isRemoved;
     }
 
     public void clearAdmins() {

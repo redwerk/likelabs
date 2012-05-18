@@ -48,6 +48,8 @@ public class CompanyAdminActivationController {
 
     private static final String PARAM_SESSION_USERID = "userId";
 
+    private static final String ACTIVATE_ADMIN_VIEW = "admincompany/activateadmin";
+
     private final Logger log = LogManager.getLogger(getClass());
 
     @Autowired
@@ -67,13 +69,63 @@ public class CompanyAdminActivationController {
     GatewayFactory gatewayFactory;
 
 
+    @RequestMapping(value = "/activate", method = RequestMethod.GET)
+    public String activateAdminGet(ModelMap model, HttpServletRequest request,
+                                   @RequestParam(value = "userId", required = true) String userId,
+                                   @RequestParam(value = "code", required = true) String confirmCode) {
+        try {
+            long id = Long.parseLong(userId);
+            User user = userService.getUser(id);
+            if (user == null) {
+                model.addAttribute("errorcode", true);
+                return ACTIVATE_ADMIN_VIEW;
+            }
+            if (registrationService.validateAdminCode(id, confirmCode)) {
+                if (user.isActive()) {
+                    return "redirect:/admincompany/success?error=already_active";
+                }
+                model.addAttribute("activatecode", confirmCode);
+                model.addAttribute("id", id);
+            } else {
+                model.addAttribute("errorcode", true);
+            }
+        } catch (IllegalStateException e) {
+            log.error(e,e);
+            model.addAttribute("errorcode", true);
+        }
+        return ACTIVATE_ADMIN_VIEW;
+    }
+
+    @RequestMapping(value = "/activate", method = RequestMethod.POST)
+    public String activateAdminPost(ModelMap model, HttpServletRequest request,
+                                    @RequestParam(value = "userId", required = true) String userId,
+                                    @RequestParam(value = "code", required = true) String confirmCode,
+                                    @RequestParam(value = "password", required = true) String password) {
+
+        try {
+            long id = Long.parseLong(userId);
+            User user = userService.getUser(id);
+            if (registrationService.validateAdminPassword(user.getId(), password) && registrationService.validateAdminCode(id, confirmCode)) {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("userId", id);
+                return "redirect:/admincompany/profile";
+            }
+            model.addAttribute("error", messageTemplateService.getMessage(MSG_INCORECT_PASSWORD));
+            model.addAttribute("activatecode", confirmCode);
+            model.addAttribute("id", id);
+        } catch (Exception e) {
+            log.error(e,e);
+        }
+        return ACTIVATE_ADMIN_VIEW;
+    }
+
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profileGet(ModelMap model, HttpServletRequest request, @RequestParam(value = "error", required = false) String error) {
         HttpSession session = request.getSession(true);
         Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
         User user = userService.getUser(id);
         if (user.isActive()) {
-            authenticatUser(request,user.getPhone(), user.getPassword());
+            authenticateUser(request, user.getPhone(), user.getPassword());
             return "redirect:/admincompany/success?error=" + PARAM_ERROR_ALREADY_ACTIVE;
         }
         if (error != null) {
@@ -99,7 +151,7 @@ public class CompanyAdminActivationController {
             Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
             User user = userService.getUser(id);
             registrationService.activateCompanyAdmin(user.getId());
-            authenticatUser(request,user.getPhone(), user.getPassword());
+            authenticateUser(request, user.getPhone(), user.getPassword());
         } catch (AbsentSocialAccountException e) {
             return profileRedirect(PARAM_ERROR_NOT_ADMIN);
         } catch (AbsentCompanyException e) {
@@ -176,7 +228,7 @@ public class CompanyAdminActivationController {
         return "redirect:/admincompany/profile";
     }
 
-    private void authenticatUser(HttpServletRequest request, String phone, String password) {
+    private void authenticateUser(HttpServletRequest request, String phone, String password) {
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);

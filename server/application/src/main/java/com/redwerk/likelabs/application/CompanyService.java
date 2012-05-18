@@ -3,6 +3,7 @@ package com.redwerk.likelabs.application;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.company.Company;
@@ -29,11 +30,11 @@ public interface CompanyService {
     
     void updateCompany(long companyId, CompanyData companyData);
     
-    CompanySocialPage attachPage(long companyId, String url);
+    CompanySocialPage attachPage(long companyId, SocialNetworkType snType, String url);
     
     void detachPage(long companyId, String pageId);
     
-    void createAdmin(long companyId, CompanyAdminData admin);
+    void createAdmin(long companyId, CompanyAdminData adminData);
     
     void removeAdmin(long companyId, long adminId);
     
