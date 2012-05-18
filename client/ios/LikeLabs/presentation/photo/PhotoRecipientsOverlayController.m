@@ -32,14 +32,15 @@ NSUInteger const BTN_TAG_OFFSET = 50;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view.frame = [UIScreen mainScreen].bounds;
     self.recipientContactField.frame = CGRectMake(0, 0, 377, 75);  
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     if (self.contactType == ContactTypePhone) {
         self.recipientContactField.placeholder = self.recipientContactField.text =  @"8(XXX)XXX-XXXX";
         self.recipientContactField.keyboardType = UIKeyboardTypePhonePad;
     } else {
-        self.recipientContactField.placeholder = self.recipientContactField.text = @"<user>@<host>.<com>";    
+        self.recipientContactField.placeholder = self.recipientContactField.text = @"my@email.com";    
         self.recipientContactField.keyboardType = UIKeyboardTypeEmailAddress;
     }
     self.textPlaceholderActive = YES;
@@ -144,8 +145,8 @@ NSUInteger const BTN_TAG_OFFSET = 50;
 
 - (BOOL) validateEmail {
     NSRegularExpression* regExp = [NSRegularExpression regularExpressionWithPattern:@"^([0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*@(([0-9a-zA-Z])+([-\\w]*[0-9a-zA-Z])*\\.)+[a-zA-Z]{2,9})$" options:NSRegularExpressionCaseInsensitive error:nil];
-    if (![regExp numberOfMatchesInString:self.recipientContactField.text options:0 range:NSMakeRange(0, self.recipientContactField.text.length)]){
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Email should be in format <user>@<host>.<com>" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    if (self.textPlaceholderActive || ![regExp numberOfMatchesInString:self.recipientContactField.text options:0 range:NSMakeRange(0, self.recipientContactField.text.length)]){
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Email should be in format my@email.com" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         [alert release];
         return NO;

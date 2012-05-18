@@ -42,6 +42,7 @@
     [self.view addSubview:vc.view];
     self.currentViewController = vc;
     
+    [self setLabelsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     [self.view bringSubviewToFront:self.headerView];
 }
 
@@ -110,7 +111,7 @@
     [enterInfoBtn setImage:threeImg forState:UIControlStateNormal];
     [enterInfoBtn setImage:threeImg forState:UIControlStateDisabled];
     [enterInfoBtn setImage:threeImg forState:UIControlStateSelected];
-    NSString* enterInfoTitle = @"  Enter your information";
+    NSString* enterInfoTitle = @"  Enter Your Information";
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateNormal];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateDisabled];
@@ -123,7 +124,7 @@
     [finishedBtn setBackgroundImage:finishedSelectedImg forState:UIControlStateSelected];
     [finishedBtn setBackgroundImage:finishedNormalImg forState:UIControlStateNormal];
     [finishedBtn setBackgroundImage:finishedDisabledImg forState:UIControlStateDisabled];
-    NSString* finishedTitle = @"Finished";
+    NSString* finishedTitle = @"Finished!";
     [finishedBtn setTitle:finishedTitle forState:UIControlStateNormal];
     [finishedBtn setTitle:finishedTitle forState:UIControlStateSelected];
     [finishedBtn setTitle:finishedTitle forState:UIControlStateDisabled];
@@ -169,6 +170,28 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self setLabelsForInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation {
+    for (UIButton* btn in self.customSegmentedControl.buttons) {
+        btn.titleLabel.font = [UIFont systemFontOfSize:(UIInterfaceOrientationIsPortrait(orientation) ? 14 : 16)];
+    }
+    
+    UIButton* selectPhotoBtn = [self.customSegmentedControl.buttons objectAtIndex:0];
+    NSString* selectPhotoTitle = (UIInterfaceOrientationIsLandscape(orientation)) ? @"  Select Photo to Share" : @"  Select Photo";
+    [selectPhotoBtn setTitle:selectPhotoTitle forState:UIControlStateNormal];
+    [selectPhotoBtn setTitle:selectPhotoTitle forState:UIControlStateDisabled];
+    [selectPhotoBtn setTitle:selectPhotoTitle forState:UIControlStateSelected];    
+    
+    UIButton* enterInfoBtn = [self.customSegmentedControl.buttons objectAtIndex:2];
+    NSString* enterInfoTitle = (UIInterfaceOrientationIsLandscape(orientation)) ? @"  Enter Your Information" : @"  Enter Your Info";
+    [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateNormal];
+    [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateDisabled];
+    [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
 }
 
 #pragma mark - ContainerController implementation

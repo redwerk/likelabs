@@ -25,7 +25,8 @@ NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view.frame = [UIScreen mainScreen].bounds;
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     if (self.phone && self.phone.length) {
@@ -48,8 +49,6 @@ NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
     [self setButtonsView:nil];
     [self setPhone:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)dealloc {

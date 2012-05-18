@@ -85,6 +85,9 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self layoutSubviewsForInterfaceOrientation:toInterfaceOrientation];
+    [self.overlay willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self.recipientsOverlay willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 - (void) setBackgroundForInterfaceOrientation:(UIInterfaceOrientation) orientation {

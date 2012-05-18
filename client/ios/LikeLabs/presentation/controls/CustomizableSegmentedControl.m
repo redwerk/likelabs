@@ -83,7 +83,7 @@
             }
         }
     }
-    self.defaultButtonWidth = (self.frame.size.width - distinctWidthsSum - self.dividerWidth*(self.buttons.count-1))/(self.buttons.count - distinctWidthCount);
+    self.defaultButtonWidth = roundf((self.frame.size.width - distinctWidthsSum - self.dividerWidth*(self.buttons.count-1))/(self.buttons.count - distinctWidthCount));
 }
 
 - (void)layoutSubviews {
