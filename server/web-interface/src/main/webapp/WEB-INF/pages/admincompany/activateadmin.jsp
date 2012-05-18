@@ -3,7 +3,7 @@
     <h4>Activation Administrator Company</h4>
     <c:choose>
         <c:when test="${empty errorcode}">
-        <form action="/activateadmin" method="POST">
+        <form action="/admincompany/activate" method="POST">
         <div>
             <div class="field">
                 Activation code was sent to your phone. Please enter received code here:
@@ -14,8 +14,8 @@
             <div class="field">
                 <input name="password" type="text" style="width: 180px;"/>
             </div>
-            <input type="hidden" name="id" value="<c:out value='${id}'/>" />
-            <input type="hidden" name="activatecode" value="<c:out value='${activatecode}'/>" />
+            <input type="hidden" name="userId" value="<c:out value='${id}'/>" />
+            <input type="hidden" name="code" value="<c:out value='${activatecode}'/>" />
             <div class="field">
                 <input type="submit" value="Activate" style="width: 187px;"/>
             </div>

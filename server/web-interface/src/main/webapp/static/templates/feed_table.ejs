@@ -2,7 +2,7 @@
     for (var key=0; key<feeds.length;key++) {
         var feed = feeds[key];
         var date = new Date(feed.date);
-        var date_str = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();;
+        var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();;
 %>
 <div class="left" onmouseover="$(this).find('.hint').removeClass('hidden')" onmouseout="$(this).find('.hint').addClass('hidden');">
     <div class="hidden hint">

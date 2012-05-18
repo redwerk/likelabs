@@ -238,8 +238,15 @@ public class CompanyController {
        SortingRule sort = null;
        if (StringUtils.isNotBlank(sortBy)) {
            SortingCriteria sortingCriteria = SortingCriteria.valueOf(sortBy.toUpperCase(Locale.ENGLISH));
-           sort = new SortingRule(sortingCriteria,
-                    (sortingCriteria == SortingCriteria.DATE) ? SortingOrder.DESCENDING : SortingOrder.ASCENDING);
+           SortingOrder sortingOrder = null;
+           switch (sortingCriteria){
+               case DATE:  sortingOrder = SortingOrder.DESCENDING;
+                           break;
+               case REVIEW_TYPE: sortingOrder = SortingOrder.DESCENDING;
+                                 break;
+               default: sortingOrder = SortingOrder.ASCENDING;
+           }
+           sort = new SortingRule(sortingCriteria, sortingOrder);
        }
        Pager pager = new Pager(page * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
        return new ReviewQueryData(pointIds, fromDate, toDate, contentType, pager, sort);
@@ -248,7 +255,7 @@ public class CompanyController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }

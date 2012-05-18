@@ -18,8 +18,8 @@
     
     
     $(document).ready(function(){
-        $("#filter_date_from").datepicker();
-        $("#filter_date_to").datepicker();
+        $("#filter_date_from").datepicker({dateFormat: "dd/mm/yy"});
+        $("#filter_date_to").datepicker({dateFormat: "dd/mm/yy"});
         initPager();
     });
 
@@ -97,7 +97,7 @@
                                                     <option value="">Sort By</option>
                                                     <option value="date">Date</option>
                                                     <option value="point">Point</option>
-                                                    <option value="review_type">Review type</option>
+                                                    <option value="review_type">Contains</option>
                                                 </select>
                                             </div>
                                         </td>
