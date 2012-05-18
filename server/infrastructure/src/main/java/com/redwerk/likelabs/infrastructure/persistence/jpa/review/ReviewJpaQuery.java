@@ -98,7 +98,7 @@ public class ReviewJpaQuery implements ReviewQuery {
     @Override
     public ReviewQuery setPointIds(List<Long> pointIds) {
         this.pointIds =
-                (pointIds != null && companyIds.isEmpty()) ? null : pointIds;
+                (pointIds != null && pointIds.isEmpty()) ? null : pointIds;
         return this;
     }
 

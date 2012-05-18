@@ -2,14 +2,15 @@ package com.redwerk.likelabs.application.messaging.exception;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class SmsMessagingException extends GeneralMessagingException {
+public class SmsMessagingException extends RuntimeException {
 
 	public static enum DeliveryStatus {
-		PENDING, DELIVERY_FAIL, NETWORK_ERROR, GENERAL_ERROR, REMOTE_ERROR, TIMEOUT
+        GENERAL_ERROR, NETWORK_ERROR, REMOTE_ERROR, TIMEOUT_ERROR
 	}
 	
 	private final DeliveryStatus deliveryStatus;
-	private final String telephoneNumber;
+
+	private final String phone;
     
 	public SmsMessagingException(DeliveryStatus status, String phone) {
 		this(status, phone, null, null);		
@@ -26,22 +27,22 @@ public class SmsMessagingException extends GeneralMessagingException {
 	public SmsMessagingException(DeliveryStatus status, String phone, String message, Throwable cause) {
 		super(message, cause);
 		this.deliveryStatus = status;
-		this.telephoneNumber = phone;
+		this.phone = phone;
 	}
 
 	public DeliveryStatus getDeliveryStatus() {
 		return deliveryStatus;
 	}
 
-	public String getTelephoneNumber() {
-		return telephoneNumber;
+	public String getPhone() {
+		return phone;
 	}
 	
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("delivery status", deliveryStatus)
-                .append("recipient phone", telephoneNumber)
+                .append("recipient phone", phone)
                 .append("details", getMessage())
                 .toString();
     }
