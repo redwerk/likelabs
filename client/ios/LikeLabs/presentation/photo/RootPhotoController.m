@@ -210,7 +210,6 @@
             break;
         case 3:
             [self switchToController:@"PhotoFinishedController"];
-        default:
             break;
     }
 }

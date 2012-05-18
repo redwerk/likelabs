@@ -44,28 +44,7 @@ NSUInteger const BTN_TAG_OFFSET = 50;
     }
     self.textPlaceholderActive = YES;
     self.recipientContactField.textColor = [UIColor grayColor];
-    
-    CGFloat labelHeight = 50;
-    CGFloat padding = 10;
-    for (NSUInteger i = 0; i<self.recipients.count; i++) {
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, (labelHeight + padding)*i, 350, labelHeight)];
-        label.tag = i+1;
-        label.font = [UIFont systemFontOfSize:32];
-        label.textColor = [UIColor whiteColor];
-        label.backgroundColor = [UIColor clearColor];
-        Contact* contact = [self.recipients objectAtIndex:i];
-        label.text = contact.contactString;
-        
-        [self.recipientsView addSubview:label];
-        
-        UIButton* delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        delBtn.tag = BTN_TAG_OFFSET + i + 1;
-        UIImage* delImg = [UIImage imageNamed:@"delete_btn.png"];
-        [delBtn setBackgroundImage:delImg forState:UIControlStateNormal];
-        delBtn.frame = CGRectMake(350, (labelHeight + padding)*i, delImg.size.width, delImg.size.height);
-        [delBtn addTarget:self action:@selector(deleteRecipient:) forControlEvents:UIControlEventTouchDown];        
-        [self.recipientsView addSubview:delBtn];
-    }
+    [self layoutRecipients];
     [self.recipientContactField becomeFirstResponder];
 }
 
@@ -90,10 +69,38 @@ NSUInteger const BTN_TAG_OFFSET = 50;
 
 #pragma mark - Recipients management
 
+- (void) layoutRecipients {
+    for (UIView* view in self.recipientsView.subviews) {
+        if ([view respondsToSelector:@selector(removeFromSuperview)]) {
+            [view removeFromSuperview];
+        }
+    }
+    CGFloat labelHeight = 50;
+    CGFloat padding = 10;
+    for (NSUInteger i = 0; i<self.recipients.count; i++) {
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, (labelHeight + padding)*i, 350, labelHeight)];
+        label.tag = i+1;
+        label.font = [UIFont systemFontOfSize:32];
+        label.textColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor clearColor];
+        Contact* contact = [self.recipients objectAtIndex:i];
+        label.text = contact.contactString;        
+        [self.recipientsView addSubview:label];
+        [label release];
+        
+        UIButton* delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        delBtn.tag = BTN_TAG_OFFSET + i + 1;
+        UIImage* delImg = [UIImage imageNamed:@"delete_btn.png"];
+        [delBtn setBackgroundImage:delImg forState:UIControlStateNormal];
+        delBtn.frame = CGRectMake(350, (labelHeight + padding)*i, delImg.size.width, delImg.size.height);
+        [delBtn addTarget:self action:@selector(deleteRecipient:) forControlEvents:UIControlEventTouchDown];        
+        [self.recipientsView addSubview:delBtn];
+    }
+}
+
 - (void) deleteRecipient: (UIButton *) sender {
     [self.recipients removeObjectAtIndex: sender.tag - BTN_TAG_OFFSET -1];
-    [[self.recipientsView viewWithTag:sender.tag - BTN_TAG_OFFSET] removeFromSuperview]; //remove label
-    [[self.recipientsView viewWithTag:sender.tag] removeFromSuperview]; //remove button
+    [self layoutRecipients];
 }
 
 #pragma mark - TextField delegate
@@ -149,6 +156,7 @@ NSUInteger const BTN_TAG_OFFSET = 50;
 - (void) saveConact {
     Contact* contact = [[Contact alloc] initWithContactType:self.contactType andContactString:self.recipientContactField.text];
     [self.recipients addObject:contact];
+    [contact release];
     [[NSNotificationCenter defaultCenter] postNotificationName:kRecipientsDone object:nil];
 }
 

@@ -18,9 +18,7 @@
 @synthesize phoneField = _phoneField;
 @synthesize addRecipientsView = _addRecipientsView;
 @synthesize submitBtn = _submitBtn;
-@synthesize reviewTextBgView = _reviewTextBgView;
 @synthesize mailButton = _mailButton;
-@synthesize textView = _textView;
 @synthesize phoneButton = _phoneButton;
 @synthesize rootController = _rootController;
 @synthesize review = _review;
@@ -44,18 +42,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;    
-    self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.imageView.layer.shadowOffset = CGSizeMake(5, 5);
-    self.imageView.layer.shadowOpacity = 0.8;
-    self.imageView.layer.shadowRadius = 10;
-
-    self.reviewTextBgView.frame = CGRectMake(-20, 282, 497, 58);
-//    self.textView.frame = CGRectMake(120, 0, 364, 48);
-    self.textView.text = self.review.text;
-    [self.reviewTextBgView addSubview:self.textView];
-    [self.imageView addSubview:self.reviewTextBgView];
+    
+    _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex] andText:self.review.text];    
+    [self.view addSubview:self.imageView];
 
     self.mailButton.enabled = self.phoneButton.enabled = (self.review.contacts.count < MAX_CONTACTS);
     
@@ -70,13 +60,9 @@
     [self setPhoneField:nil];
     [self setAddRecipientsView:nil];
     [self setSubmitBtn:nil];
-    [self setReviewTextBgView:nil];
-    [self setTextView:nil];
     [self setMailButton:nil];
     [self setPhoneButton:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
     self.rootController = nil;
 }
 
@@ -86,8 +72,6 @@
     [_phoneField release];
     [_addRecipientsView release];
     [_submitBtn release];
-    [_reviewTextBgView release];
-    [_textView release];
     [_mailButton release];
     [_phoneButton release];
     [super dealloc];
@@ -101,29 +85,12 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self layoutSubviewsForInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void) setBackgroundForInterfaceOrientation:(UIInterfaceOrientation) orientation {
     UIColor *background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"photo_share_bg_landscape.png" : @"photo_share_bg_portrait.png"]];
     self.view.backgroundColor = background;
     [background release];
-}
-
-- (void) setPhoto: (UIImage *)photo {
-    CGSize maxPhotoSize = CGSizeMake(468, 350);
-    CGFloat scale = MIN(maxPhotoSize.width / photo.size.width, maxPhotoSize.height / photo.size.height);
-    photo = [UIImage imageWithCGImage:photo.CGImage scale:1.0/scale orientation:photo.imageOrientation];
-    
-    self.imageView.image = photo;
-    
-    CGPoint oldCenter = self.imageView.center;
-    self.imageView.frame = CGRectMake(0, 0, photo.size.width, photo.size.height);
-    self.imageView.center = oldCenter;
-    
-//    self.reviewTextBgView.frame = CGRectMake(-20, 282, photo.size.width+20, 58);
-//    int textOffset = (photo.size.height/photo.size.width > 1) ? 20 : 120;
-    self.textView.frame = CGRectMake(120, 0, photo.size.width-120, 48);
 }
 
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation {
@@ -143,7 +110,7 @@
         self.submitBtn.frame = CGRectMake(47, 894, 665, 86);
         [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg.png"] forState:UIControlStateNormal];        
     }
-    [self setPhoto:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]];
+    [self.imageView setPhoto:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -154,18 +121,22 @@
 
 #pragma mark - Actions
 - (IBAction)fieldTouched:(id)sender {
-    self.overlay = [[PhotoOverlayController alloc] initWithPhone:self.review.user.phoneNumber];
+    _overlay = [[PhotoOverlayController alloc] initWithPhone:self.review.user.phoneNumber];
     [self.rootController.view addSubview:self.overlay.view];
 }
 
 - (IBAction)addMail:(id)sender {
-    self.recipientsOverlay = [[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypeEmail andRecipients:self.review.contacts];
+    _recipientsOverlay = [[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypeEmail andRecipients:self.review.contacts];
     [self.rootController.view addSubview:self.recipientsOverlay.view];
 }
 
 - (IBAction)addPhone:(id)sender {
-    self.recipientsOverlay = [[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypePhone andRecipients:self.review.contacts];
+    _recipientsOverlay = [[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypePhone andRecipients:self.review.contacts];
     [self.rootController.view addSubview:self.recipientsOverlay.view];
+}
+
+- (IBAction)submit:(id)sender {
+    [self.rootController step];
 }
 
 - (void)dismissOverlay {

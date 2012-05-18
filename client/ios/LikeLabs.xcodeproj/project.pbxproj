@@ -88,6 +88,14 @@
 		FF87486F155947DB0010D272 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486E155947DB0010D272 /* AudioToolbox.framework */; };
 		FF8748B2155992FF0010D272 /* instruction_banner_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B1155992FF0010D272 /* instruction_banner_bg.png */; };
 		FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B3155996B60010D272 /* take_photo_btn.png */; };
+		FF890A3A15665DF100481237 /* photo_thankyou_bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */; };
+		FF890A3B15665DF100481237 /* photo_thankyou_bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */; };
+		FF890A401566606B00481237 /* PhotoFinishedController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF890A3E1566606B00481237 /* PhotoFinishedController.m */; };
+		FF890A411566606B00481237 /* PhotoFinishedController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3F1566606B00481237 /* PhotoFinishedController.xib */; };
+		FF890A44156664F000481237 /* UIImageWithReview.m in Sources */ = {isa = PBXBuildFile; fileRef = FF890A43156664F000481237 /* UIImageWithReview.m */; };
+		FF890A48156685B800481237 /* return_to_home_screen_btn_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A45156685B800481237 /* return_to_home_screen_btn_landscape.png */; };
+		FF890A49156685B800481237 /* return_to_home_screen_btn_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A46156685B800481237 /* return_to_home_screen_btn_portrait.png */; };
+		FF890A4A156685B800481237 /* return_to_home_screen.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A47156685B800481237 /* return_to_home_screen.png */; };
 		FF8B67661562A92500BC6BEA /* divider_nd.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8B67651562A92500BC6BEA /* divider_nd.png */; };
 		FF9DF1561557DEB10002A658 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9DF1521557DEB10002A658 /* libTestFlight.a */; };
 		FF9DF1571557DEB10002A658 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = FF9DF1531557DEB10002A658 /* README.txt */; };
@@ -214,6 +222,16 @@
 		FF87486E155947DB0010D272 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FF8748B1155992FF0010D272 /* instruction_banner_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instruction_banner_bg.png; path = LikeLabs/resources/instruction_banner_bg.png; sourceTree = "<group>"; };
 		FF8748B3155996B60010D272 /* take_photo_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = take_photo_btn.png; path = LikeLabs/resources/take_photo_btn.png; sourceTree = "<group>"; };
+		FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_thankyou_bg_landscape.png; path = LikeLabs/resources/photo_thankyou_bg_landscape.png; sourceTree = "<group>"; };
+		FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_thankyou_bg_portrait.png; path = LikeLabs/resources/photo_thankyou_bg_portrait.png; sourceTree = "<group>"; };
+		FF890A3D1566606B00481237 /* PhotoFinishedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoFinishedController.h; path = LikeLabs/presentation/photo/PhotoFinishedController.h; sourceTree = "<group>"; };
+		FF890A3E1566606B00481237 /* PhotoFinishedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoFinishedController.m; path = LikeLabs/presentation/photo/PhotoFinishedController.m; sourceTree = "<group>"; };
+		FF890A3F1566606B00481237 /* PhotoFinishedController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoFinishedController.xib; path = LikeLabs/presentation/photo/PhotoFinishedController.xib; sourceTree = "<group>"; };
+		FF890A42156664F000481237 /* UIImageWithReview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIImageWithReview.h; path = LikeLabs/presentation/controls/UIImageWithReview.h; sourceTree = "<group>"; };
+		FF890A43156664F000481237 /* UIImageWithReview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageWithReview.m; path = LikeLabs/presentation/controls/UIImageWithReview.m; sourceTree = "<group>"; };
+		FF890A45156685B800481237 /* return_to_home_screen_btn_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = return_to_home_screen_btn_landscape.png; path = LikeLabs/resources/return_to_home_screen_btn_landscape.png; sourceTree = "<group>"; };
+		FF890A46156685B800481237 /* return_to_home_screen_btn_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = return_to_home_screen_btn_portrait.png; path = LikeLabs/resources/return_to_home_screen_btn_portrait.png; sourceTree = "<group>"; };
+		FF890A47156685B800481237 /* return_to_home_screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = return_to_home_screen.png; path = LikeLabs/resources/return_to_home_screen.png; sourceTree = "<group>"; };
 		FF8B676415628E2000BC6BEA /* ContainerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContainerController.h; path = LikeLabs/presentation/protocols/ContainerController.h; sourceTree = "<group>"; };
 		FF8B67651562A92500BC6BEA /* divider_nd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divider_nd.png; sourceTree = "<group>"; };
 		FF9DF1521557DEB10002A658 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
@@ -418,6 +436,9 @@
 				FF86F7DF1565181700BCE123 /* PhotoRecipientsOverlayController.h */,
 				FF86F7E01565181700BCE123 /* PhotoRecipientsOverlayController.m */,
 				FF86F7E11565181800BCE123 /* PhotoRecipientsOverlayController.xib */,
+				FF890A3D1566606B00481237 /* PhotoFinishedController.h */,
+				FF890A3E1566606B00481237 /* PhotoFinishedController.m */,
+				FF890A3F1566606B00481237 /* PhotoFinishedController.xib */,
 			);
 			name = photo;
 			sourceTree = "<group>";
@@ -436,6 +457,8 @@
 			children = (
 				FF853C80156164C5003F0374 /* CustomizableSegmentedControl.h */,
 				FF853C81156164C5003F0374 /* CustomizableSegmentedControl.m */,
+				FF890A42156664F000481237 /* UIImageWithReview.h */,
+				FF890A43156664F000481237 /* UIImageWithReview.m */,
 			);
 			name = controls;
 			sourceTree = "<group>";
@@ -508,6 +531,11 @@
 				FF8255061563EC6C007F42E1 /* karo_film.png */,
 				FF82550D1563FFBA007F42E1 /* cancel_btn.png */,
 				FF82550E1563FFBB007F42E1 /* done_btn.png */,
+				FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */,
+				FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */,
+				FF890A45156685B800481237 /* return_to_home_screen_btn_landscape.png */,
+				FF890A46156685B800481237 /* return_to_home_screen_btn_portrait.png */,
+				FF890A47156685B800481237 /* return_to_home_screen.png */,
 			);
 			name = Resources;
 			path = ..;
@@ -626,6 +654,12 @@
 				FF82550F1563FFBB007F42E1 /* cancel_btn.png in Resources */,
 				FF8255101563FFBB007F42E1 /* done_btn.png in Resources */,
 				FF86F7E31565181800BCE123 /* PhotoRecipientsOverlayController.xib in Resources */,
+				FF890A3A15665DF100481237 /* photo_thankyou_bg_landscape.png in Resources */,
+				FF890A3B15665DF100481237 /* photo_thankyou_bg_portrait.png in Resources */,
+				FF890A411566606B00481237 /* PhotoFinishedController.xib in Resources */,
+				FF890A48156685B800481237 /* return_to_home_screen_btn_landscape.png in Resources */,
+				FF890A49156685B800481237 /* return_to_home_screen_btn_portrait.png in Resources */,
+				FF890A4A156685B800481237 /* return_to_home_screen.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,6 +694,8 @@
 				FF32DBAB156386460020357B /* PhotoShareController.m in Sources */,
 				FF82550B1563FC88007F42E1 /* PhotoOverlayController.m in Sources */,
 				FF86F7E21565181800BCE123 /* PhotoRecipientsOverlayController.m in Sources */,
+				FF890A401566606B00481237 /* PhotoFinishedController.m in Sources */,
+				FF890A44156664F000481237 /* UIImageWithReview.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
