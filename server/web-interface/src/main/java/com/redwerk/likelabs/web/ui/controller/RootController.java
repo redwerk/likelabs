@@ -81,9 +81,8 @@ public class RootController {
         } catch (IllegalStateException e) {
             log.error(e,e);
             model.addAttribute("error", true);
-        } finally {
-            return VIEW_ACTIVATE_EMAIL;
         }
+        return VIEW_ACTIVATE_EMAIL;
     }
 
     @RequestMapping(value = "/activateadmin", method = RequestMethod.GET)
@@ -109,9 +108,8 @@ public class RootController {
         } catch (IllegalStateException e) {
             log.error(e,e);
             model.addAttribute("errorcode", true);
-        } finally {
-            return VIEW_ACTIVATE_ADMIN;
         }
+        return VIEW_ACTIVATE_ADMIN;
     }
 
     @RequestMapping(value = "/activateadmin", method = RequestMethod.POST)

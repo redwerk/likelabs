@@ -55,10 +55,9 @@ public class ContactUsController {
         } catch (NoSendMailException e) {
             log.error(e,e);
             model.addAttribute("error", true);
-        } finally {
-            status.setComplete();
-            return "contact_us_success";
         }
+        status.setComplete();
+        return "contact_us_success";
     }
 
     private class ContactUsMailValidator implements org.springframework.validation.Validator {

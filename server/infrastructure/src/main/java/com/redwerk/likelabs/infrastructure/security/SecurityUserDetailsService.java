@@ -51,14 +51,4 @@ public class SecurityUserDetailsService implements UserDetailsService {
         }
         return new org.springframework.security.core.userdetails.User(user.getPhone(), user.getPassword(), authorities);
    }
-
-    /*  for tests
-    private UserDetails createDefaultDetails(String phone) {
-
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority(AuthoritiesRoles.ROLE_USER.toString()));
-        return new org.springframework.security.core.userdetails.User(phone, "1111", authorities);
-   }
-    */
-
 }
