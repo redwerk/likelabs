@@ -51,7 +51,7 @@ public class RootController {
     @RequestMapping(value = {"/index", "/", ""}, method = RequestMethod.GET)
     public String index(ModelMap model, @RequestParam(value = "error", required = false) String error) {
         //TODO index logic
-        return VIEW_INDEX;
+        return "redirect:/company/list";
     }
 
     @RequestMapping(value = "/tos", method = RequestMethod.GET)

@@ -1,19 +1,25 @@
-<%@include  file="/WEB-INF/common/header.jsp"%>
-<div class="row">
-    <h4>Sign Up for Like Labs - step two</h4>
-    <form action="/signup/end" method="POST">
-        <div>
-            <div class="field">
-                Activation code was sent to your phone. Please enter received code here:
-            </div>
-            <div class="field errorblock">  ${error}</div>
-            <div class="field">
-                <input name="password" type="text" style="width: 180px;"/>
-            </div>
-            <div class="field">
-                <input type="submit" value="Register" style="width: 187px;"/>
-            </div>
-        </div>
-    </form>
-</div>
-<%@include  file="/WEB-INF/common/footer.jsp"%>
+<%@include  file="/WEB-INF/pages/header.jsp"%>
+    <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
+        <tr>
+            <td class="title">Sign Up for Like Labs - step two</td>
+        </tr>
+        <tr>
+            <td class="body">
+                <form action="/signup/end" method="POST">
+                    <div>
+                        <div class="field">
+                            Activation code was sent to your phone. Please enter received code here:
+                        </div>
+                        <div class="field errorblock">  ${error}</div>
+                        <div class="field">
+                            <input name="password" type="text" style="width: 180px;"/>
+                        </div>
+                        <div class="field">
+                            <input type="submit" value="Register" style="width: 187px;"/>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    </table>
+<%@include  file="/WEB-INF/pages/footer.jsp"%>

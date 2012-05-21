@@ -259,4 +259,14 @@ public class CompanyController {
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
+    
+    @RequestMapping(value = {"/{companyId}/profile"}, method = RequestMethod.GET)
+    public String profileCompany(ModelMap model) {
+        return "company_profile";
+    }
+
+    @RequestMapping(value = {"/{companyId}/point/add"}, method = RequestMethod.GET)
+    public String addPointCompany(ModelMap model) {
+        return "company_add_point";
+    }
 }

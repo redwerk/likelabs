@@ -1,4 +1,4 @@
-<%@include file="header.jsp" %>
+<%@include  file="/WEB-INF/pages/header.jsp"%>
 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
     <tr>
         <td class="title">Successfully sent a letter to contact us</td>
@@ -7,9 +7,9 @@
         <td class="body">
             <c:choose>
                 <c:when test="${empty error}">
-                    <p>
+                    <div class="title">
                         Your message was successfully sent.
-                    </p>
+                    </div>
                 </c:when>
                 <c:otherwise>
                     <p>
@@ -20,4 +20,4 @@
         </td>
     </tr>
 </table>
-<%@include file="footer.jsp" %>
+<%@include  file="/WEB-INF/pages/footer.jsp"%>

@@ -1,10 +1,15 @@
-<%@include  file="/WEB-INF/common/header.jsp"%>
-<h2><spring:message code="message.error.internal"/>
-    <br>
-<a href="mailto:<spring:message code="message.email.registration.from"/>"><spring:message code="message.email.registration.from"/></a></h2>
-<br>
-<br>
-<br>
-${error_message}
-<br>
-<%@include  file="/WEB-INF/common/footer.jsp"%>
+<%@include  file="/WEB-INF/pages/header.jsp"%>
+<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
+    <tr>
+        <td class="title"><spring:message code="message.error.internal"/></td>
+    </tr>
+    <tr>
+        <td class="body">
+            <div>
+                <a href="mailto:<spring:message code="message.email.registration.from"/>"><spring:message code="message.email.registration.from"/></a>
+            </div>
+            <div>${error_message}</div>
+        </td>
+    </tr>
+</table>
+<%@include  file="/WEB-INF/pages/footer.jsp"%>

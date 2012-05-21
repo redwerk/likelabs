@@ -1,3 +1,4 @@
+* behavior: url(border-radius.htc);
 html {
 	height: 100%;
 }
@@ -102,10 +103,12 @@ body {
 }
 
 .content td.title {
-    font-style: italic;
-    font-weight: bold;
+/*    font-style: italic;*/
+/*    font-weight: bold;*/
     height: 85px;
     color: #455172;
+    font-family: 'Lobster',Arial,Verdana,Helvetica,Sans-serif;
+    font-size: 32px;
 }
 
 .content div.title {
@@ -253,25 +256,6 @@ a:hover {
     width: 80px;
 }
 
-.contact_form td{
-    vertical-align: top;
-    padding: 5px;
-}
-
-.contact_form label{
-    color: #455172;
-    width: 100px;
-    display: block;
-}
-
-.contact_form input[type=text],textarea {
-    width: 300px;
-}
-
-.contact_form input[type=submit] {
-    width: 150px;
-}
-
 .left {
     position: relative;
     float: left;
@@ -339,4 +323,293 @@ a:hover {
 
 .black_20 {
     background: url("/static/images/black_20.png");
+}
+
+.dialog_form {
+    text-align: center;
+    width: 100%;
+}
+
+.dialog_form td{
+    vertical-align: top;
+    padding: 5px;
+    text-align: left;
+}
+
+.dialog_form label{
+    margin-top: 3px;
+    color: #455172;
+    width: 130px;
+    display: block;
+}
+
+.dialog_form select {
+    width: 180px;
+}
+
+.dialog_form input[type=text],textarea {
+    width: 170px;
+}
+
+.dialog_form input[type=submit] {
+    width: 100px;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+    font-size: 16px !important;
+    font-family: Arial !important;
+}
+.ui-widget {
+    font-size: 16px !important;
+    font-family: Arial !important;
+}
+
+input, textarea {
+    -moz-transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+
+input, textarea {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 13px;
+    padding: 3px;
+}
+
+input, textarea {
+    -moz-transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+input:focus, textarea:focus {
+    border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0 none;
+}
+
+input[type=submit], input[type=button], button {
+    cursor: pointer;
+}
+
+.btn {
+    display: inline-block;
+    *display: inline;
+    padding: 4px 10px 4px;
+    margin-bottom: 0;
+    *margin-left: .3em;
+    font-size: 13px;
+    line-height: 18px;
+    *line-height: 20px;
+    color: #333333;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    *background-color: #e6e6e6;
+    background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+    background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: linear-gradient(top, #ffffff, #e6e6e6);
+    background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+    background-repeat: repeat-x;
+    border: 1px solid #cccccc;
+    *border: 0;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+    border-bottom-color: #b3b3b3;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+    filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+    *zoom: 1;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn:hover,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+}
+
+.btn:active,
+.btn.active {
+  background-color: #cccccc \9;
+}
+
+.btn:first-child {
+  *margin-left: 0;
+}
+
+.btn:hover {
+  /*color: #333333;*/
+  text-decoration: none;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+  /* Buttons in IE7 don't get borders, so darken on hover */
+
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+     -moz-transition: background-position 0.1s linear;
+      -ms-transition: background-position 0.1s linear;
+       -o-transition: background-position 0.1s linear;
+          transition: background-position 0.1s linear;
+}
+
+.btn:focus {
+    outline: 0;
+/*  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;*/
+}
+
+.btn.active,
+.btn:active {
+  background-color: #e6e6e6;
+  background-color: #d9d9d9 \9;
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+     -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn.disabled,
+.btn[disabled] {
+  cursor: default;
+  background-color: #e6e6e6;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+}
+.btn-large {
+  padding: 9px 14px;
+  font-size: 15px;
+  line-height: normal;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+}
+
+.upload_logo_btn { 
+    font-family: "Lobster";
+    font-size:20pt;
+    border-radius: 7px ;
+    line-height: normal;
+    padding: 5px 20px;
+    color: #fff;
+    margin-right:  10px;
+    width: 250px;
+    background-color: hsl(188, 71%, 43%) !important; 
+    background-repeat: repeat-x; 
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#91e0ec", endColorstr="#1fa6bb");
+    background-image: -khtml-gradient(linear, left top, left bottom, from(#91e0ec), to(#1fa6bb)); 
+    background-image: -moz-linear-gradient(top, #91e0ec, #1fa6bb); 
+    background-image: -ms-linear-gradient(top, #91e0ec, #1fa6bb); 
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #91e0ec), color-stop(100%, #1fa6bb)); 
+    background-image: -webkit-linear-gradient(top, #91e0ec, #1fa6bb);
+    background-image: -o-linear-gradient(top, #91e0ec, #1fa6bb); 
+    background-image: linear-gradient(#91e0ec, #1fa6bb); 
+    border-color: #1fa6bb #1fa6bb hsl(188, 71%, 35%);
+    -webkit-font-smoothing: antialiased;
+    
+}
+
+.save {
+    font-family: "Lobster";
+    font-size:20pt;
+    
+    border-radius: 7px ;
+    line-height: normal;
+    padding: 0px 20px;
+    color: #fff;
+    margin-right:  10px;
+}
+
+.btn_success {
+  background-color: #5bb75b;
+  *background-color: #51a351;
+  background-image: -ms-linear-gradient(top, #62c462, #51a351);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+  background-image: -o-linear-gradient(top, #62c462, #51a351);
+  background-image: -moz-linear-gradient(top, #62c462, #51a351);
+  background-image: linear-gradient(top, #62c462, #51a351);
+  background-repeat: repeat-x;
+  border-color: #51a351 #51a351 #387038;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#62c462', endColorstr='#51a351', GradientType=0);
+  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+}
+
+.btn_success:hover,
+.btn_success:active,
+.btn_success.active,
+.btn_success.disabled,
+.btn_success[disabled] {
+  background-color: #51a351;
+  *background-color: #499249;
+}
+
+.clear {
+    clear: both;
+}
+
+.file{
+    opacity: .5;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+    position: absolute;
+    z-index: 5; 
+
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.signin_block {
+    padding: 20px;
+    font-size: 14px;
+}
+
+.signin_block input[type=text],[type=password] {
+    width: 180px;
+}
+
+.errorblock{
+    color: red;
+}
+
+.contact_form td{
+    vertical-align: top;
+    padding: 5px;
+}
+
+.contact_form label{
+    color: #455172;
+    width: 100px;
+    display: block;
+}
+
+.contact_form input[type=text],textarea {
+    width: 300px;
+}
+
+.contact_form input[type=submit] {
+    width: 150px;
 }

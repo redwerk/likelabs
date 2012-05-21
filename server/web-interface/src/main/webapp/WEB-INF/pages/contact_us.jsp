@@ -1,16 +1,4 @@
 <%@include file="./header.jsp" %>
-<style type="text/css">
-    .error {
-        color: #ff0000;
-    }
-    .errorblock{
-        color: #000;
-        background-color: #ffEEEE;
-        border: 3px solid #ff0000;
-        padding:8px;
-        margin:16px;
-    }
-</style>
 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
     <tr>
         <td class="title">Contact Us</td>
@@ -25,25 +13,25 @@
                     <tr>
                         <td><label for="name">Your name: </label></td>
                         <td><form:input path="name" /></td>
-                        <td><form:errors path="name" cssClass="error"/></td>
+                        <td><form:errors path="name" cssClass="errorblock"/></td>
                     </tr>
                     <tr>
                         <td><label for="email">Your email: </label></td>
                         <td><form:input path="email" /></td>
-                        <td><form:errors path="email" cssClass="error"/></td>
+                        <td><form:errors path="email" cssClass="errorblock"/></td>
                     </tr>
                     <tr>
                         <td><label for="summary">Summary: </label></td>
                         <td><form:input path="summary" /></td>
-                        <td><form:errors path="summary" cssClass="error"/></td>
+                        <td><form:errors path="summary" cssClass="errorblock"/></td>
                     </tr>
                     <tr>
                         <td><label for="message">Message: </label></td>
-                        <td><form:textarea path="message" rows="5" cols="40" ></form:textarea></td>
-                        <td><form:errors path="message" cssClass="error"/></td>
+                        <td><form:textarea path="message" rows="5" cols="80" ></form:textarea></td>
+                        <td><form:errors path="message" cssClass="errorblock"/></td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: center"><input type="submit" value="Send"></td>
+                        <td colspan="2" style="text-align: center"><button type="submit" class="btn btn_success save">Send</button></td>
                     </tr>
                 </table>
             </form:form>

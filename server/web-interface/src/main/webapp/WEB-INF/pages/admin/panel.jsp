@@ -1,26 +1,33 @@
-<%@include  file="/WEB-INF/common/header.jsp"%>
-<h4>Welkome To Admin DashBoard</h4><br><br>
-<form method="POST">
-    <c:if test="${not empty error}">
-        <div class="field errorblock">
-            <c:out value="${error}"/>
-        </div>
-    </c:if>
-    <div class="row">
-        Edit TOS
-        <textarea name="tos" style="width: 900px; height: 300px;"><spring:message code="message.registration.tos"/></textarea>
-    </div>
-    <div class="row">
-        Edit e-mail text
-        <textarea name="bodyemail" style="width: 900px; height: 100px;"><spring:message code="message.email.registration.body"/></textarea>
-    </div>
-    <div class="row">
-        Edit sms text
-        <textarea name="bodysms" style="width: 900px; height: 100px;"><spring:message code="message.sms.registration"/></textarea>
-    </div>
-    <div class="field">
-        <input type="submit" value="Save" style="width: 187px;"/>
-        <input type="button" value="Don't save" style="width: 187px;" onclick="document.location.href='/index'" />
-    </div>
-</form>
-<%@include  file="/WEB-INF/common/footer.jsp"%>
+<%@include  file="/WEB-INF/pages/header.jsp"%>
+<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
+    <tr>
+        <td class="title">Welcome To Admin Dashboard</td>
+    </tr>
+    <tr>
+        <td class="body">
+            <form method="POST" action="" onsubmit="return false;">
+                <c:if test="${not empty error}">
+                    <div class="field errorblock">
+                        <c:out value="${error}"/>
+                    </div>
+                </c:if>
+                <div class="form">
+                    <div class="label"><label for="">Edit TOS</label></div>
+                    <div class="field"><textarea name="tos" style="width: 500px; height: 150px;"><spring:message code="message.registration.tos"/></textarea></div>
+
+                    <div class="label"><label for="">Edit template for registration e-mail</label></div>
+                    <div class="field"><textarea name="tos" style="width: 500px; height: 150px;"><spring:message code="message.email.registration.user.body"/></textarea></div>
+
+                    <div class="label"><label for="">Edit template for registration sms</label></div>
+                    <div class="field"><textarea name="tos" style="width: 500px; height: 150px;"><spring:message code="message.sms.registration"/></textarea></div>
+                    
+                    <div style="margin-bottom: 20px">
+                        <button class="btn btn_success save" type="button" style="">Save</button> or <a href="/" >Cancel</a>
+                    </div>
+
+                </div>
+            </form>
+        </td>
+    </tr>
+</table>
+<%@include  file="/WEB-INF/pages/footer.jsp"%>

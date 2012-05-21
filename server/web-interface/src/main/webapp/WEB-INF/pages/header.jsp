@@ -12,6 +12,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>LikeLabs</title>
+    <link href="http://fonts.googleapis.com/css?family=Lobster|PICO Alphabet" rel="stylesheet" />
     <style type="text/css">
         @import "/static/css/styles.css";
         @import "/static/css/smoothness/jquery-ui-1.8.20.custom.css";
@@ -22,17 +23,102 @@
     
     <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
     <script type="text/javascript" src="/static/scripts/ejs_production.js"></script>
+    
+    <sec:authorize access="not isAuthenticated()">
+        <script type="text/javascript">
+            function signIn() {
+                var data = {
+                    "j_username":$('#username').val(),
+                    "j_password":$('#password').val(),
+                    "_spring_security_remember_me":$('#mem').val()};
+                $.ajax({
+                    url: "/login",
+                    async: false,
+                    global: true,
+                    type: "POST",
+                    processData: true,
+                    dataType: "text",
+                    data: data,
+                    success: function(data){
+                        if (data == "true") {
+                            window.location.href = "/company/list";
+                        } else {
+                            $('#password').val("");
+                            $('#authfailed').html('<spring:message code="message.auth.failed"/>');
+                        }
+                    },
+                    error: function(){
+                        $('#password').val("");
+                        $('#authfailed').html('<spring:message code="message.auth.failed"/>');
+                    }
+                })
+                return false;
+            }
+        </script>
+    </sec:authorize>
+
 </head>
 <body>
     <div class="container">
         <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%" summary="">
             <tr>
                 <td class="left_shadow" rowspan="2"><img src="/static/images/spacer.png" width="10" height="100%" alt=""/></td>
-                <td class="header"><div class="header_logo"><img src="/static/images/logo.png" width="162" height="40" alt="LikeLabs"/></div></td>
+                <td class="header">
+                    <div class="header_logo left"><img src="/static/images/logo.png" width="162" height="40" alt="LikeLabs"/></div>
+                    <div class="right signin_block">
+                        <sec:authorize access="isAuthenticated()">
+                            <div class="field">
+                                <input type="button" value="Logout" style="width: 187px;" onclick="document.location.href='/logout'"/>
+                                <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                                    <input type="button" value="Admin Panel" style="width: 187px;" onclick="document.location.href='/admin/panel'"/>
+                                </sec:authorize>
+                            </div>
+                        </sec:authorize>
+                        <sec:authorize access="isAnonymous()" >
+                            <form onsubmit="return signIn();" id="loginForm" >
+                                <table cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            Phone:
+                                        </td>
+                                        <td>
+                                            Password:
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input id="username" name="j_username" type="text" />
+                                        </td>
+                                        <td>
+                                            <input id="password" name="j_password" type="password" />
+                                        </td>
+                                        <td>
+                                            <input type="submit" value="Login"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input id="mem" type="checkbox" name="_spring_security_remember_me" />
+                                            Remember me
+                                        </td>
+                                        <td>
+                                            <div>New to LikeLabs? <a href="/signup/start/">Join now</a></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div id="authfailed" class="errorblock"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </sec:authorize>
+                    </div>
+                </td>
                 <td class="right_shadow" rowspan="2"><img src="/static/images/spacer.png" width="10" height="100%" alt=""/></td>
             </tr>
             <tr>
-                <td class="content_container" style="vertical-align: top">
+                <td class="content_container" style="vertical-align: top; height: 400px;">
                     <table cellpadding="0" cellspacing="0" style="height: 100%; background: url('/static/images/shadow_tb.png') repeat-x transparent;" summary="">
                         <tr>
                             <td class="left_menu" style="vertical-align: top;">
