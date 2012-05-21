@@ -4,14 +4,14 @@
         <td class="body">
             <c:choose>
                 <c:when test="${empty error}">
-                    <div class="title">
+                    <div style="margin: 40px 0; font-weight: bold; font-style: italic; color: #455172;">
                         Your message was successfully sent.
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <p class="error">
+                    <div class="errorblock" style="margin: 40px 0; font-weight: bold; font-style: italic;">
                         There was a problem with your submission. Please try again.
-                    </p>
+                    </div>
                 </c:otherwise>
             </c:choose>
         </td>
