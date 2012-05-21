@@ -97,7 +97,7 @@
                                                     <option value="">Sort By</option>
                                                     <option value="date">Date</option>
                                                     <option value="point">Point</option>
-                                                    <option value="review_type">Contains</option>
+                                                    <option value="review_type">Content type</option>
                                                 </select>
                                             </div>
                                         </td>

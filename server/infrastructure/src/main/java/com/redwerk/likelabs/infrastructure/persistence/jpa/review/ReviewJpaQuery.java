@@ -27,7 +27,7 @@ public class ReviewJpaQuery implements ReviewQuery {
         put(SortingCriteria.POINT,
                 "r.point.company.name {0}, a.country {0}, a.state {0}, a.city {0}, a.addressLine1 {0}, a.addressLine2 {0}");
         put(SortingCriteria.REVIEW_STATUS, "r.status {0}");
-        put(SortingCriteria.REVIEW_TYPE, "r.photo {0}, r.message {0}");
+        put(SortingCriteria.REVIEW_TYPE, "isnull(r.photo), isnull(r.message)");
     }};
 
     private static final Map<SortingOrder, String> SORTING_ORDER_EXPRESSIONS = new HashMap<SortingOrder, String>() {{

@@ -5,7 +5,7 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <http use-expressions="true" access-denied-page="/WEB-INF/error/access-denied.jsp">
+    <http use-expressions="true" access-denied-page="/WEB-INF/pages/error/access-denied.jsp">
 
         <intercept-url pattern="/dashboard**" access="hasAnyRole('ROLE_USER,ROLE_SYSTEM_ADMIN')"/>
         <intercept-url pattern="/admin**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
