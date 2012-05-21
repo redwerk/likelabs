@@ -150,7 +150,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="right">
-                                                    <div class="logo"><img src="/static/images/Firefox-on-Flames.jpg" alt="" width="217"/></div>
+                                                    <div class="logo"><img src="http://lifehacker.ru/wp-content/uploads/2012/03/1229898047_mozilla_firefox.jpg" alt="" width="217"/></div>
                                                     <div class="clear"></div>
                                                     <form method="POST" enctype="multipart/form-data" action="logo" id="logoForm">
                                                         <div style="position: relative;">

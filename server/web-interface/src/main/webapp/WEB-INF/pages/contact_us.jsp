@@ -31,7 +31,8 @@
                         <td><form:errors path="message" cssClass="errorblock"/></td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: center"><button type="submit" class="btn btn_success save">Send</button></td>
+                        <td>&nbsp;</td>
+                        <td style="text-align: center"><button type="submit" class="btn btn_success save">Send</button></td>
                     </tr>
                 </table>
             </form:form>

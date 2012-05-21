@@ -12,7 +12,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>LikeLabs</title>
-    <link href="http://fonts.googleapis.com/css?family=Lobster|PICO Alphabet" rel="stylesheet" />
+    <link href="http://fonts.googleapis.com/css?family=Lobster|PICO%20Alphabet" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         @import "/static/css/styles.css";
         @import "/static/css/smoothness/jquery-ui-1.8.20.custom.css";
@@ -23,6 +23,8 @@
     
     <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
     <script type="text/javascript" src="/static/scripts/ejs_production.js"></script>
+    
+<!--    <script type="text/javascript" src="/static/scripts/scripts.js"></script>-->
     
     <sec:authorize access="not isAuthenticated()">
         <script type="text/javascript">
@@ -68,7 +70,7 @@
                     <div class="right signin_block">
                         <sec:authorize access="isAuthenticated()">
                             <div class="field">
-                                <input type="button" value="Logout" style="width: 187px;" onclick="document.location.href='/logout'"/>
+                                <button class="btn btn_success" type="button" onclick="document.location.href='/logout'">Logout</button>
                                 <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
                                     <input type="button" value="Admin Panel" style="width: 187px;" onclick="document.location.href='/admin/panel'"/>
                                 </sec:authorize>
@@ -93,7 +95,7 @@
                                             <input id="password" name="j_password" type="password" />
                                         </td>
                                         <td>
-                                            <input type="submit" value="Login"/>
+                                            <button class="btn btn_success" type="submit">Login</button>
                                         </td>
                                     </tr>
                                     <tr>

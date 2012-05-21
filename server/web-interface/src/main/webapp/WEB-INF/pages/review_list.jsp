@@ -63,6 +63,17 @@
     function fillTable(data) {
         var template = new EJS({url: "/static/templates/feed_table.ejs"}).render({feeds: data});
         $("#feeds_table").html(template);
+//        for (var key=0;key < data.length; key ++) {
+//            var img = getThumbImage(data[key].photo);
+//            (function(_key) {
+//                img.onload = function () {
+//                    var size = getThumbSize(this.width, this.height, 292, 254);
+//                    this.width = size.width;
+//                    this.height = size.height;
+//                    $("#photo_" + _key, document.body).append(this);
+//                }
+//            })(key);
+//        }
     }
     
     function changeFilter() {
@@ -105,7 +116,7 @@
                                     <tr>
                                         <td style="height:100px">
                                             <div class="filter">
-                                                <div class="title">
+                                                <div class="sub_title">
                                                     <div style="display: inline-block">Contains :</div>
                                                     <div style="display: inline-block">
                                                         <select onchange="changeFilter()" id="feed_type">
@@ -116,7 +127,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="title">
+                                                <div class="sub_title">
                                                     <div style="display: inline-block">Point :</div>
                                                     <div style="display: inline-block">
                                                         <select onchange="changeFilter()" id="point">
@@ -128,7 +139,7 @@
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="title">
+                                                <div class="sub_title">
                                                     <div style="display: inline-block">Date :</div>
                                                     <div style="display: inline-block">
                                                         <input type="text" id="filter_date_from" onchange="changeFilter()" />

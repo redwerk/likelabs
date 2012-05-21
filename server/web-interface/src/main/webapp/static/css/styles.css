@@ -112,6 +112,15 @@ body {
 }
 
 .content div.title {
+/*    font-style: italic;
+    font-weight: bold;*/
+    color: #455172;
+    font-family: 'Lobster',Arial,Verdana,Helvetica,Sans-serif;
+    font-size: 32px;
+}
+
+
+.content div.sub_title {
     font-style: italic;
     font-weight: bold;
     color: #455172;
@@ -197,6 +206,10 @@ a:hover {
     width: 292px;
     height: 254px;
 }
+.feed_container .photo img {
+    max-width: 292px;
+    max-height: 254px;
+}
 
 .feed_container .description {
     width: 292px;
@@ -242,17 +255,17 @@ a:hover {
     cursor: pointer;
 }
 
-.filter .title {
+.filter .sub_title {
     display: inline-block;
 /*    margin: 0 20px;*/
     margin: 7px 0 0 8px;
 }
 
-.filter .title select {
+.filter .sub_title select {
     width: 115px;
 }
 
-.filter .title input {
+.filter .sub_title input {
     width: 80px;
 }
 
@@ -539,6 +552,7 @@ input[type=submit], input[type=button], button {
 }
 
 .btn_success {
+  color:#ffffff;
   background-color: #5bb75b;
   *background-color: #51a351;
   background-image: -ms-linear-gradient(top, #62c462, #51a351);
