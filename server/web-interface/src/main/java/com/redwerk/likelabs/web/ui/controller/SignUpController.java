@@ -27,6 +27,7 @@ import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUserException;
 import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.user.User;
@@ -220,7 +221,7 @@ public class SignUpController {
         try {
             User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
             userService.updateEmail(user.getId(), email);
-        } catch (MailSendException e) {
+        } catch (EmailMessagingException e) {
             log.error(e,e);
             return endRedirect(PARAM_ERROR_NO_SEND_EMAIL);
         }

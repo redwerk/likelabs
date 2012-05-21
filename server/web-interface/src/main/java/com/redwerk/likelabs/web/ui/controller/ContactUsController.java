@@ -1,8 +1,8 @@
 package com.redwerk.likelabs.web.ui.controller;
 
-import com.redwerk.likelabs.application.impl.registration.exception.NoSendMailException;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.web.ui.controller.dto.ContactUsMessage;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
@@ -51,7 +51,7 @@ public class ContactUsController {
         try {
             emailService.sendMessage(messageTemplateService.getMessage("app.email.contact.us"),
                     message.getEmail(), message.getName() + ": " + message.getSummary(), message.getMessage());
-        } catch (NoSendMailException e) {
+        } catch (EmailMessagingException e) {
             log.error(e, e);
             model.addAttribute("error", true);
         }
