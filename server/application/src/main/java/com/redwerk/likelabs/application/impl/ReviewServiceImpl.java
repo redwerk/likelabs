@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import org.apache.commons.lang.time.DateUtils;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -37,11 +40,26 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewQuery getQuery(ReviewQueryData queryData) {
         ReviewQuery query = reviewRepository.getQuery();
         query.setPointIds(queryData.getPointIds());
-        query.setDateRange(queryData.getFromDate(), queryData.getToDate());
+        Date fromDate = (queryData.getFromDate() != null) ?
+            DateUtils.truncate(queryData.getFromDate(), Calendar.DATE) : null;
+        Date toDate = (queryData.getToDate() != null) ?
+            DateUtils.truncate(queryData.getToDate(), Calendar.DATE) : null;
+        if (toDate != null) {
+            toDate = getIncrementedDate(toDate);
+        }
+        query.setDateRange(fromDate, toDate);
         query.setContentType(queryData.getType());
         query.setPager(queryData.getPager());
         query.setSortingRule(queryData.getSortingRule());
         return query;
+    }
+
+    private Date getIncrementedDate(Date date) {
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+        date = cal.getTime();
+        return date;
     }
 
     @Override

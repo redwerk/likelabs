@@ -41,7 +41,7 @@ public class ReviewJpaQuery implements ReviewQuery {
                     "(:companyIds is null or r.point.company.id in :companyIds) and " +
                     "(:pointIds is null or r.point.id in :pointIds) and " +
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
-                    "(:toDate is null or r.createdDT <= :toDate) and " +
+                    "(:toDate is null or r.createdDT < :toDate) and " +
                     "(:status is null or r.status = :status))";
 
     private static final String REVIEWS_QUERY = "select r {0} {1}";
@@ -104,8 +104,8 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     @Override
     public ReviewQuery setDateRange(Date fromDate, Date toDate) {
-        this.fromDate = (fromDate != null) ? DateUtils.truncate(fromDate, Calendar.DATE) : null;
-        this.toDate = (toDate != null) ? DateUtils.truncate(toDate, Calendar.DATE) : null;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
         return this;
     }
 
