@@ -5,6 +5,6 @@
 
 @interface ReviewService : NSObject
 
-void postReview(Review *review, User *user, NSArray *contactsToShareTo);
+void postReview(Review *review, User *user);
 
 @end

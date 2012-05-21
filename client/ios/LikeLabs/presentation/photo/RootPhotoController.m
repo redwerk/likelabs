@@ -221,6 +221,10 @@
     UIButton* selectedBtn = [self.customSegmentedControl.buttons objectAtIndex:newSegmentIndex];
     selectedBtn.enabled = YES;
     
+    for (UIButton* btn in self.customSegmentedControl.buttons) {
+        btn.userInteractionEnabled = (btn != selectedBtn);
+    }
+    
     switch (newSegmentIndex) {
         case 0:
             [self switchToController:@"PhotoSelectionController"];
@@ -232,6 +236,7 @@
             [self switchToController:@"PhotoShareController"];
             break;
         case 3:
+            self.customSegmentedControl.userInteractionEnabled = NO;
             [self switchToController:@"PhotoFinishedController"];
             break;
     }

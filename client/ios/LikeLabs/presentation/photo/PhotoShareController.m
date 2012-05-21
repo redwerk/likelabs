@@ -124,7 +124,7 @@
 
 #pragma mark - Actions
 - (IBAction)fieldTouched:(id)sender {
-    _overlay = [[PhotoOverlayController alloc] initWithPhone:self.review.user.phoneNumber];
+    _overlay = [[PhotoOverlayController alloc] initWithPhone:self.review.user.phone];
     [self.rootController.view addSubview:self.overlay.view];
 }
 
@@ -149,7 +149,7 @@
 }
 
 - (void)savePhone {
-    self.phoneField.text = self.review.user.phoneNumber = self.overlay.phone;
+    self.phoneField.text = self.review.user.phone = self.overlay.phone;
     [self dismissOverlay];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
 }

@@ -3,9 +3,9 @@
 @interface User : NSObject
 
 @property(nonatomic, retain) NSString *name;
-@property(nonatomic, retain) NSString *phoneNumber;
-@property(nonatomic, retain) NSString *password;
+@property(nonatomic, retain) NSString *phone;
 
-- (id) initWtithName:(NSString *) name phone:(NSString *)phone andPassword:(NSString *)password;
+- (id) initWtithName:(NSString *) name;
+- (id) initWithPhone:(NSString *) phone;
 
 @end

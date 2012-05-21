@@ -3,31 +3,27 @@
 @implementation User
 
 @synthesize name = _name;
-@synthesize phoneNumber = _phoneNumber;
-@synthesize password = _password;
+@synthesize phone = _phone;
 
-- (id) init {
+- (id) initWtithName:(NSString *) name {
     if (self = [super init]) {
-        _name = [[NSString alloc] init];
-        _phoneNumber = [[NSString alloc] init];
-        _password = [[NSString alloc] init];
+        self.name = name;
     }
     return self;
 }
 
-- (id) initWtithName:(NSString *) name phone:(NSString *)phone andPassword:(NSString *)password {
+- (id)initWithPhone:(NSString *)phone {
     if (self = [super init]) {
-        self.name = name;
-        self.phoneNumber = phone;
-        self.password = password;
+        self.phone = phone;
     }
     return self;
 }
 
 - (void)dealloc {
     self.name = nil;
-    self.phoneNumber = nil;
-    self.password = nil;
+    self.phone = nil;
+    [self.name release];
+    [self.phone release];
     [super dealloc];
 }
 
