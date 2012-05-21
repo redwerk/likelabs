@@ -19,10 +19,9 @@ public interface ReviewService {
     Review getReview(long reviewId);
     
     
-    Review createReview(long userId, long tabletId, String text,
-            List<PhotoData> photos, List<RecipientData> recipients);
+    Review createReview(long tabletId, String userPhone, String text, List<PhotoData> photos, List<RecipientData> recipients);
 
-    
+
     void updateReview(long userId, long reviewId, String text);
 
     void updateStatus(long userId, long reviewId, ReviewStatus status,

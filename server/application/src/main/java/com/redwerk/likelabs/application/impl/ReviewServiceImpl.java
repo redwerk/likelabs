@@ -87,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review createReview(long userId, long tabletId, String text, List<PhotoData> photos, List<RecipientData> recipients) {
+    public Review createReview(long tabletId, String userPhone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
