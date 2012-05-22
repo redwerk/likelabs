@@ -28,15 +28,8 @@ public class PointServiceImpl implements PointService {
     public Report<Point> getPoints(long companyId, Pager pager) {
         Company company = companyRepository.get(companyId);
         return new Report<Point>(
-                getLoadedPoints(pointRepository.findAll(company, pager)),
+                pointRepository.findAll(company, pager),
                 pointRepository.getCount(company));
-    }
-
-    private List<Point> getLoadedPoints(List<Point> points) {
-        for (Point p: points) {
-            p.getAddress();
-        }
-        return points;
     }
 
     @Override

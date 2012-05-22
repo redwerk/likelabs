@@ -21,7 +21,7 @@ public class Point {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="point_address", joinColumns = @JoinColumn(name="point_id"))
     private Set<Address> addresses;
 
