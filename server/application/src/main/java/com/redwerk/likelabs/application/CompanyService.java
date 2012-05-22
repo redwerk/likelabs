@@ -23,7 +23,9 @@ public interface CompanyService {
     int getCompaniesCount(long adminId);
 
     Company getCompany(long companyId);
-    
+
+    Company getCompanyForTablet(long tabletId);
+
     
     Company createCompany(CompanyData companyData, List<String> pageUrls,
             List<CompanyAdminData> admins, List<Point> points);

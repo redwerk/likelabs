@@ -16,5 +16,13 @@ public interface TabletService {
     void updateTablet(long tabletId, TabletData tabletData);
     
     void deleteTablet(long tabletId);
-    
+
+
+    Tablet getTablet(String login, String loginPassword);
+
+    boolean canLogout(long tabletId, String logoutPassword);
+
+
+    boolean apiKeyIsValid(long tabletId, String apiKey);
+
 }

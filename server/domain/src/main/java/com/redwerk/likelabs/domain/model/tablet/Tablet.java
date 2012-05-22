@@ -23,6 +23,9 @@ public class Tablet {
     @Column(name = "logout_password")
     private String logoutPassword;
 
+    @Column(name = "api_key")
+    private String apiKey;
+
     @ManyToOne
     @JoinColumn(name = "point_id")
     private Point point;
@@ -35,6 +38,11 @@ public class Tablet {
         this.login = login;
         this.loginPassword = loginPassword;
         this.logoutPassword = logoutPassword;
+        generateApiKey();
+    }
+    
+    private void generateApiKey() {
+        apiKey = null;
     }
 
     // accessors
@@ -55,9 +63,23 @@ public class Tablet {
         return logoutPassword;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+    
+    public Point getPoint() {
+        return point;
+    }
+
     // modifiers
 
+    public void setLogin(String login) {
+        generateApiKey();
+        this.login = login;
+    }
+
     public void setLoginPassword(String loginPassword) {
+        generateApiKey();
         this.loginPassword = loginPassword;
     }
 
@@ -91,6 +113,7 @@ public class Tablet {
                 .append("login", login)
                 .append("loginPassword", loginPassword)
                 .append("logoutPassword", logoutPassword)
+                .append("apiKey", apiKey)
                 .append("point", point)
                 .toString();
     }

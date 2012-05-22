@@ -105,8 +105,10 @@ CREATE TABLE `tablet` (
      `login` VARCHAR(20) NOT NULL,
      `login_password` VARCHAR(20) NOT NULL,
      `logout_password` VARCHAR(20) NOT NULL,
+     `api_key` VARCHAR(32) NOT NULL,
      `point_id` BIGINT NOT NULL,
      CONSTRAINT `PK_tablet` PRIMARY KEY (`id`),
+     CONSTRAINT `UC_tablet_login` UNIQUE(`login`),
      CONSTRAINT `FK_tablet_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 

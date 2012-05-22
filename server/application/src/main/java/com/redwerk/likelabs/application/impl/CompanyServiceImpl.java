@@ -20,6 +20,8 @@ import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.point.PointRepository;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
+import com.redwerk.likelabs.domain.model.tablet.Tablet;
+import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
@@ -56,6 +58,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TabletRepository tabletRepository;
 
     @Autowired
     GatewayFactory gatewayFactory;
@@ -117,7 +122,14 @@ public class CompanyServiceImpl implements CompanyService {
     public Company getCompany(long companyId) {
         return getLoadedCompany(companyRepository.get(companyId));
     }
-    
+
+    @Override
+    @Transactional(readOnly = true)
+    public Company getCompanyForTablet(long tabletId) {
+        Tablet tablet = tabletRepository.get(tabletId);
+        return getLoadedCompany(tablet.getPoint().getCompany());
+    }
+
     private Company getLoadedCompany(Company company) {
         company.getSocialPages();
         company.getAdmins();

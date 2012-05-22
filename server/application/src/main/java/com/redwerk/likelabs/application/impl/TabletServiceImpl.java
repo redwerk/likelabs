@@ -60,4 +60,19 @@ public class TabletServiceImpl implements TabletService {
         tabletRepository.remove(tablet);
     }
 
+    @Override
+    public Tablet getTablet(String login, String loginPassword) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean canLogout(long tabletId, String logoutPassword) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean apiKeyIsValid(long tabletId, String apiKey) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 }
