@@ -21,6 +21,10 @@ public interface ReviewQuery {
 
     ReviewQuery setStatus(ReviewStatus status);
 
+    ReviewQuery setSampleStatus(Boolean promoStatus);
+
+    ReviewQuery setPublishingStatus(Boolean publishingStatus);
+
     ReviewQuery setPager(Pager pager);
 
     ReviewQuery setSortingRule(SortingRule sortingRule);

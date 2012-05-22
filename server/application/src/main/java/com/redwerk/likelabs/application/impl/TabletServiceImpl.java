@@ -62,17 +62,20 @@ public class TabletServiceImpl implements TabletService {
 
     @Override
     public Tablet getTablet(String login, String loginPassword) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Tablet tablet = tabletRepository.find(login);
+        return (tablet != null && tablet.getLoginPassword().equals(loginPassword)) ? tablet : null;
     }
 
     @Override
     public boolean canLogout(long tabletId, String logoutPassword) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        Tablet tablet = tabletRepository.get(tabletId);
+        return tablet.getLogoutPassword().equals(logoutPassword);
     }
 
     @Override
     public boolean apiKeyIsValid(long tabletId, String apiKey) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        Tablet tablet = tabletRepository.get(tabletId);
+        return tablet.getApiKey().equals(apiKey);
     }
 
 }

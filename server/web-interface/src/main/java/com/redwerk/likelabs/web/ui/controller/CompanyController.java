@@ -249,7 +249,7 @@ public class CompanyController {
            sort = new SortingRule(sortingCriteria, sortingOrder);
        }
        Pager pager = new Pager(page * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
-       return new ReviewQueryData(pointIds, fromDate, toDate, contentType, pager, sort);
+       return new ReviewQueryData(pointIds, fromDate, toDate, contentType, null, null, pager, sort);
     }
 
 

@@ -16,16 +16,24 @@ public class ReviewQueryData {
     private final Date toDate;
     
     private final ContentTypeFilter type;
-    
+
+    private final Boolean sampleStatus;
+
+    private final Boolean publishingStatus;
+
     private final Pager pager;
     
     private final SortingRule sortingRule;
 
-    public ReviewQueryData(List<Long> pointIds, Date fromDate, Date toDate, ContentTypeFilter type, Pager pager, SortingRule sortingRule) {
+
+    public ReviewQueryData(List<Long> pointIds, Date fromDate, Date toDate, ContentTypeFilter type,
+                           Boolean sampleStatus, Boolean publishingStatus, Pager pager, SortingRule sortingRule) {
         this.pointIds = pointIds;
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.type = type;
+        this.sampleStatus = sampleStatus;
+        this.publishingStatus = publishingStatus;
         this.pager = pager;
         this.sortingRule = sortingRule;
     }
@@ -53,5 +61,13 @@ public class ReviewQueryData {
     public ContentTypeFilter getType() {
         return type;
     }
-    
+
+    public Boolean getSampleStatus() {
+        return sampleStatus;
+    }
+
+    public Boolean getPublishingStatus() {
+        return publishingStatus;
+    }
+
 }

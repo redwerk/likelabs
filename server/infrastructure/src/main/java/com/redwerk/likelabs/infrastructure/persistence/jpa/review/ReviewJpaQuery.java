@@ -42,7 +42,11 @@ public class ReviewJpaQuery implements ReviewQuery {
                     "(:pointIds is null or r.point.id in :pointIds) and " +
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
                     "(:toDate is null or r.createdDT < :toDate) and " +
-                    "(:status is null or r.status = :status))";
+                    "(:status is null or r.status = :status)) and " +
+                    "(:promoStatus is null or " +
+                        "(:sampleStatus = true and r in elements(r.point.company.sampleReviews)) or " +
+                        "(:sampleStatus = false and r not in elements(r.point.company.sampleReviews))) and " +
+                    "(:publishingStatus is null or r.publishedInSN = :publishingStatus)";
 
     private static final String REVIEWS_QUERY = "select r {0} {1}";
 
@@ -66,6 +70,10 @@ public class ReviewJpaQuery implements ReviewQuery {
     private ContentTypeFilter contentType;
 
     private ReviewStatus status;
+    
+    private Boolean sampleStatus;
+
+    private Boolean publishingStatus;
 
     private Pager pager;
 
@@ -122,6 +130,18 @@ public class ReviewJpaQuery implements ReviewQuery {
     }
 
     @Override
+    public ReviewQuery setSampleStatus(Boolean sampleStatus) {
+        this.sampleStatus = sampleStatus;
+        return this;
+    }
+
+    @Override
+    public ReviewQuery setPublishingStatus(Boolean publishingStatus) {
+        this.publishingStatus = publishingStatus;
+        return this;
+    }
+
+    @Override
     public ReviewQuery setPager(Pager pager) {
         this.pager = pager;
         return this;
@@ -154,6 +174,8 @@ public class ReviewJpaQuery implements ReviewQuery {
         parameters.put("fromDate", fromDate);
         parameters.put("toDate", toDate);
         parameters.put("status", status);
+        parameters.put("sampleStatus", sampleStatus);
+        parameters.put("publishingStatus", publishingStatus);
         return parameters;
     }
     
