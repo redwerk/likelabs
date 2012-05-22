@@ -21,6 +21,22 @@
         $("#filter_date_from").datepicker({dateFormat: "dd/mm/yy"});
         $("#filter_date_to").datepicker({dateFormat: "dd/mm/yy"});
         initPager();
+        
+        $("input[name=status_filter]").change(function(){
+            updateOptions();
+            updateData();
+        });
+        
+        $(".button_filter").click(function(){
+            $(".button_filter").removeClass("active");
+            $(this).toggleClass("active");
+        })
+        
+        
+        var filter_status = $("input[name=status_filter]:checked").val();
+        filter_status = filter_status? filter_status : "all";
+        $("label[for=status_" + filter_status + "]").click();
+        
     });
 
 
@@ -36,7 +52,8 @@
         date_to: null,
         date_from: null,
         sort_by: null,
-        page_number: 0
+        page_number: 0,
+        status: null
     };
     
     function pageSelectCallback(page_index, jq) {
@@ -63,17 +80,6 @@
     function fillTable(data) {
         var template = new EJS({url: "/static/templates/feed_table.ejs"}).render({feeds: data});
         $("#feeds_table").html(template);
-//        for (var key=0;key < data.length; key ++) {
-//            var img = getThumbImage(data[key].photo);
-//            (function(_key) {
-//                img.onload = function () {
-//                    var size = getThumbSize(this.width, this.height, 292, 254);
-//                    this.width = size.width;
-//                    this.height = size.height;
-//                    $("#photo_" + _key, document.body).append(this);
-//                }
-//            })(key);
-//        }
     }
     
     function changeFilter() {
@@ -97,6 +103,17 @@
         options.point = $("#point").val();
         options.page_number = 0;
         options.sort_by = $("#sort_by").val();
+        options.status = $("input[name=status_filter]:checked").val();
+    }
+    
+    function updateFeed(reviewId, name, value) {
+        $.get("/company/" + companyId + "/reviews/" + reviewId + "/data?" + name + "=" + value, function(response){
+            if (response.error) {
+                console.warn(response.error);
+                return;
+            }
+            updateData();
+        });
     }
 </script>
                                 <table cellpadding="0" cellspacing="0" style="width: 100%;" summary="" class="content_block">
@@ -114,58 +131,61 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="height:100px">
-                                            <div class="filter">
-                                                <div class="sub_title">
-                                                    <div style="display: inline-block">Contains :</div>
-                                                    <div style="display: inline-block">
-                                                        <select onchange="changeFilter()" id="feed_type">
-                                                            <option value="">Not selected</option>
-                                                            <option value="contains_text">Text</option>
-                                                            <option value="contains_photo">Photo</option>
-                                                            <option value="contains_text_and_photo">Text and Photo</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="sub_title">
-                                                    <div style="display: inline-block">Point :</div>
-                                                    <div style="display: inline-block">
-                                                        <select onchange="changeFilter()" id="point">
-                                                            <option value="">All</option>
-                                                            <c:forEach varStatus="status" var="point" items="${points}">
-                                                                <option value="${point.id}">${point.address.addressLine1}</option>
-                                                            </c:forEach> 
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="sub_title">
-                                                    <div style="display: inline-block">Date :</div>
-                                                    <div style="display: inline-block">
-                                                        <input type="text" id="filter_date_from" onchange="changeFilter()" />
-                                                        -
-                                                        <input type="text" id="filter_date_to" onchange="changeFilter()" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <!--
-                                    <tr>
                                         <td>
-                                            <div class="filter">
-                                                <div class="title" style="padding-right: 15px;">View :</div>
-                                                <div class="button_active">All</div>
+                                            <div class="filter admin">
+                                                <div>
+                                                    <div class="sub_title">
+                                                        <div style="display: inline-block">Contains :</div>
+                                                        <div style="display: inline-block">
+                                                            <select onchange="changeFilter()" id="feed_type">
+                                                                <option value="">Not selected</option>
+                                                                <option value="contains_text">Text</option>
+                                                                <option value="contains_photo">Photo</option>
+                                                                <option value="contains_text_and_photo">Text and Photo</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="sub_title">
+                                                        <div style="display: inline-block">Point :</div>
+                                                        <div style="display: inline-block">
+                                                            <select onchange="changeFilter()" id="point">
+                                                                <option value="">All</option>
+                                                                <c:forEach varStatus="status" var="point" items="${points}">
+                                                                    <option value="${point.id}">${point.address.addressLine1}</option>
+                                                                </c:forEach> 
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="sub_title">
+                                                        <div style="display: inline-block">Date :</div>
+                                                        <div style="display: inline-block">
+                                                            <input type="text" id="filter_date_from" onchange="changeFilter()" />
+                                                            -
+                                                            <input type="text" id="filter_date_to" onchange="changeFilter()" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 15px; margin-left: 10px;">
+                                                    <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
+                                                    <input id="status_pending" type="radio" name="status_filter" value="pending"/>
+                                                    <input id="status_approved" type="radio" name="status_filter" value="approved"/>
+                                                    <input id="status_archived" type="radio" name="status_filter" value="archived"/>
+                                                    <input id="status_flagged" type="radio" name="status_filter" value="flagged"/>
+                                                    <input id="status_published" type="radio" name="status_filter" value="published"/>
+                                                    <input id="status_promo" type="radio" name="status_filter" value="promo"/>
+                                                    
 
-                                                <div class="button">Pending</div>
-                                                <div class="button">Approved</div>
-                                                <div class="button">Flagged</div>
-                                                <div class="button">Photos</div>
-                                                <div class="button">Comments</div>
+                                                    <label class="button_filter" for="status_all">All</label>
+                                                    <label class="button_filter" for="status_pending">Pending</label>
+                                                    <label class="button_filter" for="status_approved">Approved</label>
+                                                    <label class="button_filter" for="status_archived">Archived</label>
+                                                    <label class="button_filter" for="status_flagged">Flagged</label>
+                                                    <label class="button_filter" for="status_published">Published</label>
+                                                    <label class="button_filter" for="status_promo">Favourites</label>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
-                                    -->
                                     <tr>
                                         <td class="body" style="width: 100%;">
                                             <div id="feeds_table"></div>

@@ -3,8 +3,10 @@
         var feed = feeds[key];
         var date = new Date(feed.date);
         var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        feed.promo = key%2==0? "true" : "false";
+        feed.published = key%2==0? "true" : "false";
 %>
-<div class="left" onmouseover="$(this).find('.hint').removeClass('hidden')" onmouseout="$(this).find('.hint').addClass('hidden');">
+<div class="left" onmouseover="$(this).find('.hint').removeClass('hidden')" onmouseout="$(this).find('.hint').addClass('hidden');" id="feed_item_<%=feed.id%>">
     <div class="hidden hint">
         <table cellpadding="0" cellspacing="0" style="width: 292px;" summary="">
             <tr class="black_10">
@@ -19,9 +21,31 @@
                 <td>Point name:</td>
                 <td><%=feed.point%></td>
             </tr>
+            <tr class="black_20">
+                <td>Status:</td>
+                <td>
+                    <select style="width: 150px;" onchange="updateFeed('<%=feed.id%>', 'status', this.value)">
+                        <option>Pending</option>
+                        <option>Approved</option>
+                        <option>Archived</option>
+                        <option>Flagged</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="black_10">
+                <td>Favourite:</td>
+                <td>
+                    <div class="star <%= feed.promo == 'true'? 'active' : ''%>" title="<%= feed.promo == 'true'? 'Remove from favourites' : 'Add to favourites'%>" onclick="updateFeed('<%=feed.id%>', 'promo', '<%= feed.promo == 'true'? 'false' : 'true'%>')"></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;" colspan="2">
+                    <button style="width: 120px; height: 32px;" type="button" class="btn <%= feed.published == 'true'? 'disabled' : 'btn_success'%>" onclick="<%= feed.published == 'true'? 'return false;' : ''%>updateFeed('<%=feed.id%>', 'publish', true)"><%= feed.published == 'true'? 'Published' : 'Publish'%></button>
+                </td>
+            </tr>
         </table>
     </div>
-    <div class="feed_container <%= key%2==0? "feed_left_block" : "" %>">
+    <div class="feed_container <%= key%2==0? 'feed_left_block' : '' %>">
         <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="<%=feed.photo%>" alt=""/></div>
         <div class="description"><%= feed.message %></div>
     </div>

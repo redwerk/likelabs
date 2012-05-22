@@ -126,6 +126,8 @@
                             <td class="left_menu" style="vertical-align: top;">
                                 <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/list">COMPANIES</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
+                                <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/1/reviews">COMPANY FEED</a></div>
+                                <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div  class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'tos'}">active</c:if>"><a href="/tos">TERMS OF SERVICE</a></div>

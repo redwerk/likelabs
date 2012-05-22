@@ -176,6 +176,7 @@ public class CompanyController {
                 map.put("name", review.getAuthor().getName());
                 map.put("date", review.getCreatedDT());
                 map.put("point", review.getPoint().getAddress().getAddressLine1());
+                map.put("id", review.getId());
                 data.add(map);
             }
             response.put("data", data);
