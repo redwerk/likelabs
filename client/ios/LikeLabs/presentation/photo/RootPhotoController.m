@@ -82,6 +82,7 @@
     NSString* selectTitle = @"  Select Photo to Share";
     [selectPhotoBtn setTitle:selectTitle forState:UIControlStateNormal];
     [selectPhotoBtn setTitle:selectTitle forState:UIControlStateSelected];
+    selectPhotoBtn.userInteractionEnabled = NO;
     [bt2 addObject:selectPhotoBtn];
     
     

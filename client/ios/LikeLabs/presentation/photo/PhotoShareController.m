@@ -48,6 +48,9 @@
     [self.view addSubview:self.imageView];
 
     self.mailButton.enabled = self.phoneButton.enabled = (self.review.contacts.count < MAX_CONTACTS);
+    if (self.review.user.phone && self.review.user.phone.length) {
+        self.phoneField.text = self.review.user.phone;
+    }
     
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
 }

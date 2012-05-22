@@ -22,8 +22,8 @@
 - (void)dealloc {
     self.name = nil;
     self.phone = nil;
-    [self.name release];
-    [self.phone release];
+    [_name release];
+    [_phone release];
     [super dealloc];
 }
 
