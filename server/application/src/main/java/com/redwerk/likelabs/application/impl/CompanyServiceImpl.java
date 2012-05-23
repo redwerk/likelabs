@@ -4,7 +4,10 @@ import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
+import com.redwerk.likelabs.application.dto.company.CompanyPageData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
+import com.redwerk.likelabs.application.dto.point.PointData;
+import com.redwerk.likelabs.application.impl.point.PointFactory;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.impl.registration.PasswordGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
@@ -138,8 +141,20 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public Company createCompany(CompanyData companyData, List<String> pageUrls, List<CompanyAdminData> admins, List<Point> points) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Company createCompany(CompanyData companyData, List<CompanyPageData> pages, List<CompanyAdminData> admins,
+                                 List<PointData> points) {
+        Company company = new Company(companyData.getName(), companyData.getPhone(), companyData.getEmail());
+        for (CompanyPageData pageData: pages) {
+            attachPageInternal(company, pageData);
+        }
+        for (CompanyAdminData adminData: admins) {
+            createAdminInternal(company, adminData);
+        }
+        PointFactory pointFactory = new PointFactory(pointRepository);
+        for (PointData pointData: points) {
+            pointFactory.createPoint(company, pointData);
+        }
+        return company;
     }
 
     @Override
@@ -153,12 +168,15 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public CompanySocialPage attachPage(long companyId, SocialNetworkType snType, String url) {
-        if (snType == null) {
-            throw new IllegalArgumentException("snType cannot be null");
+    public CompanySocialPage attachPage(long companyId, CompanyPageData pageData) {
+        if (pageData == null) {
+            throw new IllegalArgumentException("pageData cannot be null");
         }
-        Company company = companyRepository.get(companyId);
-        CompanySocialPage page = gatewayFactory.getGateway(snType).getCompanyPage(url);
+        return attachPageInternal(companyRepository.get(companyId), pageData);
+    }
+
+    private CompanySocialPage attachPageInternal(Company company, CompanyPageData pageData) {
+        CompanySocialPage page = gatewayFactory.getGateway(pageData.getSnType()).getCompanyPage(pageData.getUrl());
         company.addSocialPage(page);
         return page;
     }
@@ -179,11 +197,16 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional
     public void createAdmin(long companyId, CompanyAdminData adminData) {
+        createAdminInternal(companyRepository.get(companyId), adminData);
+    }
+
+    private void createAdminInternal(Company company, CompanyAdminData adminData) {
         User admin = createUser(adminData.getPhone(), adminData.getEmail());
-        registerAsCompanyAdmin(companyId, admin);
+        company.addAdmin(admin);
         sendSmsWithPassword(admin);
         sendActivationEmail(admin);
     }
+
     
     private User createUser(String phone, String email) {
         String password = passwordGenerator.getPassword(phone);
@@ -192,11 +215,6 @@ public class CompanyServiceImpl implements CompanyService {
         return user;
     }
     
-    private void registerAsCompanyAdmin(long companyId, User admin) {
-        Company company = companyRepository.get(companyId);
-        company.addAdmin(admin);
-    }
-
     private void sendSmsWithPassword(User receiver) {
         String msg = messageService.getMessage(
                 ADMIN_REGISTRATION_SMS_MSG, messageService.getMessage(APP_DOMAIN_MSG), receiver.getPassword());

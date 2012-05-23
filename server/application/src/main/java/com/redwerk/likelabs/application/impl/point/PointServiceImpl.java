@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.impl;
+package com.redwerk.likelabs.application.impl.point;
 
 import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.domain.model.query.Pager;
@@ -41,10 +41,11 @@ public class PointServiceImpl implements PointService {
     @Override
     @Transactional
     public Point createPoint(long companyId, PointData pointData) {
-        Company company = companyRepository.get(companyId);
-        Point point = new Point(company, pointData.getAddress(), pointData.getPhone(), pointData.getEmail());
-        pointRepository.add(point);
-        return point;
+        if (pointData == null) {
+            throw new IllegalArgumentException("pointData cannot be null");
+        }
+        PointFactory factory = new PointFactory(pointRepository);
+        return factory.createPoint(companyRepository.get(companyId), pointData);
     }
 
     @Override

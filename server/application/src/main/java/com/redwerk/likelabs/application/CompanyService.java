@@ -3,6 +3,8 @@ package com.redwerk.likelabs.application;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
+import com.redwerk.likelabs.application.dto.company.CompanyPageData;
+import com.redwerk.likelabs.application.dto.point.PointData;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
@@ -26,14 +28,14 @@ public interface CompanyService {
 
     Company getCompanyForTablet(long tabletId);
 
-    
-    Company createCompany(CompanyData companyData, List<String> pageUrls,
-            List<CompanyAdminData> admins, List<Point> points);
+
+    Company createCompany(CompanyData companyData, List<CompanyPageData> pages, List<CompanyAdminData> admins,
+                          List<PointData> points);
     
     void updateCompany(long companyId, CompanyData companyData);
     
-    CompanySocialPage attachPage(long companyId, SocialNetworkType snType, String url);
-    
+    CompanySocialPage attachPage(long companyId, CompanyPageData pageData);
+
     void detachPage(long companyId, String pageId);
     
     void createAdmin(long companyId, CompanyAdminData adminData);

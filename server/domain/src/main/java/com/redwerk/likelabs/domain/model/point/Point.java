@@ -22,7 +22,7 @@ public class Point {
     private Company company;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="point_address", joinColumns = @JoinColumn(name="point_id"))
+    @CollectionTable(name = "point_address", joinColumns = @JoinColumn(name = "point_id"))
     private Set<Address> addresses;
 
     private String phone;
@@ -66,7 +66,7 @@ public class Point {
     // modifiers
 
     public void setAddress(Address address) {
-        addresses.clear();
+
         addresses.add(address);
     }
 

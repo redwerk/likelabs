@@ -59,11 +59,11 @@ public class Company {
 
     // constructors
 
-    public Company(String name, String phone, String email, Set<User> admins) {
+    public Company(String name, String phone, String email) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.admins = new HashSet<User>(admins);
+        this.admins = new HashSet<User>();
     }
 
     // accessors
