@@ -1,56 +1,38 @@
-<%@include file="./admin_header.jsp" %>
+<%@include file="/WEB-INF/pages/admin_header.jsp" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <div id="content">
     <h1>Edit Your Profile</h1>
     
-    <form id="companyProfile" class="cmxform" method="POST">
+    <form:form modelAttribute="profile" id="profile" class="cmxform" method="POST">
         <fieldset>
-            <div class="field-holder">
-                <label for="venueName">Venue Name:</label>
-                <input id="venueName" name="venueName" type="text" autocomplete="off" minlength="2" />
-            </div>
+            <input type="hidden" id="oldUserId" value="${profile.phone}" />
             <div class="field-holder">
                 <label for="phone">Phone Number:</label>
-                <input id="phone" name="phone" type="text" autocomplete="off" />
+                <form:input id="phone" name="phone" type="text" autocomplete="off" path="phone" />
             </div>
             <div class="field-holder">
                 <label for="email">Email:</label>
-                <input id="email" name="email" type="email" autocomplete="off" />
+                <form:input id="email" name="email" type="email" autocomplete="off" path="email" />
             </div>
             <div class="field-holder">
-                <label for="website">Website:</label>
-                <input id="website" name="website"  type="url" autocomplete="off" />
-            </div>
-            <div class="field-holder">
-                <label for="address1">Addresse Line 1:</label>
-                <input id="address1" name="address1" type="text" autocomplete="off" />
-            </div>
-            <div class="field-holder">
-                <label for="address2">Addresse Line 2:</label>
-                <input id="address2" name="address2" type="text" autocomplete="off" />
-            </div>
-            <div class="field-holder">
-                <label for="city">City:</label>
-                <input id="city" name="city" type="text" autocomplete="off" />
-            </div>
-            <div class="field-holder">
-                <label for="postalCode">Postal Code:</label>
-                <input id="postalCode" name="postalCode" type="text" autocomplete="off" />
+                <label for="email">Password:</label>
+                <form:input id="password" name="password" type="password" autocomplete="off" path="password" />
             </div>
             <div class="field-holder">
                 <button class="btn btn-success save" type="submit">Save</button> or <a href="#">Cancel</a>
             </div>
         </fieldset>
-    </form>
+    </form:form>
     <div class="right-col">
         <div class="logo-holder">
-            <div class="company-logo"><img src="/static/images/team-member.png" width="210" height="180" alt="Company Logo"  /></div>
-            <form method="POST" enctype="multipart/form-data" action="logo" id="logoForm">
+            <div class="company-logo"><img src="/companyadmin/profileImage" width="210" height="180" alt="Company Logo"  /></div>
+            <form:form method="POST" enctype="multipart/form-data" action="logo" id="logoForm" modelAttribute="imageData" >
                 <div style="position: relative;">
                     <button id="uploadLogo" class="btn upload-logo" type="button">Upload New Logo</button>
-                    <input type="file" class="file" id="file" onchange="submitLogo();return false;"/>
+                    <form:input type="file" class="file" id="file" onchange="submitLogo();return false;" path="fileData" />
                 </div>
-            </form>
+            </form:form>
             <div class="clear"></div>
         </div>
         <ul class="social-buttons">
@@ -67,7 +49,7 @@
     (function($){
         $(document).ready(function(){
            
-           $("#companyProfile").validate({
+           $("#profile").validate({
 		rules: {
 			venueName: {
                             required: true,
@@ -107,4 +89,4 @@
     }
 </script>
 
-<%@include file="./admin_footer.jsp" %>
+<%@include file="/WEB-INF/pages/admin_footer.jsp" %>
