@@ -43,7 +43,7 @@ public class ReviewJpaQuery implements ReviewQuery {
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
                     "(:toDate is null or r.createdDT < :toDate) and " +
                     "(:status is null or r.status = :status)) and " +
-                    "(:promoStatus is null or " +
+                    "(:sampleStatus is null or " +
                         "(:sampleStatus = true and r in elements(r.point.company.sampleReviews)) or " +
                         "(:sampleStatus = false and r not in elements(r.point.company.sampleReviews))) and " +
                     "(:publishingStatus is null or r.publishedInCompanySN = :publishingStatus)";
