@@ -29,7 +29,7 @@
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
-    _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 211, 468, 350) image:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex] andText:self.review.text];    
+    _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 211, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
     [self.view addSubview:self.imageView];
     
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
@@ -74,7 +74,7 @@
         self.imageView.frame = CGRectMake(142, 275, 468, 350);
         self.button.frame = CGRectMake(47, 895, 667,86);
     }
-    [self.imageView setPhoto:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]];
+    [self.imageView setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
 }
 
 - (void) setBackgroundForInterfaceOrientation:(UIInterfaceOrientation) orientation {

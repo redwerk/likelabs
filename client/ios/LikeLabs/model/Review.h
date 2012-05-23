@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "User.h"
 #import "Contact.h"
+#import "Photo.h"
 
 typedef enum {
     ReviewTypeText,
@@ -19,5 +20,6 @@ extern NSUInteger const MAX_CONTACTS;
 
 - (id)initWithReviewType: (ReviewType)reviewType;
 - (id)initWithUser: (User *)user andText: (NSString *)text;
+- (NSString*) serializeToXml;
 
 @end

@@ -70,7 +70,7 @@ static NSString *const GREETING = @"Start typing a message!";
     }
     [self.textView becomeFirstResponder];    
     
-    [self setPhoto:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]];
+    [self setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
 }
 
 #pragma mark - Review management

@@ -95,7 +95,8 @@ const float deletedPhotoAlpha = 0.5;
     CGSize maxPhotoSize = CGSizeMake(128.0, 114.0);
     int photosPadding = 10;
     for (int i=0; i<5; i++) {
-        UIImage *photo = [photos objectAtIndex:i];
+        Photo* reviewPhoto = [photos objectAtIndex:i];
+        UIImage *photo = reviewPhoto.image;
         CGFloat scale = MIN(maxPhotoSize.width / photo.size.width, maxPhotoSize.height / photo.size.height);
         photo = [UIImage imageWithCGImage:photo.CGImage scale:1.0/scale orientation:photo.imageOrientation];
         photo = [self imageWithBorderFromImage:photo];
@@ -109,7 +110,10 @@ const float deletedPhotoAlpha = 0.5;
         imageView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
         [imageView addGestureRecognizer:tapGesture];
-        [tapGesture release];
+        [tapGesture release];        
+        if (reviewPhoto.status == PhotoStatusDeleted) {
+            [self dimThumbnail:imageView];
+        }
         [self.thumbnailsView addSubview:imageView];
     }
     [self selectThumbnail:[self.thumbnailsView.subviews objectAtIndex:self.review.reviewPhotoIndex]];
@@ -126,8 +130,8 @@ const float deletedPhotoAlpha = 0.5;
 - (void) selectThumbnail:(UIView*) thumbnail {
     UIView* tappedImage = thumbnail;
     [self resetThumbnails];
-    [self setPhoto:[self.review.photos objectAtIndex:tappedImage.tag - 1]];
-    self.review.reviewPhotoIndex = tappedImage.tag - 1;        
+    [self setPhoto:((Photo*)[self.review.photos objectAtIndex:tappedImage.tag - 1]).image];
+    self.review.reviewPhotoIndex = tappedImage.tag - 1;
     
     CGPoint oldCenter = tappedImage.center;
     tappedImage.frame = CGRectMake(0, 0, tappedImage.frame.size.width * selectedScaleFactor, tappedImage.frame.size.height * selectedScaleFactor);
@@ -158,12 +162,31 @@ const float deletedPhotoAlpha = 0.5;
 }
 
 - (void) deletePhoto: (UIButton *) sender {
-    UIView *thumbnail = [self.thumbnailsView viewWithTag:sender.tag];
-    CGPoint center = thumbnail.center;
-    thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
-    thumbnail.center = center;
-    thumbnail.alpha = deletedPhotoAlpha;
-    [sender removeFromSuperview];
+    if ([self selectNewPhotoBeforeDeletingPhotoAtIndex: sender.tag - 1]) {
+        Photo* deletedPhoto = [self.review.photos objectAtIndex:sender.tag - 1];
+        deletedPhoto.status = PhotoStatusDeleted;
+        
+        [self dimThumbnail:[self.thumbnailsView viewWithTag:sender.tag]];
+        [sender removeFromSuperview];
+    }
+}
+
+- (BOOL) selectNewPhotoBeforeDeletingPhotoAtIndex:(NSUInteger) deletedPhotoIndex {
+    for (NSUInteger i = (deletedPhotoIndex == self.review.photos.count - 1) ? 0 : deletedPhotoIndex + 1; 
+         i != deletedPhotoIndex; 
+         i = (i == self.review.photos.count - 1) ? 0 : i + 1) 
+    {
+        Photo* newPhoto = [self.review.photos objectAtIndex:i];
+        if (newPhoto.status != PhotoStatusDeleted) {
+            [self selectThumbnail:[self.thumbnailsView viewWithTag:i+1]];
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void) dimThumbnail: (UIView*) thumbnail {    
+    thumbnail.alpha = deletedPhotoAlpha;    
 }
 
 - (UIImage*)imageWithBorderFromImage:(UIImage*)source {

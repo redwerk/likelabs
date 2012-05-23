@@ -5,10 +5,12 @@
 #import "PhotoOverlayController.h"
 #import "User.h"
 #import "PhotoRecipientsOverlayController.h"
+#import "ReviewService.h"
 
 @interface PhotoShareController ()
 @property (nonatomic, retain) RootPhotoController* rootController;
 @property (nonatomic, assign) Review* review;
+@property (nonatomic, assign) ReviewService* reviewService;
 @property (nonatomic, retain) PhotoOverlayController* overlay;
 @property (nonatomic, retain) PhotoRecipientsOverlayController* recipientsOverlay;
 @end
@@ -24,6 +26,7 @@
 @synthesize review = _review;
 @synthesize overlay = _overlay;
 @synthesize recipientsOverlay = _recipientsOverlay;
+@synthesize reviewService = _reviewService;
 
 #pragma mark - Initialization
 
@@ -31,6 +34,7 @@
     if (self = [super init]) {
         self.rootController = rootController;
         self.review = rootController.rootController.review;
+        self.reviewService = rootController.rootController.reviewService;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissOverlay) name:kPrimaryPhoneDidCancel object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePhone) name:kPrimaryPhoneDone object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissRecipientsOverlay) name:kRecipientsDidCancel object:nil];
@@ -44,7 +48,7 @@
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;    
     
-    _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex] andText:self.review.text];    
+    _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
     [self.view addSubview:self.imageView];
 
     self.mailButton.enabled = self.phoneButton.enabled = (self.review.contacts.count < MAX_CONTACTS);
@@ -116,7 +120,7 @@
         self.submitBtn.frame = CGRectMake(47, 894, 665, 86);
         [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg.png"] forState:UIControlStateNormal];        
     }
-    [self.imageView setPhoto:[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]];
+    [self.imageView setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -142,6 +146,7 @@
 }
 
 - (IBAction)submit:(id)sender {
+    [self.reviewService postReview:self.review];
     [self.rootController step];
 }
 

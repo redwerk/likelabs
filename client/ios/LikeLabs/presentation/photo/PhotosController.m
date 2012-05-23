@@ -288,7 +288,9 @@ static float const TIMER_DELAY = 0.2;
 - (void)saveImageToPhotoAlbum 
 {
     [self dismissModalViewControllerAnimated:NO];
-    [self.rootController.review.photos addObject: self.photoPicker.image];
+    Photo* photo = [[Photo alloc] initWithImage: self.photoPicker.image];
+    [self.rootController.review.photos addObject: photo];
+    [photo release];
     self.photoPicker = nil;
     [_photoPicker release];
     if (self.photoNumber <= 5) {

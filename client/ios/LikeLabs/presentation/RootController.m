@@ -10,8 +10,16 @@
 
 @synthesize review = _review;
 @synthesize currentViewController = _currentViewController;
+@synthesize reviewService = _reviewService;
 
 #pragma mark - Initialization
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        _reviewService = [[ReviewService alloc] init];
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {

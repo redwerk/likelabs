@@ -147,7 +147,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
 	_captureSession = [[AVCaptureSession alloc] init];
 	[self.captureSession addInput:captureInput];
     [self.captureSession addOutput:self.imageOutput];    
-    [self.captureSession setSessionPreset:AVCaptureSessionPresetMedium];
+    [self.captureSession setSessionPreset:AVCaptureSessionPresetHigh];
     
 	self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession: self.captureSession];
 	self.previewLayer.frame = self.view.frame;
@@ -172,15 +172,14 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
         }
 	}
     videoConnection.videoOrientation = [UIApplication sharedApplication].statusBarOrientation;
-	NSLog(@"about to request a capture from: %@", self.imageOutput);
 	[self.imageOutput captureStillImageAsynchronouslyFromConnection:videoConnection 
                                                          completionHandler:^(CMSampleBufferRef imageSampleBuffer, NSError *error) { 
-                                                             CFDictionaryRef exifAttachments = CMGetAttachment(imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);
-                                                             if (exifAttachments) {
-                                                                 NSLog(@"attachements: %@", exifAttachments);
-                                                             } else { 
-                                                                 NSLog(@"no attachments");
-                                                             }
+//                                                             CFDictionaryRef exifAttachments = CMGetAttachment(imageSampleBuffer, kCGImagePropertyExifDictionary, NULL);
+//                                                             if (exifAttachments) {
+//                                                                 NSLog(@"attachements: %@", exifAttachments);
+//                                                             } else { 
+//                                                                 NSLog(@"no attachments");
+//                                                             }
                                                              NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];    
                                                              _image = [[UIImage alloc] initWithData:imageData];
                                                              
