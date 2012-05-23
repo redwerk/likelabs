@@ -46,7 +46,7 @@ public class ReviewJpaQuery implements ReviewQuery {
                     "(:promoStatus is null or " +
                         "(:sampleStatus = true and r in elements(r.point.company.sampleReviews)) or " +
                         "(:sampleStatus = false and r not in elements(r.point.company.sampleReviews))) and " +
-                    "(:publishingStatus is null or r.publishedInSN = :publishingStatus)";
+                    "(:publishingStatus is null or r.publishedInCompanySN = :publishingStatus)";
 
     private static final String REVIEWS_QUERY = "select r {0} {1}";
 

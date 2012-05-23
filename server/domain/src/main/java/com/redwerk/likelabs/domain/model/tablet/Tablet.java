@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.domain.model.tablet;
 
 import com.redwerk.likelabs.domain.model.point.Point;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -10,6 +11,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "tablet")
 public class Tablet {
+
+    private static final int API_KEY_LENGTH = 32;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +45,7 @@ public class Tablet {
     }
     
     private void generateApiKey() {
-        apiKey = null;
+        apiKey = RandomStringUtils.randomAlphanumeric(API_KEY_LENGTH);
     }
 
     // accessors
