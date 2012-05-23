@@ -47,12 +47,12 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date notifiedDT;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="user_social_account", joinColumns = @JoinColumn(name="user_id"))
     @Sort(type = SortType.NATURAL)
     private SortedSet<UserSocialAccount> accounts = new TreeSet<UserSocialAccount>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="user_event_type", joinColumns = @JoinColumn(name="user_id"))
     @Column(name = "event_type")
     private Set<EventType> enabledEvents;

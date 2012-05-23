@@ -134,7 +134,7 @@ CREATE TABLE `review` (
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `review_recipient`;
-CREATE TABLE `recipient` (
+CREATE TABLE `review_recipient` (
      `review_id` BIGINT AUTO_INCREMENT NOT NULL,
      `type` TINYINT(1) NOT NULL,
      `address` VARCHAR(40) NOT NULL,

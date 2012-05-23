@@ -35,7 +35,7 @@ public class Company {
     @Basic(fetch = FetchType.LAZY)
     private byte[] logo;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="company_social_page", joinColumns = @JoinColumn(name="company_id"))
     @Sort(type = SortType.NATURAL)
     private SortedSet<CompanySocialPage> pages = new TreeSet<CompanySocialPage>();

@@ -14,7 +14,7 @@ public class DashboardController {
 
 
     @RequestMapping(value = {"/",""}, method = RequestMethod.GET)
-    public String dasboard(ModelMap model) {
+    public String dashboard(ModelMap model) {
 
         return VIEW_DASHBOARD;
     }

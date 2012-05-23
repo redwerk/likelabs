@@ -131,9 +131,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     private Company getLoadedCompany(Company company) {
-        company.getSocialPages();
-        company.getAdmins();
-        company.getSampleReviews();
+        company.getAdmins().size();
+        company.getSampleReviews().size();
         return company;
     }
 

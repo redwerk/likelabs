@@ -58,7 +58,7 @@ public class Review {
     @Temporal(TemporalType.TIMESTAMP)
     private Date moderatedDT;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name="review_recipient", joinColumns = @JoinColumn(name="review_id"))
     private Set<Recipient> recipients;
 
