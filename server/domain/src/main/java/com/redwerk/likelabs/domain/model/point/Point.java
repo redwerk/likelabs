@@ -66,7 +66,7 @@ public class Point {
     // modifiers
 
     public void setAddress(Address address) {
-
+        addresses.clear();
         addresses.add(address);
     }
 
