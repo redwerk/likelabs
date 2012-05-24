@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.*;
+import org.apache.commons.collections.functors.FalsePredicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -220,7 +221,8 @@ public class CompanyAdminController {
         List<Map<String, String>> result = new LinkedList<Map<String, String>>();
         for (CompanyReportItem company : companies) {
             Map<String, String> companyJson = new HashMap<String, String>();
-            companyJson.put("name", company.getCompany().getName());
+            companyJson.put("name", company.getCompany() .getName());
+            companyJson.put("id", company.getCompany().getId().toString());
             companyJson.put("points_count", new Integer(company.getPointsNumber()).toString());
             companyJson.put("reviews_count", new Integer(company.getPointsNumber()).toString());
             companyJson.put("logo", MessageFormat.format(LOGO_LINK_TEMPLATE, company.getCompany().getId()));
@@ -233,9 +235,12 @@ public class CompanyAdminController {
         List<Map<String, String>> result = new LinkedList<Map<String, String>>();
         for (Review review : reviews) {
             Map<String, String> reviewJson = new HashMap<String, String>();
+            reviewJson.put("id", review.getId().toString());
             reviewJson.put("message", review.getMessage());
             reviewJson.put("name", review.getAuthor().getName());
             reviewJson.put("date", review.getCreatedDT().toString());
+            reviewJson.put("status", review.getStatus().toString()); 
+            reviewJson.put("published", review.isPublishedInCompanySN() ? "true":"false");
             reviewJson.put("point", review.getPoint().getAddress().getAddressLine1());
             reviewJson.put("photo", MessageFormat.format(PHOTO_REVIEW_LINK_TEMPLATE, String.valueOf(review.getId())));
             result.add(reviewJson);

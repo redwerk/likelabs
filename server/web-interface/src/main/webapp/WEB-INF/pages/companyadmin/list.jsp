@@ -1,16 +1,83 @@
-<%@include  file="/WEB-INF/pages/header.jsp"%>
-<style type="text/css">
-    @import "/static/css/fb.css";
-    @import "/static/css/vk.css";
-</style>
-        <h1>Hello World!</h1>
-        <table border="1 px">
-            <tr>
-                <th>Company name</th>
-                <th>Phone</th>
-                <th>E-Mail</th>
-                <th>Points</th>
-                <th>Reviews</th>
-            </tr>
-        </table>
-<%@include  file="/WEB-INF/pages/footer.jsp"%>
+<%@include  file="/WEB-INF/pages/admin_header.jsp"%>
+<div id="content">
+    <h1>My Companies</h1>
+    <div id="company-list">
+        
+    </div>
+    <div class="pager"></div>
+    <div class="clear"></div>
+</div>
+<script type="text/javascript">
+    (function(){
+        var template = new EJS({url: "/static/templates/companies.ejs"});
+        var pagerOptions = {
+            items_per_page : 10,
+            next_text : "&gt;",
+            num_display_entries : 6,
+            num_edge_entries : 2,
+            current_page: 0,
+            prev_text : "&lt;",
+            ellipse_text: "...",
+            callback: pageChanged,
+            resetPager: true
+        };     
+        
+        var ajaxObj = false;
+        function pageChanged(newPage, jq) {
+            loadData(newPage);
+            return false;
+        }
+        
+        function loadData(newPage) {
+            
+            newPage = newPage || 0;
+            newPage++;
+            $('#content').mask('Please wait...');
+            
+            ajaxObj && ajaxObj.abort();
+            
+            ajaxObj= $.ajax({
+                dataType: 'json',
+                url: '/companyadmin/companies/data/' + newPage,
+                success: function(data){
+                    initPager(data.count);
+                    renderData(data);
+                },
+                error: function(){
+                    $('#content').unmask();
+                    //alert("Server temporarily unavailable");
+                }
+            });
+           
+        }
+        function initPager(itemsCount){
+            if(!pagerOptions.resetPager){
+                return;
+            }
+            pagerOptions.resetPager = false;
+            if(!itemsCount){
+                $('.pager').hide();
+                return;
+            }
+            $('.pager').show();
+            $('.pager').pagination(itemsCount, pagerOptions);
+        }
+        function renderData(data){
+            if(!data.count){
+                $('#company-list').html('No Data Found.');
+                return;
+            } else{
+                var view = template.render({companies: data.companies});
+                $('#company-list').html(view);
+            }
+           
+            $('#content').unmask();
+        }
+        
+        $(document).ready(function(){
+            loadData(0);
+        });
+    })();
+    
+</script>
+<%@include  file="/WEB-INF/pages/admin_footer.jsp"%>

@@ -1,0 +1,38 @@
+<% 
+    for (var i=0, len=reviews.length ; i<len ;++i ) {
+    var review = reviews[i];
+%>
+<div class="item-wrapper" review-id="<%=review.id%>">
+    <div class="item-cmd">
+        <table>
+            <tr><td>Author:</td><td><%=review.name%></td></tr>
+            <tr class="odd"><td>Taken:</td><td><%=review.date%></td></tr>
+            <tr><td>Point name:</td><td><%=review.point%></td></tr>
+            <tr class="odd"><td>Status:</td><td>
+                <select style="width: 100px;">
+                    <option <% review.status =='PENDING' ? 'selected="selected"' : '' %>  value="PENDING">Pending</option>
+                    <option <% review.status =='APPROVED' ? 'selected="selected"' : '' %> value="APPROVED">Approved</option>
+                    <option <% review.status =='ARCHIVED' ? 'selected="selected"' : '' %>value="ARCHIVED">Archived</option>
+                    <option <% review.status =='FLAGGED' ? 'selected="selected"' : '' %> value="FLAGGED">Flagged</option>
+                </select>
+            </td></tr>
+        </table>
+       <div class="btn-holder">
+            <% if(review.published == "true" ){ %>
+                <button class="btn btn-success" type="button">Publish</button>
+            <% } else {%>
+                <span class="btn disabled">Published</span>
+            <% }%>
+            
+        </div>
+    </div>
+    <div class="item-data">
+        <div class="img"><img src="<%=review.photo%>" /></div>
+        <div class="msg"><%=review.message%></div>
+        
+    </div>
+</div>
+<% 
+    }
+%>
+         

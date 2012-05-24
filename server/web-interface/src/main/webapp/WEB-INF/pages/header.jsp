@@ -12,7 +12,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>LikeLabs</title>
-    <link href="http://fonts.googleapis.com/css?family=Lobster|PICO%20Alphabet" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         @import "/static/css/styles.css";
         @import "/static/css/smoothness/jquery-ui-1.8.20.custom.css";
@@ -101,7 +101,7 @@
                                     <tr>
                                         <td>
                                             <input id="mem" type="checkbox" name="_spring_security_remember_me" />
-                                            Remember me
+                                            <label for="mem">Remember me</label>                                            
                                         </td>
                                         <td>
                                             <div>New to LikeLabs? <a href="/signup/start/">Join now</a></div>

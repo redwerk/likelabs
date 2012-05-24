@@ -1,5 +1,4 @@
 <%@include file="./admin_header.jsp" %>
-<script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <div id="content">
     <h1>My Companies</h1>
     <ul id="company-list" class="company-list">
