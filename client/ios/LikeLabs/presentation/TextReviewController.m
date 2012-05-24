@@ -3,7 +3,7 @@
 #import "SettingsDao.h"
 #import "Review.h"
 #import "User.h"
-#import "RootController.h"
+#import "RootMessageController.h"
 
 static NSString *const GREETING = @"Start typing a message!";
 static NSString *const TEXT_CELL_IDENTIFIER = @"textCellIdeintifier";
@@ -12,8 +12,9 @@ static NSString *const bgLandscape = @"textmessage_landscape.png";
 static NSString *const bgPortrait = @"textmessage_portrait.png";
 
 @interface TextReviewController()
-@property (retain, nonatomic) RootController* rootController;
+@property (retain, nonatomic) RootMessageController* rootController;
 @property (retain, nonatomic) NSArray* reviews;
+@property (nonatomic, assign) Review* review;
 @property (retain, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) BOOL textPlaceholderActive;
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
@@ -44,12 +45,14 @@ float commentsContentOffset = 0;
 @synthesize textPlaceholderActive = _textPlaceholderActive;
 @synthesize btnNext = _btnNext;
 @synthesize textLabel = _textLabel;
+@synthesize review = _review;
 
-- (id)initWithRootController:(RootController *)rootController {
+- (id)initWithRootController:(RootMessageController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
         SettingsDao* dao = [[SettingsDao alloc] init];
         self.reviews = [dao getTextReviews];
+        self.review = self.rootController.rootController.review;//[self.rootController getReview];
         [dao release];
     }
     return self;
@@ -67,8 +70,6 @@ float commentsContentOffset = 0;
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-   
-    [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0];
     _timer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
     commentsContentOffset = self.socialComments.contentSize.height/2;
     [self scrollComments];
@@ -77,22 +78,18 @@ float commentsContentOffset = 0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0];
     // Do any additional setup after loading the view from its nib.
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self.socialComments setBackgroundView:nil];
     [self.socialComments setBackgroundView:[[[UIView alloc] init] autorelease]];
     [self.socialComments setBackgroundColor:[UIColor clearColor]];
     
-    UIColor *background = [[UIColor alloc] initWithPatternImage:
-                           [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
-    self.view.backgroundColor = background;
-    [background release];
-
     self.textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
     self.textView.layer.borderWidth = BORDER_WIDTH;
     self.textView.layer.cornerRadius = BORDER_CORNER_RADIUS;
     self.textPlaceholderActive = true;
-    self.textLabel.font = [UIFont fontWithName:@"Lobster" size:24];
+    self.textLabel.font = [UIFont fontWithName:@"Lobster 1.4" size:23];
     [self.textView becomeFirstResponder];    
 }
 
@@ -109,6 +106,7 @@ float commentsContentOffset = 0;
     [self setReviews:nil];
     [self setBtnNext:nil];
     [self setTextLabel:nil];
+    [self setReview:nil];
     [super viewDidUnload];    
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -158,12 +156,10 @@ float commentsContentOffset = 0;
         label = [[UILabel alloc] initWithFrame:CGRectZero];
 
         [label setLineBreakMode:UILineBreakModeWordWrap];
-        [label setMinimumFontSize:FONT_SIZE];
         [label setNumberOfLines:0];
-        [label setFont:[UIFont systemFontOfSize:FONT_SIZE]];
+        [label setFont:[UIFont fontWithName:@"BadScript-Regular" size:15]];
         [label setBackgroundColor:[UIColor clearColor]];
         [label setTag:1];
-        label.font = [UIFont fontWithName:@"BadScript-Regular" size:15];
         titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 
         [titleLabel setLineBreakMode:UILineBreakModeWordWrap];
@@ -230,7 +226,6 @@ float commentsContentOffset = 0;
     [self.socialComments.layer removeAllAnimations];
 
     UIColor *background;    
-    CGFloat width = self.view.frame.size.width;
     CGFloat oldOffset = self.socialComments.contentSize.height;
     CGFloat viewPadding = 20;
     if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
@@ -239,7 +234,7 @@ float commentsContentOffset = 0;
         [self.socialComments setTransform:CGAffineTransformMakeRotation(-M_PI_2)];
         
         self.socialComments.center = CGPointMake(390, self.socialComments.frame.size.height/2+162);
-        self.textLabel.center = CGPointMake(width/2, 490);
+        self.textLabel.center = CGPointMake(384, 490);
         self.textView.frame = CGRectMake(33, 520, 700, 110);
         self.btnNext.frame = CGRectMake(33, 640, 700, 80);
         self.socialComments.contentOffset = CGPointMake(0, self.socialComments.contentOffset.y * oldOffset/self.socialComments.contentSize.height);
@@ -281,7 +276,12 @@ float commentsContentOffset = 0;
 
 - (IBAction)goHome:(id)sender {
     [self.timer invalidate];
-    [self.rootController switchToController:@"SplashScreenController"];
+    [self.rootController goHome:sender];
+}
+
+- (IBAction)step {
+    [[self.rootController getReview] setText:self.textView.text];
+    [self.rootController step];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {

@@ -9,5 +9,6 @@
 @property (retain, nonatomic) IBOutlet UILabel *textLabel;
 
 - (IBAction)goHome:(id)sender;
+- (IBAction)step;
 
 @end

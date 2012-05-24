@@ -8,6 +8,9 @@
 
 @implementation RootController
 
+NSString *const NAVIGTION_BG_PORTRAIT = @"navigation_bg_portrait.png";
+NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
+
 @synthesize review = _review;
 @synthesize currentViewController = _currentViewController;
 @synthesize reviewService = _reviewService;

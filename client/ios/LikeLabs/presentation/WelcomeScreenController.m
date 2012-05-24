@@ -52,7 +52,7 @@
 }
 
 - (IBAction)showTextScreen:(id)sender {
-    [self.rootController switchToController:@"TextReviewController"];
+    [self.rootController switchToController:@"RootMessageController"];
 }
 
 - (IBAction)showPhotoScreen:(id)sender {

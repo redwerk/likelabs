@@ -1,20 +1,24 @@
-#import "RootPhotoController.h"
+#import "RootMessageController.h"
 #import <AVFoundation/AVFoundation.h>
 
-@interface RootPhotoController ()
+
+
+@interface RootMessageController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
+
+- (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
+- (UIViewController *)viewControllerByName:(NSString *)controllerName;
+
 @end
 
-@implementation RootPhotoController
+@implementation RootMessageController
 @synthesize segmentedControl = _segmentedControl;
 @synthesize headerView = _headerView;
 @synthesize navigationBackground = _navigationBackground;
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
 @synthesize currentViewController = _currentViewController;
-
-#pragma mark - Initialization
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -23,100 +27,90 @@
     return self;
 }
 
+- (void)didReceiveMemoryWarning
+{
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+#pragma mark - View lifecycle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.navigationBackground.image = [[UIImage imageNamed:@"navigation_bg.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
     self.segmentedControl.alpha = 0;
-    _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
-    self.customSegmentedControl.autoresizingMask = self.segmentedControl.autoresizingMask;
+    CGRect frame;
+    if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
+        frame = CGRectMake(95, 24, 660, 43);
+    } else {
+        frame = CGRectMake(95, 24, 916, 43);      
+    }
+    self.customSegmentedControl = [[[CustomizableSegmentedControl alloc] initWithFrame:frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self] autorelease];
+
     [self.headerView addSubview:self.customSegmentedControl];
     
-    UIViewController *vc = [self viewControllerByName:@"PhotoSelectionController"];
+    UIViewController *vc = [self viewControllerByName:@"TextReviewController"];
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
     self.currentViewController = vc;
     
-    [self setLabelsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
+    [self setLabelsForInterfaceOrientation:[self interfaceOrientation]];
     [self.view bringSubviewToFront:self.headerView];
+    
 }
-
-#pragma mark - Memory management
 
 - (void)viewDidUnload
 {
-    [self setSegmentedControl:nil];
-    [self setHeaderView:nil];
-    [self setCustomSegmentedControl:nil];
-    [self setNavigationBackground:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc {
-    [_customSegmentedControl release];
-    [_segmentedControl release];
-    [_headerView release];
-    [_navigationBackground release];
-    [super dealloc];
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+	return YES;
 }
-
-#pragma mark - CustomSegmentedControl population
 
 - (NSMutableArray*) getButtons {
     NSMutableArray* bt2 = [[[NSMutableArray alloc] initWithCapacity:4] autorelease];
-    UIButton* selectPhotoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage* firstImgSelected = [[UIImage imageNamed:@"btn_first_bg_selected.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
-    UIImage* firstImgNormal = [[UIImage imageNamed:@"btn_first_bg_normal.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+    UIButton* writeMessageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage* firstImgSelected = [[UIImage imageNamed:@"btn_first_bg_selected.png"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
+    UIImage* firstImgNormal = [[UIImage imageNamed:@"btn_first_bg_normal.png"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
     UIImage* oneImg = [UIImage imageNamed:@"1.png"];
-    [selectPhotoBtn setBackgroundImage: firstImgNormal forState:UIControlStateNormal];
-    [selectPhotoBtn setBackgroundImage:firstImgSelected forState:UIControlStateSelected];
-    [selectPhotoBtn setImage:oneImg forState:UIControlStateSelected];
-    [selectPhotoBtn setImage:oneImg forState:UIControlStateNormal];
-    NSString* selectTitle = @"  Select Photo to Share";
-    [selectPhotoBtn setTitle:selectTitle forState:UIControlStateNormal];
-    [selectPhotoBtn setTitle:selectTitle forState:UIControlStateSelected];
-    selectPhotoBtn.userInteractionEnabled = NO;
-    [bt2 addObject:selectPhotoBtn];
+    [writeMessageBtn setBackgroundImage: firstImgNormal forState:UIControlStateNormal];
+    [writeMessageBtn setBackgroundImage:firstImgSelected forState:UIControlStateSelected];
+    [writeMessageBtn setImage:oneImg forState:UIControlStateSelected];
+    [writeMessageBtn setImage:oneImg forState:UIControlStateNormal];
+    NSString* writeMsgTitle = @"  Write A Message";
+    [writeMessageBtn setTitle:writeMsgTitle forState:UIControlStateNormal];
+    [writeMessageBtn setTitle:writeMsgTitle forState:UIControlStateSelected];
+    [bt2 addObject:writeMessageBtn];
     
     
-    UIButton* writeMsgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIButton* infoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage* selectedImg = [[UIImage imageNamed:@"btn_bg_selected.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     UIImage* normalImg = [[UIImage imageNamed:@"btn_bg_normal.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     UIImage* disabledImg = [[UIImage imageNamed:@"btn_bg_disabled.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     UIImage* twoImg = [UIImage imageNamed:@"2.png"];
-    [writeMsgBtn setBackgroundImage:selectedImg forState:UIControlStateSelected];
-    [writeMsgBtn setBackgroundImage:normalImg forState:UIControlStateNormal];
-    [writeMsgBtn setBackgroundImage:disabledImg forState:UIControlStateDisabled];
-    [writeMsgBtn setImage:twoImg forState:UIControlStateNormal];
-    [writeMsgBtn setImage:twoImg forState:UIControlStateDisabled];
-    [writeMsgBtn setImage:twoImg forState:UIControlStateSelected];
-    NSString* writeMsgTitle = @"  Write A Message";
-    [writeMsgBtn setTitle:writeMsgTitle forState:UIControlStateNormal];
-    [writeMsgBtn setTitle:writeMsgTitle forState:UIControlStateSelected];
-    [writeMsgBtn setTitle:writeMsgTitle forState:UIControlStateDisabled];
-    [bt2 addObject:writeMsgBtn];
+    [infoBtn setBackgroundImage:selectedImg forState:UIControlStateSelected];
+    [infoBtn setBackgroundImage:normalImg forState:UIControlStateNormal];
+    [infoBtn setBackgroundImage:disabledImg forState:UIControlStateDisabled];
+    [infoBtn setImage:twoImg forState:UIControlStateNormal];
+    [infoBtn setImage:twoImg forState:UIControlStateDisabled];
+    [infoBtn setImage:twoImg forState:UIControlStateSelected];
+    NSString* infoTitle = @"  Enter Your Information";
+    [infoBtn setTitle:infoTitle forState:UIControlStateNormal];
+    [infoBtn setTitle:infoTitle forState:UIControlStateSelected];
+    [infoBtn setTitle:infoTitle forState:UIControlStateDisabled];
+    [bt2 addObject:infoBtn];
     
-    
-    UIButton* enterInfoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [enterInfoBtn setBackgroundImage:selectedImg forState:UIControlStateSelected];
-    [enterInfoBtn setBackgroundImage:normalImg forState:UIControlStateNormal];
-    [enterInfoBtn setBackgroundImage:disabledImg forState:UIControlStateDisabled];
-    UIImage* threeImg = [UIImage imageNamed:@"3.png"];
-    [enterInfoBtn setImage:threeImg forState:UIControlStateNormal];
-    [enterInfoBtn setImage:threeImg forState:UIControlStateDisabled];
-    [enterInfoBtn setImage:threeImg forState:UIControlStateSelected];
-    NSString* enterInfoTitle = @"  Enter Your Information";
-    [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateNormal];
-    [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
-    [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateDisabled];
-    [bt2 addObject:enterInfoBtn];
     
     UIButton* finishedBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage* finishedDisabledImg = [[UIImage imageNamed:@"btn_last_bg_disabled.png"] stretchableImageWithLeftCapWidth:25 topCapHeight:0];
@@ -166,33 +160,26 @@
     return div2;
 }
 
-#pragma mark - Rotation
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [self setLabelsForInterfaceOrientation:toInterfaceOrientation];
-}
-
 - (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation {
-    for (UIButton* btn in self.customSegmentedControl.buttons) {
-        btn.titleLabel.font = [UIFont systemFontOfSize:(UIInterfaceOrientationIsPortrait(orientation) ? 14 : 16)];
-    }
-    
-    UIButton* selectPhotoBtn = [self.customSegmentedControl.buttons objectAtIndex:0];
-    NSString* selectPhotoTitle = (UIInterfaceOrientationIsLandscape(orientation)) ? @"  Select Photo to Share" : @"  Select Photo";
-    [selectPhotoBtn setTitle:selectPhotoTitle forState:UIControlStateNormal];
-    [selectPhotoBtn setTitle:selectPhotoTitle forState:UIControlStateDisabled];
-    [selectPhotoBtn setTitle:selectPhotoTitle forState:UIControlStateSelected];    
-    
-    UIButton* enterInfoBtn = [self.customSegmentedControl.buttons objectAtIndex:2];
+  
+    UIButton* enterInfoBtn = [self.customSegmentedControl.buttons objectAtIndex:1];
     NSString* enterInfoTitle = (UIInterfaceOrientationIsLandscape(orientation)) ? @"  Enter Your Information" : @"  Enter Your Info";
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateNormal];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateDisabled];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
+
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        self.customSegmentedControl.frame = CGRectMake(90, 24, 661, 43);
+        self.navigationBackground.image = [UIImage imageNamed:NAVIGTION_BG_PORTRAIT];
+    } else {
+        self.customSegmentedControl.frame = CGRectMake(90, 24, 916, 43); 
+        self.navigationBackground.image = [UIImage imageNamed:NAVIGTION_BG_LANDSCAPE];
+    }
+}
+
+-(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    [self setLabelsForInterfaceOrientation:toInterfaceOrientation];
+
 }
 
 #pragma mark - ContainerController implementation
@@ -204,7 +191,7 @@
 - (void)switchToController:(NSString *)controllerName {
     UIViewController *vc = [self viewControllerByName:controllerName];
     [self addChildViewController:vc];
-    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
+    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
         [self.currentViewController.view removeFromSuperview];
         vc.view.frame = self.view.bounds;
         [self.view addSubview:vc.view];
@@ -218,6 +205,7 @@
 
 #pragma mark - CustomSegmentedControlDelegate implementation
 
+
 - (void)selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl *)sender {
     UIButton* selectedBtn = [self.customSegmentedControl.buttons objectAtIndex:newSegmentIndex];
     selectedBtn.enabled = YES;
@@ -226,20 +214,19 @@
         btn.userInteractionEnabled = (btn != selectedBtn);
     }
     
-    switch (newSegmentIndex) {
-        case 0:
-            [self switchToController:@"PhotoSelectionController"];
-            break;
-        case 1:
-            [self switchToController:@"PhotoMessageController"];
-            break;
-        case 2:
-            [self switchToController:@"PhotoShareController"];
-            break;
-        case 3:
-            self.customSegmentedControl.userInteractionEnabled = NO;
-            [self switchToController:@"PhotoFinishedController"];
-            break;
+    if(oldSegmentIndex!=newSegmentIndex){
+        switch (newSegmentIndex) {
+            case 0:
+                [self switchToController:@"TextReviewController"];
+                break;
+            case 1:
+                [self switchToController:@"PhotoShareController"];
+                break;
+            case 2:
+                self.customSegmentedControl.userInteractionEnabled = NO;
+                [self switchToController:@"PhotoFinishedController"];
+                break;
+        }
     }
 }
 
@@ -254,10 +241,14 @@
 }
 
 - (Review *) getReview{
+    if(!self.rootController.review){
+        self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
+    }
     return self.rootController.review;
 }
 
 - (ReviewService *) getReviewService{
+    
     return self.rootController.reviewService;
 }
 

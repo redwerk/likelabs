@@ -8,20 +8,23 @@
 #import "ReviewService.h"
 
 @interface PhotoShareController ()
-@property (nonatomic, retain) RootPhotoController* rootController;
+@property (nonatomic, retain) UIViewController <ContainerController>* rootController;
 @property (nonatomic, assign) Review* review;
 @property (nonatomic, assign) ReviewService* reviewService;
 @property (nonatomic, retain) PhotoOverlayController* overlay;
 @property (nonatomic, retain) PhotoRecipientsOverlayController* recipientsOverlay;
+- (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 @end
 
 @implementation PhotoShareController
 @synthesize imageView = _imageView;
+@synthesize messageView = _messageView;
 @synthesize phoneField = _phoneField;
 @synthesize addRecipientsView = _addRecipientsView;
 @synthesize submitBtn = _submitBtn;
 @synthesize mailButton = _mailButton;
 @synthesize phoneButton = _phoneButton;
+@synthesize lbTitle = _lbTitle;
 @synthesize rootController = _rootController;
 @synthesize review = _review;
 @synthesize overlay = _overlay;
@@ -30,11 +33,11 @@
 
 #pragma mark - Initialization
 
--(id)initWithRootController:(RootPhotoController *)rootController {
+-(id)initWithRootController:(UIViewController <ContainerController> *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
-        self.review = rootController.rootController.review;
-        self.reviewService = rootController.rootController.reviewService;
+        self.review = [rootController getReview];
+        self.reviewService = [rootController getReviewService];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissOverlay) name:kPrimaryPhoneDidCancel object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePhone) name:kPrimaryPhoneDone object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissRecipientsOverlay) name:kRecipientsDidCancel object:nil];
@@ -47,10 +50,31 @@
 {
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;    
-    
-    _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
-    [self.view addSubview:self.imageView];
+    NSString *titleFormat = @"Share your %@ with your friends!";
+    [self.lbTitle setFont:[UIFont fontWithName:@"Lobster 1.4" size:45]];
+    [self.lbTitle setFrame:CGRectMake(0, 0, 700, 50)];
 
+    if(self.review.reviewType == ReviewTypeText){
+        self.lbTitle.text = [[[NSString alloc] initWithFormat:titleFormat, @"message"] autorelease];
+        self.messageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-block-landscape.png"] ]autorelease];
+        [self.messageView setFrame:CGRectMake(24, 191, 468, 350) ];
+        UILabel *lbText = [[[UILabel alloc] initWithFrame:CGRectMake(10, 10, self.messageView.frame.size.width-20, self.messageView.frame.size.height-20)] autorelease];
+        self.messageView.opaque = NO;
+        lbText.contentMode = UIViewContentModeScaleToFill;
+        lbText.font = [UIFont fontWithName:@"BadScript-Regular" size:20];
+        [lbText setBackgroundColor:[UIColor clearColor]];
+        [lbText setNumberOfLines:0];
+        [lbText setText:self.review.text];
+        [lbText setTextAlignment:UITextAlignmentCenter];
+         
+        [self.messageView addSubview:lbText];
+        [self.view addSubview:self.messageView];
+    } else {
+        self.lbTitle.text = [[[NSString alloc] initWithFormat:titleFormat, @"photo message"] autorelease];
+        _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
+        [self.view addSubview:self.imageView];
+    }
+    
     self.mailButton.enabled = self.phoneButton.enabled = (self.review.contacts.count < MAX_CONTACTS);
     if (self.review.user.phone && self.review.user.phone.length) {
         self.phoneField.text = self.review.user.phone;
@@ -64,11 +88,13 @@
 - (void)viewDidUnload
 {
     [self setImageView:nil];
+    [self setMessageView:nil];
     [self setPhoneField:nil];
     [self setAddRecipientsView:nil];
     [self setSubmitBtn:nil];
     [self setMailButton:nil];
     [self setPhoneButton:nil];
+    [self setLbTitle:nil];
     [super viewDidUnload];
     self.rootController = nil;
 }
@@ -76,11 +102,13 @@
 - (void)dealloc {
     [_rootController release];
     [_imageView release];
+    [_messageView release];
     [_phoneField release];
     [_addRecipientsView release];
     [_submitBtn release];
     [_mailButton release];
     [_phoneButton release];
+    [_lbTitle release];
     [super dealloc];
 }
 
@@ -98,29 +126,47 @@
 }
 
 - (void) setBackgroundForInterfaceOrientation:(UIInterfaceOrientation) orientation {
-    UIColor *background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"photo_share_bg_landscape.png" : @"photo_share_bg_portrait.png"]];
+    UIColor *background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"share_bg_landscape.png" : @"photo_share_bg_portrait.png"]];
     self.view.backgroundColor = background;
     [background release];
 }
 
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation {
     [self setBackgroundForInterfaceOrientation:orientation];
+    if(self.review.reviewType==ReviewTypeText){
+        
+        if (UIInterfaceOrientationIsLandscape(orientation)) {            
+            //self.messageView.image = [UIImage imageNamed:@"text-block-portrait.png"];
+            self.messageView.frame = CGRectMake(24, 191, 468, 350);
+        } else {
+            //self.messageView.image = [UIImage imageNamed:@"text-block-landscape.png"];
+            self.messageView.frame = CGRectMake(142, 180, 468, 350);   
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(orientation)) {
+            //LANDSCAPE
+            self.imageView.frame = CGRectMake(24, 191, 468, 350);
+        } else {
+            //PRTRAIT
+            self.imageView.frame = CGRectMake(142, 180, 468, 350);        
+        }
+        [self.imageView setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
+    }
+    
     if (UIInterfaceOrientationIsLandscape(orientation)) {
-        //LANDSCAPE
-        self.imageView.frame = CGRectMake(24, 191, 468, 350);
+        [self.lbTitle setCenter:CGPointMake(1024/2, 120)];
         self.phoneField.frame = CGRectMake(581, 402, 389, 51);
         self.addRecipientsView.frame = CGRectMake(832, 498, 138, 53);
         self.submitBtn.frame = CGRectMake(548, 568, 422, 86);
-        [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg_landscape.png"] forState:UIControlStateNormal];        
+        [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg_landscape.png"] forState:UIControlStateNormal]; 
     } else {
-        //PRTRAIT
-        self.imageView.frame = CGRectMake(142, 180, 468, 350);
+        [self.lbTitle setCenter:CGPointMake(768/2, 120)];
         self.phoneField.frame = CGRectMake(108, 789, 442, 51);
         self.addRecipientsView.frame = CGRectMake(561, 789, 142, 53);
         self.submitBtn.frame = CGRectMake(47, 894, 665, 86);
-        [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg.png"] forState:UIControlStateNormal];        
+        [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg.png"] forState:UIControlStateNormal];  
     }
-    [self.imageView setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
+    NSLog(@"%f", self.view.frame.size.width);
 }
 
 #pragma mark - UITextFieldDelegate
@@ -146,7 +192,7 @@
 }
 
 - (IBAction)submit:(id)sender {
-    [self.reviewService postReview:self.review];
+    //[self.reviewService postReview:self.review];
     [self.rootController step];
 }
 
