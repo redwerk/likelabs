@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/company")
-public class CompanyController {
+public class CompanyContentController {
 
     public static final int ITEMS_PER_PAGE_COMPANY = 3;
     public static final int ITEMS_PER_PAGE_POINT = 5;
@@ -189,13 +190,13 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/{companyId}/logo", method = RequestMethod.GET)
-    public void getlogo(@PathVariable Integer companyId,
+    public void getlogo(HttpSession session, @PathVariable Integer companyId,
             HttpServletResponse response) {
 
         ServletOutputStream out = null;
         try {
             Company company = companyService.getCompany(companyId);
-            if (company == null || company.getLogo() ==null) return;
+            if (company == null || company.getLogo() == null) return;
             byte[] logo = company.getLogo();
             response.setContentType("image");
             out = response.getOutputStream();
@@ -259,15 +260,5 @@ public class CompanyController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-    }
-    
-    @RequestMapping(value = {"/{companyId}/profile"}, method = RequestMethod.GET)
-    public String profileCompany(ModelMap model) {
-        return "company_profile";
-    }
-
-    @RequestMapping(value = {"/{companyId}/point/add"}, method = RequestMethod.GET)
-    public String addPointCompany(ModelMap model) {
-        return "company_add_point";
     }
 }

@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.web.ui.validator;
 
 import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 
 public class EmailValidator implements Validator<String>{
 
@@ -11,9 +12,12 @@ public class EmailValidator implements Validator<String>{
 	}
 
 	@Override
-	public boolean isValid(String email) {
-       
-            return PATTERN_EMAIL.matcher(email).find() ? true : false;
+	public boolean isValid(String param) {
+            if (StringUtils.isEmpty(param))
+                return false;
+            if (!PATTERN_EMAIL.matcher(param).find())
+                return false;
+            return  true;
 	}
 
 }

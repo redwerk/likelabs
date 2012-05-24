@@ -104,7 +104,8 @@ public class SignUpController {
     public String registerPost(ModelMap model, HttpServletRequest request, @RequestParam(value = "phone", required = true) String phone,
             @RequestParam(value = "countryCode", required = true) String countryCode,
             @RequestParam(value = "tos", required = true) String tos) {
-        if (!phoneValidator.isValid(phone) || !phoneValidator.isValid(countryCode.substring(PLUS_INDEX))) {
+        phone = countryCode.concat(phone);
+        if (!phoneValidator.isValid(phone)) {
             return startRedirect(PARAM_ERROR_BAD_PHONE);
         }
         HttpSession session = request.getSession(true);

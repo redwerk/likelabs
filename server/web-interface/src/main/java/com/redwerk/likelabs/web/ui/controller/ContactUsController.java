@@ -3,7 +3,7 @@ package com.redwerk.likelabs.web.ui.controller;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
-import com.redwerk.likelabs.web.ui.controller.dto.ContactUsMessage;
+import com.redwerk.likelabs.web.ui.controller.dto.ContactUsMessageDto;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
 import org.apache.commons.lang.StringUtils;
@@ -34,14 +34,14 @@ public class ContactUsController {
     @RequestMapping(method = RequestMethod.GET)
     public String initForm(ModelMap model) {
 
-        ContactUsMessage message = new ContactUsMessage();
+        ContactUsMessageDto message = new ContactUsMessageDto();
         model.addAttribute("message", message);
         model.addAttribute("page", "contact");
         return "contact_us";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processSubmit(ModelMap model, @ModelAttribute("message") ContactUsMessage message,
+    public String processSubmit(ModelMap model, @ModelAttribute("message") ContactUsMessageDto message,
             BindingResult result, SessionStatus status) {
         model.addAttribute("page", "contact");
         validator.validate(message, result);
@@ -66,19 +66,19 @@ public class ContactUsController {
 
         @Override
         public boolean supports(Class<?> clazz) {
-            return ContactUsMessage.class.isAssignableFrom(clazz);
+            return ContactUsMessageDto.class.isAssignableFrom(clazz);
         }
 
         @Override
         public void validate(Object target, Errors errors) {
 
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "message",
-                    "contactus.form.required.message", "Please fill in the required fields.");
+                    "contactus.form.required.field", "Please fill in the required fields.");
 
-            ContactUsMessage mail = (ContactUsMessage) target;
+            ContactUsMessageDto mail = (ContactUsMessageDto) target;
             
             if (StringUtils.isBlank(mail.getEmail())) {
-                errors.rejectValue("email", "contactus.form.required.email", "Please fill in the required fields.");
+                errors.rejectValue("email", "contactus.form.required.field", "Please fill in the required fields.");
             } else if (!mailValidator.isValid(mail.getEmail())) {
                 errors.rejectValue("email", "contactus.form.ivalide.email", "Please enter valid email address.");
             }
