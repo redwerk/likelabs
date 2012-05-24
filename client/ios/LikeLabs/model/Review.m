@@ -105,7 +105,7 @@ NSUInteger const MAX_CONTACTS = 5;
     
     [xmlWriter writeEndElement];//review
     [xmlWriter writeEndDocument];//just in case
-    NSString* xml = [xmlWriter toString];
+    NSString* xml = [NSString stringWithString:[xmlWriter toString]];
     [xmlWriter release];
     return xml;
 }

@@ -199,6 +199,7 @@
     } completion:^(BOOL finished) {
         [vc didMoveToParentViewController:self];
         [self.currentViewController removeFromParentViewController];
+        [self.currentViewController viewDidUnload];
         self.currentViewController = vc;
     }];
 }

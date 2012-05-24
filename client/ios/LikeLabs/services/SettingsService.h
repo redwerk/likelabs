@@ -1,15 +1,12 @@
 #import <Foundation/Foundation.h>
+#import "ASIHTTPRequest.h"
 
 @class Tablet;
 @class Review;
 
 
-@interface SettingsService : NSObject
+@interface SettingsService : NSObject <ASIHTTPRequestDelegate>
 
-- (NSString*) getCompanyName;
-- (id) getLogo;
-- (Tablet*) getTablet;
-- (NSArray*) getWelcomeReviews;
-- (NSArray*) getTextReviews;
+- (void) getSettings;
 
 @end

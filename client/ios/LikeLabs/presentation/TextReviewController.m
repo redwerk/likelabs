@@ -75,6 +75,10 @@ float commentsContentOffset = 0;
     [self scrollComments];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [self.timer invalidate];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -274,12 +278,10 @@ float commentsContentOffset = 0;
     [super dealloc];
 }
 
-- (IBAction)goHome:(id)sender {
-    [self.timer invalidate];
-    [self.rootController goHome:sender];
-}
-
-- (IBAction)step {
+- (IBAction)step:(id)sender {
+    if (self.textPlaceholderActive) {
+        return;
+    }
     [[self.rootController getReview] setText:self.textView.text];
     [self.rootController step];
 }

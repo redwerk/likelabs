@@ -74,6 +74,7 @@
 		E9F81B9815471A7100E0B41A /* bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = E9F81B9615471A7000E0B41A /* bg_portrait.png */; };
 		FF32DBAB156386460020357B /* PhotoShareController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF32DBA9156386460020357B /* PhotoShareController.m */; };
 		FF32DBAC156386460020357B /* PhotoShareController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF32DBAA156386460020357B /* PhotoShareController.xib */; };
+		FF56EAA3156EAB3900220650 /* URLUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = FF56EAA2156EAB3900220650 /* URLUtil.m */; };
 		FF669B80155C5DC30097515A /* delete_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF669B7F155C5DC30097515A /* delete_btn.png */; };
 		FF8254FA1563B777007F42E1 /* photo_share_bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8254F81563B777007F42E1 /* photo_share_bg_landscape.png */; };
 		FF8254FE1563CD14007F42E1 /* add_mail.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8254FC1563CD13007F42E1 /* add_mail.png */; };
@@ -128,6 +129,7 @@
 		FF892214156BF8A300BD93D0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF892213156BF8A300BD93D0 /* CFNetwork.framework */; };
 		FF892216156BF8FC00BD93D0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF892215156BF8FC00BD93D0 /* SystemConfiguration.framework */; };
 		FF8B67661562A92500BC6BEA /* divider_nd.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8B67651562A92500BC6BEA /* divider_nd.png */; };
+		FF8BDEFE156E61380066291A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FF8BDEFD156E61380066291A /* Settings.bundle */; };
 		FFC60FE0155BCC5E00F4368A /* PhotoSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */; };
 		FFC60FE1155BCC5E00F4368A /* PhotoSelectionController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */; };
 		FFC60FE4155BDDD700F4368A /* photo_selection_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FE3155BDDD700F4368A /* photo_selection_bg.png */; };
@@ -249,6 +251,8 @@
 		FF32DBA8156386460020357B /* PhotoShareController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoShareController.h; path = LikeLabs/presentation/photo/PhotoShareController.h; sourceTree = "<group>"; };
 		FF32DBA9156386460020357B /* PhotoShareController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoShareController.m; path = LikeLabs/presentation/photo/PhotoShareController.m; sourceTree = "<group>"; };
 		FF32DBAA156386460020357B /* PhotoShareController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoShareController.xib; path = LikeLabs/presentation/photo/PhotoShareController.xib; sourceTree = "<group>"; };
+		FF56EAA1156EAB3900220650 /* URLUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLUtil.h; sourceTree = "<group>"; };
+		FF56EAA2156EAB3900220650 /* URLUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLUtil.m; sourceTree = "<group>"; };
 		FF669B7F155C5DC30097515A /* delete_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete_btn.png; path = LikeLabs/resources/delete_btn.png; sourceTree = "<group>"; };
 		FF8254F81563B777007F42E1 /* photo_share_bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_share_bg_landscape.png; path = LikeLabs/resources/photo_share_bg_landscape.png; sourceTree = "<group>"; };
 		FF8254FC1563CD13007F42E1 /* add_mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = add_mail.png; path = LikeLabs/resources/add_mail.png; sourceTree = "<group>"; };
@@ -311,6 +315,7 @@
 		FF892215156BF8FC00BD93D0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FF8B676415628E2000BC6BEA /* ContainerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContainerController.h; path = LikeLabs/presentation/protocols/ContainerController.h; sourceTree = "<group>"; };
 		FF8B67651562A92500BC6BEA /* divider_nd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divider_nd.png; sourceTree = "<group>"; };
+		FF8BDEFD156E61380066291A /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		FFC60FDD155BCC5E00F4368A /* PhotoSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSelectionController.h; path = LikeLabs/presentation/photo/PhotoSelectionController.h; sourceTree = "<group>"; };
 		FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSelectionController.m; path = LikeLabs/presentation/photo/PhotoSelectionController.m; sourceTree = "<group>"; };
 		FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoSelectionController.xib; path = LikeLabs/presentation/photo/PhotoSelectionController.xib; sourceTree = "<group>"; };
@@ -357,6 +362,7 @@
 		0AAB5568153F564E00649AB4 = {
 			isa = PBXGroup;
 			children = (
+				FF8BDEFD156E61380066291A /* Settings.bundle */,
 				9F99D13D156A97E900DACCC5 /* TestFlightSDK1.0 */,
 				0AAB557D153F564E00649AB4 /* LikeLabs */,
 				0AAB5576153F564E00649AB4 /* Frameworks */,
@@ -490,6 +496,8 @@
 		9F194D7C156E285200095C21 /* util */ = {
 			isa = PBXGroup;
 			children = (
+				FF56EAA1156EAB3900220650 /* URLUtil.h */,
+				FF56EAA2156EAB3900220650 /* URLUtil.m */,
 				9F194D7D156E285200095C21 /* asihttp */,
 				9F194D94156E285200095C21 /* base64 */,
 				9F194D97156E285200095C21 /* xmlwriter */,
@@ -825,6 +833,7 @@
 				9F99D143156A97EA00DACCC5 /* README.txt in Resources */,
 				9F99D144156A97EA00DACCC5 /* release_notes.txt in Resources */,
 				9F99D24E156A9D8100DACCC5 /* text-block-landscape.png in Resources */,
+				FF8BDEFE156E61380066291A /* Settings.bundle in Resources */,
 				9FAE11C3156B93FE00CA20C7 /* Lobster.otf in Resources */,
 				9FAE11CE156B971400CA20C7 /* RootMessageController.xib in Resources */,
 				9F194DA9156E3FE900095C21 /* navigation_bg_portrait.png in Resources */,
@@ -881,6 +890,7 @@
 				9F194DA3156E285200095C21 /* Base64.m in Sources */,
 				9F194DA4156E285200095C21 /* XMLWriter.m in Sources */,
 				9F194DA7156E2A0000095C21 /* Photo.m in Sources */,
+				FF56EAA3156EAB3900220650 /* URLUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

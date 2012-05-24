@@ -8,7 +8,6 @@
 @property (retain, nonatomic) IBOutlet UIButton *btnNext;
 @property (retain, nonatomic) IBOutlet UILabel *textLabel;
 
-- (IBAction)goHome:(id)sender;
-- (IBAction)step;
+- (IBAction)step:(id)sender;
 
 @end

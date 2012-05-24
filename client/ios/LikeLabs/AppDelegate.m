@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 #import "TestFlight.h"
+#import "SettingsDao.h"
+#import "SettingsService.h"
 
 @implementation AppDelegate
 
@@ -9,8 +11,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];	
-    // Override point for customization after application launch.
+
     [TestFlight takeOff:@"c64efb5c4a86d134fcc09ee1e7693304_NDY4MjgyMDExLTEyLTE0IDAxOjAwOjExLjUwMDcwMg"];
+    [SettingsDao setUserDefaults];
+    SettingsService* settingsService = [[SettingsService alloc] init];
+    [settingsService getSettings];
+   
     [self.window setRootViewController:self.rootController];
     [self.window makeKeyAndVisible];
     return YES;

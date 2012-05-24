@@ -96,9 +96,11 @@
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         //LANDSCAPE
         self.button.frame = CGRectMake(552, 387, 422,86);
+        self.lbMessageSent.center = CGPointMake(760, 255);
     } else {
         //PORTRAIT
         self.button.frame = CGRectMake(47, 895, 667,86);
+        self.lbMessageSent.center = CGPointMake(768/2, 760);
     }
     if(self.review.reviewType==ReviewTypePhoto){
         if (UIInterfaceOrientationIsLandscape(orientation)) {
@@ -112,10 +114,8 @@
     } else {
         if (UIInterfaceOrientationIsLandscape(orientation)) {            
             self.messageView.frame = CGRectMake(24, 191, 468, 350);
-            self.lbMessageSent.center = CGPointMake(760, 255);
         } else {
             self.messageView.frame = CGRectMake(142, 230, 468, 350);   
-            self.lbMessageSent.center = CGPointMake(768/2, 760);
         }
     }
 

@@ -8,6 +8,8 @@
 NSString* getCompanyName();
 void setCompanyTame(NSString* name);
 
++ (void) setUserDefaults;
+
 - (id) getLogo;
 - (void) setLogo:(id) logo;
 
