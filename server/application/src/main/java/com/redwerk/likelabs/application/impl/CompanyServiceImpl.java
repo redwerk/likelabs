@@ -221,11 +221,10 @@ public class CompanyServiceImpl implements CompanyService {
         sendActivationEmail(admin);
     }
 
-    
     private User createUser(String phone, String email) {
-        String password = passwordGenerator.getPassword(phone);
-        User user = new UserFactory().createUser(phone, password);
+        User user = new UserFactory().createUser(phone, passwordGenerator.getPassword(phone));
         user.setEmail(email);
+        userRepository.add(user);
         return user;
     }
     
