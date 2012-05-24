@@ -8,10 +8,13 @@ public class CompanyData {
 
     private final String email;
 
-    public CompanyData(String name, String phone, String email) {
+    private final boolean moderateReviews;
+
+    public CompanyData(String name, String phone, String email, boolean moderateReviews) {
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.moderateReviews = moderateReviews;
     }
 
     public String getName() {
@@ -24,6 +27,10 @@ public class CompanyData {
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean isModerateReviews() {
+        return moderateReviews;
     }
 
 }

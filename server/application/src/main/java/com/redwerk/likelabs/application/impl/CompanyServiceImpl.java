@@ -177,6 +177,7 @@ public class CompanyServiceImpl implements CompanyService {
         company.setName(companyData.getName());
         company.setPhone(companyData.getPhone());
         company.setEmail(companyData.getEmail());
+        company.setModerateReviews(companyData.isModerateReviews());
     }
 
     @Override
