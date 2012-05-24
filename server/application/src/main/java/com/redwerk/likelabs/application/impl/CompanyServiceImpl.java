@@ -141,9 +141,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public Company createCompany(CompanyData companyData, List<CompanyPageData> pages, List<CompanyAdminData> admins,
-                                 List<PointData> points) {
-        Company company = new Company(companyData.getName(), companyData.getPhone(), companyData.getEmail());
+    public Company createCompany(CompanyData companyData, byte[] logo, List<CompanyPageData> pages,
+                                 List<CompanyAdminData> admins, List<PointData> points) {
+        Company company = new Company(companyData.getName(), companyData.getPhone(), companyData.getEmail(), logo);
         for (CompanyPageData pageData: pages) {
             attachPageInternal(company, pageData);
         }
@@ -154,13 +154,26 @@ public class CompanyServiceImpl implements CompanyService {
         for (PointData pointData: points) {
             pointFactory.createPoint(company, pointData);
         }
+        companyRepository.add(company);
         return company;
+    }
+
+    @Override
+    @Transactional
+    public void updateCompany(long companyId, CompanyData companyData, byte[] logo) {
+        Company company = companyRepository.get(companyId);
+        updateCompanyData(company, companyData);
+        company.setLogo(logo);
     }
 
     @Override
     @Transactional
     public void updateCompany(long companyId, CompanyData companyData) {
         Company company = companyRepository.get(companyId);
+        updateCompanyData(company, companyData);
+    }
+
+    private void updateCompanyData(Company company, CompanyData companyData) {
         company.setName(companyData.getName());
         company.setPhone(companyData.getPhone());
         company.setEmail(companyData.getEmail());

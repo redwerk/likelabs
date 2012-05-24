@@ -6,7 +6,6 @@ import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
-import org.apache.commons.lang.time.DateUtils;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -25,7 +24,7 @@ public class ReviewJpaQuery implements ReviewQuery {
      private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
         put(SortingCriteria.DATE, "r.createdDT {0}");
         put(SortingCriteria.POINT,
-                "r.point.company.name {0}, a.country {0}, a.state {0}, a.city {0}, a.addressLine1 {0}, a.addressLine2 {0}");
+                "r.point.company.name {0}, p.address.country {0}, p.address.state {0}, p.address.city {0}, p.address.addressLine1 {0}, p.address.addressLine2 {0}");
         put(SortingCriteria.REVIEW_STATUS, "r.status {0}");
         put(SortingCriteria.REVIEW_TYPE, "isnull(r.photo), isnull(r.message)");
     }};
@@ -36,7 +35,7 @@ public class ReviewJpaQuery implements ReviewQuery {
     }};
 
     private static final String REVIEWS_FILTER =
-            "from Review r join r.point.addresses a where ((:authorId is null or r.author.id = :authorId) and " +
+            "from Review r where ((:authorId is null or r.author.id = :authorId) and " +
                     "(:moderatorId is null or r.moderator.id = :moderatorId) and " +
                     "(:companyIds is null or r.point.company.id in :companyIds) and " +
                     "(:pointIds is null or r.point.id in :pointIds) and " +

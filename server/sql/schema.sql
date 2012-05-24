@@ -88,15 +88,14 @@ CREATE TABLE `point` (
 
 DROP TABLE IF EXISTS `point_address`;
 CREATE TABLE `point_address` (
-     `id` BIGINT AUTO_INCREMENT NOT NULL,
+     `point_id` BIGINT NOT NULL,
      `city` VARCHAR(80),
      `state` VARCHAR(80),
      `postal_code` VARCHAR(40),
      `country` VARCHAR(80),
      `address_line_1` VARCHAR(80),
      `address_line_2` VARCHAR(80),
-     `point_id` BIGINT NOT NULL,
-     CONSTRAINT `PK_point_address` PRIMARY KEY (`id`),
+     CONSTRAINT `PK_point_address` PRIMARY KEY (`point_id`),
      CONSTRAINT `FK_point_address_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 

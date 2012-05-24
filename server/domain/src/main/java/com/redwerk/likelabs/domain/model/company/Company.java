@@ -46,7 +46,7 @@ public class Company {
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> admins;
+    private Set<User> admins = new HashSet<User>();
 
     @ManyToMany
     @JoinTable(
@@ -59,11 +59,15 @@ public class Company {
 
     // constructors
 
-    public Company(String name, String phone, String email) {
+    public Company(String name, String phone, String email, byte[] logo) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.admins = new HashSet<User>();
+        this.logo = logo;
+    }
+
+    public Company(String name, String phone, String email) {
+        this(name, phone, email, null);
     }
 
     // accessors

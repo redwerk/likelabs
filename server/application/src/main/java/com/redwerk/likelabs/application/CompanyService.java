@@ -29,9 +29,11 @@ public interface CompanyService {
     Company getCompanyForTablet(long tabletId);
 
 
-    Company createCompany(CompanyData companyData, List<CompanyPageData> pages, List<CompanyAdminData> admins,
-                          List<PointData> points);
+    Company createCompany(CompanyData companyData, byte[] logo, List<CompanyPageData> pages,
+                          List<CompanyAdminData> admins, List<PointData> points);
     
+    void updateCompany(long companyId, CompanyData companyData, byte[] logo);
+
     void updateCompany(long companyId, CompanyData companyData);
     
     CompanySocialPage attachPage(long companyId, CompanyPageData pageData);

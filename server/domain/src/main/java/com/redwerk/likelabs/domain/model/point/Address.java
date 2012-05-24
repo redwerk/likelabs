@@ -10,19 +10,22 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Address {
 
+    @Column(table = "point_address")
     private String city;
 
+    @Column(table = "point_address")
     private String state;
 
+    @Column(table = "point_address")
     private String country;
 
-    @Column(name = "postal_code")
+    @Column(table = "point_address", name = "postal_code")
     private String postalCode;
 
-    @Column(name = "address_line_1")
+    @Column(table = "point_address", name = "address_line_1")
     private String addressLine1;
 
-    @Column(name = "address_line_2")
+    @Column(table = "point_address", name = "address_line_2")
     private String addressLine2;
 
 
