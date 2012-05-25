@@ -56,7 +56,7 @@
     
     UIViewController *vc = [self viewControllerByName:@"TextReviewController"];
     [self addChildViewController:vc];
-    vc.view.frame = self.view.bounds;
+    vc.view.frame = self.view.bounds;   //self.view == nil!!!!??????
     [self.view addSubview:vc.view];
     self.currentViewController = vc;
     

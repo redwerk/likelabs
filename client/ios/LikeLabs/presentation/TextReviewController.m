@@ -47,26 +47,19 @@ float commentsContentOffset = 0;
 @synthesize textLabel = _textLabel;
 @synthesize review = _review;
 
+
+#pragma mark - Lifecycle
+
 - (id)initWithRootController:(RootMessageController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
         SettingsDao* dao = [[SettingsDao alloc] init];
-        self.reviews = [dao getTextReviews];
-        self.review = self.rootController.rootController.review;//[self.rootController getReview];
+        self.reviews = dao.textReviews;
+        self.review = self.rootController.rootController.review;
         [dao release];
     }
     return self;
 }
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-#pragma mark - View lifecycle
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -97,11 +90,6 @@ float commentsContentOffset = 0;
     [self.textView becomeFirstResponder];    
 }
 
-- (void) scrollComments {   
-     commentsContentOffset -=ANIMATION_SPEED;
-     [self.socialComments setContentOffset: CGPointMake(0, commentsContentOffset) animated:NO];
-}
-
 - (void)viewDidUnload
 {
     [self setSocialComments:nil];
@@ -116,11 +104,17 @@ float commentsContentOffset = 0;
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-	return YES;
+- (void)dealloc {
+    [_socialComments release];
+    [_textView release];
+    [_rootController release];
+    [_reviews release];
+    [_btnNext release];
+    [_textLabel release];
+    [super dealloc];
 }
+
+#pragma mark - TextViewDelegate implementation
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if (self.textPlaceholderActive) {
@@ -138,6 +132,8 @@ float commentsContentOffset = 0;
         self.textPlaceholderActive = true;
     }
 }
+
+#pragma mark - TableViewDelegate implementation
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return ROWS_ENDLESS;
@@ -186,7 +182,14 @@ float commentsContentOffset = 0;
         titleLabel = (UILabel*)[cell viewWithTag:2];
     }
     
-    Review* review = [self.reviews objectAtIndex:i];
+    Review* review;// = [self.reviews objectAtIndex:i];
+    if (i < 0) {
+        review = [[Review alloc] initWithReviewType:ReviewTypeText];
+        review.user.name = @"System";
+        review.text = @"No promo review is avalilable at the moment. Check the internet connection and restart the application please";
+    } else {
+        review = [self.reviews objectAtIndex:i];
+    }
 
     CGFloat textHeight = [self getTextHeight:review.text font:[UIFont systemFontOfSize:FONT_SIZE]];
     CGFloat titleHeight = [self getTextHeight:review.user.name font:[UIFont boldSystemFontOfSize:FONT_SIZE]];
@@ -218,11 +221,25 @@ float commentsContentOffset = 0;
     Review* review = [self.reviews objectAtIndex:[self getIndexFrom:indexPath.section dataSize:self.reviews.count]];
     CGFloat titleHeight = [self getTextHeight:review.user.name font:[UIFont boldSystemFontOfSize:FONT_SIZE]];
     CGFloat textHeight = [self getTextHeight:review.text font:[UIFont systemFontOfSize:FONT_SIZE]];
-    return titleHeight + textHeight + (CELL_CONTENT_MARGIN * 2);
+    return titleHeight + textHeight + (CELL_CONTENT_MARGIN * 4);
 }
 
 -(NSInteger)getIndexFrom:(NSInteger)infiniteScrollSectionIndex dataSize:(NSInteger)dataSize {
-    return infiniteScrollSectionIndex % dataSize;
+    return (dataSize) ? (infiniteScrollSectionIndex % dataSize) : -1;
+}
+
+- (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font{
+    CGFloat CELL_CONTENT_WIDTH = self.socialComments.frame.size.width - (CELL_CONTENT_MARGIN*2);
+    CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
+    CGSize size = [text sizeWithFont:font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    return size.height;
+}
+
+#pragma mark - Rotation
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return YES;
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -260,23 +277,8 @@ float commentsContentOffset = 0;
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     [self scrollComments];
 }
-     
-- (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font{
-    CGFloat CELL_CONTENT_WIDTH = self.socialComments.frame.size.width - (CELL_CONTENT_MARGIN*2);
-    CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
-    CGSize size = [text sizeWithFont:font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    return size.height;
-}
 
-- (void)dealloc {
-    [_socialComments release];
-    [_textView release];
-    [_rootController release];
-    [_reviews release];
-    [_btnNext release];
-    [_textLabel release];
-    [super dealloc];
-}
+#pragma mark - Actions
 
 - (IBAction)step:(id)sender {
     if (self.textPlaceholderActive) {
@@ -285,6 +287,8 @@ float commentsContentOffset = 0;
     [[self.rootController getReview] setText:self.textView.text];
     [self.rootController step];
 }
+
+#pragma mark - Scrolling
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.contentOffset.y == scrollView.contentSize.height - scrollView.frame.size.height) {
@@ -308,6 +312,11 @@ float commentsContentOffset = 0;
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     commentsContentOffset = scrollView.contentOffset.y;
+}
+
+- (void) scrollComments {   
+    commentsContentOffset -=ANIMATION_SPEED;
+    [self.socialComments setContentOffset: CGPointMake(0, commentsContentOffset) animated:NO];
 }
 
 @end

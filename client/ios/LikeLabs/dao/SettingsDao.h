@@ -3,23 +3,12 @@
 @class Tablet;
 
 @interface SettingsDao : NSObject
-
-
-NSString* getCompanyName();
-void setCompanyTame(NSString* name);
+@property (nonatomic, retain) UIImage* logo;
+@property (nonatomic, retain) NSString* companyName;
+@property (nonatomic, assign) NSUInteger tabletId;
+@property (nonatomic, retain) NSString* apiKey;
+@property (nonatomic, retain) NSArray* promoReviews;
+@property (nonatomic, readonly) NSArray* textReviews;
 
 + (void) setUserDefaults;
-
-- (id) getLogo;
-- (void) setLogo:(id) logo;
-
-- (Tablet*) getTablet;
-- (void) setTablet:(Tablet*) tablet;
-
-- (NSArray*) getWelcomeReviews;
-- (void) setWelcomeReviews:(NSArray*) reviews;
-
-- (NSArray*) getTextReviews;
-- (void) setTextReviews:(NSArray*) comments;
-
 @end

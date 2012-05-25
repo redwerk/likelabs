@@ -20,7 +20,6 @@
 		0AAB559E153F577400649AB4 /* ReviewService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5593153F577400649AB4 /* ReviewService.m */; };
 		0AAB559F153F577400649AB4 /* SettingsDao.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5595153F577400649AB4 /* SettingsDao.m */; };
 		0AAB55A0153F577400649AB4 /* SettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5597153F577400649AB4 /* SettingsService.m */; };
-		0AAB55A1153F577400649AB4 /* Tablet.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB5599153F577400649AB4 /* Tablet.m */; };
 		0AAB55A2153F577400649AB4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB559B153F577400649AB4 /* User.m */; };
 		0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAB55B2153F59BB00649AB4 /* TextReviewController.m */; };
 		0AAB55B5153F59BB00649AB4 /* TextReviewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */; };
@@ -130,6 +129,7 @@
 		FF87486F155947DB0010D272 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87486E155947DB0010D272 /* AudioToolbox.framework */; };
 		FF8748B2155992FF0010D272 /* instruction_banner_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B1155992FF0010D272 /* instruction_banner_bg.png */; };
 		FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B3155996B60010D272 /* take_photo_btn.png */; };
+		FF881DE0156F9E2C0056E209 /* SettingsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF881DDF156F9E2C0056E209 /* SettingsParser.m */; };
 		FF890A3A15665DF100481237 /* photo_thankyou_bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */; };
 		FF890A3B15665DF100481237 /* photo_thankyou_bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */; };
 		FF890A401566606B00481237 /* PhotoFinishedController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF890A3E1566606B00481237 /* PhotoFinishedController.m */; };
@@ -180,8 +180,6 @@
 		0AAB5595153F577400649AB4 /* SettingsDao.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsDao.m; path = LikeLabs/dao/SettingsDao.m; sourceTree = "<group>"; };
 		0AAB5596153F577400649AB4 /* SettingsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsService.h; path = LikeLabs/services/SettingsService.h; sourceTree = "<group>"; };
 		0AAB5597153F577400649AB4 /* SettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsService.m; path = LikeLabs/services/SettingsService.m; sourceTree = "<group>"; };
-		0AAB5598153F577400649AB4 /* Tablet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tablet.h; path = LikeLabs/model/Tablet.h; sourceTree = "<group>"; };
-		0AAB5599153F577400649AB4 /* Tablet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Tablet.m; path = LikeLabs/model/Tablet.m; sourceTree = "<group>"; };
 		0AAB559A153F577400649AB4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = LikeLabs/model/User.h; sourceTree = "<group>"; };
 		0AAB559B153F577400649AB4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = LikeLabs/model/User.m; sourceTree = "<group>"; };
 		0AAB55B1153F59BB00649AB4 /* TextReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextReviewController.h; path = LikeLabs/presentation/TextReviewController.h; sourceTree = "<group>"; };
@@ -325,6 +323,8 @@
 		FF87486E155947DB0010D272 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		FF8748B1155992FF0010D272 /* instruction_banner_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = instruction_banner_bg.png; path = LikeLabs/resources/instruction_banner_bg.png; sourceTree = "<group>"; };
 		FF8748B3155996B60010D272 /* take_photo_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = take_photo_btn.png; path = LikeLabs/resources/take_photo_btn.png; sourceTree = "<group>"; };
+		FF881DDE156F9E2C0056E209 /* SettingsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsParser.h; sourceTree = "<group>"; };
+		FF881DDF156F9E2C0056E209 /* SettingsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsParser.m; sourceTree = "<group>"; };
 		FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_thankyou_bg_landscape.png; path = LikeLabs/resources/photo_thankyou_bg_landscape.png; sourceTree = "<group>"; };
 		FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_thankyou_bg_portrait.png; path = LikeLabs/resources/photo_thankyou_bg_portrait.png; sourceTree = "<group>"; };
 		FF890A3D1566606B00481237 /* PhotoFinishedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoFinishedController.h; path = LikeLabs/presentation/photo/PhotoFinishedController.h; sourceTree = "<group>"; };
@@ -459,8 +459,6 @@
 				0AAB558F153F577400649AB4 /* Contact.m */,
 				0AAB5590153F577400649AB4 /* Review.h */,
 				0AAB5591153F577400649AB4 /* Review.m */,
-				0AAB5598153F577400649AB4 /* Tablet.h */,
-				0AAB5599153F577400649AB4 /* Tablet.m */,
 				0AAB559A153F577400649AB4 /* User.h */,
 				0AAB559B153F577400649AB4 /* User.m */,
 			);
@@ -540,11 +538,12 @@
 		9F194D7C156E285200095C21 /* util */ = {
 			isa = PBXGroup;
 			children = (
-				FF56EAA1156EAB3900220650 /* URLUtil.h */,
-				FF56EAA2156EAB3900220650 /* URLUtil.m */,
 				9F194D7D156E285200095C21 /* asihttp */,
 				9F194D94156E285200095C21 /* base64 */,
 				9F194D97156E285200095C21 /* xmlwriter */,
+				FF881DDD156F9E130056E209 /* xmlparsers */,
+				FF56EAA1156EAB3900220650 /* URLUtil.h */,
+				FF56EAA2156EAB3900220650 /* URLUtil.m */,
 			);
 			name = util;
 			path = LikeLabs/services/util;
@@ -702,6 +701,15 @@
 			);
 			name = navigation;
 			path = LikeLabs/resources/navigation;
+			sourceTree = "<group>";
+		};
+		FF881DDD156F9E130056E209 /* xmlparsers */ = {
+			isa = PBXGroup;
+			children = (
+				FF881DDE156F9E2C0056E209 /* SettingsParser.h */,
+				FF881DDF156F9E2C0056E209 /* SettingsParser.m */,
+			);
+			path = xmlparsers;
 			sourceTree = "<group>";
 		};
 		FFC05FD7155D3F510057A670 /* Resources */ = {
@@ -915,7 +923,6 @@
 				0AAB559E153F577400649AB4 /* ReviewService.m in Sources */,
 				0AAB559F153F577400649AB4 /* SettingsDao.m in Sources */,
 				0AAB55A0153F577400649AB4 /* SettingsService.m in Sources */,
-				0AAB55A1153F577400649AB4 /* Tablet.m in Sources */,
 				0AAB55A2153F577400649AB4 /* User.m in Sources */,
 				0AAB55B4153F59BB00649AB4 /* TextReviewController.m in Sources */,
 				E9F81B831545A09200E0B41A /* LoginController.m in Sources */,
@@ -948,6 +955,7 @@
 				9F194DA4156E285200095C21 /* XMLWriter.m in Sources */,
 				9F194DA7156E2A0000095C21 /* Photo.m in Sources */,
 				FF56EAA3156EAB3900220650 /* URLUtil.m in Sources */,
+				FF881DE0156F9E2C0056E209 /* SettingsParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,7 @@ typedef enum {
     ReviewTypePhoto
 } ReviewType;
 
-@interface Review : NSObject
+@interface Review : NSObject <NSCoding>
 extern NSUInteger const MAX_CONTACTS;
 
 @property (retain, nonatomic) User *user;
@@ -17,6 +17,7 @@ extern NSUInteger const MAX_CONTACTS;
 @property (retain, nonatomic) NSString *text;
 @property (assign, nonatomic) ReviewType reviewType;
 @property (retain, nonatomic) NSMutableArray* contacts;
+@property (retain, nonatomic) NSString* imageUrl;
 
 - (id)initWithReviewType: (ReviewType)reviewType;
 - (id)initWithUser: (User *)user andText: (NSString *)text;

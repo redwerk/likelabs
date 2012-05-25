@@ -6,7 +6,7 @@ typedef enum {
     PhotoStatusActive
 } PhotoStatus;
 
-@interface Photo : NSObject
+@interface Photo : NSObject <NSCoding>
 
 @property (nonatomic, retain) UIImage* image;
 @property (nonatomic, assign) PhotoStatus status;

@@ -3,10 +3,17 @@
 #import "SettingsDao.h"
 #import "SettingsService.h"
 
+@interface AppDelegate()
+
+@property (nonatomic, retain) SettingsService* settingsService;
+
+@end
+
 @implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize rootController = _rootController;
+@synthesize settingsService = _settingsService;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -14,8 +21,8 @@
 
     [TestFlight takeOff:@"c64efb5c4a86d134fcc09ee1e7693304_NDY4MjgyMDExLTEyLTE0IDAxOjAwOjExLjUwMDcwMg"];
     [SettingsDao setUserDefaults];
-    SettingsService* settingsService = [[SettingsService alloc] init];
-    [settingsService getSettings];
+    _settingsService = [[SettingsService alloc] init];
+    [self.settingsService getSettings];    
    
     [self.window setRootViewController:self.rootController];
     [self.window makeKeyAndVisible];
@@ -62,6 +69,7 @@
 }
 
 - (void)dealloc {
+    [_settingsService release];
     [_window release];
     [_rootController release];
     [super dealloc];

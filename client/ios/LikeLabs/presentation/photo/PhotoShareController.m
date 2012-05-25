@@ -166,7 +166,6 @@
         self.submitBtn.frame = CGRectMake(47, 894, 665, 86);
         [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg.png"] forState:UIControlStateNormal];  
     }
-    NSLog(@"%f", self.view.frame.size.width);
 }
 
 #pragma mark - UITextFieldDelegate
@@ -192,7 +191,7 @@
 }
 
 - (IBAction)submit:(id)sender {
-    //[self.reviewService postReview:self.review];
+    [self.reviewService postReview:self.review];
     [self.rootController step];
 }
 

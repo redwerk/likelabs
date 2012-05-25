@@ -5,7 +5,7 @@ typedef enum {
     ContactTypeEmail
 } ContactType;
 
-@interface Contact : NSObject
+@interface Contact : NSObject <NSCoding>
 
 @property (nonatomic, assign) ContactType contactType;
 @property (nonatomic, retain) NSString *contactString;

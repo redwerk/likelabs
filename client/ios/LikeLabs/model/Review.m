@@ -4,6 +4,14 @@
 
 @implementation Review
 NSUInteger const MAX_CONTACTS = 5;
+static NSUInteger const MAX_PHOTO = 5;
+static NSString* const USER_KEY = @"user";
+static NSString* const REVIEW_PHOTO_INDEX_KEY = @"reviewPhotoIndex";
+static NSString* const PHOTOS_KEY = @"photos";
+static NSString* const TEXT_KEY = @"text";
+static NSString* const REVIEW_TYPE_KEY = @"reviewType";
+static NSString* const CONTACTS_KEY = @"contacts";
+static NSString* const IMAGE_URL_KEY = @"imageUrl";
 
 @synthesize user = _user;
 @synthesize reviewPhotoIndex = _reviewPhotoIndex;
@@ -11,13 +19,22 @@ NSUInteger const MAX_CONTACTS = 5;
 @synthesize photos = _photos;
 @synthesize text = _text;
 @synthesize contacts = _contacts;
+@synthesize imageUrl = _imageUrl;
 
-- (id)initWithReviewType:(ReviewType)reviewType {
+#pragma mark - Initialization
+
+- (id) init {
     if (self = [super init]) {
-        self.reviewType = reviewType;
-        _photos = [[NSMutableArray alloc] init];
+        _photos = [[NSMutableArray alloc] initWithCapacity:MAX_PHOTO];
         _user = [[User alloc] init];
         _contacts = [[NSMutableArray alloc] initWithCapacity:MAX_CONTACTS];
+    }
+    return self;
+}
+
+- (id)initWithReviewType:(ReviewType)reviewType {
+    if (self = [self init]) {
+        self.reviewType = reviewType;
     }
     return self;
 }
@@ -30,6 +47,8 @@ NSUInteger const MAX_CONTACTS = 5;
     return self;
 }
 
+#pragma mark - Photo index management
+
 - (void)setReviewPhotoIndex:(NSInteger)reviewPhotoIndex {
     Photo* oldPhoto = [self.photos objectAtIndex:_reviewPhotoIndex];
     oldPhoto.status = PhotoStatusActive;
@@ -39,6 +58,8 @@ NSUInteger const MAX_CONTACTS = 5;
     
     _reviewPhotoIndex = reviewPhotoIndex;
 }
+
+#pragma mark - Serialization
 
 - (NSString*) serializeToXml {
     XMLWriter* xmlWriter = [[XMLWriter alloc] init];
@@ -110,16 +131,43 @@ NSUInteger const MAX_CONTACTS = 5;
     return xml;
 }
 
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.user forKey:USER_KEY];
+    [aCoder encodeObject:[NSNumber numberWithInteger:self.reviewPhotoIndex] forKey:REVIEW_PHOTO_INDEX_KEY];    
+    [aCoder encodeObject:self.photos forKey:PHOTOS_KEY];
+    [aCoder encodeObject:self.text forKey:TEXT_KEY];
+    [aCoder encodeObject:[NSNumber numberWithUnsignedInt: self.reviewType] forKey:REVIEW_TYPE_KEY];
+    [aCoder encodeObject:self.contacts forKey:CONTACTS_KEY];
+    [aCoder encodeObject:self.imageUrl forKey:IMAGE_URL_KEY];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super init]) {
+        self.user = [aDecoder decodeObjectForKey:USER_KEY];
+        self.reviewPhotoIndex = ((NSNumber*)[aDecoder decodeObjectForKey:REVIEW_PHOTO_INDEX_KEY]).integerValue;
+        self.photos = [aDecoder decodeObjectForKey:PHOTOS_KEY];
+        self.text = [aDecoder decodeObjectForKey:TEXT_KEY];
+        self.reviewType = ((NSNumber*)[aDecoder decodeObjectForKey:REVIEW_TYPE_KEY]).unsignedIntegerValue;
+        self.contacts = [aDecoder decodeObjectForKey:CONTACTS_KEY];
+        self.imageUrl = [aDecoder decodeObjectForKey:IMAGE_URL_KEY];
+    }
+    return self;
+}
+
+
+#pragma mark - Memory mangement
+
 - (void)dealloc {
     self.photos = nil;
     self.text = nil;
     self.user = nil;
     self.contacts = nil;
+    self.imageUrl = nil;
+    [_imageUrl release];
     [_photos release];
     [_text release];
     [_user release];
     [_contacts release];
     [super dealloc];
 }
-
 @end

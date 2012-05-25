@@ -5,7 +5,7 @@
 @class Review;
 
 
-@interface SettingsService : NSObject <ASIHTTPRequestDelegate>
+@interface SettingsService : NSObject <ASIHTTPRequestDelegate, NSXMLParserDelegate>
 
 - (void) getSettings;
 
