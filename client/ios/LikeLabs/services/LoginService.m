@@ -6,4 +6,8 @@
     return [code isEqualToString: @""] && [password isEqualToString: @""];
 }
 
+- (BOOL)checkLogout:(NSString*)code andPassword:(NSString*)password {
+    return [code isEqualToString: @""] && [password isEqualToString: @""];
+}
+
 @end
