@@ -45,14 +45,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping(value = "/company")
-public class CompanyContentController {
+@RequestMapping(value = "/public")
+public class PublicContentController {
 
     public static final int ITEMS_PER_PAGE_COMPANY = 3;
     public static final int ITEMS_PER_PAGE_POINT = 5;
     public static final int ITEMS_PER_PAGE_REVIEW = 8;
-    private static final String LOGO_LINK_TEMPLATE = "/company/{0}/logo";
-    private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/company/review/{0}/photo";
+    //private static final String LOGO_LINK_TEMPLATE = "/company/{0}/logo";
+    //private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/company/review/{0}/photo";
     private static final String VIEW_COMPANY_LIST = "companies_list";
     private static final String VIEW_POINTS_LIST = "points_list";
     private static final String VIEW_REVIEWS_LIST = "review_list";
@@ -65,7 +65,7 @@ public class CompanyContentController {
 
     @Autowired
     private ReviewService reviewService;
-
+    
     private final Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = {"/", "", "/list"}, method = RequestMethod.GET)
@@ -90,7 +90,6 @@ public class CompanyContentController {
                 Map<String, String> map = new HashMap<String, String>();
                 Company company = reportItem.getCompany();
                 map.put("id", String.valueOf(company.getId()));
-                map.put("logo", MessageFormat.format(LOGO_LINK_TEMPLATE, String.valueOf(company.getId())));
                 map.put("name", company.getName());
                 map.put("points", String.valueOf(reportItem.getPointsNumber()));
                 map.put("comments", String.valueOf(reportItem.getReviewsNumber()));
@@ -172,7 +171,6 @@ public class CompanyContentController {
             List<Map> data = new ArrayList<Map>();
             for (Review review : report.getItems()) {
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put("photo", MessageFormat.format(PHOTO_REVIEW_LINK_TEMPLATE, String.valueOf(review.getId())));
                 map.put("message", review.getMessage());
                 map.put("name", review.getAuthor().getName());
                 map.put("date", review.getCreatedDT());
@@ -224,7 +222,14 @@ public class CompanyContentController {
             log.error(e, e);
         }
     }
-
+    
+    @InitBinder
+    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+    
     private ReviewQueryData queryFilterBuilder(Long point, String feedType, Date toDate,
                                 Date fromDate, String sortBy, Integer page) throws ParseException {
         
@@ -252,13 +257,5 @@ public class CompanyContentController {
        }
        Pager pager = new Pager(page * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
        return new ReviewQueryData(pointIds, fromDate, toDate, contentType, null, null, pager, sort);
-    }
-
-
-    @InitBinder
-    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        dateFormat.setLenient(false);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 }

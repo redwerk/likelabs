@@ -1,4 +1,4 @@
-<%@include file="./header.jsp" %>
+<%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript">
     var companyId = <c:out value="${company.id}"/>;
@@ -64,7 +64,7 @@
     }
     var force_update = true;
     function updateData() {
-        $.get("/company/" + companyId + "/reviews/data", options, function(response){
+        $.get("/public/" + companyId + "/reviews/data", options, function(response){
             if (response.error) {
                 console.warn(response.error);
                 return;
@@ -107,7 +107,7 @@
     }
     
     function updateFeed(reviewId, name, value) {
-        $.get("/company/" + companyId + "/reviews/" + reviewId + "/data?" + name + "=" + value, function(response){
+        $.get("/public/" + companyId + "/reviews/" + reviewId + "/data?" + name + "=" + value, function(response){
             if (response.error) {
                 console.warn(response.error);
                 return;
@@ -165,24 +165,26 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div style="margin-top: 15px; margin-left: 10px;">
-                                                    <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
-                                                    <input id="status_pending" type="radio" name="status_filter" value="pending"/>
-                                                    <input id="status_approved" type="radio" name="status_filter" value="approved"/>
-                                                    <input id="status_archived" type="radio" name="status_filter" value="archived"/>
-                                                    <input id="status_flagged" type="radio" name="status_filter" value="flagged"/>
-                                                    <input id="status_published" type="radio" name="status_filter" value="published"/>
-                                                    <input id="status_promo" type="radio" name="status_filter" value="promo"/>
-                                                    
+                                                <sec:authorize access="hasRole('ROLE_COMPANY_ADMIN')">
+                                                    <div style="margin-top: 15px; margin-left: 10px;">
+                                                        <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
+                                                        <input id="status_pending" type="radio" name="status_filter" value="pending"/>
+                                                        <input id="status_approved" type="radio" name="status_filter" value="approved"/>
+                                                        <input id="status_archived" type="radio" name="status_filter" value="archived"/>
+                                                        <input id="status_flagged" type="radio" name="status_filter" value="flagged"/>
+                                                        <input id="status_published" type="radio" name="status_filter" value="published"/>
+                                                        <input id="status_promo" type="radio" name="status_filter" value="promo"/>
 
-                                                    <label class="button_filter" for="status_all">All</label>
-                                                    <label class="button_filter" for="status_pending">Pending</label>
-                                                    <label class="button_filter" for="status_approved">Approved</label>
-                                                    <label class="button_filter" for="status_archived">Archived</label>
-                                                    <label class="button_filter" for="status_flagged">Flagged</label>
-                                                    <label class="button_filter" for="status_published">Published</label>
-                                                    <label class="button_filter" for="status_promo">Favourites</label>
-                                                </div>
+
+                                                        <label class="button_filter" for="status_all">All</label>
+                                                        <label class="button_filter" for="status_pending">Pending</label>
+                                                        <label class="button_filter" for="status_approved">Approved</label>
+                                                        <label class="button_filter" for="status_archived">Archived</label>
+                                                        <label class="button_filter" for="status_flagged">Flagged</label>
+                                                        <label class="button_filter" for="status_published">Published</label>
+                                                        <label class="button_filter" for="status_promo">Favourites</label>
+                                                    </div>
+                                                </sec:authorize>
                                             </div>
                                         </td>
                                     </tr>
@@ -194,4 +196,4 @@
                                         </td>
                                     </tr>
                                 </table>
-<%@include file="./footer.jsp" %>
+<%@include file="/WEB-INF/pages/commons//footer.jsp" %>

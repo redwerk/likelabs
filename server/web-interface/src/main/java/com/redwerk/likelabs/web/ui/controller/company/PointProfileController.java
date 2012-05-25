@@ -1,5 +1,5 @@
 
-package com.redwerk.likelabs.web.ui.controller;
+package com.redwerk.likelabs.web.ui.controller.company;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.PointService;
@@ -90,9 +90,12 @@ public class PointProfileController {
             pointService.updatePoint(pointId, point.getPointData());
         } else {
             Point newPoint = pointService.createPoint(companyId, point.getPointData());
-            for (TabletDto tablet: (List<TabletDto>)session.getAttribute(SESSION_ATR_TABLETS)) {
-                tabletService.createTablet(newPoint.getId(), 
-                        new TabletData(tablet.getLogin(), tablet.getLoginPassword(), tablet.getLogoutPassword()));
+            List<TabletDto> newTablets = (List<TabletDto>)session.getAttribute(SESSION_ATR_TABLETS);
+            if (newTablets != null) {
+                for (TabletDto tablet: newTablets) {
+                    tabletService.createTablet(newPoint.getId(),
+                            new TabletData(tablet.getLogin(), tablet.getLoginPassword(), tablet.getLogoutPassword()));
+                }
             }
         }
         session.removeAttribute(SESSION_ATR_TABLETS);
@@ -167,19 +170,12 @@ public class PointProfileController {
 
         ModelMap response = new ModelMap();
         try {
-            if (StringUtils.isBlank(tablet.getLogin()) ||
-                    StringUtils.isBlank(tablet.getLoginPassword()) ||
-                    StringUtils.isBlank(tablet.getLogoutPassword())) {
-                response.put("error", messageTemplateService.getMessage("dto.not.empty"));
+            List<String> errors = validateTablet(tablet);
+            if (!errors.isEmpty()) {
+                response.put("errors",errors);
+                response.put("success", false);
                 return response;
             }
-            if (tablet.getLogin().length() > MAX_LENGTH_FIELD_TABLET ||
-                    tablet.getLoginPassword().length() > MAX_LENGTH_FIELD_TABLET ||
-                    tablet.getLogoutPassword().length() > MAX_LENGTH_FIELD_TABLET) {
-                response.put("error", messageTemplateService.getMessage("dto.max.length", MAX_LENGTH_FIELD_TABLET.toString()));
-                return response;
-            }
-
             Map<String, Object> data = new HashMap<String, Object>();
             if (pointId > NEW_RECORD_ID) {
                 Tablet newTablet = tabletService.createTablet(pointId, new TabletData(tablet.getLogin(), tablet.getLoginPassword(), tablet.getLogoutPassword()));
@@ -198,12 +194,34 @@ public class PointProfileController {
         } catch (Exception e) {
             log.error(e, e);
             response.put("success", false);
-            response.put("error", "Not added. Server error.");
+            response.put("errors","Not added. Server error.");
         }
         return response;
     }
 
+    private List<String> validateTablet(TabletDto tablet) {
 
+        List<String> errors = new ArrayList<String>();
+        if (StringUtils.isBlank(tablet.getLogin())) {
+            errors.add(messageTemplateService.getMessage("point.profile.empty.login"));
+        }
+        if (StringUtils.isBlank(tablet.getLoginPassword())) {
+            errors.add(messageTemplateService.getMessage("point.profile.empty.loginpass"));
+        }
+        if (StringUtils.isBlank(tablet.getLogoutPassword())) {
+            errors.add(messageTemplateService.getMessage("point.profile.empty.logoutpass"));
+        }
+        if (tablet.getLogin().length() > MAX_LENGTH_FIELD_TABLET) {
+            errors.add(messageTemplateService.getMessage("point.profile.ivalide.login.length", MAX_LENGTH_FIELD_TABLET.toString()));
+        }
+        if (tablet.getLoginPassword().length() > MAX_LENGTH_FIELD_TABLET) {
+            errors.add(messageTemplateService.getMessage("point.profile.ivalide.loginpass.length", MAX_LENGTH_FIELD_TABLET.toString()));
+        }
+        if (tablet.getLogoutPassword().length() > MAX_LENGTH_FIELD_TABLET) {
+            errors.add(messageTemplateService.getMessage("point.profile.ivalide.logoutpass.length", MAX_LENGTH_FIELD_TABLET.toString()));
+        }
+        return errors;
+    }
 
     private class PointProfileValidator implements org.springframework.validation.Validator {
 
@@ -221,44 +239,38 @@ public class PointProfileController {
 
         @Override
         public void validate(Object target, Errors errors) {
-            /*
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone",
-                    "dto.not.empty", "Please fill in the required fields.");
-            
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email",
-                    "dto.not.empty", "Please fill in the required fields.");
-            */
+
             PointDto point = (PointDto) target;
 
             if (!mailValidator.isValid(point.getEmail())) {
-                errors.rejectValue("email", "dto.not.valid", "Please enter valid field.");
+                errors.rejectValue("email", "point.profile.ivalide.email", "Please enter valid field.");
             }
             if (!phoneValidator.isValid(point.getPhone())) {
-                errors.rejectValue("phone", "dto.not.valid", "Please enter valid field.");
+                errors.rejectValue("phone", "point.profile.ivalide.phone", "Please enter valid field.");
             }
             if (point.getPhone() != null && point.getPhone().length() > LENGTH_PHONE) {
-                errors.rejectValue("phone", "dto.max.length", new Byte[]{LENGTH_PHONE} ,"Maximum length allowed is XX symbols.");
+                errors.rejectValue("phone", "point.profile.ivalide.phone.length", new Byte[]{LENGTH_PHONE} ,"Maximum length allowed is " + LENGTH_PHONE +" symbols.");
             }
             if (point.getEmail() != null && point.getEmail().length() > LENGTH_EMAIL) {
-                errors.rejectValue("email", "dto.max.length",new Byte[]{LENGTH_EMAIL},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("email", "point.profile.ivalide.email.length",new Byte[]{LENGTH_EMAIL},"Maximum length allowed is " + LENGTH_EMAIL + " symbols.");
             }
             if (point.getPostalCode() != null && point.getPostalCode().length() > LENGTH_POSTAL_CODE) {
-                errors.rejectValue("postalCode", "dto.max.length", new Byte[]{LENGTH_POSTAL_CODE},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("postalCode", "point.profile.ivalide.postal.length", new Byte[]{LENGTH_POSTAL_CODE},"Maximum length allowed is " + LENGTH_POSTAL_CODE + " symbols.");
             }
             if (point.getCity() != null && point.getCity().length() > LENGTH_ADDRESS_FIELD) {
-                errors.rejectValue("city", "dto.max.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("city", "point.profile.ivalide.city.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is " + LENGTH_ADDRESS_FIELD + " symbols.");
             }
             if (point.getState() != null && point.getState().length() > LENGTH_ADDRESS_FIELD) {
-                errors.rejectValue("state", "dto.max.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("state", "point.profile.ivalide.state.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is " + LENGTH_ADDRESS_FIELD + " symbols.");
             }
             if (point.getCountry() != null && point.getCountry().length() > LENGTH_ADDRESS_FIELD) {
-                errors.rejectValue("country", "dto.max.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("country", "point.profile.ivalide.country.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is " + LENGTH_ADDRESS_FIELD + " symbols.");
             }
             if (point.getAddressLine1() != null && point.getAddressLine1().length() > LENGTH_ADDRESS_FIELD) {
-                errors.rejectValue("addressLine1", "dto.max.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("addressLine1", "point.profile.ivalide.addressline.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is " + LENGTH_ADDRESS_FIELD + " symbols.");
             }
             if (point.getAddressLine2() != null && point.getAddressLine2().length() > LENGTH_ADDRESS_FIELD) {
-                errors.rejectValue("addressLine2", "dto.max.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is XX symbols.");
+                errors.rejectValue("addressLine2", "point.profile.ivalide.addressline.length", new Byte[]{LENGTH_ADDRESS_FIELD},"Maximum length allowed is "  + LENGTH_ADDRESS_FIELD + " symbols.");
             }
         }
     }

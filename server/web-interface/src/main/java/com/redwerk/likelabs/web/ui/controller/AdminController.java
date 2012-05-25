@@ -35,7 +35,7 @@ public class AdminController {
             return VIEW_ADMIN_PANEL;
         }
 */
-        return "redirect:/index";
+        return "redirect:/public";
     }
     
     @RequestMapping(value = "/list/{pageId:\\d}", method = RequestMethod.GET)

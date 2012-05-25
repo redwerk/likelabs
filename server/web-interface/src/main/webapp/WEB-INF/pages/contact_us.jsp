@@ -1,4 +1,4 @@
-<%@include file="./header.jsp" %>
+<%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
     <tr>
         <td class="title">Contact Us</td>
@@ -39,4 +39,4 @@
         </td>
     </tr>
 </table>
-<%@include file="./footer.jsp" %>
+<%@include file="/WEB-INF/pages/commons/footer.jsp" %>

@@ -1,39 +1,41 @@
-<%@include file="./header.jsp" %>
+<%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript">
     var companyId = <c:out value="${company.id}" default="0"/>;
     $(document).ready(function(){
-        $("#add_administrator_dialog").dialog({ autoOpen: false, title: "Add administrator", modal: true, minWidth: 400, minHeight: 200});
-        $("#add_social_page_dialog").dialog({ autoOpen: false, title: "Add social page", modal: true, minWidth: 400, minHeight: 200});
+        $("#add_administrator_dialog").dialog({ autoOpen: false, title: "Add administrator", close: function(){document.getElementById("add_administrator_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
+        $("#add_social_page_dialog").dialog({ autoOpen: false, title: "Add social page", close: function(){document.getElementById("add_social_page_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
         $("#error_dialog_admin").dialog({ autoOpen: false, title: "Error added company administrator", modal: true, width: 400, height: 150});
         $("#error_dialog_social").dialog({ autoOpen: false, title: "Error added social page", modal: true, width: 400, height: 150});
     })
-    
     function addAdmin() {
         $.post("/company/" + companyId + "/profile/admin", $("#add_administrator_form").serialize(), function(response){
-            $("#add_administrator_dialog").dialog("close");
             if (!response.success) {
-                $('#eroor_message_admin').html(response.error);
+                $('#error_message_admin').html("");
+                for (var key = 0 ;key < response.errors.length; key++) {
+                    $('#error_message_admin').html($('#error_message_admin').html() + response.errors[key] + "<br/>");
+                }
                 $('#error_dialog_admin').dialog('open');
                 return;
             }
             window.location.reload();
         });
     }
-
     function addPage() {
         $.post("/company/" + companyId + "/profile/page", $("#add_social_page_form").serialize(), function(response){
-            $("#add_social_page_dialog").dialog("close");
             if (!response.success) {
-                $('#eroor_message_social').html(response.error);
+                $('#error_message_social').html(response.error);
                 $('#error_dialog_social').dialog('open');
                 return;
             }
             window.location.reload();
         });
     }
-
+    function submitLogo() {
+        $('#logoForm').submit();
+    }
     function deleteAdmin(id) {
-        $.ajax({
+        confirmDialog("Delete administrator company", "Are you sure?",function(){
+            $.ajax({
             url: "/company/" + companyId + "/profile/admin/" + id,
             type: "DELETE",
             success: function(response){
@@ -44,11 +46,25 @@
                 }
                 window.location.reload();
             }
-        })
+        })});
     }
-
-    function deleteSocialPage(id) {
-        $.ajax({
+    function deletePoint(id) {
+        confirmDialog("Delete point", "Are you sure?",function(){
+            $.ajax({
+            url: "/company/" + companyId + "/profile/point/" + id,
+            type: "DELETE",
+            success: function(response){
+                if (!response.success) {
+                    //TODO
+                    return;
+                }
+                window.location.reload();
+            }
+        })});
+    }
+    function deletePage(id) {
+        confirmDialog("Delete social page", "Are you sure?",function(){
+            $.ajax({
             url: "/company/" + companyId + "/profile/page/" + id,
             type: "DELETE",
             success: function(response){
@@ -59,24 +75,7 @@
                 }
                 window.location.reload();
             }
-        })
-    }
-
-    function deletePoint(id) {
-        $.ajax({
-            url: "/company/" + companyId + "/profile/point/" + id,
-            type: "DELETE",
-            success: function(response){
-                if (!response.success) {
-                    window.alert(response.error);
-                    return;
-                }
-                window.location.reload();
-            }
-        })
-    }
-    function submitLogo() {
-        $('#logoForm').submit();
+        })});
     }
 </script>
 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
@@ -129,7 +128,7 @@
 
                             <c:forEach items="${points}" var="point" >
                                 <tr style="background-color: #fdfeff">
-                                    <td>${point.address.addressLine1}</td>
+                                    <td><c:if test="${empty point.address.addressLine1}">N/A</c:if>${point.address.addressLine1}</td>
                                     <td>${point.phone}</td>
                                     <td>
                                         <a href="/company/${company.id}/point/${point.id}/profile"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
@@ -180,7 +179,6 @@
                                 </table>
                             </form>
                         </div>
-
                     </td>
                     <td style="text-align: center; vertical-align: top; padding-left: 40px; width: 260px;">
 
@@ -209,7 +207,7 @@
                             <c:forEach items="${socialPages}" var="page">
                                 <tr style="background-color: #fdfeff">
                                     <td><a href="${page.url}" target="_blank">${page.url}</a></td>
-                                    <td><a href="javascript:void(0);" onclick="deleteSocialPage(${page.pageId})"><img src="/static/images/delete.png" alt=""/></a></td>
+                                    <td><a href="javascript:void(0);" onclick="deletePage(${page.pageId})"><img src="/static/images/delete.png" alt=""/></a></td>
                                 </tr>
                             </c:forEach>
                         </table>
@@ -241,7 +239,7 @@
                         <div id="error_dialog_admin" style="width: 400px;">
                             <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
                                 <tr>
-                                    <td style="text-align: center"><span id="eroor_message_admin" class="errorblock"/></td>
+                                    <td style="text-align: center"><span id="error_message_admin" class="errorblock"/></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: center"><button class="btn btn_success save" type="button" onclick="$('#error_dialog_admin').dialog('close');$('#add_administrator_dialog').dialog('open');">OK</button></td>
@@ -251,7 +249,7 @@
                         <div id="error_dialog_social" style="width: 400px;">
                             <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
                                 <tr>
-                                    <td style="text-align: center"><span id="eroor_message_social" class="errorblock"/></td>
+                                    <td style="text-align: center"><span id="error_message_social" class="errorblock"/></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: center"><button class="btn btn_success save" type="button" onclick="$('#error_dialog_social').dialog('close');$('#add_social_page_dialog').dialog('open');">OK</button></td>
@@ -262,4 +260,4 @@
         </td>
     </tr>
 </table>
-<%@include file="./footer.jsp" %>
+<%@include file="/WEB-INF/pages/commons/footer.jsp" %>

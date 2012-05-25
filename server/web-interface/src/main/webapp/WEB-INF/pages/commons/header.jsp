@@ -43,7 +43,7 @@
                     data: data,
                     success: function(data){
                         if (data == "true") {
-                            window.location.href = "/company/list";
+                            window.location.href = "/public";
                         } else {
                             $('#password').val("");
                             $('#authfailed').html('<spring:message code="message.auth.failed"/>');
@@ -59,8 +59,30 @@
         </script>
     </sec:authorize>
 
+<script type="text/javascript">
+    function confirmDialog (title, description, callback) {
+        $("#confirm_dialog").dialog({modal: true, autoOpen: false, title: title }); 
+        $("#confirm_dialog #description").html(description);
+        $("#confirm_dialog").dialog("open");
+        $("#confirm_dialog_ok").click(function(){callback.call();$("#confirm_dialog").dialog("close")});
+        $("#confirm_dialog_cancel").click(function(){$("#confirm_dialog").dialog("close")});
+    }
+</script>
 </head>
 <body>
+    <div id="confirm_dialog" style="display: none;">
+        <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
+            <tr>
+                <td style="text-align: center"><div id="description" ></div></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; padding-top: 30px;">
+                    <button id='confirm_dialog_ok' class="btn btn_success save" type="button">OK</button>
+                    <button id="confirm_dialog_cancel" class="btn btn-info save" type="button">Cancel</button>
+                </td>
+            </tr>
+        </table>
+    </div>
     <div class="container">
         <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%" summary="">
             <tr>
@@ -124,7 +146,7 @@
                     <table cellpadding="0" cellspacing="0" style="height: 100%; background: url('/static/images/shadow_tb.png') repeat-x transparent;" summary="">
                         <tr>
                             <td class="left_menu" style="vertical-align: top;">
-                                <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/list">COMPANIES</a></div>
+                                <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/public">COMPANIES</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/1/reviews">COMPANY FEED</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>

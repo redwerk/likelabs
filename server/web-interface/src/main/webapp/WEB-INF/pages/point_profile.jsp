@@ -1,9 +1,10 @@
-<%@include file="./header.jsp" %>
+<%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript">
     var companyId = <c:out value="${companyId}" default="0"/>;
     var pointId = <c:out value="${pointId}" default="0"/>;
+
     $(document).ready(function(){
-        $("#add_tablet_dialog").dialog({ autoOpen: false, title: "Attach tablet", modal: true, width: 400, height: 250});
+        $("#add_tablet_dialog").dialog({ autoOpen: false, title: "Attach tablet", close: function(){document.getElementById("add_tablet_form").reset();}, modal: true, width: 400, height: 250});
         $("#error_dialog").dialog({ autoOpen: false, title: "Error tablet", modal: true, width: 400, height: 150});
     })
     var tablet = {
@@ -14,17 +15,20 @@
     };
     function addTablet() {
         $.post("/company/" + companyId + "/point/" + pointId + "/profile/tablet", $("#add_tablet_form").serialize(),function(response){
-            $("#add_tablet_dialog").dialog("close");
             if (!response.success) {
+                $('#error_message').html("");
+                for (var key = 0 ;key < response.errors.length; key++) {
+                    $('#error_message').html($('#error_message').html() + response.errors[key] + "<br/>");
+                }
                 $('#error_dialog').dialog('open');
-                $('#eroor_message').html(response.error);
                 return;
             }
             window.location.reload();
         });
     }
     function deleteTablet(id) {
-        $.ajax({
+        confirmDialog("Delete tablet", "Are you sure?",function(){
+            $.ajax({
             url: "/company/" + companyId + "/point/" + pointId + "/profile/tablet/" + id,
             type: "DELETE",
             success: function(response){
@@ -35,7 +39,7 @@
                 }
                 window.location.reload();
             }
-        })
+        })});
     }
 </script>
                                 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
@@ -117,7 +121,7 @@
                                                             <td>${tablet.loginPassword}</td>
                                                             <td>${tablet.logoutPassword}</td>
                                                             <td>
-                                                                <a href="javascript:deleteTablet(${tablet.id});"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
+                                                                <a href="javascript:void(0);" onclick="deleteTablet(${tablet.id})"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
                                                             </td>
                                                         </tr>
                                                         </c:forEach>
@@ -150,7 +154,7 @@
                                                     <div id="error_dialog" style="width: 400px;">
                                                         <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
                                                             <tr>
-                                                                <td style="text-align: center"><span id="eroor_message" class="errorblock"></span></td>
+                                                                <td style="text-align: center"><span id="error_message" class="errorblock"></span></td>
                                                             </tr>
                                                             <tr>
                                                                 <td style="text-align: center"><button class="btn btn_success save" type="button" onclick="$('#error_dialog').dialog('close');$('#add_tablet_dialog').dialog('open')">OK</button></td>
@@ -162,4 +166,4 @@
                                         </td>
                                     </tr>
                                 </table>
-<%@include file="./footer.jsp" %>
+<%@include file="/WEB-INF/pages/commons/footer.jsp" %>

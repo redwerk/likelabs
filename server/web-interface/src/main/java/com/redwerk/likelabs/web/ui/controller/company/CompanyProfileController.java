@@ -1,11 +1,10 @@
-package com.redwerk.likelabs.web.ui.controller;
+package com.redwerk.likelabs.web.ui.controller.company;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
 import com.redwerk.likelabs.application.dto.company.CompanyPageData;
-import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
@@ -20,6 +19,7 @@ import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.SocialLinkValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -51,17 +51,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class CompanyProfileController {
 
     private final static int NEW_RECORD_ID = 0;
-    private final static String SESSION_ATR_TABLETS = "tablets";
     private final static String VIEW_COMPANY_PROFILE = "company_profile";
-    private final static Byte MAX_LENGTH_FIELD_TABLET = 20;
     private final static Byte MAX_LENGTH_PHONE = 20;
     private final static Byte MAX_LENGTH_EMAIL = 40;
     private final static Byte MAX_LENGTH_SOCIAL_URL = 100;
 
     private CompanyProfileValidator validator = new CompanyProfileValidator();
     private final Logger log = LogManager.getLogger(getClass());
-    @Autowired
-    private EmailService emailService;
+
     @Autowired
     private MessageTemplateService messageTemplateService;
     @Autowired
@@ -112,14 +109,14 @@ public class CompanyProfileController {
         model.clear();
         session.removeAttribute("logo");
         status.setComplete();
-        return "redirect:/company/list";
+        return "redirect:/company/" + companyId;
     }
 
     @RequestMapping(value = "/cancel",method = RequestMethod.GET)
-    public String processCancel(ModelMap model, HttpSession session) {
+    public String processCancel(ModelMap model, HttpSession session, @PathVariable Long companyId) {
         model.clear();
         session.removeAttribute("logo");
-        return "redirect:/company/list";
+        return "redirect:/company/" + companyId;
     }
 
     @ModelAttribute("admins")
@@ -196,33 +193,32 @@ public class CompanyProfileController {
     public ModelMap addCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @RequestParam("phone") String phone,
                                                               @RequestParam("email") String email) {
         ModelMap response = new ModelMap();
-        if (StringUtils.isBlank(phone) || StringUtils.isBlank(email)) {
-            response.put("error", messageTemplateService.getMessage("dto.not.empty"));
-            response.put("success", false);
-            return response;
+
+        List<String> errors = new ArrayList<String>();
+        if (!new EmailValidator().isValid(email)) {
+            errors.add(messageTemplateService.getMessage("company.profile.ivalide.email"));
         }
-        if (!new EmailValidator().isValid(email) || !new PhoneValidator().isValid(phone)) {
-            response.put("error", messageTemplateService.getMessage("dto.not.valid"));
-            response.put("success", false);
-            return response;
+        if (!new PhoneValidator().isValid(phone)) {
+            errors.add(messageTemplateService.getMessage("company.profile.ivalide.phone"));
         }
         if (email.length() > MAX_LENGTH_EMAIL) {
-            response.put("success", false);
-            response.put("error", messageTemplateService.getMessage("dto.max.length", MAX_LENGTH_EMAIL.toString()));
-            return response;
+            errors.add(messageTemplateService.getMessage("company.profile.ivalide.email.length", MAX_LENGTH_EMAIL.toString()));
         }
         if (phone.length() > MAX_LENGTH_PHONE) {
+            errors.add(messageTemplateService.getMessage("company.profile.ivalide.phone.length", MAX_LENGTH_PHONE.toString()));
+        }
+        if (!errors.isEmpty()) {
+            response.put("errors",errors);
             response.put("success", false);
-            response.put("error", messageTemplateService.getMessage("dto.max.length", MAX_LENGTH_PHONE.toString()));
             return response;
         }
+        response.put("success", true);
         try {
             companyService.createAdmin(companyId, new CompanyAdminData(phone, email));
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
             response.put("success", false);
-            response.put("error", "Company administrator not added  Server error.");
+            errors.add("Company administrator not added  Server error.");
         }
         return response;
     }
@@ -233,19 +229,14 @@ public class CompanyProfileController {
                                                               @RequestParam("url") String url) {
 
         ModelMap response = new ModelMap();
-        if (StringUtils.isBlank(url)) {
-            response.put("error", messageTemplateService.getMessage("dto.not.empty"));
-            response.put("success", false);
-            return response;
-        }
         if (!new SocialLinkValidator().isValid(url)) {
-            response.put("error", messageTemplateService.getMessage("dto.not.valid"));
+            response.put("error", messageTemplateService.getMessage("company.profile.ivalide.url"));
             response.put("success", false);
             return response;
         }
         if (url.length() > MAX_LENGTH_SOCIAL_URL) {
             response.put("success", false);
-            response.put("error", messageTemplateService.getMessage("dto.max.length", MAX_LENGTH_SOCIAL_URL.toString()));
+            response.put("error", messageTemplateService.getMessage("company.profile.ivalide.url.length", MAX_LENGTH_SOCIAL_URL.toString()));
             return response;
         }
         try {
@@ -278,20 +269,20 @@ public class CompanyProfileController {
     }
 
     @RequestMapping(value = "/logo", method = RequestMethod.GET)
-    public void getPreviewlogo(HttpSession session, @PathVariable Integer companyId,
+    public void getPreviewlogo(HttpSession session, @PathVariable Long companyId,
             HttpServletResponse response) {
 
         ServletOutputStream out = null;
         try {
             byte[] image;
-            if (session.getAttribute("logo") == null) {
-                Company company = companyService.getCompany(companyId);
-                if (company == null || company.getLogo() == null) return;
-                image = company.getLogo();
-            } else {
+            if (session.getAttribute("logo") != null && (Long)((Map<String,Object>)session.getAttribute("logo")).get("companyId") == companyId) {
                 Map<String,Object> logo = (Map<String,Object>)session.getAttribute("logo");
                 if (logo.get("companyId") != companyId) return;
                 image = (byte[])logo.get("image");
+            } else {
+                Company company = companyService.getCompany(companyId);
+                if (company == null || company.getLogo() == null) return;
+                image = company.getLogo();
             }
             response.setContentType("image");
             out = response.getOutputStream();
@@ -319,24 +310,24 @@ public class CompanyProfileController {
         public void validate(Object target, Errors errors) {
 
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name",
-                    "contactus.form.required.message", "Please fill in the required field.");
+                    "company.profile.ivalide.name.required", "Please fill in the required field.");
 
             CompanyDto company = (CompanyDto) target;
 
             if (!mailValidator.isValid(company.getEmail())) {
-                errors.rejectValue("email", "dto.not.valid", "Please enter valid field.");
+                errors.rejectValue("email", "company.profile.ivalide.email", "Please enter valid field.");
             }
             if (!phoneValidator.isValid(company.getPhone())) {
-                errors.rejectValue("phone", "dto.not.valid", "Please enter valid field.");
+                errors.rejectValue("phone", "company.profile.ivalide.phone", "Please enter valid field.");
             }
             if (company.getPhone() != null && company.getPhone().length() > MAX_LENGTH_PHONE) {
-                errors.rejectValue("phone", "dto.max.length", new Byte[]{MAX_LENGTH_PHONE} ,"Maximum length allowed is "+MAX_LENGTH_PHONE+" symbols.");
+                errors.rejectValue("phone", "company.profile.ivalide.phone.length", new Byte[]{MAX_LENGTH_PHONE} ,"Maximum length allowed is "+MAX_LENGTH_PHONE+" symbols.");
             }
             if (company.getName() != null && company.getName().length() > MAX_LENGTH_NAME) {
-                errors.rejectValue("name", "dto.max.length", new Byte[]{MAX_LENGTH_NAME} ,"Maximum length allowed is "+MAX_LENGTH_NAME+" symbols.");
+                errors.rejectValue("name", "company.profile.ivalide.name.length", new Byte[]{MAX_LENGTH_NAME} ,"Maximum length allowed is "+MAX_LENGTH_NAME+" symbols.");
             }
             if (company.getEmail() != null && company.getEmail().length() > MAX_LENGTH_EMAIL) {
-                errors.rejectValue("email", "dto.max.length", new Byte[]{MAX_LENGTH_EMAIL} ,"Maximum length allowed is "+MAX_LENGTH_EMAIL+" symbols.");
+                errors.rejectValue("email", "company.profile.ivalide.email.length", new Byte[]{MAX_LENGTH_EMAIL} ,"Maximum length allowed is "+MAX_LENGTH_EMAIL+" symbols.");
             }
         }
     }

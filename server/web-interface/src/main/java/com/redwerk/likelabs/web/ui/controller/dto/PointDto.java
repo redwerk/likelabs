@@ -31,15 +31,19 @@ public class PointDto {
 
     public PointDto(Point p) {
         Address a = p.getAddress();
+        if (a != null) {
+            this.city = a.getCity();
+            this.state = a.getState();
+            this.country = a.getCountry();
+            this.postalCode = a.getPostalCode();
+            this.addressLine1 = a.getAddressLine1();
+            this.addressLine2 = a.getAddressLine2();
+        }
         this.id = p.getId();
-        this.city = a.getCity();
-        this.state = a.getState();
-        this.country = a.getCountry();
-        this.postalCode = a.getPostalCode();
-        this.addressLine1 = a.getAddressLine1();
-        this.addressLine2 = a.getAddressLine2();
         this.phone = p.getPhone();
         this.email = p.getEmail();
+
+        
     }
 
     public PointData getPointData() {

@@ -13,7 +13,7 @@ public class EmailValidator implements Validator<String>{
 
 	@Override
 	public boolean isValid(String param) {
-            if (StringUtils.isEmpty(param))
+            if (StringUtils.isBlank(param))
                 return false;
             if (!PATTERN_EMAIL.matcher(param).find())
                 return false;

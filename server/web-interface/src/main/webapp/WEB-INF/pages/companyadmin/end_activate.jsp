@@ -1,4 +1,4 @@
-<%@include  file="/WEB-INF/pages/header.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/header.jsp"%>
 <style type="text/css">
     @import "/static/css/fb.css";
     @import "/static/css/vk.css";
@@ -75,4 +75,4 @@
             </td>
         </tr>
     </table>
-<%@include  file="/WEB-INF/pages/footer.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

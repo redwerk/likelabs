@@ -1,4 +1,4 @@
-<%@include  file="/WEB-INF/pages/header.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/header.jsp"%>
 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
     <tr>
         <td class="title">Welcome To Like Labs - activation e-mail</td>
@@ -20,4 +20,4 @@
         </td>
     </tr>
 </table>
-<%@include  file="/WEB-INF/pages/footer.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

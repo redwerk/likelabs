@@ -1,4 +1,4 @@
-<%@include file="./header.jsp" %>
+<%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript" >
     var pager_options = {
@@ -41,7 +41,7 @@
 
     var force_update = true;
     function updateData() {
-        $.get("/company/list/data", options, function(response){
+        $.get("/public/list/data", options, function(response){
             if (response.error) {
                 console.warn(response.error);
                 return;
@@ -70,4 +70,4 @@
                                         </td>
                                     </tr>
                                 </table>
-<%@include file="./footer.jsp" %>
+<%@include file="/WEB-INF/pages/commons/footer.jsp" %>

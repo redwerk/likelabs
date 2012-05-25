@@ -29,7 +29,9 @@ public class RootController {
 
     private static final String VIEW_INDEX = "index";
     private static final String VIEW_ACTIVATE_EMAIL = "activatemail";
-    private static final String VIEW_TOS = "tos";
+    private static final String VIEW_TOS = "commons/tos";
+    private static final String VIEW_ABOUT = "commons/about";
+    private static final String VIEW_FAQ = "commons/faq";
 
     private static final String MSG_INCORRECT_PASSWORD = "message.auth.invalid.password";
 
@@ -51,7 +53,7 @@ public class RootController {
     @RequestMapping(value = {"/index", "/", ""}, method = RequestMethod.GET)
     public String index(ModelMap model, @RequestParam(value = "error", required = false) String error) {
         //TODO index logic
-        return "redirect:/company/list";
+        return "redirect:/public";
     }
 
     @RequestMapping(value = "/tos", method = RequestMethod.GET)
@@ -84,13 +86,13 @@ public class RootController {
     @RequestMapping(value = {"/about", "/about/"}, method = RequestMethod.GET)
     public String aboutUs(ModelMap model) {
         model.addAttribute("page", "about");
-        return "about";
+        return VIEW_ABOUT;
     }
 
     @RequestMapping(value = {"/faq", "/faq/"}, method = RequestMethod.GET)
     public String faq(ModelMap model) {
         model.addAttribute("page", "faq");
-        return "faq";
+        return VIEW_FAQ;
     }
 
     private void authenticateUser(HttpServletRequest request, String phone, String password) {

@@ -15,7 +15,7 @@ public class PhoneValidator implements Validator<String> {
 	@Override
 	public boolean isValid(String param) {
 
-            if (StringUtils.isEmpty(param))
+            if (StringUtils.isBlank(param))
                 return false;
             if (!param.startsWith("+"))
                 return false;
