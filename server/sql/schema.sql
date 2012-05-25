@@ -135,11 +135,28 @@ CREATE TABLE `review` (
 
 DROP TABLE IF EXISTS `review_recipient`;
 CREATE TABLE `review_recipient` (
-     `review_id` BIGINT AUTO_INCREMENT NOT NULL,
-     `type` TINYINT(1) NOT NULL,
-     `address` VARCHAR(40) NOT NULL,
-     CONSTRAINT `PK_recipient` PRIMARY KEY (`review_id`),
+     `id` BIGINT AUTO_INCREMENT NOT NULL,
+     `type` VARCHAR(1) NOT NULL,
+     `is_notified` TINYINT(1) NOT NULL,
+     `review_id` BIGINT NOT NULL,
+     CONSTRAINT `PK_recipient` PRIMARY KEY (`id`),
      CONSTRAINT `FK_recipient_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `review_sms_recipient`;
+CREATE TABLE `review_sms_recipient` (
+     `recipient_id` BIGINT AUTO_INCREMENT NOT NULL,
+     `phone` VARCHAR(20) NOT NULL,
+     CONSTRAINT `PK_sms_recipient` PRIMARY KEY (`recipient_id`),
+     CONSTRAINT `FK_sms_recipient_recipient` FOREIGN KEY (`recipient_id`) REFERENCES `review_recipient` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `review_email_recipient`;
+CREATE TABLE `review_email_recipient` (
+     `recipient_id` BIGINT AUTO_INCREMENT NOT NULL,
+     `email` VARCHAR(40) NOT NULL,
+     CONSTRAINT `PK_email_recipient` PRIMARY KEY (`recipient_id`),
+     CONSTRAINT `FK_email_recipient_recipient` FOREIGN KEY (`recipient_id`) REFERENCES `review_recipient` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sample_review`;

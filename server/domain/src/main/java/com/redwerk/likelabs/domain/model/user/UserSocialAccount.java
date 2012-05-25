@@ -36,7 +36,7 @@ public class UserSocialAccount implements Comparable<UserSocialAccount> {
 
     public UserSocialAccount(SocialNetworkType type, String accountId, String accessToken, String name) {
         this.type = type;
-        this.accountId =accountId;
+        this.accountId = accountId;
         this.accessToken = accessToken;
         this.name = name;
     }

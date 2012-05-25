@@ -6,6 +6,7 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -59,21 +60,17 @@ public class Review {
     @Temporal(TemporalType.TIMESTAMP)
     private Date moderatedDT;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name="review_recipient", joinColumns = @JoinColumn(name="review_id"))
-    private Set<Recipient> recipients;
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Recipient> recipients = new HashSet<Recipient>();
 
 
     // factory methods
 
-    public static Review createReview(User author, Point point, String message, Photo photo, Set<Recipient> recipients) {
-        if (author == null || point == null || message == null || photo == null || recipients == null) {
+    public static Review createReview(User author, Point point, String message, Photo photo) {
+        if (author == null || point == null || message == null || photo == null) {
             throw new IllegalArgumentException("createReview() parameters cannot be null");
         }
-        if (recipients.size() > MAX_RECIPIENTS_NUMBER) {
-            throw new IllegalArgumentException("too many recipients for review");
-        }
-        Review review = new Review(author, point, message, photo, recipients);
+        Review review = new Review(author, point, message, photo);
         point.registerReview(review, new ReviewRegistrationAgent() {
             @Override
             public void setReviewStatus(Review review, ReviewStatus status) {
@@ -85,12 +82,11 @@ public class Review {
     
     // constructors
 
-    protected Review(User author, Point point, String message, Photo photo, Set<Recipient> recipients) {
+    protected Review(User author, Point point, String message, Photo photo) {
         this.author = author;
         this.point = point;
         this.message = message;
         this.photo = photo;
-        this.recipients = new HashSet<Recipient>(recipients);
         this.status = ReviewStatus.PENDING;
         this.createdDT = new Date();
         this.publishedInCompanySN = false;
@@ -192,6 +188,31 @@ public class Review {
         }
         Company company = point.getCompany();
         return useAsSample ? company.addSampleReview(this) : company.removeSampleReview(this);
+    }
+
+    public boolean addRecipient(Recipient recipient) {
+        if (recipients.size() >= MAX_RECIPIENTS_NUMBER) {
+            throw new IllegalArgumentException("too many recipients for review");
+        }
+        return recipients.add(recipient);
+    }
+
+    public boolean removeRecipient(Recipient recipient) {
+        for (Recipient r: recipients) {
+            if (r.equals(recipient)) {
+                if (r.isNotified()) {
+                    throw new IllegalStateException("cannot remove notified recipient");
+                }
+                break;
+            }
+        }
+        return recipients.remove(recipient);
+    }
+
+    public void notifyRecipients(RecipientNotifier notifier) {
+        for (Recipient r: recipients) {
+            r.notify(notifier);
+        }
     }
 
     private void markAsModerated(User moderator) {

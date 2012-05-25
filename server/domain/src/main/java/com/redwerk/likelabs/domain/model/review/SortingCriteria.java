@@ -2,6 +2,6 @@ package com.redwerk.likelabs.domain.model.review;
 
 public enum SortingCriteria {
     
-    DATE, POINT, REVIEW_TYPE, REVIEW_STATUS
+    DATE, COMPANY_AND_POINT, REVIEW_TYPE, REVIEW_STATUS
 
 }

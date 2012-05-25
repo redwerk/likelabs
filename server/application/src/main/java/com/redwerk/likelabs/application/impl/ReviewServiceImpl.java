@@ -133,15 +133,14 @@ public class ReviewServiceImpl implements ReviewService {
         if (reviewPhoto == null) {
             throw new IllegalArgumentException("review photo is not selected");
         }
-        // create recipients
-        Set<Recipient> reviewRecipients = new HashSet<Recipient>();
-        for (RecipientData recipientData: recipients) {
-            reviewRecipients.add(new Recipient(recipientData.getType(), recipientData.getAddress()));
-        }
         // create review with proper status
         Point point = tablet.getPoint();
         ReviewStatus status = point.getCompany().isModerateReviews() ? ReviewStatus.PENDING : ReviewStatus.APPROVED;
-        Review review = Review.createReview(author, point, text, reviewPhoto, reviewRecipients);
+        Review review = Review.createReview(author, point, text, reviewPhoto);
+        RecipientFactory recipientFactory = new RecipientFactory();
+        for (RecipientData recipientData: recipients) {
+            review.addRecipient(recipientFactory.createReviewRecipient(review, recipientData.getType(), recipientData.getAddress()));
+        }
         reviewRepository.add(review);
         // publish in user sn ?
         if (author.isPublishInSN()) {

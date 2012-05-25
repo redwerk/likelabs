@@ -21,9 +21,9 @@ public class ReviewJpaQuery implements ReviewQuery {
         put(ContentTypeFilter.CONTAINS_TEXT_AND_PHOTO, "r.message is not null and r.photo is not null");
     }};
 
-     private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
+    private static final Map<SortingCriteria, String> ORDER_BY_EXPRESSIONS = new HashMap<SortingCriteria, String>() {{
         put(SortingCriteria.DATE, "r.createdDT {0}");
-        put(SortingCriteria.POINT,
+        put(SortingCriteria.COMPANY_AND_POINT,
                 "r.point.company.name {0}, p.address.country {0}, p.address.state {0}, p.address.city {0}, p.address.addressLine1 {0}, p.address.addressLine2 {0}");
         put(SortingCriteria.REVIEW_STATUS, "r.status {0}");
         put(SortingCriteria.REVIEW_TYPE, "isnull(r.photo), isnull(r.message)");

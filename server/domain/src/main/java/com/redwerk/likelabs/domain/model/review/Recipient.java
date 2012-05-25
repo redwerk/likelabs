@@ -1,30 +1,62 @@
 package com.redwerk.likelabs.domain.model.review;
 
+import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
-@Embeddable
-public class Recipient {
+@Entity
+@Table(name = "review_recipient")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, columnDefinition = "type", length = 1)
+public abstract class Recipient {
 
-    private RecipientType type;
-    
-    private String address;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Recipient(RecipientType type, String address) {
-        this.type = type;
-        this.address = address;
+    @Column(name = "is_notified")
+    private boolean notified = false;
+
+    @ManyToOne
+    @JoinColumn(name = "review_id")
+    private Review review;
+
+
+    // constructors
+
+    protected Recipient(Review review) {
+        this.review = review;
     }
 
-    public RecipientType getType() {
-        return type;
+    // business methods
+
+    public Long getId() {
+        return id;
     }
 
-    public String getAddress() {
-        return address;
+    public boolean isNotified() {
+        return notified;
     }
+
+    public boolean notify(RecipientNotifier notifier) {
+        if (notified) {
+            throw new IllegalStateException("recipient is already notified");
+        }
+        notified = sendNotification(notifier);
+        return notified;
+    }
+
+    protected abstract boolean sendNotification(RecipientNotifier notifier);
+
+    protected Review getReview() {
+        return review;
+    }
+
+    // overrides
 
     @Override
     public boolean equals(Object obj) {
@@ -32,24 +64,23 @@ public class Recipient {
         if (obj == null || getClass() != obj.getClass()) return false;
         Recipient other = (Recipient) obj;
         return new EqualsBuilder()
-                .append(type, other.type)
-                .append(address, other.address)
+                .append(review, other.review)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(type)
-                .append(address)
+                .append(review)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("type", type)
-                .append("address", address)
+                .append("id", id)
+                .append("notified", notified)
+                .append("review", review)
                 .toString();
     }
 
