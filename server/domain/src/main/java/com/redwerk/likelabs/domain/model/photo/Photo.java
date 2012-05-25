@@ -31,9 +31,10 @@ public class Photo {
 
     // constructors
 
-    public Photo(User user, byte[] image) {
+    public Photo(User user, PhotoStatus status, byte[] image) {
         this.user = user;
         this.image = image;
+        this.status = status;
         this.createdDT = new Date();
     }
 

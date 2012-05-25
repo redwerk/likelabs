@@ -5,7 +5,7 @@ import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
-import com.redwerk.likelabs.application.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;

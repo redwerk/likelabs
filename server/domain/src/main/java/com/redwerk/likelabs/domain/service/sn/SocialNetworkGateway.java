@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.sn;
+package com.redwerk.likelabs.domain.service.sn;
 
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
@@ -31,7 +31,7 @@ public interface SocialNetworkGateway {
      * @param publisher publisher account in the social account
      * @param message text of the message
      */
-    public void postUserMessage(UserSocialAccount publisher, String message);
+    public void postUserMessage(UserSocialAccount publisher, String message, byte[] image);
 
     /**
      * Post message to the company page in the social network
@@ -39,7 +39,7 @@ public interface SocialNetworkGateway {
      * @param publisher publisher in the social account
      * @param message text of the message
      */
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message);
+    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, byte[] image);
 
     /**
      * Checks if user account has administrative privileges for the company page in social network

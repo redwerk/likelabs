@@ -1,8 +1,9 @@
 package com.redwerk.likelabs.domain.model.company;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
-import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.review.Review;
+import com.redwerk.likelabs.domain.model.review.ReviewRegistrationAgent;
+import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -186,6 +187,14 @@ public class Company {
 
     public void clearSampleReviews() {
         sampleReviews.clear();
+    }
+    
+    // reviews
+    
+    public void registerReview(Review review, ReviewRegistrationAgent registrationAgent) {
+        if (!moderateReviews) {
+            registrationAgent.setReviewStatus(review, ReviewStatus.APPROVED);
+        }
     }
 
     // overrides

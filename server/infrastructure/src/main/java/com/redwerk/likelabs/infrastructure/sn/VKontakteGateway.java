@@ -1,8 +1,8 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
-import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
-import com.redwerk.likelabs.application.sn.exception.*;
+import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
+import com.redwerk.likelabs.domain.service.sn.exception.*;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
@@ -94,7 +94,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message) {
+    public void postUserMessage(UserSocialAccount publisher, String message, byte[] image) {
         try {
             String url = MessageFormat.format(API_POST_USER_MESSAGE_TEMPLATE, publisher.getAccountId(), URLEncoder.encode(message, "UTF-8"), publisher.getAccessToken());
             String data = requestApiData(url);
@@ -117,7 +117,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message) {
+    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, byte[] image) {
         try {
             String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE,  "-" + page.getPageId(), URLEncoder.encode(message, "UTF-8"), publisher.getAccessToken());
             String data = requestApiData(url);

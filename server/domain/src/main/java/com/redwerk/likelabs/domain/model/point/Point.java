@@ -1,13 +1,13 @@
 package com.redwerk.likelabs.domain.model.point;
 
 import com.redwerk.likelabs.domain.model.company.Company;
+import com.redwerk.likelabs.domain.model.review.Review;
+import com.redwerk.likelabs.domain.model.review.ReviewRegistrationAgent;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "point")
@@ -74,7 +74,13 @@ public class Point {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
+    // reviews
+
+    public void registerReview(Review review, ReviewRegistrationAgent registrationAgent) {
+        company.registerReview(review, registrationAgent);
+    }
+
     // overrides
 
     @Override

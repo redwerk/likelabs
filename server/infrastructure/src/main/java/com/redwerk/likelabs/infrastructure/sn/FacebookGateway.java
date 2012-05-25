@@ -1,14 +1,14 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
-import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
-import com.redwerk.likelabs.application.sn.exception.AccessTokenExpiredException;
-import com.redwerk.likelabs.application.sn.exception.ResourceAccessDeniedException;
-import com.redwerk.likelabs.application.sn.exception.SNConnectionFailedException;
-import com.redwerk.likelabs.application.sn.exception.SNGeneralException;
-import com.redwerk.likelabs.application.sn.exception.SNResourceType;
-import com.redwerk.likelabs.application.sn.exception.WrongAccessCodeException;
-import com.redwerk.likelabs.application.sn.exception.WrongPageUrlException;
+import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
+import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
+import com.redwerk.likelabs.domain.service.sn.exception.ResourceAccessDeniedException;
+import com.redwerk.likelabs.domain.service.sn.exception.SNConnectionFailedException;
+import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
+import com.redwerk.likelabs.domain.service.sn.exception.SNResourceType;
+import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessCodeException;
+import com.redwerk.likelabs.domain.service.sn.exception.WrongPageUrlException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
@@ -117,7 +117,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message) {
+    public void postUserMessage(UserSocialAccount publisher, String message, byte[] image) {
         
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(API_POST_USER_MESSAGE_URL);
@@ -136,7 +136,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message) {
+    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, byte[] image) {
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, page.getPageId()));
         postMethod.addParameter("message", message);

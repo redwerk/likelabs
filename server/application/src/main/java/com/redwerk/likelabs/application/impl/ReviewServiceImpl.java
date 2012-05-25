@@ -5,19 +5,22 @@ import com.redwerk.likelabs.application.dto.PhotoData;
 import com.redwerk.likelabs.application.dto.RecipientData;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
+import com.redwerk.likelabs.domain.model.photo.Photo;
+import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
+import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
+import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
+import com.redwerk.likelabs.domain.model.tablet.Tablet;
+import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
+
 import org.apache.commons.lang.time.DateUtils;
 
 @Service
@@ -28,6 +31,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TabletRepository tabletRepository;
+
+    @Autowired
+    private PhotoRepository photoRepository;
 
 
     @Override
@@ -105,9 +114,50 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review createReview(long tabletId, String userPhone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
+        Tablet tablet = tabletRepository.get(tabletId);
+        // get or create author
+        User author = getOrCreateReviewAuthor(phone);
+        // creates photos
+        Photo reviewPhoto = null;
+        for (PhotoData photoData: photos) {
+            Photo photo = new Photo(author, photoData.getStatus(), photoData.getImage());
+            if (photo.getStatus() == PhotoStatus.SELECTED) {
+                if (reviewPhoto != null) {
+                    throw new IllegalArgumentException("only one photo can be selected");
+                }
+                reviewPhoto = photo;
+            }
+            photoRepository.add(photo);
+        }
+        if (reviewPhoto == null) {
+            throw new IllegalArgumentException("review photo is not selected");
+        }
+        // create recipients
+        Set<Recipient> reviewRecipients = new HashSet<Recipient>();
+        for (RecipientData recipientData: recipients) {
+            reviewRecipients.add(new Recipient(recipientData.getType(), recipientData.getAddress()));
+        }
+        // create review with proper status
+        Point point = tablet.getPoint();
+        ReviewStatus status = point.getCompany().isModerateReviews() ? ReviewStatus.PENDING : ReviewStatus.APPROVED;
+        Review review = Review.createReview(author, point, text, reviewPhoto, reviewRecipients);
+        reviewRepository.add(review);
+        // publish in user sn ?
+        if (author.isPublishInSN()) {
+        }
+        // create events
+        // send notifications for recipients
+        return review;
     }
+    
+    private User getOrCreateReviewAuthor(String phone) {
+        User author = userRepository.find(phone); // or create
+        if (author == null) {
+        }
+        return author;
+    }
+
 
     @Override
     @Transactional

@@ -19,7 +19,7 @@ public interface ReviewService {
     Review getReview(long reviewId);
     
     
-    Review createReview(long tabletId, String userPhone, String text, List<PhotoData> photos, List<RecipientData> recipients);
+    Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients);
 
 
     void updateReview(long userId, long reviewId, String text);

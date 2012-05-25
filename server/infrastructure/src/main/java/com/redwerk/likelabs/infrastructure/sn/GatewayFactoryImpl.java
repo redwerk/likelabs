@@ -1,10 +1,8 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
-import com.redwerk.likelabs.application.sn.GatewayFactory;
-import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
-import com.redwerk.likelabs.application.sn.SocialNetworkGateway;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
-import java.util.jar.Attributes.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

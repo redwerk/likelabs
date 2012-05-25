@@ -16,7 +16,7 @@ import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMa
 import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
 import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.SmsService;
-import com.redwerk.likelabs.application.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;

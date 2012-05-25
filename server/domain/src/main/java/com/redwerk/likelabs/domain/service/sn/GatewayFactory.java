@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.sn;
+package com.redwerk.likelabs.domain.service.sn;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 

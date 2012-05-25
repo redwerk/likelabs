@@ -6,6 +6,7 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -63,20 +64,36 @@ public class Review {
     private Set<Recipient> recipients;
 
 
-    // constructors
+    // factory methods
 
-    public Review(String message, Photo photo, Point point, User author, Set<Recipient> recipients) {
+    public static Review createReview(User author, Point point, String message, Photo photo, Set<Recipient> recipients) {
+        if (author == null || point == null || message == null || photo == null || recipients == null) {
+            throw new IllegalArgumentException("createReview() parameters cannot be null");
+        }
         if (recipients.size() > MAX_RECIPIENTS_NUMBER) {
             throw new IllegalArgumentException("too many recipients for review");
         }
+        Review review = new Review(author, point, message, photo, recipients);
+        point.registerReview(review, new ReviewRegistrationAgent() {
+            @Override
+            public void setReviewStatus(Review review, ReviewStatus status) {
+                review.status = status;
+            }
+        });
+        return review;
+    }
+    
+    // constructors
+
+    protected Review(User author, Point point, String message, Photo photo, Set<Recipient> recipients) {
+        this.author = author;
+        this.point = point;
         this.message = message;
         this.photo = photo;
-        this.point = point;
-        this.author = author;
-        this.createdDT = new Date();
-        this.status = ReviewStatus.PENDING;
-        this.publishedInCompanySN = false;
         this.recipients = new HashSet<Recipient>(recipients);
+        this.status = ReviewStatus.PENDING;
+        this.createdDT = new Date();
+        this.publishedInCompanySN = false;
     }
 
     // accessors
@@ -152,6 +169,7 @@ public class Review {
         }
         this.status = status;
         markAsModerated(moderator);
+        // TODO: create event for owner if status == ReviewStatus.APPROVED
         return true;
     }
 

@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.sn.exception;
+package com.redwerk.likelabs.domain.service.sn.exception;
 
 public enum SNResourceType {
 

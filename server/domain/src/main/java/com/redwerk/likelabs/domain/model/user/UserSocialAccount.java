@@ -1,9 +1,14 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.review.Review;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
+import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -12,6 +17,8 @@ import javax.persistence.Enumerated;
 
 @Embeddable
 public class UserSocialAccount implements Comparable<UserSocialAccount> {
+    
+    private static final Logger LOGGER = Logger.getLogger(UserSocialAccount.class);
 
     @Enumerated(value = EnumType.ORDINAL)
     private SocialNetworkType type;
@@ -64,6 +71,20 @@ public class UserSocialAccount implements Comparable<UserSocialAccount> {
     public int compareTo(UserSocialAccount other) {
         int res = type.compareTo(other.type);
         return (res != 0) ? res: accountId.compareTo(other.accountId);
+    }
+    
+    // reviews publishing
+    
+    public boolean publishReview(Review review, GatewayFactory gatewayFactory) {
+        SocialNetworkGateway snGateway = gatewayFactory.getGateway(type);
+        try {
+            snGateway.postUserMessage(this, review.getMessage(), review.getPhoto().getImage());
+        }
+        catch (SNGeneralException e) {
+            LOGGER.error("cannot publish review in " + type, e);
+            return false;
+        }
+        return true;
     }
 
     // overrides
