@@ -5,7 +5,7 @@ import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.impl.registration.exception.AbsentSocialAccountException;
 import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
 import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
-import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.user.User;

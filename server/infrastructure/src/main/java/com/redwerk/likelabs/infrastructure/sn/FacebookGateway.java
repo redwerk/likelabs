@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
-import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
 import com.redwerk.likelabs.domain.service.sn.exception.ResourceAccessDeniedException;

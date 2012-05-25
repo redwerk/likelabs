@@ -15,8 +15,6 @@ import javax.persistence.Table;
 @DiscriminatorValue("s")
 class SmsRecipient extends Recipient {
 
-    private static final Logger LOGGER = Logger.getLogger(SmsRecipient.class);
-
     private String phone;
 
 
@@ -27,16 +25,8 @@ class SmsRecipient extends Recipient {
 
     @Override
     protected boolean sendNotification(RecipientNotifier notifier) {
-        try {
-            Review review = getReview();
-            notifier.notifyBySms(phone, review.getId(), review.getAuthor().getName());
-        }
-        // TODO: use concrete exception class
-        catch (Exception e) {
-            LOGGER.error("cannot notify review recipient by SMS " + phone, e);
-            return false;
-        }
-        return true;
+        Review review = getReview();
+        return notifier.notifyBySms(phone, review.getId(), review.getAuthor().getName());
     }
 
     // overrides

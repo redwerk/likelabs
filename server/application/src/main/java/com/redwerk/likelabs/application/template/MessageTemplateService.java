@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.messaging;
+package com.redwerk.likelabs.application.template;
 
 
 public interface MessageTemplateService {

@@ -1,7 +1,8 @@
 package com.redwerk.likelabs.infrastructure.template;
 
-import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.template.MessageTemplateService;
 import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.MessageSource;

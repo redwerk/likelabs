@@ -15,8 +15,6 @@ import javax.persistence.Table;
 @DiscriminatorValue("e")
 class EmailRecipient extends Recipient {
 
-    private static final Logger LOGGER = Logger.getLogger(EmailRecipient.class);
-
     private String email;
 
 
@@ -27,16 +25,8 @@ class EmailRecipient extends Recipient {
 
     @Override
     protected boolean sendNotification(RecipientNotifier notifier) {
-        try {
-            Review review = getReview();
-            notifier.notifyByEmail(email, review.getId(), review.getAuthor().getName());
-        }
-        // TODO: use concrete exception class
-        catch (Exception e) {
-            LOGGER.error("cannot notify review recipient by email " + email, e);
-            return false;
-        }
-        return true;
+        Review review = getReview();
+        return notifier.notifyByEmail(email, review.getId(), review.getAuthor().getName());
     }
 
     // overrides

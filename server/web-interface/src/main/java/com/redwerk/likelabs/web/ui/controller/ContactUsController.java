@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.web.ui.controller;
 
 import com.redwerk.likelabs.application.messaging.EmailService;
-import com.redwerk.likelabs.application.messaging.MessageTemplateService;
+import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.web.ui.controller.dto.ContactUsMessageDto;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;

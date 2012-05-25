@@ -3,6 +3,8 @@ package com.redwerk.likelabs.application.impl.registration;
 import java.util.List;
 import java.util.Set;
 
+import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.service.UserRegistrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +16,6 @@ import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUs
 import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
 import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
-import com.redwerk.likelabs.application.messaging.MessageTemplateService;
 import com.redwerk.likelabs.application.messaging.SmsService;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.company.Company;
@@ -28,7 +29,7 @@ import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 
 
 @Service
-public class RegistrationServiceImpl implements RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService, UserRegistrator {
 
     private static final String MSG_SMS_REG = "message.sms.registration";
 
@@ -60,6 +61,22 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (userRepository.find(phone) != null) {
             throw new DuplicatedUserException(phone);
         }
+        sendRegistrationMessage(phone);
+    }
+
+    @Override
+    @Transactional
+    public User registerUser(String phone) {
+        if (userRepository.find(phone) != null) {
+            throw new DuplicatedUserException(phone);
+        }
+        User user = new UserFactory().createUser(phone, passwordGenerator.getPassword(phone));
+        userRepository.add(user);
+        sendRegistrationMessage(phone);
+        return user;
+    }
+
+    private void sendRegistrationMessage(String phone) {
         String msg = messageTemplateService.getMessage(
                 MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN), passwordGenerator.getPassword(phone));
         smsService.sendMessage(phone, msg);

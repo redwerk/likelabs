@@ -2,8 +2,8 @@ package com.redwerk.likelabs.domain.service;
 
 public interface RecipientNotifier {
     
-    void notifyBySms(String email, long reviewId, String authorName);
+    boolean notifyBySms(String email, long reviewId, String authorName);
 
-    void notifyByEmail(String email, long reviewId, String authorName);
+    boolean notifyByEmail(String email, long reviewId, String authorName);
 
 }
