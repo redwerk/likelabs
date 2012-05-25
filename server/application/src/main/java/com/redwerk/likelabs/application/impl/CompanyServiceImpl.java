@@ -42,7 +42,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private static final String APP_DOMAIN_MSG =  "app.domain";
 
-    private static final String ADMIN_ACTIVATION_LINK_TEMPLATE = "{0}/admincompany/activate?userId={1}&code={2}";
+    private static final String ADMIN_ACTIVATION_LINK_TEMPLATE = "{0}/companyadmin/activate?userId={1}&code={2}";
 
     private static final String ADMIN_REGISTRATION_SMS_MSG = "message.sms.registration";
 

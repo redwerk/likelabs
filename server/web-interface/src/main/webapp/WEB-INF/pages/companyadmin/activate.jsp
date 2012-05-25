@@ -7,7 +7,7 @@
         <td class="body">
         <c:choose>
             <c:when test="${empty errorcode}">
-            <form action="/admincompany/activate" method="POST">
+            <form action="/companyadmin/activate" method="POST">
                 <div>
                     <div class="field">
                         Activation code was sent to your phone. Please enter received code here:
@@ -21,7 +21,7 @@
                     <input type="hidden" name="userId" value="<c:out value='${id}'/>" />
                     <input type="hidden" name="code" value="<c:out value='${activatecode}'/>" />
                     <div class="field">
-                        <input type="submit" value="Activate" style="width: 187px;"/>
+                        <button class="btn btn_success save" type="submit" style="">Activate</button>
                     </div>
                 </div>
             </form>

@@ -104,14 +104,14 @@ public class SignUpController {
     public String registerPost(ModelMap model, HttpServletRequest request, @RequestParam(value = "phone", required = true) String phone,
             @RequestParam(value = "countryCode", required = true) String countryCode,
             @RequestParam(value = "tos", required = true) String tos) {
-        phone = countryCode.concat(phone);
-        if (!phoneValidator.isValid(phone)) {
+        String fullPhone = countryCode.concat(phone);
+        if (StringUtils.isBlank(phone) || !phoneValidator.isValid(fullPhone)) {
             return startRedirect(PARAM_ERROR_BAD_PHONE);
         }
         HttpSession session = request.getSession(true);
-        session.setAttribute(ATTRIBUTE_SESSION_PHONE, countryCode.concat(phone));
+        session.setAttribute(ATTRIBUTE_SESSION_PHONE, fullPhone);
         try {
-            registrationService.createUser(countryCode.concat(phone));
+            registrationService.createUser(fullPhone);
         } catch (DuplicatedUserException e) {
             log.error(e.getMessage());
             return startRedirect(PARAM_ERROR_DUPLICATED_USER);

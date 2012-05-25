@@ -174,7 +174,7 @@
                                     <tr>
                                         <td colspan="2" style="text-align: center; padding-top: 30px;">
                                             <button class="btn btn_success save" type="submit">Submit</button>
-                                            <button class="btn btn_success save" type="button" onclick="$('#add_administrator_dialog').dialog('close')">Cancel</button>
+                                            <button class="btn btn-info save" type="button" onclick="$('#add_administrator_dialog').dialog('close')">Cancel</button>
                                         </td>
                                     </tr>
                                 </table>
