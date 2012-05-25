@@ -4,14 +4,18 @@
 
 @interface LoginController()
 @property (retain, nonatomic) RootController* rootController;
+@property (retain, nonatomic) UIAlertView * alertLogout;
 @end
 
 @implementation LoginController
+
+NSString *const kLogoutViewDidDismiss = @"LogoutViewDidDismiss";
 
 @synthesize inputCode = _inputCode;
 @synthesize inputPassword = _inputPassword;
 @synthesize submitButton = _submitButton;
 @synthesize rootController = _rootController;
+@synthesize alertLogout = _alertLogout;
 
 NSString *bgLandscape = @"bg_landscape.png";
 NSString *bgPortrait = @"bg_portrait.png";
@@ -24,8 +28,17 @@ NSString *bgPortrait = @"bg_portrait.png";
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self willRotateToInterfaceOrientation:[self interfaceOrientation] duration:0];
+}
+
 -(void)viewDidLoad {   
     [super viewDidLoad];    
+    
+    self.view.frame = [UIScreen mainScreen].bounds;
+    
     UIColor *background = [[UIColor alloc] initWithPatternImage:
                            [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
@@ -40,6 +53,7 @@ NSString *bgPortrait = @"bg_portrait.png";
     self.inputPassword = nil;
     self.submitButton = nil;
     self.rootController = nil;
+    self.alertLogout = nil;
 }
 
 - (void)dealloc {
@@ -47,6 +61,7 @@ NSString *bgPortrait = @"bg_portrait.png";
     [_inputPassword release];
     [_submitButton release];
     [_rootController release];
+    [_alertLogout release];
     [super dealloc];
 }
 
@@ -86,10 +101,38 @@ NSString *bgPortrait = @"bg_portrait.png";
         [self.rootController switchToController:@"SplashScreenController"];
     } else {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 
-                                                        delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
         [alert release];   
     }    
+}
+
+- (IBAction)logout:(id)sender
+{
+    LoginService *loginService = [[LoginService alloc] init];
+    BOOL loginSuccessfull = [loginService checkLogout:self.inputCode.text andPassword:self.inputPassword.text];
+    [loginService release];
+    
+    if (loginSuccessfull) {
+        exit(0);
+    } else {
+        _alertLogout = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 
+                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [_alertLogout show];
+    }    
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (alertView == self.alertLogout)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kLogoutViewDidDismiss object:nil];
+    }
+}
+
+- (void)setSubmitButtonName:(NSString *)name
+{
+    [self.submitButton setTitle:name forState:UIControlStateNormal];
 }
 
 @end
