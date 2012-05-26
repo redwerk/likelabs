@@ -8,6 +8,7 @@ import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
 import com.redwerk.likelabs.domain.model.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,9 +32,17 @@ public class SecurityUserDetailsService implements UserDetailsService {
     private CompanyService CompanyService;
 
     @Override
-    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException, DataAccessException {
+    public UserDetails loadUserByUsername(String idOrPhone) throws UsernameNotFoundException, DataAccessException {
 
-        User user = userService.findUser(phone);
+        User user;
+        if (isPhone(idOrPhone)) {
+            user = userService.findUser(idOrPhone);
+        } else {
+            if (!StringUtils.isNumeric(idOrPhone)) {
+                throw new UsernameNotFoundException(null);
+            }
+            user = userService.getUser(Long.parseLong(idOrPhone));
+        }
         if (user == null) {
             throw new UsernameNotFoundException(null);
         }
@@ -51,6 +60,12 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (CompanyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getCount() > 0 && user.isActive()) {
             authorities.add(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()));
         }
-        return new org.springframework.security.core.userdetails.User(user.getPhone(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getId().toString(), user.getPassword(), authorities);
+   }
+
+   private boolean isPhone(String phone) {
+            if (!phone.startsWith("+"))
+                return false;
+            return true;
    }
 }

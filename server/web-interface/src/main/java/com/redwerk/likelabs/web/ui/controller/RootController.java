@@ -72,7 +72,7 @@ public class RootController {
             long id = Long.parseLong(userId);
             registrationService.confirmEmail(id, email, confirmCode);
             User user = userService.getUser(id);
-            authenticateUser(request, user.getPhone(), user.getPassword());
+            authenticateUser(request, user.getId(), user.getPassword());
         } catch (NotConfirmMailException e) {
             log.error(e,e);
             model.addAttribute("error", true);
@@ -95,8 +95,8 @@ public class RootController {
         return VIEW_FAQ;
     }
 
-    private void authenticateUser(HttpServletRequest request, String phone, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
+    private void authenticateUser(HttpServletRequest request, Long userId, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(String.valueOf(userId), password);
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);
         authenticationToken.setDetails(details);
         Authentication fullauth = authenticationManager.authenticate(authenticationToken);

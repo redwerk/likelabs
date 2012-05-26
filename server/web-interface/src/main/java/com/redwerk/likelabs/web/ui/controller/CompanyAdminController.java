@@ -49,7 +49,7 @@ public class CompanyAdminController {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profileGet(ModelMap model) {
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         model.addAttribute("profile", new ProfileData(user.getPhone(), user.getPassword(), user.getEmail()));
         return VIEW_PROFILE;
     }
@@ -86,7 +86,7 @@ public class CompanyAdminController {
 
         ModelMap modelMap = new ModelMap();
 
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         Report<CompanyReportItem> companiesResult = companyService.getCompanies(user.getId(), new Pager(offset, count));
 
         modelMap.put("companies", buildCompaniesJson(companiesResult.getItems()));
@@ -119,7 +119,7 @@ public class CompanyAdminController {
             statusFilter = ReviewStatus.valueOf(statusFilterParam);
         }
 
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
 
         int offset = (pageId - 1) * REVIEW_LIST_PAGE_SIZE;
         int count = REVIEW_LIST_PAGE_SIZE;
@@ -149,7 +149,7 @@ public class CompanyAdminController {
             @RequestParam(value = "status", defaultValue = "") String newStatusParam) {
         ModelMap modelMap = new ModelMap();
         try {
-            User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
             ReviewStatus reviewStatus = ReviewStatus.valueOf(newStatusParam);
             reviewService.updateStatus(user.getId(), reviewId, reviewStatus, false, false);
             modelMap.put("stasus", "OK");

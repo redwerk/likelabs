@@ -28,7 +28,6 @@ import java.util.Set;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,7 +255,7 @@ public class CompanyProfileController {
     }
 
     @RequestMapping(value = "/logo", method = RequestMethod.POST)
-    public String uploadLogo(HttpSession session, @PathVariable Integer companyId, @RequestParam("logo") MultipartFile image) {
+    public String uploadLogo(HttpSession session, @PathVariable Long companyId, @RequestParam("logo") MultipartFile image) {
         try {
             Map<String,Object> logo = new HashMap<String, Object>();
             logo.put("companyId", companyId);

@@ -100,14 +100,13 @@ public class SignUpController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerPost(ModelMap model, HttpServletRequest request, @RequestParam(value = "phone", required = true) String phone,
+    public String registerPost(ModelMap model, HttpSession session, @RequestParam(value = "phone", required = true) String phone,
             @RequestParam(value = "countryCode", required = true) String countryCode,
             @RequestParam(value = "tos", required = true) String tos) {
         String fullPhone = countryCode.concat(phone);
         if (StringUtils.isBlank(phone) || !phoneValidator.isValid(fullPhone)) {
             return startRedirect(PARAM_ERROR_BAD_PHONE);
         }
-        HttpSession session = request.getSession(true);
         session.setAttribute(ATTRIBUTE_SESSION_PHONE, fullPhone);
         try {
             registrationService.createUser(fullPhone);
@@ -130,10 +129,9 @@ public class SignUpController {
     }
 
     @RequestMapping(value = "/end", method = RequestMethod.POST)
-    public String end(ModelMap model, HttpServletRequest request, @RequestParam(value = "password", required = true) String password) {
+    public String end(ModelMap model,HttpSession session, HttpServletRequest request, @RequestParam(value = "password", required = true) String password) {
 
-        HttpSession session = request.getSession(true);
-        String phone = (String) session.getAttribute("phone");
+        String phone = (String) session.getAttribute(ATTRIBUTE_SESSION_PHONE);
         if (phone == null) {
             return startRedirect(null);
         }
@@ -143,7 +141,8 @@ public class SignUpController {
             log.error(e,e);
             return registerRedirect(INCORECT_PASSWORD);
         }
-        authenticatUser(request, phone, password);
+        User user = userService.findUser(phone);
+        authenticatUser(request, user.getId(), password);
         return VIEW_SINGNUP_END;
     }
 
@@ -162,7 +161,7 @@ public class SignUpController {
             model.addAttribute("error", error);
         }
         
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         List<UserSocialAccount> accounts = user.getAccounts();
         for (UserSocialAccount a : accounts) {
             model.addAttribute(a.getType().toString(), true);
@@ -180,7 +179,7 @@ public class SignUpController {
         if (StringUtils.isBlank(code)) {
             return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
         }
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         userService.attachAccount(user.getId(), SocialNetworkType.FACEBOOK, code);
         return endRedirect(null);
     }
@@ -194,7 +193,7 @@ public class SignUpController {
         if (StringUtils.isBlank(code)) {
             return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
         }
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         userService.attachAccount(user.getId(), SocialNetworkType.VKONTAKTE, code);
         return endRedirect(null);
     }
@@ -202,7 +201,7 @@ public class SignUpController {
     @RequestMapping(value = "/unlinkaccount", method = RequestMethod.GET)
     public String unlinkSocialAccount(ModelMap model, @RequestParam(value = "account", required = true) String account) {
 
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         List<UserSocialAccount> accounts = user.getAccounts();
         if (account.equals(PARAM_FACEBOOK_ACCOUNT)) {
             userService.detachAccount(user.getId(), SocialNetworkType.FACEBOOK);
@@ -219,14 +218,14 @@ public class SignUpController {
             return endRedirect(PARAM_ERROR_INVALIDE_EMAIL);
         }
         try {
-            User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
             userService.updateEmail(user.getId(), email);
         } catch (EmailMessagingException e) {
             log.error(e,e);
             return endRedirect(PARAM_ERROR_NO_SEND_EMAIL);
         }
         model.addAttribute("email_success", "Activation email was sent to the specified address. ");
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         List<UserSocialAccount> accounts = user.getAccounts();
         for (UserSocialAccount a : accounts) {
             model.addAttribute(a.getType().toString(), true);
@@ -234,9 +233,9 @@ public class SignUpController {
         return VIEW_SINGNUP_END;
     }
 
-    private void authenticatUser(HttpServletRequest request, String phone, String password) {
+    private void authenticatUser(HttpServletRequest request, Long userId, String password) {
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(String.valueOf(userId), password);
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);
         authenticationToken.setDetails(details);
         Authentication fullauth = authenticationManager.authenticate(authenticationToken);

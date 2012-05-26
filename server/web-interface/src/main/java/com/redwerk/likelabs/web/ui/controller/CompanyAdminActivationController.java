@@ -128,7 +128,7 @@ public class CompanyAdminActivationController {
         }
         User user = userService.getUser(id);
         if (user.isActive()) {
-            authenticateUser(request, user.getPhone(), user.getPassword());
+            authenticateUser(request, user.getId(), user.getPassword());
             return "redirect:/companyadmin/activate/success?error=" + PARAM_ERROR_ALREADY_ACTIVE;
         }
         if (error != null) {
@@ -165,7 +165,7 @@ public class CompanyAdminActivationController {
                 return "redirect:/";
             }
             registrationService.activateCompanyAdmin(user.getId());
-            authenticateUser(request, user.getPhone(), user.getPassword());
+            authenticateUser(request, user.getId(), user.getPassword());
         } catch (AbsentSocialAccountException e) {
             return endRedirect(PARAM_ERROR_NOT_ADMIN);
         } catch (AbsentCompanyException e) {
@@ -224,8 +224,7 @@ public class CompanyAdminActivationController {
     @RequestMapping(value = "/unlinkaccount", method = RequestMethod.GET)
     public String unlinkSocialAccount(ModelMap model, @RequestParam(value = "account", required = true) String account) {
 
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        List<UserSocialAccount> accounts = user.getAccounts();
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         try {
             if (account.equals(PARAM_FACEBOOK_ACCOUNT)) {
                 userService.detachAccount(user.getId(), SocialNetworkType.FACEBOOK);
@@ -251,9 +250,9 @@ public class CompanyAdminActivationController {
         return "redirect:/companyadmin/activate/end";
     }
 
-    private void authenticateUser(HttpServletRequest request, String phone, String password) {
+    private void authenticateUser(HttpServletRequest request, Long userId, String password) {
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(String.valueOf(userId), password);
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);
         authenticationToken.setDetails(details);
         Authentication fullauth = authenticationManager.authenticate(authenticationToken);

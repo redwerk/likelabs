@@ -16,7 +16,6 @@ import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
 import org.apache.commons.lang.StringUtils;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,11 +47,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/public")
 public class PublicContentController {
 
-    public static final int ITEMS_PER_PAGE_COMPANY = 3;
-    public static final int ITEMS_PER_PAGE_POINT = 5;
+    public static final int ITEMS_PER_PAGE_COMPANY = 10;
+    public static final int ITEMS_PER_PAGE_POINT = 10;
     public static final int ITEMS_PER_PAGE_REVIEW = 8;
-    //private static final String LOGO_LINK_TEMPLATE = "/company/{0}/logo";
-    //private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/company/review/{0}/photo";
     private static final String VIEW_COMPANY_LIST = "companies_list";
     private static final String VIEW_POINTS_LIST = "points_list";
     private static final String VIEW_REVIEWS_LIST = "review_list";
@@ -142,7 +139,7 @@ public class PublicContentController {
     }
 
     @RequestMapping(value = "/{companyId}/reviews", method = RequestMethod.GET)
-    public String reviewsCompany(ModelMap model, @PathVariable Integer companyId) {
+    public String reviewsPublic(ModelMap model, @PathVariable Integer companyId) {
 
         Company company = companyService.getCompany(companyId);
         Report<Point> report = pointService.getPoints(companyId, Pager.ALL_RECORDS);
@@ -156,7 +153,7 @@ public class PublicContentController {
 
     @RequestMapping(value = "/{companyId}/reviews/data", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap reviewsCompanyData(@PathVariable Integer companyId,
+    public ModelMap reviewsPublicData(@PathVariable Integer companyId,
             @RequestParam("point") Long point,
             @RequestParam("feed_type") String feedType,
             @RequestParam("date_to") Date toDate,

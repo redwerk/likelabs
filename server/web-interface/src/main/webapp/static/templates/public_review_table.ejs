@@ -1,0 +1,31 @@
+<%
+    for (var key=0; key<feeds.length;key++) {
+        var feed = feeds[key];
+        var date = new Date(feed.date);
+        var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+%>
+<div class="left" onmouseover="$(this).find('.hint').removeClass('hidden')" onmouseout="$(this).find('.hint').addClass('hidden');" id="feed_item_<%=feed.id%>">
+    <div class="hidden hint">
+        <table cellpadding="0" cellspacing="0" style="width: 292px;" summary="">
+            <tr class="black_10">
+                <td>Name:</td>
+                <td><%=feed.name%></td>
+            </tr>
+            <tr class="black_20">
+                <td>Taken:</td>
+                <td><%=date_str%></td>
+            </tr>
+            <tr class="black_10">
+                <td>Point name:</td>
+                <td><%=feed.point%></td>
+            </tr>
+        </table>
+    </div>
+    <div class="feed_container <%= key%2==0? 'feed_left_block' : '' %>">
+        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=feed.id%>/photo" alt=""/></div>
+        <div class="description"><%= feed.message %></div>
+    </div>
+</div>
+<%
+    }
+%>

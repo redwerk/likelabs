@@ -15,28 +15,28 @@
             callback: pageSelectCallback
         }
     }
-    
-    
+
+
     $(document).ready(function(){
         $("#filter_date_from").datepicker({dateFormat: "dd/mm/yy"});
         $("#filter_date_to").datepicker({dateFormat: "dd/mm/yy"});
         initPager();
-        
+
         $("input[name=status_filter]").change(function(){
             updateOptions();
             updateData();
         });
-        
+
         $(".button_filter").click(function(){
             $(".button_filter").removeClass("active");
             $(this).toggleClass("active");
         })
-        
-        
+
+
         var filter_status = $("input[name=status_filter]:checked").val();
         filter_status = filter_status? filter_status : "all";
         $("label[for=status_" + filter_status + "]").click();
-        
+
     });
 
 
@@ -55,7 +55,7 @@
         page_number: 0,
         status: null
     };
-    
+
     function pageSelectCallback(page_index, jq) {
         options.page_number = page_index;
         if (force_update)
@@ -78,10 +78,10 @@
     }
 
     function fillTable(data) {
-        var template = new EJS({url: "/static/templates/public_review_table.ejs"}).render({feeds: data});
+        var template = new EJS({url: "/static/templates/company_review_table.ejs"}).render({feeds: data});
         $("#feeds_table").html(template);
     }
-    
+
     function changeFilter() {
         options.date_from = $("#filter_date_from").val();
         options.date_to = $("#filter_date_to").val();
@@ -90,12 +90,12 @@
         options.page_number = 0;
         initPager();
     }
-    
+
     function changeSort() {
         options.sort_by = $("#sort_by").val();
         updateData();
     }
-    
+
     function updateOptions() {
         options.date_from = $("#filter_date_from").val();
         options.date_to = $("#filter_date_to").val();
@@ -105,11 +105,21 @@
         options.sort_by = $("#sort_by").val();
         options.status = $("input[name=status_filter]:checked").val();
     }
+
+    function updateFeed(reviewId, name, value) {
+        $.get("/public/" + companyId + "/reviews/" + reviewId + "/data?" + name + "=" + value, function(response){
+            if (response.error) {
+                console.warn(response.error);
+                return;
+            }
+            updateData();
+        });
+    }
 </script>
                                 <table cellpadding="0" cellspacing="0" style="width: 100%;" summary="" class="content_block">
                                     <tr>
                                         <td style="height: 85px;">
-                                            <div class="title" style="position: relative; float: left;">Feed for ${company.name}</div>
+                                            <div class="title" style="position: relative; float: left;">Reviews for ${company.name}</div>
                                             <div style="position: relative; float: right; padding-right: 5px;">
                                                 <select onchange="changeSort()" id="sort_by" style="width: 150px">
                                                     <option value="">Sort By</option>
@@ -142,7 +152,7 @@
                                                                 <option value="">All</option>
                                                                 <c:forEach varStatus="status" var="point" items="${points}">
                                                                     <option value="${point.id}">${point.address.addressLine1}</option>
-                                                                </c:forEach> 
+                                                                </c:forEach>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -155,6 +165,26 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <sec:authorize access="hasRole('ROLE_COMPANY_ADMIN')">
+                                                    <div style="margin-top: 15px; margin-left: 10px;">
+                                                        <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
+                                                        <input id="status_pending" type="radio" name="status_filter" value="pending"/>
+                                                        <input id="status_approved" type="radio" name="status_filter" value="approved"/>
+                                                        <input id="status_archived" type="radio" name="status_filter" value="archived"/>
+                                                        <input id="status_flagged" type="radio" name="status_filter" value="flagged"/>
+                                                        <input id="status_published" type="radio" name="status_filter" value="published"/>
+                                                        <input id="status_promo" type="radio" name="status_filter" value="promo"/>
+
+
+                                                        <label class="button_filter" for="status_all">All</label>
+                                                        <label class="button_filter" for="status_pending">Pending</label>
+                                                        <label class="button_filter" for="status_approved">Approved</label>
+                                                        <label class="button_filter" for="status_archived">Archived</label>
+                                                        <label class="button_filter" for="status_flagged">Flagged</label>
+                                                        <label class="button_filter" for="status_published">Published</label>
+                                                        <label class="button_filter" for="status_promo">Favourites</label>
+                                                    </div>
+                                                </sec:authorize>
                                             </div>
                                         </td>
                                     </tr>

@@ -57,7 +57,7 @@
     }
    
     function fillTable(data) {
-        var template = new EJS({url: "/static/templates/point_list.ejs"}).render({points: data});
+        var template = new EJS({url: "/static/templates/point_table.ejs"}).render({points: data});
         $("#point_list_table").html(template);
     }
 </script>

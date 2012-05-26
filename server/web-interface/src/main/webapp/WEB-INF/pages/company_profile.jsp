@@ -4,29 +4,24 @@
     $(document).ready(function(){
         $("#add_administrator_dialog").dialog({ autoOpen: false, title: "Add administrator", close: function(){document.getElementById("add_administrator_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
         $("#add_social_page_dialog").dialog({ autoOpen: false, title: "Add social page", close: function(){document.getElementById("add_social_page_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
-        $("#error_dialog_admin").dialog({ autoOpen: false, title: "Error added company administrator", modal: true, width: 400, height: 150});
-        $("#error_dialog_social").dialog({ autoOpen: false, title: "Error added social page", modal: true, width: 400, height: 150});
     })
     function addAdmin() {
         $.post("/company/" + companyId + "/profile/admin", $("#add_administrator_form").serialize(), function(response){
             if (!response.success) {
-                $('#error_message_admin').html("");
-                for (var key = 0 ;key < response.errors.length; key++) {
-                    $('#error_message_admin').html($('#error_message_admin').html() + response.errors[key] + "<br/>");
-                }
-                $('#error_dialog_admin').dialog('open');
+                errorsDialog("Error adding administrator", response.errors);
                 return;
             }
+            $("#add_administrator_dialog").dialog("close");
             window.location.reload();
         });
     }
     function addPage() {
         $.post("/company/" + companyId + "/profile/page", $("#add_social_page_form").serialize(), function(response){
             if (!response.success) {
-                $('#error_message_social').html(response.error);
-                $('#error_dialog_social').dialog('open');
+                errorDialog("Error adding social page", response.error);
                 return;
             }
+            $("#add_social_page_dialog").dialog("close");
             window.location.reload();
         });
     }
@@ -36,46 +31,44 @@
     function deleteAdmin(id) {
         confirmDialog("Delete administrator company", "Are you sure?",function(){
             $.ajax({
-            url: "/company/" + companyId + "/profile/admin/" + id,
-            type: "DELETE",
-            success: function(response){
-                if (!response.success) {
-                    $('#eroor_message_admin').html(response.error);
-                    $('#error_dialog_admin').dialog('open');
-                    return;
+                url: "/company/" + companyId + "/profile/admin/" + id,
+                type: "DELETE",
+                success: function(response){
+                    if (!response.success) {
+                        errorDialog("Error deleting administrator", response.error);
+                        return;
+                    }
+                    window.location.reload();
                 }
-                window.location.reload();
-            }
-        })});
+            })});
     }
     function deletePoint(id) {
         confirmDialog("Delete point", "Are you sure?",function(){
             $.ajax({
-            url: "/company/" + companyId + "/profile/point/" + id,
-            type: "DELETE",
-            success: function(response){
-                if (!response.success) {
-                    //TODO
-                    return;
+                url: "/company/" + companyId + "/profile/point/" + id,
+                type: "DELETE",
+                success: function(response){
+                    if (!response.success) {
+                        errorDialog("Error deleting point", response.error);
+                        return;
+                    }
+                    window.location.reload();
                 }
-                window.location.reload();
-            }
-        })});
+            })});
     }
     function deletePage(id) {
         confirmDialog("Delete social page", "Are you sure?",function(){
             $.ajax({
-            url: "/company/" + companyId + "/profile/page/" + id,
-            type: "DELETE",
-            success: function(response){
-                if (!response.success) {
-                    $('#eroor_message_social').html(response.error);
-                    $('#error_dialog_social').dialog('open');
-                    return;
+                url: "/company/" + companyId + "/profile/page/" + id,
+                type: "DELETE",
+                success: function(response){
+                    if (!response.success) {
+                        errorDialog("Error deleting page", response.error);
+                        return;
+                    }
+                    window.location.reload();
                 }
-                window.location.reload();
-            }
-        })});
+            })});
     }
 </script>
 <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
@@ -88,17 +81,17 @@
                 <tr>
                     <td>
                         <form:form method="POST" commandName="company" >
-                            <div class="label"><label for="">Name <form:errors path="name" cssClass="errorblock"/></label></div>
+                            <div class="label"><label for="">Name <form:errors path="name" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
                                 <form:input path="name" />
                             </div>
 
-                            <div class="label"><label for="">Phone <form:errors path="phone" cssClass="errorblock"/></label></div>
+                            <div class="label"><label for="">Phone <form:errors path="phone" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
                                 <form:input path="phone" />
                             </div>
 
-                            <div class="label"><label for="">Email <form:errors path="email" cssClass="errorblock"/></label></div>
+                            <div class="label"><label for="">Email <form:errors path="email" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
                                 <form:input path="email" />
                             </div>
@@ -182,7 +175,7 @@
                     </td>
                     <td style="text-align: center; vertical-align: top; padding-left: 40px; width: 260px;">
 
-                        <div class="logo" style="margin-left: 7px;"><img src="/company/${company.id}/profile/logo " alt="" width="217"/></div>
+                        <div class="logo" style="margin-left: 7px;"><img src="/company/${company.id}/profile/logo " alt="logo" width="217"/></div>
                         <div class="clear"></div>
                         <form method="POST" enctype="multipart/form-data" action="/company/${company.id}/profile/logo" id="logoForm">
                             <div style="position: relative;">
@@ -207,7 +200,7 @@
                             <c:forEach items="${socialPages}" var="page">
                                 <tr style="background-color: #fdfeff">
                                     <td><a href="${page.url}" target="_blank">${page.url}</a></td>
-                                    <td><a href="javascript:void(0);" onclick="deletePage(${page.pageId})"><img src="/static/images/delete.png" alt=""/></a></td>
+                                    <td><a href="javascript:void(0);" onclick="deletePage(${page.pageId})"><img src="/static/images/delete.png" alt="delete" title="Delete"/></a></td>
                                 </tr>
                             </c:forEach>
                         </table>
@@ -235,26 +228,6 @@
                                     </tr>
                                 </table>
                             </form>
-                        </div>
-                        <div id="error_dialog_admin" style="width: 400px;">
-                            <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
-                                <tr>
-                                    <td style="text-align: center"><span id="error_message_admin" class="errorblock"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center"><button class="btn btn_success save" type="button" onclick="$('#error_dialog_admin').dialog('close');$('#add_administrator_dialog').dialog('open');">OK</button></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div id="error_dialog_social" style="width: 400px;">
-                            <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
-                                <tr>
-                                    <td style="text-align: center"><span id="error_message_social" class="errorblock"/></td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center"><button class="btn btn_success save" type="button" onclick="$('#error_dialog_social').dialog('close');$('#add_social_page_dialog').dialog('open');">OK</button></td>
-                                </tr>
-                            </table>
                         </div>
             </table>
         </td>

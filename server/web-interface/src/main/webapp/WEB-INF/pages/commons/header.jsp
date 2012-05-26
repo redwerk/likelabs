@@ -29,6 +29,10 @@
     <sec:authorize access="not isAuthenticated()">
         <script type="text/javascript">
             function signIn() {
+                if ($('#username').val()[0] != "+") {
+                    $('#authfailed').html('<spring:message code="message.auth.failed"/>');
+                    return false;
+                }
                 var data = {
                     "j_username":$('#username').val(),
                     "j_password":$('#password').val(),
@@ -60,16 +64,29 @@
     </sec:authorize>
 
 <script type="text/javascript">
-    function confirmDialog (title, description, callback) {
+    function confirmDialog(title, description, callback) {
         $("#confirm_dialog").dialog({modal: true, autoOpen: false, title: title }); 
         $("#confirm_dialog #description").html(description);
         $("#confirm_dialog").dialog("open");
         $("#confirm_dialog_ok").click(function(){callback.call();$("#confirm_dialog").dialog("close")});
         $("#confirm_dialog_cancel").click(function(){$("#confirm_dialog").dialog("close")});
     }
+    function errorsDialog(title, errors) {
+        $("#error_dialog").dialog({modal: true, autoOpen: false, title: title, minHeight: 50 });
+        $('#error_message').html("");
+        for (var key = 0 ;key < errors.length; key++) {
+            $('#error_message').html($('#error_message').html() + errors[key] + "<br/>");
+        }
+        $('#error_dialog').dialog('open');
+    }
+    function errorDialog(title, error) {
+        $("#error_dialog").dialog({modal: true, autoOpen: false, title: title, minHeight: 50 });
+        $('#error_message').html(error);
+        $('#error_dialog').dialog('open');
+    }
 </script>
 </head>
-<body>
+    <body>
     <div id="confirm_dialog" style="display: none;">
         <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
             <tr>
@@ -83,11 +100,22 @@
             </tr>
         </table>
     </div>
+    <div id="error_dialog" style="display: none;">
+        <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
+            <tr>
+                <td style="text-align: center"><div id="error_message" class="errorblock"></div></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><button class="btn btn-info save" type="button" onclick="$('#error_dialog').dialog('close');">OK</button></td>
+            </tr>
+        </table>
+    </div>
+    <div class="container">
     <div id="sitewrapper">
         <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%" summary="">
             <tr>
                 <td class="header">
-                    <div class="header_logo left"><img src="/static/images/logo.png" width="162" height="40" alt="LikeLabs"/></div>
+                    <div class="header_logo left"><a href="/"><img src="/static/images/logo.png" width="162" height="40" alt="LikeLabs"/></a></div>
                     <div class="right signin_block">
                         <sec:authorize access="isAuthenticated()">
                             <div class="field">
@@ -146,14 +174,14 @@
                             <td class="left_menu" style="vertical-align: top;">
                                 <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/public">COMPANIES</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/1/reviews">COMPANY FEED</a></div>
+                                <div class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <!--<div  class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
+                            <%--<div  class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'tos'}">active</c:if>"><a href="/tos">TERMS OF SERVICE</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'faq'}">active</c:if>"><a href="/faq">FAQ</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item <c:if test="${page eq 'contact'}">active</c:if>"><a href="/contact">CONTACT US</a></div>-->
+                                <div class="menu_item <c:if test="${page eq 'contact'}">active</c:if>"><a href="/contact">CONTACT US</a></div> --%>
                             </td>
                             <td class="content" style="vertical-align: top;">
