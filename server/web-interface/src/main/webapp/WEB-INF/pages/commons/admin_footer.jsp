@@ -1,16 +1,16 @@
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div id="footer">
+
+                <div class="clear"></div>
+            </div><!-- End of #content -->
+            
+        </div><!-- End of #sitewrapper -->
+        <div class="clear"></div>
+        <div id="footer">
             <div class="conteiner">
                 <div class="footer-nav">
                     <div class="footer-inner">
                         <ul>
                             <li><a href="/">Home</a></li>
+                            <li><a href="/blog">Blog</a></li>
                             <li><a href="/about">About</a></li>
                             <li><a href="/faq">FAQ</a></li>
                             <li><a href="/tos">Terms</a></li>
@@ -36,5 +36,5 @@
                 </div>
             </div>
         </div>
-</body>
+    </body>
 </html>

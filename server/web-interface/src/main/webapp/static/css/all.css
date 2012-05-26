@@ -433,6 +433,10 @@ input, textarea {
     margin-bottom: 10px;
     background: none;
     height: auto;
+    cursor: default;
+}
+.social-buttons li:first-child:hover{
+    margin-left: 0;
 }
 
 .social-buttons h3{
@@ -445,6 +449,10 @@ input, textarea {
     background-image: url('../images/social-btns-bg.png');
     background-repeat: no-repeat;
     background-position: right top;
+    cursor: pointer;
+}
+.social-buttons li:hover {
+   margin-left:  1px;
 }
 
 .social-buttons li p, .social-buttons li a {
@@ -468,29 +476,30 @@ input, textarea {
     background-position: right top;   
 }
 
-.social-buttons li:hover{
-    padding-left: 1px; 
-}
 .social-buttons li a, .social-buttons li:hover a {
     text-decoration: none;
 }
 
 .social-buttons .linked{
      background-position: left top !important; 
+     cursor: default;
 }
-.social-buttons .linked:hover, .social-buttons li:hover:first-child {
-     padding-left: 0px; 
-}
+
 .social-buttons .linked p, .social-buttons .linked:hover p{
     color: #3d485f;
-    line-height: 27px;
-    padding-left: 50px;
+    line-height: 22px;
+    padding-left: 70px;
+    padding-top: 5px;
 }
 .social-buttons .linked a{
     display: inline;
     background-image: none;
     line-height: 14px;
+    padding-left: 10px;
     
+}
+.social-buttons .linked:hover{
+    margin-left: 0;
 }
 .social-buttons .linked a:hover{
     text-decoration: underline;
@@ -909,4 +918,112 @@ input:focus, textarea:focus {
 /* IE7 workaround (opacity disabled) */
 *+html .ui-state-disabled, *+html .ui-state-disabled a { color: silver; }
 a.ui-selectmenu:hover{text-decoration: none;}
+
+
+#footer{
+    position: relative;
+   width: 1172px;
+   margin: 0 auto;
+   border-left: 1px solid #A8C4D0;
+   border-right: 1px solid #A8C4D0;
+   border-top: 1px solid #666;
+   padding: 35px 0 80px;
+   background: url("../images/background_inner.png") repeat scroll 0 0 transparent;
+   font-size: 12px;
+   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3) ;
+}
+#footer .conteiner{
+    margin: 0 auto;
+    padding: 0 80px
+}
+#footer .footer-nav{
+    width: 650px;
+    margin-right: 70px;
+    float: left;
+    
+}
+#footer .footer-inner{
+     border-bottom: 1px solid #666;
+     padding-bottom: 10px;
+     margin-bottom: 10px;
+     text-transform: uppercase;
+}
+#footer .footer-nav ul{
+   
+}
+#footer li{
+    float: left;
+}
+
+
+
+#footer .footer-nav li a{
+    padding:  0 15px;
+}
+#footer .stay-connected{
+    width: 220px;
+    margin-right: 20px;
+    float: left;
+}
+#footer .contact-info li{
+    padding-left: 24px;
+    margin-left: 25px;
+    line-height: 18px;
+}
+#footer .contact-info li a{
+    padding: 0;
+}
+#footer .contact-info li:first-child{
+    margin-left: 0;
+}
+.contact-info .address{
+    background: url("../images/icon-address.png") no-repeat scroll 0 0 transparent;
+}
+.contact-info .phone{
+    background: url("../images/icon-phone.png") no-repeat scroll 0 1px transparent;
+}
+.contact-info .mail{
+    background: url("../images/icon-email-2.png") no-repeat scroll 0 4px transparent;
+}
+#footer .social-links li{
+   text-indent: -9999px;
+   margin-right: 10px;
+}
+#footer .social-links li a{
+    background: url("../images/social-icons.png") no-repeat scroll 0 0 transparent;
+    height: 16px;
+    width: 21px;
+    display: block;
+}
+#footer .social-links li.twitter a{
+    background-position: 0 -208px;
+    height: 15px;
+}
+#footer .social-links li.twitter a:hover{
+    background-position: 0 -193px;
+    height: 15px;
+}
+
+#footer .social-links li.facebook a{
+    background-position: 0 -160px;
+}
+#footer .social-links li.facebook a:hover{
+    background-position: 0 -144px;
+}
+
+#footer .social-links li.youtube a{
+    background-position: 0 -112px;
+    height: 15px;
+}
+#footer .social-links li.youtube a:hover{
+    background-position: 0 -97px;
+}
+
+#footer .social-links li.skype a{
+    background-position: 0 -63px;
+}
+#footer .social-links li.skype a:hover{
+    background-position: 0 -47px;
+}
+
 

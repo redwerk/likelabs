@@ -1,4 +1,4 @@
-<%@include  file="/WEB-INF/pages/admin_header.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/admin_header.jsp"%>
 <form id="formFilter" action="/" method="post" onsubmit="return false;">
     <div id="content">
     
@@ -173,4 +173,4 @@
     })();
     
 </script>
-<%@include  file="/WEB-INF/pages/admin_footer.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/admin_footer.jsp"%>

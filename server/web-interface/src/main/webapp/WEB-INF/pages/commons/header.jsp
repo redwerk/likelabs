@@ -83,10 +83,9 @@
             </tr>
         </table>
     </div>
-    <div class="container">
+    <div id="sitewrapper">
         <table cellpadding="0" cellspacing="0" style="height: 100%; width: 100%" summary="">
             <tr>
-                <td class="left_shadow" rowspan="2"><img src="/static/images/spacer.png" width="10" height="100%" alt=""/></td>
                 <td class="header">
                     <div class="header_logo left"><img src="/static/images/logo.png" width="162" height="40" alt="LikeLabs"/></div>
                     <div class="right signin_block">
@@ -126,7 +125,7 @@
                                             <label for="mem">Remember me</label>                                            
                                         </td>
                                         <td>
-                                            <div>New to LikeLabs? <a href="/signup/start/">Join now</a></div>
+                                            <div>New to LikeLabs? <b><a href="/signup/start/">Join now</a></b></div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -139,7 +138,6 @@
                         </sec:authorize>
                     </div>
                 </td>
-                <td class="right_shadow" rowspan="2"><img src="/static/images/spacer.png" width="10" height="100%" alt=""/></td>
             </tr>
             <tr>
                 <td class="content_container" style="vertical-align: top; height: 400px;">
@@ -150,12 +148,12 @@
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'company'}">active</c:if>" ><a href="/company/1/reviews">COMPANY FEED</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div  class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
+                                <!--<div  class="menu_item <c:if test="${page eq 'about'}">active</c:if>"><a href="/about">ABOUT US</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'tos'}">active</c:if>"><a href="/tos">TERMS OF SERVICE</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
                                 <div class="menu_item <c:if test="${page eq 'faq'}">active</c:if>"><a href="/faq">FAQ</a></div>
                                 <div class="menu_separator"><img src="/static/images/spacer.png" width="100%" height="1" alt=""/></div>
-                                <div class="menu_item <c:if test="${page eq 'contact'}">active</c:if>"><a href="/contact">CONTACT US</a></div>
+                                <div class="menu_item <c:if test="${page eq 'contact'}">active</c:if>"><a href="/contact">CONTACT US</a></div>-->
                             </td>
                             <td class="content" style="vertical-align: top;">

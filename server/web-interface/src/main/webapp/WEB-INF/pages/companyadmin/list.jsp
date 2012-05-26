@@ -1,4 +1,4 @@
-<%@include  file="/WEB-INF/pages/admin_header.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/admin_header.jsp"%>
 <div id="content">
     <h1>My Companies</h1>
     <div id="company-list">

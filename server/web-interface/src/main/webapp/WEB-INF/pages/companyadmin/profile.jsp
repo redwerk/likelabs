@@ -1,4 +1,4 @@
-<%@include file="/WEB-INF/pages/admin_header.jsp" %>
+<%@include file="/WEB-INF/pages/commons/admin_header.jsp" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <div id="content">
@@ -24,7 +24,7 @@
                 <input id="confirm_password" name="confirm_password" type="password" autocomplete="off" />
             </div>
             <div class="field-holder">
-                <button class="btn btn-success save" type="submit">Save</button> or <a href="#">Cancel</a>
+                <button class="btn btn-success save" type="submit">Save</button> or &nbsp;<a href="#">Cancel</a>
             </div>
         </fieldset>
     </form:form>
@@ -32,11 +32,12 @@
         <ul class="social-buttons">
             <li><h3>Connect Social Accounts:</h3></li>
             <li class="fb-btn linked"><i class="icon"></i><p>Facebook is linked to Like Labs. <a href="#" class="unlink">Unlink</a></p></li>
-            <li class="fb-btn"><i class="icon"></i><a href="#" >Unlink</a></li>
+            <li class="fb-btn"><i class="icon"></i><a href="#" >Connect with Facebook</a></li>
             <li class="vk-btn"><i class="icon"></i> <a href="#">Connect with VK</a></li>
-            <li class="twi-btn"><i class="icon"></i><a href="#">Connect with Twitter</a></li>
         </ul>
     </div>
+    <!--
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />-->
     <div class="clear"></div>
 </div>
 <script type="text/javascript">
@@ -64,18 +65,18 @@
 		messages: {
 			phone: {
                             required: "Please provide a phone number",
-                            minlength: "The field must be at least 2 characters long"
+                            minlength: "Please enter valid phone number"
                         },	
 			email: {
                             required: "Please provide an email",
-                            email: "Please enter a valid email address"
+                            email: "Please enter valid email address"
                         },
                         password: {
 				minlength: "Your password must be at least 5 characters long"
 			},
                         confirm_password: {
 				minlength: "Your password must be at least 5 characters long",
-				equalTo: "Please enter the same password as above"
+				equalTo: "Passwords do not match"
 			}
 		}
             });
@@ -83,4 +84,4 @@
     })(jQuery);
 </script>
 
-<%@include file="/WEB-INF/pages/admin_footer.jsp" %>
+<%@include file="/WEB-INF/pages/commons/admin_footer.jsp" %>

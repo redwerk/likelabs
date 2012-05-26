@@ -63,7 +63,7 @@
     <div id="sitewrapper">
         <div id="header">
             <div class="site-logo">
-                <a href="#"><img src="/static/images/logo.png" alt="logo" /></a>
+                <a href="/"><img src="/static/images/logo.png" alt="logo" /></a>
             </div>
             <div class="right signin_block">
                 <sec:authorize access="isAuthenticated()">
@@ -103,7 +103,7 @@
                                     <label for="mem">Remember me</label>                                            
                                 </td>
                                 <td>
-                                    <div>New to LikeLabs? <a href="/signup/start/">Join now</a></div>
+                                    <div>New to LikeLabs? <b><a href="/signup/start/">Join now</a></b></div>
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
