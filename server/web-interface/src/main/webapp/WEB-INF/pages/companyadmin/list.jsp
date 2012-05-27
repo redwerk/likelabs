@@ -11,7 +11,7 @@
     (function(){
         var template = new EJS({url: "/static/templates/companies.ejs"});
         var pagerOptions = {
-            items_per_page : 10,
+            items_per_page : ${items_per_page},
             next_text : "&gt;",
             num_display_entries : 6,
             num_edge_entries : 2,
@@ -64,6 +64,7 @@
         function renderData(data){
             if(!data.count || !data.companies.length){
                 $('#company-list').html('No Data Found.');
+                $('#content').unmask();
                 return;
             } else{
                 var view = template.render({companies: data.companies});

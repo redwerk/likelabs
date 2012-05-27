@@ -6,7 +6,7 @@
     <div class="order-holder">
         <select style="width: 100px;" id="sortingCriteria" name="sortingCriteria">
         <option value="DATE">Date</option>
-        <option value="POINT">Point</option>
+        <option value="COMPANY_AND_POINT">Company / Point</option>
         <option value="REVIEW_TYPE">Review type</option>
         <option value="REVIEW_STATUS">Review status</option>
     </select>
@@ -66,11 +66,21 @@
     </div> 
 </form>
 <script type="text/javascript">
+    
+    var companiesPoints = [
+<c:forEach items="${compniesPointsMap}" var="companyPointsPair" >        { name : "${companyPointsPair.key}",
+          points : [ 
+<c:forEach items="${companyPointsPair.value}" var="point" >                { id : ${point.id},
+                  name : "${point.address.addressLine1}" },</c:forEach>
+          ] },</c:forEach>
+    ];
+    
+    
     (function(){
         var template = new EJS({url: '/static/templates/feed_items.ejs'});
         var pagerOptions = {
             config: {
-                items_per_page : 10,
+                items_per_page : ${items_per_page},
                 next_text : '&gt;',
                 num_display_entries : 6,
                 num_edge_entries : 2,
