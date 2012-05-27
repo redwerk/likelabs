@@ -423,6 +423,14 @@ input, textarea {
     background-position: right -114px;
 }
 
+#sidebar .menu li a .company{
+    background-position: left -173px;
+}
+
+#sidebar .menu li a .company span{
+    background-position: right -173px;
+}
+
 
 #content{
     margin-left: 300px;   
@@ -593,14 +601,14 @@ input, textarea {
     margin: 0 auto;
 }
 .upload-logo { 
-    font-family: "Lobster";
+        font-family: "Lobster";
     font-size:20pt;
     border-radius: 7px ;
     line-height: normal;
-    padding: 5px 20px;
+/*    padding: 5px 20px;*/
     color: #fff;
-    margin-right:  10px;
-    width: 250px;
+/*    margin-right:  10px;*/
+    width: 235px;
     background-color: hsl(188, 71%, 43%) !important; 
     background-repeat: repeat-x; 
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#91e0ec", endColorstr="#1fa6bb");
@@ -612,8 +620,7 @@ input, textarea {
     background-image: -o-linear-gradient(top, #91e0ec, #1fa6bb); 
     background-image: linear-gradient(#91e0ec, #1fa6bb); 
     border-color: #1fa6bb #1fa6bb hsl(188, 71%, 35%);
-    -webkit-font-smoothing: antialiased;
-    
+    -webkit-font-smoothing: antialiased;    
 }
 
 .field-holder{
@@ -770,7 +777,7 @@ input:focus, textarea:focus {
 }
 
 .item-wrapper {
-    width: 310px;
+    width: 320px;
     height: 350px;
     float: left;
     margin-right: 55px;
@@ -787,7 +794,7 @@ input:focus, textarea:focus {
     background: url('../images/cmd-bg.png');
     position: absolute;
     color: #fff;
-    padding: 10px;
+    padding: 10px 15px;
 }
 .item-wrapper:hover{
     border: 1px solid #292f3d;
@@ -797,8 +804,8 @@ input:focus, textarea:focus {
     z-index: 20;
 }
 .item-wrapper table{
-    width: 290px;
     margin: 15px auto 0 auto;
+    width: 292px;
      
 }
 .item-wrapper table tr{
@@ -814,7 +821,7 @@ input:focus, textarea:focus {
 }
 
 .item-wrapper table tr td{
-   /* padding: 7px 10px;*/
+   padding: 0 10px;
 }
 
 .item-wrapper .item-data{
@@ -823,7 +830,7 @@ input:focus, textarea:focus {
     color: #767676;
     
     position: relative;
-    padding: 10px;
+    padding: 10px 15px;
     
     height: 330;
 }
@@ -847,18 +854,7 @@ input:focus, textarea:focus {
 }
 
 
-.btn-holder {
-    bottom: 0;
-    position: absolute;
-    margin: 0 auto;
-    right: 0;
-    left: 0;
-    margin-bottom: 10px;
-    width: 290px;
-    
-}
-
-.btn-holder  .btn, .publish{
+.btn-holder .publish{
     padding: 5px 10px;
     margin: 0 auto;
     font-weight: bold;
@@ -931,7 +927,8 @@ input:focus, textarea:focus {
     margin-bottom: 20px;
 }
 .filter-holder input{padding: 2px 5px; width: 75px;}
-.filter-holder label{margin-left: 5px;}
+.filter-holder label{width: 70px; text-align: right; display:inline-block; font-weight: bold; }
+.filter-holder select{ width: 120px;}
 .filter-holder label:first-child{margin-left: 0;}
 
 .status-filter{
@@ -949,7 +946,8 @@ input:focus, textarea:focus {
     height: 28px;
     padding-top: 7px;
     text-align: center;
-    width: 88px;
+    width: 91px;
+    font-weight: normal;
 }
 
 .status-filter label:hover{

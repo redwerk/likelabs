@@ -77,30 +77,30 @@
                 <tr>
                     <td>
                         <form:form method="POST" commandName="company" >
-                            <div class="label"><label for="">Name <form:errors path="name" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
+                            <div class="label"><label for="name">Name <form:errors path="name" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
                                 <form:input path="name" />
                             </div>
 
-                            <div class="label"><label for="">Phone <form:errors path="phone" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
+                            <div class="label"><label for="phone">Phone <form:errors path="phone" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
                                 <form:input path="phone" />
                             </div>
 
-                            <div class="label"><label for="">Email <form:errors path="email" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
+                            <div class="label"><label for="email">Email <form:errors path="email" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
                                 <form:input path="email" />
                             </div>
 
-                            <div class="label"><label for="">Moderation</label></div>
+                            <div class="label"><label for="moderate1">Moderation</label><form:checkbox path="moderate" /></div>
                             <div class="field">
-                                <form:checkbox path="moderate" />
+                                
                             </div>
                             <form:hidden path="id"/>
                             <div style="margin-bottom: 20px">
-                                <button class="btn btn_success save" type="submit" style="">Save</button>or&nbsp;&nbsp;<a href="/company/${company.id}/profile/cancel">Cancel</a>
+                                <button class="btn btn-success save" type="submit" style="">Save</button>or&nbsp;&nbsp;<a href="/company/${company.id}/profile/cancel">Cancel</a>
                             </div>
-                        </form:form>
+                        </form:form><br/>
 
                         <div class="field">
                             <div class="left label">Points</div>
@@ -175,7 +175,7 @@
                         <div class="clear"></div>
                         <form method="POST" enctype="multipart/form-data" action="/company/${company.id}/profile/logo" id="logoForm">
                             <div style="position: relative;">
-                                <button class="btn upload_logo_btn" type="button" onclick="$('#file').click()">Upload New Logo</button>
+                                <button class="btn upload-logo" type="button" onclick="$('#file').click()">Upload New Logo</button>
                                 <input name="logo" type="file" class="file" id="file" onchange="submitLogo();return false;"/>
                             </div>
                         </form>

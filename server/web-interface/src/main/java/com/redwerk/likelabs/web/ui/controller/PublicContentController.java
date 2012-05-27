@@ -147,7 +147,7 @@ public class PublicContentController {
         model.addAttribute("company", company);
         model.addAttribute("count", report.getCount());
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_REVIEW);
-        model.addAttribute("page", "company");
+        model.addAttribute("page", "reviews");
         return VIEW_REVIEWS_LIST;
     }
 

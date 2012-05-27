@@ -22,6 +22,9 @@ $(document).ready(function(){
         initPager();
 
         $("input[name=status_filter]").change(function(){
+            var statusId = $(this).attr('id');
+            $('.status-filter label').removeClass('active');
+            $('.status-filter label[for='+ statusId+']').addClass('active');
             updateOptions();
             updateData();
         });
@@ -159,7 +162,7 @@ $(document).ready(function(){
                 <input id="status_promo" type="radio" name="status_filter" value="promo"/>
 
 
-                <label for="status_all">All</label>
+                <label class="active"  for="status_all">All</label>
                 <label for="status_pending">Pending</label>
                 <label for="status_approved">Approved</label>
                 <label for="status_archived">Archived</label>

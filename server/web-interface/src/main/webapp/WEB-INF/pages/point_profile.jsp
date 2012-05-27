@@ -44,54 +44,54 @@
     <div class="form">
         <div class="left">
             <form:form commandName="point" method="POST">
-                <div class="label"><label for="">City</label></div>
+                <div class="label"><label for="city">City</label></div>
                 <div class="field">
                     <form:input path="city" />
                     <form:errors path="city" cssClass="errorblock"/>
                 </div>
 
-                <div class="label"><label for="">State</label></div>
+                <div class="label"><label for="state">State</label></div>
                 <div class="field">
                     <form:input path="state" />
                     <form:errors path="state" cssClass="errorblock"/>
                 </div>
 
-                <div class="label"><label for="">Country</label></div>
+                <div class="label"><label for="country">Country</label></div>
                 <div class="field">
                     <form:input path="country" />
                     <form:errors path="country" cssClass="errorblock"/>
                 </div>
 
-                <div class="label"><label for="">Postal code</label></div>
+                <div class="label"><label for="postalCode">Postal code</label></div>
                 <div class="field">
                     <form:input path="postalCode" />
                     <form:errors path="postalCode" cssClass="errorblock"/>
                 </div>
 
-                <div class="label"><label for="">Address first</label></div>
+                <div class="label"><label for="addressLine1">Address first</label></div>
                 <div class="field">
                     <form:input path="addressLine1" />
                     <form:errors path="addressLine1" cssClass="errorblock"/>
                 </div>
 
-                <div class="label"><label for="">Address two</label></div>
+                <div class="label"><label for="addressLine2">Address two</label></div>
                 <div class="field">
                     <form:input path="addressLine2" />
                     <form:errors path="addressLine2" cssClass="errorblock"/>
                 </div>
-                <div class="label"><label for="">Phone</label></div>
+                <div class="label"><label for="phone">Phone</label></div>
                 <div class="field">
                     <form:input path="phone" />
                     <form:errors path="phone" cssClass="errorblock"/>
                 </div>
-                <div class="label"><label for="">Email</label></div>
+                <div class="label"><label for="email">Email</label></div>
                 <div class="field">
                     <form:input path="email" />
                     <form:errors path="email" cssClass="errorblock"/>
                 </div>
                 <form:hidden path="id"/>
                 <div style="margin-bottom: 20px">
-                    <button class="btn btn_success save" type="submit" style="">Save</button>or &nbsp;&nbsp;<a href="/company/${companyId}/point/${pointId}/profile/cancel" >Cancel</a>
+                    <button class="btn btn-success save" type="submit" style="">Save</button>or &nbsp;&nbsp;<a href="/company/${companyId}/point/${pointId}/profile/cancel" >Cancel</a>
                 </div>
             </form:form>
             <div class="field">
@@ -136,7 +136,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center; padding-top: 30px;">
-                                <button class="btn btn_success save" type="submit" onclick="addTablet();">Submit</button>
+                                <button class="btn btn-success save" type="submit" onclick="addTablet();">Submit</button>
                                 <button class="btn btn-info save" type="button" onclick="$('#add_tablet_dialog').dialog('close')">Cancel</button>
                             </td>
                         </tr>

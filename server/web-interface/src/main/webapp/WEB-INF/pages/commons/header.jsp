@@ -22,21 +22,23 @@
     <link href="/static/css/styles.css" rel="stylesheet" type="text/css"/>
     <link href="/static/css/all.css" rel="stylesheet" type="text/css"/>
     
-    
-    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css" />
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/flick/jquery-ui.css" rel="stylesheet" type="text/css" />
-
     
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.19/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" ></script>
+    <script type="text/javascript" src="/static/scripts/jquery-1.7.2.min.js"></script>    
+    <script type="text/javascript" src="/static/scripts/jquery-ui-1.8.20.custom.min.js"></script>    
     <script type="text/javascript" src="/static/scripts/ejs_production.js" ></script>
     <script type="text/javascript" src="/static/scripts/jquery.loadmask.min.js" ></script>
     <script type="text/javascript" src="/static/scripts/jquery.pagination.js" ></script>
+    <script type="text/javascript" src="/static/scripts/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
     <sec:authorize access="not isAuthenticated()">
         <script type="text/javascript">
             function signIn() {
+                if ($('#username').val()[0] != "+") {
+                    $('#authfailed').html('<spring:message code="message.auth.failed"/>');
+                    return false;
+                }
                 var data = {
                     "j_username":$('#username').val(),
                     "j_password":$('#password').val(),
@@ -75,6 +77,19 @@
         $("#confirm_dialog_ok").click(function(){callback.call();$("#confirm_dialog").dialog("close")});
         $("#confirm_dialog_cancel").click(function(){$("#confirm_dialog").dialog("close")});
     }
+    function errorsDialog(title, errors) {
+        $("#error_dialog").dialog({modal: true, autoOpen: false, title: title, minHeight: 50 });
+        $('#error_message').html("");
+        for (var key = 0 ;key < errors.length; key++) {
+            $('#error_message').html($('#error_message').html() + errors[key] + "<br/>");
+        }
+        $('#error_dialog').dialog('open');
+    }
+    function errorDialog(title, error) {
+        $("#error_dialog").dialog({modal: true, autoOpen: false, title: title, minHeight: 50 });
+        $('#error_message').html(error);
+        $('#error_dialog').dialog('open');
+    }
 </script>
 </head>
 <body>
@@ -91,6 +106,16 @@
             </tr>
         </table>
     </div>
+    <div id="error_dialog" style="display: none;">
+        <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
+            <tr>
+                <td style="text-align: center"><div id="error_message" class="errorblock"></div></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><button class="btn btn-info save" type="button" onclick="$('#error_dialog').dialog('close');">OK</button></td>
+            </tr>
+        </table>
+    </div>
     <div id="sitewrapper">
          <div id="header">
             <div class="site-logo">
@@ -98,12 +123,13 @@
             </div>
             <div class="right signin_block">
                 <sec:authorize access="isAuthenticated()">
-                    <div class="field">
-                        <a class="btn btn-success" href="/logout">Logout</a>
+                    <div style="width: 100px; float: right;">
+                        <div><a class="btn btn-success" href="/logout">Logout</a></div> 
                         <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                            <input type="button" value="Admin Panel" style="width: 187px;" onclick="document.location.href='/admin/panel'"/>
+                            <div><a href="/admin/panel">Admin Panel</a></div>
                         </sec:authorize>
                     </div>
+                    
                 </sec:authorize>
                 <sec:authorize access="isAnonymous()" >
                     <form onsubmit="return signIn();" id="loginForm" >
@@ -147,12 +173,13 @@
         <div id="main-holder">
             <div id="sidebar">
                 <ul class="menu">
-                    <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/companyadmin/companies"><span class="mark dashboard"><span></span></span>Companies</a></li>
-                    <li class=' <c:if test="${page eq 'feed'}">active</c:if>'><a href="/companyadmin/feed"><span class="mark feed"><span></span></span>Feed</a></li>
+                    <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/companyadmin/companies"><span class="mark company"><span></span></span>Companies</a></li>
+                    <li class=' <c:if test="${page eq 'feed'}">active</c:if>'><a href="/companyadmin/feed"><span class="mark dashboard"><span></span></span>Feed</a></li>
                     <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/companyadmin/profile"><span class="mark profile"><span></span></span> Profile</a></li>
                     
-                    <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/public"><span class="mark profile"><span></span></span>Company list</a></li>
-                    <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/public/1/reviews"><span class="mark feed"><span></span></span>Company feed</a></li>
+                    <li class=' <c:if test="${page eq 'company'}">active</c:if>'><a href="/public"><span class="mark company"><span></span></span>Company list</a></li>
+                    <li class=' <c:if test="${page eq 'reviews'}">active</c:if>'><a href="/public/1/reviews"><span class="mark feed"><span></span></span>Company feed</a></li>
+                    
                 </ul>
             </div>
        

@@ -1,7 +1,18 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
+
+<div id="content">    
 <form id="formFilter" action="/" method="post" onsubmit="return false;">
-    <div id="content">
-    
+    <style type="text/css">
+        .filter-holder label{
+            width: 80px;
+        }
+        .filter-holder select{
+            width: 200px;
+        }
+        .status-filter label {
+            width: 91px;
+        }
+    </style>
     <h1>My Feed</h1> 
     <div class="order-holder">
         <select style="width: 100px;" id="sortingCriteria" name="sortingCriteria">
@@ -16,22 +27,24 @@
         <div class="filter-holder">
             <div>
                 <label for="contentType">Contains:</label>
-                <select style="width: 120px;" id="contentType" name="contentType">
+                <select id="contentType" name="contentType">
                         <option value="CONTAINS_TEXT_AND_PHOTO">Any content</option>
                         <option value="CONTAINS_PHOTO">Images</option>
                         <option value="CONTAINS_TEXT">Text</option>
                     </select>
-                 <label>Date:</label> <input name="startDate" type="text" id="startDate" /> 
-                <label> &mdash;</label> <input name="endDate" type="text" id="endDate" />
+                <label for="startDate">Date:</label> <input name="startDate" type="text" id="startDate" /> 
+                    - <input name="endDate" type="text" id="endDate" />
             </div>
             <div>
-                <label for="location">Point:</label>
-                <select style="width: 200px;" name="loacation" id="location">
+                <label for="location">Companyes:</label>
+                <select name="companyes" id="companyes">
                     <option value="">All</option>
-                    <option value="1">12345 Sample1 Street</option>
-                    <option value="2">12345 Sample2 Street</option>
-                    <option value="3">12345 Sample3 Street</option>
                 </select>
+                <label for="point">Point:</label>
+                <select name="point" id="point" disabled="disabled">
+                    <option value="">All</option>
+                </select>
+                
             </div>
            
             
@@ -42,7 +55,7 @@
                 <input type="radio" value="ARCHIVED" name="status" id="statusArchived" />
                 <input type="radio" value="FLAGGED" name="status" id="statusFlagged" />
                 <input type="radio" value="published" name="status" id="statusPublished" />
-                <input type="radio" value="promo" name="status" id="statusPromo">
+                <input type="radio" value="promo" name="status" id="statusPromo" />
 
 
                 <label for="statusAll" class="active">All</label>
@@ -63,8 +76,8 @@
         
     </div>
    
-    </div> 
-</form>
+</form>  
+</div> 
 <script type="text/javascript">
     
     var companiesPoints = [
@@ -77,6 +90,7 @@
     
     
     (function(){
+        
         var template = new EJS({url: '/static/templates/feed_items.ejs'});
         var pagerOptions = {
             config: {
@@ -159,59 +173,82 @@
             //change status
             $('#feedContainer select').change(function(){                
                 var $me = $(this);
-                var $wrapper = $me.parents('.item-wrapper').mask();
+                var $wrapper = $me.parents('.item-wrapper').mask('Please wait...');
                 var id = $wrapper.attr('review-id');
                 var companyId = $wrapper.attr('review-id');
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '/company/'+companyId +'/review/'+id +'/data/status',
+                    url: '/company/'+companyId +'/reviews/'+id +'/data/status',
                     data: {status: $me.val().toLowerCase()},
                     success: function(data){
-                       $me.replaceWith('<span class="btn disabled">Published</span>');
-                       $wrapper.unmask();
+                       if(data.error){
+                           alert(data.error);
+                       }
                     },
-                    error:function(jqXHR, textStatus){
+                    error:function(jqXHR, textStatus){                        
+                        errorDialog("Request error", textStatus);
+                    },
+                    complete: function(){
                         $wrapper.unmask();
                     }
+                    
                 });
             });
             
             //change favorite
-            $('#feedContainer .promo').click(function(){
+            $('#feedContainer .star').click(function(){
                 var $me = $(this);
-                var $wrapper = $me.parents('.item-wrapper').mask();
+                var $wrapper = $me.parents('.item-wrapper').mask('Please wait...');
                 var id = $wrapper.attr('review-id');
                 var companyId = $wrapper.attr('review-id');
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '/company/'+companyId +'/review/'+id +'/data/promo',
-                    data: {promo: $me.val()},
+                    url: '/company/'+companyId +'/reviews/'+id +'/data/promo',
+                    data: {promo: !$me.hasClass('active')},
                     success: function(data){
-                       $me.replaceWith('<span class="btn disabled">Published</span>');
-                       $wrapper.unmask();
+                        if (data.error) {
+                            errorDialog("Error update review", data.error);
+                        } else{
+                            if($me.hasClass('active')){
+                                $me.removeClass('active');
+                                $me.attr('title', 'Add to favourites');
+                            } else{
+                                $me.addClass('active');
+                                $me.attr('title', 'Remove from favourites');
+                            }
+                        }
                     },
                     error:function(jqXHR, textStatus){
+                        errorDialog("Request error", textStatus);
+                    },
+                    complete: function(){
                         $wrapper.unmask();
                     }
                 });
             });
             $('#feedContainer button.publish').click(function(){
                 var $me = $(this);
-                var $wrapper = $me.parents('.item-wrapper').mask();
+                var $wrapper = $me.parents('.item-wrapper').mask('Please wait...');
                 var id = $wrapper.attr('review-id');
                 var companyId = $wrapper.attr('review-id');
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: '/company/'+companyId +'/review/'+id +'/data/publish',                    
+                    url: '/company/'+companyId +'/reviews/'+id +'/data/publish',                    
                     data: {publish: true},
                     success: function(data){
-                       $me.replaceWith('<span class="btn disabled">Published</span>');
-                       $wrapper.unmask();
+                        if (data.error) {
+                            errorDialog("Error update review", response.error);
+                        } else{
+                            $me.replaceWith('<span class="btn disabled">Published<'+'/span>');
+                        }
                     },
                     error:function(jqXHR, textStatus){
+                        errorDialog("Request error", textStatus);
+                    },
+                    complete: function(){
                         $wrapper.unmask();
                     }
                 });
@@ -220,8 +257,8 @@
         
         $(document).ready(function(){
             loadData(0);
-            $('#startDate').datepicker({dateFormat: "dd/mm/yy"});
-            $('#endDate').datepicker({dateFormat: "dd/mm/yy"});
+            $('#startDate').datepicker({dateFormat: "mm/dd/yyyy"});
+            $('#endDate').datepicker({dateFormat: "mm/dd/yyyy"});
             $('.status-filter input[name=status]').change(function(){
                 pagerOptions.resetPager = true;
                 loadData(0);
@@ -229,9 +266,30 @@
                 $('.status-filter label').removeClass('active');
                 $('.status-filter label[for='+ statusId+']').addClass('active');
             });
-            $('#startDate').add('#endDate').add('#sortingCriteria').add('.filter-holder select').change(function(){
+            $('#startDate').add('#endDate').add('#sortingCriteria').add('#contentType').add('#point').change(function(){
                 loadData(0);
             });
+            
+            var i, len, companiesOption = "";
+            for(i = 0, len = companiesPoints.length; i< len; ++i){
+                companiesOption += '<option value="'+ i +'">' + companiesPoints[i].name + '<'+'/option>';
+            }
+            $('#companyes').append(companiesOption).change(function(){
+               var value = $(this).val();
+               if(value === ''){
+                    $('#point').attr('disabled','disabled').html('').val('');
+               } else{
+                    value = parseInt(value, 10);
+                    var points = companiesPoints[ value].points;
+                    var i, len, pointsOption = '<option value="" >All</'+'option>';
+                    for(i = 0, len = points.length; i< len; ++i){
+                        pointsOption += '<option value="'+ points[i].id +'" >' + points[i].name + '</option>';
+                    }
+                    $('#point').html(pointsOption);
+                    $('#point').removeAttr('disabled');
+               }
+            });
+            $('#point').attr('disabled','disabled');
         });
     })();
     

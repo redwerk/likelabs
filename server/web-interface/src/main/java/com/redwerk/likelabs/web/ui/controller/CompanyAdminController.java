@@ -103,8 +103,7 @@ public class CompanyAdminController {
 
     @RequestMapping(value = "/feed", method = RequestMethod.GET)
     public String reviewList(ModelMap model) {
-        
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         Map<String, List<Point>> companiesPointsMap = new HashMap<String, List<Point>>();
         List<CompanyReportItem> companies = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
         for (CompanyReportItem company : companies) {

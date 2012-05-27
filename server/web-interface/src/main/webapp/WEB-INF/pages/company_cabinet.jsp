@@ -10,10 +10,10 @@
     <tr> 
         <sec:authorize access="isAuthenticated()">
             <td>
-                <a class="btn btn-success save" style="width: 240px;" type="buttont" href="/company/${companyId}/profile">Edit profile</a>
+                <a class="btn btn-success save" style="width: 240px; padding: 5px 0;" type="buttont" href="/company/${companyId}/profile">Edit profile</a>
                 <br/>
                 <br/>
-                <a class="btn btn-info save" style="width: 240px;" type="buttont" href="/company/${companyId}/reviews">Moderate reviews</a>
+                <a class="btn btn-info save" style="width: 240px; padding: 5px 0;" type="buttont" href="/company/${companyId}/reviews">Moderate reviews</a>
             </td>
         </sec:authorize>
         <sec:authorize access="not isAuthenticated()">
