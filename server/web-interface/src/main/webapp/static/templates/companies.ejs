@@ -4,10 +4,8 @@
     var company = companies[i];
 %>
         
-    <li class="<%=i%2?'odd': ''%> "><a href="/company/<%=company.id%>"> <img src="<%=company.logo%>" /><%=company.name%></a></li>
+    <li <%=i%2?'class="odd"': ''%> ><a href="/company/<%=company.id%>"> <img src="<%=company.logo%>" /><%=company.name%></a></li>
 <% 
     }
 %>
-         
-
 </ul>

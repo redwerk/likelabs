@@ -9,12 +9,12 @@
                 <c:choose>
                     <c:when test="${already_active eq true}">
                         <div class="field">
-                            <span class="errorblock" >You already active administrator for company ${company}.</span> Now you can go to <a href="javascript:void(0)" onclick="document.location.href='/'">Dashboard</a>
+                            <span class="errorblock" >You already active administrator for company ${company}.</span> Now you can go to <a href="/" >Dashboard</a>
                         </div>
                     </c:when>
                     <c:otherwise>
                         <div class="field">
-                            Congratulations! You were successfully activate administrator rights for company ${company}. Now you can go to <a href="javascript:void(0)" onclick="document.location.href='/'">Dashboard</a>
+                            Congratulations! You were successfully activate administrator rights for company ${company}. Now you can go to <a href="/">Dashboard</a>
                         </div>
                     </c:otherwise>
                 </c:choose>

@@ -27,12 +27,10 @@
     }
 
 </script>
-    <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-        <tr>
-            <td class="title">Sign Up for Like Labs</td>
-        </tr>
-        <tr>
-            <td class="body">
+ <div id="content">
+    
+    <h1>Sign Up for Like Labs</h1> 
+
                 <div>
                     <div class="field">
                         Congratulations! You were successfully registered to Like Labs!
@@ -86,7 +84,5 @@
                 <div class="field">
                     <button type="button" class="btn btn_success save" onclick="document.location.href='/'">Finish</button>
                 </div>
-            </td>
-        </tr>
-    </table>
+ </div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

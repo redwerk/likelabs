@@ -106,64 +106,46 @@
         options.status = $("input[name=status_filter]:checked").val();
     }
 </script>
-                                <table cellpadding="0" cellspacing="0" style="width: 100%;" summary="" class="content_block">
-                                    <tr>
-                                        <td style="height: 85px;">
-                                            <div class="title" style="position: relative; float: left;">Feed for ${company.name}</div>
-                                            <div style="position: relative; float: right; padding-right: 5px;">
-                                                <select onchange="changeSort()" id="sort_by" style="width: 150px">
-                                                    <option value="">Sort By</option>
-                                                    <option value="date">Date</option>
-                                                    <option value="point">Point</option>
-                                                    <option value="review_type">Content type</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="filter admin">
-                                                <div>
-                                                    <div class="sub_title">
-                                                        <div style="display: inline-block">Contains :</div>
-                                                        <div style="display: inline-block">
-                                                            <select onchange="changeFilter()" id="feed_type">
-                                                                <option value="">Not selected</option>
-                                                                <option value="contains_text">Text</option>
-                                                                <option value="contains_photo">Photo</option>
-                                                                <option value="contains_text_and_photo">Text and Photo</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="sub_title">
-                                                        <div style="display: inline-block">Point :</div>
-                                                        <div style="display: inline-block">
-                                                            <select onchange="changeFilter()" id="point">
-                                                                <option value="">All</option>
-                                                                <c:forEach varStatus="status" var="point" items="${points}">
-                                                                    <option value="${point.id}">${point.address.addressLine1}</option>
-                                                                </c:forEach> 
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="sub_title">
-                                                        <div style="display: inline-block">Date :</div>
-                                                        <div style="display: inline-block">
-                                                            <input type="text" id="filter_date_from" onchange="changeFilter()" />
-                                                            -
-                                                            <input type="text" id="filter_date_to" onchange="changeFilter()" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="body" style="width: 100%;">
-                                            <div id="feeds_table"></div>
-                                            <div style="clear: both"></div>
-                                            <div id="pager" class="pagination" style="position: relative; float: right;">asd</div>
-                                        </td>
-                                    </tr>
-                                </table>
+<div id="content">
+    <h1>
+        Feed for ${company.name}
+    </h1>
+    <div class="order-holder">
+        <select onchange="changeSort()" id="sort_by" style="width: 150px">
+            <option value="">Sort By</option>
+            <option value="date">Date</option>
+            <option value="point">Point</option>
+            <option value="review_type">Content type</option>
+        </select>
+    </div>
+    <div class="items-holder" >      
+
+        <div class="filter-holder">
+            <label for="feed_type">Contains :</label>
+            <select onchange="changeFilter()" id="feed_type">
+                <option value="">Not selected</option>
+                <option value="contains_text">Text</option>
+                <option value="contains_photo">Photo</option>
+                <option value="contains_text_and_photo">Text and Photo</option>
+            </select>
+            
+            <label for="point">Point :</label>
+            <select onchange="changeFilter()" id="point">
+                <option value="">All</option>
+                <c:forEach varStatus="status" var="point" items="${points}">
+                    <option value="${point.id}">${point.address.addressLine1}</option>
+                </c:forEach>
+            </select>
+            
+            <label for="filter_date_from">Date :</label>
+            <input type="text" id="filter_date_from" onchange="changeFilter()" />
+            -
+            <input type="text" id="filter_date_to" onchange="changeFilter()" />
+        </div>
+        <div id="feeds_table" class="items-inner"></div>
+        <div id="pager" class="pager"></div>
+        <div class="clear"></div>
+    </div>
+</div>
+
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

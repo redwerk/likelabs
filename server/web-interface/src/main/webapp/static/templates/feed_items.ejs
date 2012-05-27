@@ -2,7 +2,7 @@
     for (var i=0, len=reviews.length ; i<len ;++i ) {
     var review = reviews[i];
 %>
-<div class="item-wrapper" review-id="<%=review.id%>">
+<div class="item-wrapper" review-id="<%=review.id%>" company-id="<%=review.companyId%>" >
     <div class="item-cmd">
         <table>
             <tr><td>Author:</td><td><%=review.name%></td></tr>
@@ -19,7 +19,7 @@
         </table>
        <div class="btn-holder">
             <% if(review.published == "true" ){ %>
-                <button class="btn btn-success" type="button">Publish</button>
+                <button class="btn btn-success publish" type="button">Publish</button>
             <% } else {%>
                 <span class="btn disabled">Published</span>
             <% }%>
@@ -27,8 +27,8 @@
         </div>
     </div>
     <div class="item-data">
-        <div class="img"><img src="<%=review.photo%>" /></div>
-        <div class="msg"><%=review.message%></div>
+        <div class="photo"><img src="<%=review.photo%>" /></div>
+        <div class="description"><%=review.message%></div>
         
     </div>
 </div>

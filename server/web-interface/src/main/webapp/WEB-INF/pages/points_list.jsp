@@ -61,15 +61,11 @@
         $("#point_list_table").html(template);
     }
 </script>
-                                <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-                                    <tr>
-                                        <td class="title">List of Points for ${company.name}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="body">
-                                            <div id="point_list_table"></div>
-                                            <div id="pager" class="pagination" style="position: relative; float: right; padding-top: 20px"></div>
-                                        </td>
-                                    </tr>
-                                </table>
+<div id="content">
+    <h1>List of Points for ${company.name}</h1> 
+
+    <div id="point_list_table"></div>
+    <div id="pager" class="pager"></div>
+    <div class="clear"></div>
+</div>
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

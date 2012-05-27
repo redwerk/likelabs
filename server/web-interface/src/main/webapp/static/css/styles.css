@@ -36,19 +36,141 @@ img {
     -moz-box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
     background: url('../images/background_inner.png');
 }
-
-.header {
-    margin: 0 auto;
-    width: 1172px;
+#header {
+    margin: 0 auto 30px auto;
     height: 104px;
-    border: none;
+    border-top: 0;
     border-bottom: solid 1px #d2d9df;
+    -webkit-box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.3);
     background-color: #FFFFFF;
 }
-
-.header_logo {
-    padding: 36px;
+#header  .site-logo{
+    padding: 30px;
+    width: 300px;
+    float: left;
 }
+
+#header .signin_block {
+    font-size: 14px;
+    padding: 15px;
+    float: right;
+    width: 450px;
+}
+#header .signin_block td{
+    width: 180px;
+    
+}
+#header .signin_block label{font-size: 14px; line-height: 17px;vertical-align: middle;}
+#header .signin_block #username, #header .signin_block #password{
+    padding: 3px;
+    width: 180px;
+    margin: 0;
+    margin-right: 10px;
+    
+}
+#header .signin_block .errorblock{
+    color: red;
+}
+#header .signin_block .field{
+    float: right;
+}
+
+#header .signin_block #mem{
+     width: auto;
+     margin: 0;
+     vertical-align: middle;
+}
+
+#header .btn-success{
+    color: #fff;
+}
+#main-holder{
+     padding-right: 80px;
+     padding-bottom: 130px;
+}
+
+#sidebar {
+    width: 270px;
+    padding-top:50px;
+    float: left;
+}
+#sidebar .menu{
+	text-transform:uppercase;
+}
+#sidebar .menu li{    
+    margin: 10px;
+    background-image: url('../images/menu-bg-line.png');
+    background-position: left bottom;
+    background-repeat: repeat-x;
+    clear: both;
+    line-height: 50px;
+}
+#sidebar .menu li:last-child{
+	border-bottom: none;
+	-webkit-box-shadow-bottom: none;
+	-moz-box-shadow-bottom: none;
+	box-shadow-bottom: none;
+}
+
+#sidebar .menu li a{
+    color: #455172;
+    font-family: "ProximaNova Bold";
+    display: block;
+}
+
+#sidebar .menu li a .mark{
+    display: block;
+    background-image: url('../images/menu-marks.png');
+    background-position: left top;
+    background-repeat: no-repeat;
+    height: 40px;
+    width: 70px;
+    margin: 0 10px 0 -15px;
+    float: left;
+}
+
+#sidebar .menu li:hover {
+    padding-left: 1px;
+}
+#sidebar .menu li.active a .mark{
+    width: 100px;
+}
+#sidebar .menu li a .mark span{
+    display: block; 
+    background-image: url('../images/menu-marks.png');
+    background-position: right top;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 40px;
+    float: right;
+}
+
+#sidebar .menu li a .dashboard{
+    background-position: left 0;
+}
+
+#sidebar .menu li a .dashboard span{
+    background-position: right 0;
+}
+
+#sidebar .menu li a .feed{
+    background-position: left -57px;
+}
+
+#sidebar .menu li a .feed span{
+    background-position: right -57px;
+}
+
+#sidebar .menu li a .profile{
+    background-position: left -114px;
+}
+
+#sidebar .menu li a .profile span{
+    background-position: right -114px;
+}
+
 
 .content_container {
     margin: 0 auto;
@@ -206,13 +328,7 @@ a:hover {
 
 
 .feed_container {
-    width: 292px;
-    height: 313px;
-    padding: 12px;
-    border: solid 1px #d1d1d1;
-    background: url("/static/images/background_inner_light.png") transparent;
-    display: inline-block;
-    margin-bottom: 25px;
+
 }
 
 .feed_left_block {
@@ -347,7 +463,7 @@ a:hover {
     position: absolute;
     
     background: url("/static/images/feed_hint_background.png") no-repeat transparent -5px -2px;
-    width: 330px;
+
     height: 352px;
     padding-left: 13px;
     padding-top: 13px;

@@ -1,10 +1,6 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
-    <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-        <tr>
-            <td class="title">Sign Up for Like Labs - step two</td>
-        </tr>
-        <tr>
-            <td class="body">
+<div id="content">
+<h1>Sign Up for Like Labs - step two</h1>
                 <form action="/signup/end" method="POST">
                     <div>
                         <div class="field">
@@ -19,7 +15,4 @@
                         </div>
                     </div>
                 </form>
-            </td>
-        </tr>
-    </table>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

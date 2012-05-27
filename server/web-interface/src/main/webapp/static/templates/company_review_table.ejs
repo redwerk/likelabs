@@ -4,8 +4,8 @@
         var date = new Date(feed.date);
         var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
 %>
-<div class="left" onmouseover="$(this).find('.hint').removeClass('hidden')" onmouseout="$(this).find('.hint').addClass('hidden');" id="feed_item_<%=feed.id%>">
-    <div class="hidden hint">
+<div class="item-wrapper" id="feed_item_<%=feed.id%>">
+    <div class="item-cmd hint">
         <table cellpadding="0" cellspacing="0" style="width: 292px;" summary="">
             <tr class="black_10">
                 <td>Name:</td>
@@ -38,12 +38,16 @@
             </tr>
             <tr>
                 <td style="text-align: center;" colspan="2">
-                    <button style="width: 120px; height: 32px;" type="button" class="btn <%= feed.published == true ? 'disabled' : 'btn_success'%>" onclick="<%= feed.published == true ? 'return false;' : ''%>updateFeed('<%=feed.id%>', 'publish', true)"><%= feed.published == true ? 'Published' : 'Publish'%></button>
+                    <% if(feed.published == true ){ %>
+                        <button class="btn btn-success publish" type="button" onclick="updateFeed('<%=feed.id%>', 'publish', true);">Publish</button>
+                    <% } else {%>
+                        <span class="btn disabled">Published</span>
+                    <% }%>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="feed_container <%= key%2==0? 'feed_left_block' : '' %>">
+    <div class="feed_container item-data">
         <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=feed.id%>/photo" alt="foto" title="Foto"/></div>
         <div class="description"><%= feed.message %></div>
     </div>

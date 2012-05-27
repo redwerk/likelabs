@@ -1,4 +1,4 @@
-<%@include  file="/WEB-INF/pages/commons/admin_header.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/header.jsp"%>
 <form id="formFilter" action="/" method="post" onsubmit="return false;">
     <div id="content">
     
@@ -11,27 +11,29 @@
         <option value="REVIEW_STATUS">Review status</option>
     </select>
         </div>
-    <div class="items-holder" >
-        
-       
+    <div class="items-holder" >       
 
         <div class="filter-holder">
-            <label for="contentType">Contains:</label>
-            <select style="width: 120px;" id="contentType" name="contentType">
-                    <option value="CONTAINS_TEXT_AND_PHOTO">Any content</option>
-                    <option value="CONTAINS_PHOTO">Images</option>
-                    <option value="CONTAINS_TEXT">Text</option>
+            <div>
+                <label for="contentType">Contains:</label>
+                <select style="width: 120px;" id="contentType" name="contentType">
+                        <option value="CONTAINS_TEXT_AND_PHOTO">Any content</option>
+                        <option value="CONTAINS_PHOTO">Images</option>
+                        <option value="CONTAINS_TEXT">Text</option>
+                    </select>
+                 <label>Date:</label> <input name="startDate" type="text" id="startDate" /> 
+                <label> &mdash;</label> <input name="endDate" type="text" id="endDate" />
+            </div>
+            <div>
+                <label for="location">Point:</label>
+                <select style="width: 200px;" name="loacation" id="location">
+                    <option value="">All</option>
+                    <option value="1">12345 Sample1 Street</option>
+                    <option value="2">12345 Sample2 Street</option>
+                    <option value="3">12345 Sample3 Street</option>
                 </select>
-            <label for="location">Point:</label>
-            <select style="width: 200px;" name="loacation" id="location">
-                <option value="">All</option>
-                <option value="1">12345 Sample1 Street</option>
-                <option value="2">12345 Sample2 Street</option>
-                <option value="3">12345 Sample3 Street</option>
-            </select>
-            
-            <label>Date:</label> <input name="startDate" type="text" id="startDate" /> 
-            <label> &mdash;</label> <input name="endDate" id="endDate" from_datetype="text" />
+            </div>
+           
             
             <div class="status-filter">
                 <input type="radio"  value="" name="status" id="statusAll" checked="checked" />
@@ -89,7 +91,6 @@
         function loadData(newPage) {
             
             newPage = newPage || 0;
-            newPage++;
             $('#content').mask('Please wait...');
             
             ajaxObj && ajaxObj.abort();
@@ -111,9 +112,12 @@
                     initPager(data.count);
                     renderData(data);
                 },
-                error: function(){
+                error: function(jqXHR, textStatus, errorThrown){
+                  
+                   if(textStatus !== 'abort'){
+                       alert("Server temporarily unavailable");
+                   }
                    $('#content').unmask();
-                   alert("Server temporarily unavailable");
                     
                 }
             });
@@ -133,6 +137,7 @@
         function renderData(data){
             if(!data.count){
                 $('#feedContainer').html('No Data Found.');
+                $('#content').unmask();
                 return;
             } else{
                 var view = template.render({reviews: data.reviews});
@@ -140,28 +145,73 @@
             }
            
             $('#content').unmask();
-            $('#feedContainer select').change(function(){
-                
+            
+            //change status
+            $('#feedContainer select').change(function(){                
                 var $me = $(this);
-                var $wrapper = $me.parents('.item-wrapper');
-                var id = $wrapper.mask().attr('review-id');
-                
+                var $wrapper = $me.parents('.item-wrapper').mask();
+                var id = $wrapper.attr('review-id');
+                var companyId = $wrapper.attr('review-id');
                 $.ajax({
                     type: 'POST',
-                    url: '/companyadmin/review/'+id +'/status/',
-                    data: {status: $me.val()},
-                    complete: function(jqXHR, textStatus){
-                      $wrapper.unmask();
+                    dataType: 'json',
+                    url: '/company/'+companyId +'/review/'+id +'/data/status',
+                    data: {status: $me.val().toLowerCase()},
+                    success: function(data){
+                       $me.replaceWith('<span class="btn disabled">Published</span>');
+                       $wrapper.unmask();
+                    },
+                    error:function(jqXHR, textStatus){
+                        $wrapper.unmask();
                     }
                 });
             });
             
+            //change favorite
+            $('#feedContainer .promo').click(function(){
+                var $me = $(this);
+                var $wrapper = $me.parents('.item-wrapper').mask();
+                var id = $wrapper.attr('review-id');
+                var companyId = $wrapper.attr('review-id');
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/company/'+companyId +'/review/'+id +'/data/promo',
+                    data: {promo: $me.val()},
+                    success: function(data){
+                       $me.replaceWith('<span class="btn disabled">Published</span>');
+                       $wrapper.unmask();
+                    },
+                    error:function(jqXHR, textStatus){
+                        $wrapper.unmask();
+                    }
+                });
+            });
+            $('#feedContainer button.publish').click(function(){
+                var $me = $(this);
+                var $wrapper = $me.parents('.item-wrapper').mask();
+                var id = $wrapper.attr('review-id');
+                var companyId = $wrapper.attr('review-id');
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/company/'+companyId +'/review/'+id +'/data/publish',                    
+                    data: {publish: true},
+                    success: function(data){
+                       $me.replaceWith('<span class="btn disabled">Published</span>');
+                       $wrapper.unmask();
+                    },
+                    error:function(jqXHR, textStatus){
+                        $wrapper.unmask();
+                    }
+                });
+            });
         }
         
         $(document).ready(function(){
             loadData(0);
-            $('#startDate').datepicker();
-            $('#endDate').datepicker();
+            $('#startDate').datepicker({dateFormat: "dd/mm/yy"});
+            $('#endDate').datepicker({dateFormat: "dd/mm/yy"});
             $('.status-filter input[name=status]').change(function(){
                 pagerOptions.resetPager = true;
                 loadData(0);
@@ -169,8 +219,11 @@
                 $('.status-filter label').removeClass('active');
                 $('.status-filter label[for='+ statusId+']').addClass('active');
             });
+            $('#startDate').add('#endDate').add('#sortingCriteria').add('.filter-holder select').change(function(){
+                loadData(0);
+            });
         });
     })();
     
 </script>
-<%@include  file="/WEB-INF/pages/commons/admin_footer.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

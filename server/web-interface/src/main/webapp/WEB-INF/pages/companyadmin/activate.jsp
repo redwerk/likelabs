@@ -1,10 +1,8 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
-<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-    <tr>
-        <td class="title">Activation Administrator Company</td>
-    </tr>
-    <tr>
-        <td class="body">
+ <div id="content">
+    
+    <h1>Activation Administrator Company</h1> 
+
         <c:choose>
             <c:when test="${empty errorcode}">
             <form action="/companyadmin/activate" method="POST">
@@ -32,7 +30,5 @@
                 </div>
             </c:otherwise>
         </c:choose>
-        </td>
-    </tr>
-</table>
+ </div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

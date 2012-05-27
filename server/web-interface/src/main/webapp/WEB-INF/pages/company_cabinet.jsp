@@ -1,41 +1,40 @@
 <%@include file="/WEB-INF/pages/commons/header.jsp" %>
-<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
+<div id="content">
     <sec:authorize access="isAuthenticated()">
-        <tr>
-            <td class="title">Cabinet for <c:out value="${companyName}"/></td>
-        </tr>
+        <h1>Cabinet for <c:out value="${companyName}"/></h1>
     </sec:authorize>
     <sec:authorize access="not isAuthenticated()">
-        <tr>
-            <td class="title">About company <c:out value="${companyName}"/></td>
-        </tr>
+        <h1>About company <c:out value="${companyName}"/></h1>
     </sec:authorize>
+<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
     <tr> 
         <sec:authorize access="isAuthenticated()">
             <td>
-                <button class="btn btn_success save" style="width: 240px;" type="buttont" onclick="document.location.href='/company/${companyId}/profile'">Edit profile</button>
-                <br>
-                <br>
-                <button class="btn btn-info save" style="width: 240px;" type="buttont" onclick="document.location.href='/company/${companyId}/reviews'">Moderate reviews</button>
+                <a class="btn btn-success save" style="width: 240px;" type="buttont" href="/company/${companyId}/profile">Edit profile</a>
+                <br/>
+                <br/>
+                <a class="btn btn-info save" style="width: 240px;" type="buttont" href="/company/${companyId}/reviews">Moderate reviews</a>
             </td>
         </sec:authorize>
         <sec:authorize access="not isAuthenticated()">
             <td>
-                <button class="btn btn-info save" style="width: 240px;" type="buttont" onclick="document.location.href='/public/${companyId}/reviews'">See reviews</button>
+                <a class="btn btn-info save" style="width: 240px;" type="buttont" href="/public/${companyId}/reviews">See reviews</a>
             </td>
         </sec:authorize>
-        <td align="right"><div class="logo"><img src="/public/${companyId}/logo " alt="logo" title="Logo Company"width="217"/></div></td>
-    </tr>
-
-    <tr>
-        <td colspan="2" class="body">
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. D onec sit amet nisi dui. Nullam tristique risus quis arcu iaculis consequat. Praesent aliquam consequat risus, sit amet facilisis quam porta eu. Integer sit amet velit vel lorem pretium feugiat. Ut condimentum est porttitor lectus dignissim facilisis. Cras augue libero, fermentum eu ultrices tristique, volutpat non nisl. Vestibulum rhoncus bibendum tempor. Donec sed velit vitae risus faucibus vulputate id id justo. Pellentesque a nisi turpis, nec egestas tortor. Integer ac augue neque.
-            </p>
-            <p>
-                Aenean augue arcu, sagittis ut mattis sed, sodales nec purus. Curabitur aliquet, metus quis porttitor congue, ipsum dui mattis justo, et feugiat dui magna nec odio. Maecenas sit amet enim id elit tincidunt accumsan in quis dolor. Mauris non diam sed felis pretium viverra a quis mi. Nunc sit amet malesuada lacus. Cras ut sem urna, ac tempor enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus aliquet gravida augue eu auctor. Donec vel ligula justo, eu sodales neque. Nullam nec ipsum rutrum leo scelerisque placerat. Curabitur ut lectus justo.
-            </p>
-        </td>
+        <td align="right"><div class="logo"><img src="/public/${companyId}/logo " alt="logo" title="${companyName} logo"width="217"/></div></td>
     </tr>
 </table>
+    <div class="text-holder">
+        <p>
+            <b>Welcome to <c:out value="${companyName}"/></b> - the Software Development Company providing complete programming solutions for companies around the world.
+        </p> 
+        <p>
+            Our approach, the value our expert software engineers bring to the table, and the advantages of outsourcing your IT projects makes <c:out value="${companyName}"/> a triple threat in the offshore custom software development field.
+        </p>
+        <p>
+            Your company can only grow as fast and as large as your software and technology can handle. Aging software programs and IT systems unable to expand with your business are the number one reason companies fall behind the competition. Choose <c:out value="${companyName}"/>  to connect the disconnected, integrate fragmented systems, and give your business more dynamic software and a cohesive IT infrastructure.  <c:out value="${companyName}"/>  is your one stop IT and software development Company.
+        </p>
+    </div>
+    <div class="clear"></div>
+</div>
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

@@ -1,4 +1,4 @@
-<%@include  file="/WEB-INF/pages/commons/admin_header.jsp"%>
+<%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <div id="content">
     <h1>My Companies</h1>
     <div id="company-list">
@@ -31,7 +31,6 @@
         function loadData(newPage) {
             
             newPage = newPage || 0;
-            newPage++;
             $('#content').mask('Please wait...');
             
             ajaxObj && ajaxObj.abort();
@@ -63,7 +62,7 @@
             $('.pager').pagination(itemsCount, pagerOptions);
         }
         function renderData(data){
-            if(!data.count){
+            if(!data.count || !data.companies.length){
                 $('#company-list').html('No Data Found.');
                 return;
             } else{
@@ -80,4 +79,4 @@
     })();
     
 </script>
-<%@include  file="/WEB-INF/pages/admin_footer.jsp"%>
+<%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

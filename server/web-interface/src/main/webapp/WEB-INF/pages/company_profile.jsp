@@ -71,12 +71,8 @@
             })});
     }
 </script>
-<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-    <tr>
-        <td class="title">${title}</td>
-    </tr>
-    <tr>
-        <td class="body">
+<div id="content">
+    <h1>${title}</h1> 
             <table cellpadding="0" cellspacing="0" summary="" class="form" style="width: 100%;">
                 <tr>
                     <td>
@@ -230,7 +226,5 @@
                             </form>
                         </div>
             </table>
-        </td>
-    </tr>
-</table>
+</div>
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

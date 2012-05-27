@@ -1,42 +1,37 @@
 <%@include file="/WEB-INF/pages/commons/header.jsp" %>
-<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-    <tr>
-        <td class="title">Contact Us</td>
-    </tr>
-    <tr>
-        <td class="body">
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <form:form method="POST" commandName="message">
-                <table cellpadding="0" cellspacing="0" summary="" class="contact_form">
-                    <tr>
-                        <td><label for="name">Your name: </label></td>
-                        <td><form:input path="name" /></td>
-                        <td><form:errors path="name" cssClass="errorblock"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="email">Your email: </label></td>
-                        <td><form:input path="email" /></td>
-                        <td><form:errors path="email" cssClass="errorblock"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="summary">Summary: </label></td>
-                        <td><form:input path="summary" /></td>
-                        <td><form:errors path="summary" cssClass="errorblock"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="message">Message: </label></td>
-                        <td><form:textarea path="message" rows="5" cols="80" ></form:textarea></td>
-                        <td><form:errors path="message" cssClass="errorblock"/></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td style="text-align: center"><button type="submit" class="btn btn_success save">Send</button></td>
-                    </tr>
-                </table>
-            </form:form>
-        </td>
-    </tr>
-</table>
+<div id="content">
+    <h1>Contact Us</h1>
+    <div class="text-holder">
+        <p>You can always call us on our Global Advisory Line +xx (xxx) xxx-xxxx to speak to one of our operatives direct. 
+        </p>
+        <p>Or why not fill in the brief Contact Form below outlining your requirements and we'll get back to you with the most up to date information on Likelabs.
+        </p>
+        <form:form method="POST" commandName="message" class="contact-form">
+            <div class="field-holder">
+                <label for="name">Your name: </label>
+                <form:input path="name" />
+                    <form:errors path="name" cssClass="errorblock"/>
+            </div>
+            <div class="field-holder">
+                <label for="email">Your email: </label>
+                <form:input path="email" />
+                <form:errors path="email" cssClass="errorblock"/>
+            </div>
+            <div class="field-holder">
+                <label for="summary">Summary: </label>
+                <form:input path="summary" />
+                <form:errors path="summary" cssClass="errorblock"/>
+            </div>
+            <div class="field-holder">
+                <label for="message">Message: </label>
+                <form:textarea path="message" rows="5" cols="80" style="width" ></form:textarea>
+                <form:errors path="message" cssClass="errorblock"/>
+            </div>
+            <div class="field-holder">
+                <button type="submit" class="btn btn-success save">Send</button>
+            </div>
+        </form:form>
+    </div>
+    <div class="clear"></div>
+</div>
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

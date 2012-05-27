@@ -1,17 +1,12 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
-    <table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
-        <tr>
-            <td class="title">Sign Up for Like Labs</td>
-        </tr>
-        <tr>
-            <td>
+    <div id="content">
+    
+    <h1>Sign Up for Like Labs</h1> 
+
                 <div class="field errorblock">
                     ${notsendsms}
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="body">
+
                 <form action="/signup/register" method="POST" onsubmit="return register();"   >
                     <div style="width: 350px;" class="center">
                         <div class="field">
@@ -50,7 +45,5 @@
                         </div>
                     </div>
                 </form>
-            </td>
-        </tr>
-    </table>
+    </div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

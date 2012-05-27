@@ -38,8 +38,8 @@ public class CompanyAdminController {
     private static final String PROFILE_REDIRECT_URL = "redirect:/companyadmin/profile";
     private static final int COMPANY_LIST_PAGE_SIZE = 10;
     private static final int REVIEW_LIST_PAGE_SIZE = 8;
-    private static final String LOGO_LINK_TEMPLATE = "/company/{0}/logo";
-    private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/company/review/{0}/photo";
+    private static final String LOGO_LINK_TEMPLATE = "/public/{0}/logo";
+    private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/public/review/{0}/photo";
     @Autowired
     private CompanyService companyService;
     @Autowired
@@ -50,7 +50,7 @@ public class CompanyAdminController {
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profileGet(ModelMap model) {
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
-        model.addAttribute("profile", new ProfileData(user.getPhone(), user.getPassword(), user.getEmail()));
+        model.addAttribute("profile", new ProfileData(user.getPhone(), "", user.getEmail()));
         return VIEW_PROFILE;
     }
 
@@ -81,7 +81,7 @@ public class CompanyAdminController {
     @RequestMapping(value = "/companies/data/{pageId:\\d}", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap companyListPaged(@PathVariable int pageId) {
-        int offset = (pageId - 1) * COMPANY_LIST_PAGE_SIZE;
+        int offset = pageId * COMPANY_LIST_PAGE_SIZE;
         int count = COMPANY_LIST_PAGE_SIZE;
 
         ModelMap modelMap = new ModelMap();
@@ -121,7 +121,7 @@ public class CompanyAdminController {
 
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
 
-        int offset = (pageId - 1) * REVIEW_LIST_PAGE_SIZE;
+        int offset = pageId * REVIEW_LIST_PAGE_SIZE;
         int count = REVIEW_LIST_PAGE_SIZE;
         Pager pager = new Pager(offset, count);
 
@@ -236,6 +236,8 @@ public class CompanyAdminController {
         for (Review review : reviews) {
             Map<String, String> reviewJson = new HashMap<String, String>();
             reviewJson.put("id", review.getId().toString());
+
+            reviewJson.put("companyId", review.getPoint().getCompany().getId().toString()); // todo: ???
             reviewJson.put("message", review.getMessage());
             reviewJson.put("name", review.getAuthor().getName());
             reviewJson.put("date", review.getCreatedDT().toString());
