@@ -3,6 +3,7 @@ package com.redwerk.likelabs.domain.model.user;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -75,10 +76,10 @@ public class UserSocialAccount implements Comparable<UserSocialAccount> {
     
     // reviews publishing
     
-    public boolean publishReview(Review review, GatewayFactory gatewayFactory) {
+    public boolean publishReview(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
         SocialNetworkGateway snGateway = gatewayFactory.getGateway(type);
         try {
-            snGateway.postUserMessage(this, review.getMessage(), review.getPhoto().getImage());
+            snGateway.postUserMessage(this, review.getMessage(), imageSourceFactory.createImageSource(review.getPhoto()));
         }
         catch (SNGeneralException e) {
             LOGGER.error("cannot publish review in " + type, e);

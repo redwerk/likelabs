@@ -30,16 +30,18 @@ public interface SocialNetworkGateway {
      * Post message to the user page in the social network
      * @param publisher publisher account in the social account
      * @param message text of the message
+     * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
-    public void postUserMessage(UserSocialAccount publisher, String message, byte[] image);
+    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource);
 
     /**
      * Post message to the company page in the social network
      * @param page company page in the social network
      * @param publisher publisher in the social account
      * @param message text of the message
+     * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, byte[] image);
+    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource);
 
     /**
      * Checks if user account has administrative privileges for the company page in social network

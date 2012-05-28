@@ -1,8 +1,10 @@
 package com.redwerk.likelabs.application;
 
 import com.redwerk.likelabs.application.dto.*;
+import com.redwerk.likelabs.domain.service.dto.PhotoData;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewStatus;
+import com.redwerk.likelabs.domain.service.dto.RecipientData;
 
 import java.util.List;
 

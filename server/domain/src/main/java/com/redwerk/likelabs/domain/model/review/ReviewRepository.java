@@ -1,11 +1,6 @@
 package com.redwerk.likelabs.domain.model.review;
 
-import com.redwerk.likelabs.domain.model.company.Company;
-import com.redwerk.likelabs.domain.model.point.Point;
-import com.redwerk.likelabs.domain.model.review.exception.NotAllowedReviewRemovalException;
-import com.redwerk.likelabs.domain.model.user.User;
-
-import java.util.List;
+import com.redwerk.likelabs.domain.model.review.exception.ApprovedReviewRemovingException;
 
 public abstract class ReviewRepository {
 
@@ -17,7 +12,7 @@ public abstract class ReviewRepository {
 
     public void remove(Review review) {
         if (review.getStatus() == ReviewStatus.APPROVED) {
-            throw new NotAllowedReviewRemovalException(review);
+            throw new ApprovedReviewRemovingException(review);
         }
         removeInternal(review);
     }

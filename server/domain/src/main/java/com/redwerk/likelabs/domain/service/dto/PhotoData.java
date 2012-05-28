@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.dto;
+package com.redwerk.likelabs.domain.service.dto;
 
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 

@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.service.sn.ImageSource;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
 import com.redwerk.likelabs.domain.service.sn.exception.ResourceAccessDeniedException;
@@ -117,7 +118,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message, byte[] image) {
+    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
         
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(API_POST_USER_MESSAGE_URL);
@@ -136,7 +137,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, byte[] image) {
+    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, page.getPageId()));
         postMethod.addParameter("message", message);

@@ -1,9 +1,14 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.event.Event;
+import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.event.EventType;
+import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountException;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -197,6 +202,28 @@ public class User {
             throw new AccountNotExistsException(this, networkType);
         }
         accounts.remove(account);
+    }
+    
+    // reviews
+    
+    public void registerReview(Review review, EventRepository eventRepository, GatewayFactory gatewayFactory,
+                               ImageSourceFactory imageSourceFactory) {
+        generateEvents(review, eventRepository);
+        publishInSN(review, gatewayFactory, imageSourceFactory);
+    }
+
+    private void generateEvents(Review review, EventRepository eventRepository) {
+        for (EventType eventType: enabledEvents) {
+            eventRepository.add(new Event(eventType, this, review));
+        }
+    }
+
+    private void publishInSN(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+        if (publishInSN) {
+            for (UserSocialAccount account: accounts) {
+                account.publishReview(review, gatewayFactory, imageSourceFactory);
+            }
+        }
     }
 
     // overrides

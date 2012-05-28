@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.service.sn.ImageSource;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.*;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
@@ -94,7 +95,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message, byte[] image) {
+    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
             String url = MessageFormat.format(API_POST_USER_MESSAGE_TEMPLATE, publisher.getAccountId(), URLEncoder.encode(message, "UTF-8"), publisher.getAccessToken());
             String data = requestApiData(url);
@@ -117,7 +118,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, byte[] image) {
+    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
             String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE,  "-" + page.getPageId(), URLEncoder.encode(message, "UTF-8"), publisher.getAccessToken());
             String data = requestApiData(url);

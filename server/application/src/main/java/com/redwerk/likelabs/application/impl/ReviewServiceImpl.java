@@ -1,20 +1,26 @@
 package com.redwerk.likelabs.application.impl;
 
+import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.ReviewService;
-import com.redwerk.likelabs.application.dto.PhotoData;
-import com.redwerk.likelabs.application.dto.RecipientData;
+import com.redwerk.likelabs.domain.service.RecipientNotifier;
+import com.redwerk.likelabs.domain.service.ReviewRegistrator;
+import com.redwerk.likelabs.domain.service.dto.PhotoData;
+import com.redwerk.likelabs.domain.service.dto.RecipientData;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
+import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.point.Point;
-import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
+import com.redwerk.likelabs.domain.service.impl.BasicReviewRegistrator;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +44,32 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private PhotoRepository photoRepository;
 
+    @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
+    private GatewayFactory gatewayFactory;
+
+    @Autowired
+    private ImageSourceFactory imageSourceFactory;
+
+    @Autowired
+    private RecipientNotifier recipientNotifier;
+
+    @Autowired
+    private RegistrationService registrationService;
+
+    private ReviewRegistrator reviewRegistrator;
+
+    private ReviewRegistrator getReviewRegistrator() {
+        if (reviewRegistrator == null) {
+            reviewRegistrator = new BasicReviewRegistrator(userRepository, registrationService, reviewRepository,
+                    photoRepository, eventRepository, gatewayFactory, imageSourceFactory, recipientNotifier);
+        }
+        return reviewRegistrator;
+    }
+
+    // implementation of ReviewService
 
     @Override
     @Transactional(readOnly = true)
@@ -117,49 +149,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
-        Tablet tablet = tabletRepository.get(tabletId);
-        // get or create author
-        User author = getOrCreateReviewAuthor(phone);
-        // creates photos
-        Photo reviewPhoto = null;
-        for (PhotoData photoData: photos) {
-            Photo photo = new Photo(author, photoData.getStatus(), photoData.getImage());
-            if (photo.getStatus() == PhotoStatus.SELECTED) {
-                if (reviewPhoto != null) {
-                    throw new IllegalArgumentException("only one photo can be selected");
-                }
-                reviewPhoto = photo;
-            }
-            photoRepository.add(photo);
-        }
-        if (reviewPhoto == null) {
-            throw new IllegalArgumentException("review photo is not selected");
-        }
-        // create review with proper status
-        Point point = tablet.getPoint();
-        ReviewStatus status = point.getCompany().isModerateReviews() ? ReviewStatus.PENDING : ReviewStatus.APPROVED;
-        Review review = Review.createReview(author, point, text, reviewPhoto);
-        RecipientFactory recipientFactory = new RecipientFactory();
-        for (RecipientData recipientData: recipients) {
-            review.addRecipient(recipientFactory.createReviewRecipient(review, recipientData.getType(), recipientData.getAddress()));
-        }
-        reviewRepository.add(review);
-        // publish in user sn ?
-        if (author.isPublishInSN()) {
-        }
-        // create events
-        // send notifications for recipients
-        return review;
+        return getReviewRegistrator().createAndRegisterReview(tabletRepository.get(tabletId), text, phone, photos, recipients);
     }
     
-    private User getOrCreateReviewAuthor(String phone) {
-        User author = userRepository.find(phone); // or create
-        if (author == null) {
-        }
-        return author;
-    }
-
-
     @Override
     @Transactional
     public void updateReview(long userId, long reviewId, String text) {
@@ -173,7 +165,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void updateStatus(long userId, long reviewId, ReviewStatus status, boolean useAsSample, boolean publishOnCompanyPage) {
         User user = userRepository.get(userId);
         Review review = reviewRepository.get(reviewId);
-        review.setStatus(status, user);
+        review.setStatus(status, user, eventRepository);
         if (publishOnCompanyPage) {
             review.publishInCompanySN(user);
         }

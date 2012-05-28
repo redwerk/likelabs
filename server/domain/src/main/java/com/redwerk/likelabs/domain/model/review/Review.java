@@ -1,6 +1,9 @@
 package com.redwerk.likelabs.domain.model.review;
 
 import com.redwerk.likelabs.domain.model.company.Company;
+import com.redwerk.likelabs.domain.model.event.Event;
+import com.redwerk.likelabs.domain.model.event.EventRepository;
+import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
@@ -8,6 +11,7 @@ import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -67,9 +71,10 @@ public class Review {
     // factory methods
 
     public static Review createReview(User author, Point point, String message, Photo photo) {
-        if (author == null || point == null || message == null || photo == null) {
-            throw new IllegalArgumentException("createReview() parameters cannot be null");
-        }
+        Validate.notNull(author, "author is required for review");
+        Validate.notNull(point, "point is required for review");
+        Validate.notNull(message, "message is required for review");
+        Validate.notNull(photo, "photo is required for review");
         Review review = new Review(author, point, message, photo);
         point.registerReview(review, new ReviewRegistrationAgent() {
             @Override
@@ -156,7 +161,7 @@ public class Review {
         return true;
     }
 
-    public boolean setStatus(ReviewStatus status, User moderator) {
+    public boolean setStatus(ReviewStatus status, User moderator, EventRepository eventRepository) {
         if (!canModerate(moderator)) {
             throw new NotAuthorizedReviewUpdateException(moderator, this, UpdateType.UPDATE_STATUS);
         }
@@ -165,7 +170,9 @@ public class Review {
         }
         this.status = status;
         markAsModerated(moderator);
-        // TODO: create event for owner if status == ReviewStatus.APPROVED
+        if (status == ReviewStatus.APPROVED) {
+            eventRepository.add(new Event(EventType.USER_REVIEW_APPROVED, author, this));
+        }
         return true;
     }
 

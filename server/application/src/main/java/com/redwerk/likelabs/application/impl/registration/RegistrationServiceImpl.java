@@ -29,7 +29,7 @@ import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 
 
 @Service
-public class RegistrationServiceImpl implements RegistrationService, UserRegistrator {
+public class RegistrationServiceImpl implements RegistrationService {
 
     private static final String MSG_SMS_REG = "message.sms.registration";
 
