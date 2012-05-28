@@ -30,7 +30,6 @@
  <div id="content">
     
     <h1>Sign Up for Like Labs</h1> 
-
                 <div>
                     <div class="field">
                         Congratulations! You were successfully registered to Like Labs!
@@ -76,13 +75,13 @@
                     <c:if test="${empty email_success}">
                         <div>
                             <div class="field">
-                                <input name="email" type="text" /> <input type="submit" value="Link  Email"/>
+                                <input name="email" type="text" /> <button class="btn" type="submit" >Link  Email</button>
                             </div>
                         </div>
                     </c:if>
                 </form>
                 <div class="field">
-                    <a class="btn btn-success save" href="/">Finish</button>
+                    <a class="btn btn-success save" href="/">Finish</a>
                 </div>
  </div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>
