@@ -11,5 +11,6 @@ extern NSString *const kRecipientsDone;
 - (IBAction)cancel:(id)sender;
 - (IBAction)done:(id)sender;
 - (id) initWithContactType:(ContactType)contactType andRecipients:(NSMutableArray*) recipients;
+- (NSString*) maskPhoneNumber:(NSString*) phone;
 
 @end

@@ -10,6 +10,9 @@
 NSString *const kRecipientsDidCancel = @"RecipientsDidCancel";
 NSString *const kRecipientsDone = @"RecipientsDone";
 NSUInteger const BTN_TAG_OFFSET = 50;
+NSString *const phoneRecipientsFormat = @"8(___)___-____";
+NSString *const phoneRecipientsDigitMask = @"_";
+int myPhoneSemaphore;
 
 @synthesize recipientsView;
 @synthesize recipientContactField;
@@ -24,6 +27,7 @@ NSUInteger const BTN_TAG_OFFSET = 50;
         self.recipients = recipients;
         self.contactType = contactType;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
+        myPhoneSemaphore = 1;
     }
     return self;
 }
@@ -122,6 +126,17 @@ NSUInteger const BTN_TAG_OFFSET = 50;
         self.recipientContactField.text = self.recipientContactField.placeholder;
         self.textPlaceholderActive = YES;
     }
+    
+    if (self.contactType == ContactTypePhone) {
+        NSString* res = [self maskPhoneNumber:self.recipientContactField.text];
+        if (res == @"")
+        {
+            myPhoneSemaphore = 0;
+            return;
+        }
+        
+        self.recipientContactField.text = res;
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -159,6 +174,57 @@ NSUInteger const BTN_TAG_OFFSET = 50;
     [self.recipients addObject:contact];
     [contact release];
     [[NSNotificationCenter defaultCenter] postNotificationName:kRecipientsDone object:nil];
+}
+
+- (NSString*) maskPhoneNumber:(NSString*) phone{
+    static int deleteIndex = 0;
+    
+    if (myPhoneSemaphore) return @"";
+    myPhoneSemaphore = 1;
+    
+    NSString* input = [NSString stringWithString:phone];
+    if (phone.length == 1) 
+        input = phoneRecipientsFormat;
+    
+    if (input.length < phoneRecipientsFormat.length)
+    {
+        NSMutableString* afterDelete = [NSMutableString stringWithString:[NSString stringWithFormat:@"%@%@", input, phoneRecipientsDigitMask]];
+        if (deleteIndex > 1)
+        {
+            [afterDelete replaceCharactersInRange:NSMakeRange(deleteIndex, phoneRecipientsFormat.length-deleteIndex) withString:[phoneRecipientsFormat substringFromIndex:deleteIndex]];
+            
+            deleteIndex--;
+            
+            if (deleteIndex > 1)
+            {
+                while (!isdigit([afterDelete characterAtIndex:deleteIndex]))
+                    deleteIndex--;
+            }
+        }
+        
+        return afterDelete;
+    }
+    
+    NSRange nextNumber = [input rangeOfString:phoneRecipientsDigitMask];
+    if (nextNumber.location != NSNotFound)
+        deleteIndex = nextNumber.location;
+    
+    char lastInputChar = [phone characterAtIndex:[phone length] - 1];
+    
+    NSMutableString* number = [NSMutableString stringWithString:input];
+    if (number.length > phoneRecipientsFormat.length)
+        [number replaceCharactersInRange:NSMakeRange(phoneRecipientsFormat.length, 1) withString:@""];
+    
+    if (nextNumber.location == NSNotFound)
+    {
+        myPhoneSemaphore = 1;
+        return number;
+    }
+    if (isdigit(lastInputChar))
+        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", lastInputChar]];
+    
+    
+    return number;
 }
 
 #pragma mark - Rotation

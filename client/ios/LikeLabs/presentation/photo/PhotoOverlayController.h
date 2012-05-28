@@ -10,5 +10,6 @@ extern NSString *const kPrimaryPhoneDone;
 - (id) initWithPhone:(NSString*) phone;
 - (IBAction)cancel:(id)sender;
 - (IBAction)done:(id)sender;
+- (NSString*) maskPhoneNumber:(NSString*) phone;
 
 @end

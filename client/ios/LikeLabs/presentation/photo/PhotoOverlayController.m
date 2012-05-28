@@ -7,6 +7,10 @@
 @implementation PhotoOverlayController
 NSString *const kPrimaryPhoneDidCancel = @"PrimaryPhoneDidCancel";
 NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
+NSString *const phoneFormat = @"8(___)___-____";
+NSString *const phoneDigitMask = @"_";
+int myPhoneSemaphore;
+
 
 @synthesize textField = _textField;
 @synthesize buttonsView = _buttonsView;
@@ -18,6 +22,7 @@ NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
     if (self = [super init]) {
         self.phone = phone;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
+        myPhoneSemaphore = 1;
     }
     return self;
 }
@@ -99,6 +104,15 @@ NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
         self.textField.text = self.textField.placeholder;
         self.textPlaceholderActive = YES;
     }
+    
+    NSString* res = [self maskPhoneNumber:self.textField.text];
+    if (res == @"")
+    {
+        myPhoneSemaphore = 0;
+        return;
+    }
+    
+    self.textField.text = res;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -123,6 +137,58 @@ NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
 - (void) savePhone {
     self.phone = self.textField.text;
     [[NSNotificationCenter defaultCenter] postNotificationName:kPrimaryPhoneDone object:nil];    
+}
+
+- (NSString*) maskPhoneNumber:(NSString*) phone
+{
+    static int deleteIndex = 0;
+    
+    if (myPhoneSemaphore) return @"";
+    myPhoneSemaphore = 1;
+    
+    NSString* input = [NSString stringWithString:phone];
+    if (phone.length == 1) 
+        input = phoneFormat;
+    
+    if (input.length < phoneFormat.length)
+    {
+        NSMutableString* afterDelete = [NSMutableString stringWithString:[NSString stringWithFormat:@"%@%@", input, phoneDigitMask]];
+        if (deleteIndex > 1)
+        {
+            [afterDelete replaceCharactersInRange:NSMakeRange(deleteIndex, phoneFormat.length-deleteIndex) withString:[phoneFormat substringFromIndex:deleteIndex]];
+            
+            deleteIndex--;
+            
+            if (deleteIndex > 1)
+            {
+                while (!isdigit([afterDelete characterAtIndex:deleteIndex]))
+                    deleteIndex--;
+            }
+        }
+        
+        return afterDelete;
+    }
+    
+    NSRange nextNumber = [input rangeOfString:phoneDigitMask];
+    if (nextNumber.location != NSNotFound)
+        deleteIndex = nextNumber.location;
+    
+    char lastInputChar = [phone characterAtIndex:[phone length] - 1];
+    
+    NSMutableString* number = [NSMutableString stringWithString:input];
+    if (number.length > phoneFormat.length)
+        [number replaceCharactersInRange:NSMakeRange(phoneFormat.length, 1) withString:@""];
+    
+    if (nextNumber.location == NSNotFound)
+    {
+        myPhoneSemaphore = 1;
+        return number;
+    }
+    if (isdigit(lastInputChar))
+        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", lastInputChar]];
+    
+    
+    return number;
 }
 
 #pragma mark - Actions
