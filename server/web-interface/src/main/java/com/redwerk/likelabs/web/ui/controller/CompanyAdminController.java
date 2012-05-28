@@ -51,16 +51,23 @@ public class CompanyAdminController {
     @Autowired
     private PointService pointService;
 
+    @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
+    public String dashboard(ModelMap model) {
+
+         return "redirect:/companyadmin/companies";
+    }
+
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profileGet(ModelMap model) {
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         model.addAttribute("profile", new ProfileData(user.getPhone(), "", user.getEmail()));
         model.addAttribute("page", "profile");
+        model.put("cabinet", "company_admin");
         return VIEW_PROFILE;
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public String profileSave(@ModelAttribute("profile") ProfileData profileData,
+    public String profileSave(ModelMap model, @ModelAttribute("profile") ProfileData profileData,
             BindingResult result) {
         User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
         new ProfileValidator().validate(profileData, result);
@@ -74,14 +81,16 @@ public class CompanyAdminController {
                     new HashSet<EventType>()));
             return PROFILE_REDIRECT_URL;
         } else {
+            model.put("cabinet", "company_admin");
             return VIEW_PROFILE;
         }
     }
 
     @RequestMapping(value = "/companies", method = RequestMethod.GET)
     public String companyList(ModelMap model) {
-        model.addAttribute("page", "companies");
         model.addAttribute("items_per_page" ,COMPANY_LIST_PAGE_SIZE);
+        model.addAttribute("page", "companies");
+        model.addAttribute("cabinet", "company_admin");
         return VIEW_COMPANY_LIST;
     }
 
@@ -112,7 +121,8 @@ public class CompanyAdminController {
         }
         model.addAttribute("compniesPointsMap", companiesPointsMap);
         model.addAttribute("items_per_page", REVIEW_LIST_PAGE_SIZE);
-        model.addAttribute("page", "feed");
+        model.addAttribute("page", "moderation");
+        model.addAttribute("cabinet", "company_admin");
         return VIEW_REVIEW_LIST;
     }
 

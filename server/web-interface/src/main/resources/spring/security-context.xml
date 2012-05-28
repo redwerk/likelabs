@@ -7,9 +7,7 @@
 
     <http use-expressions="true" access-denied-page="/WEB-INF/pages/error/access-denied.jsp">
 
-        <intercept-url pattern="/dashboard**" access="hasAnyRole('ROLE_USER,ROLE_SYSTEM_ADMIN')"/>
-        <intercept-url pattern="/admin**" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
-
+        <intercept-url pattern="/admin*" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
         <form-login login-page="/index"
                             default-target-url="/dashboard"
                             authentication-success-handler-ref="authSuccessHandler"

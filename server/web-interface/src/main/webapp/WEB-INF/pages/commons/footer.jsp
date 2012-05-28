@@ -2,6 +2,7 @@
         </div><!-- End of #content -->
     </div><!-- End of #sitewrapper -->
     <div class="clear"></div>
+    <%--
     <div id="footer">
             <div class="conteiner">
                 <div class="footer-nav">
@@ -33,5 +34,6 @@
                 </div>
             </div>
         </div>
+        --%>
 </body>
 </html>

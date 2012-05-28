@@ -8,24 +8,24 @@
         </p>
         <form:form method="POST" commandName="message" class="contact-form">
             <div class="field-holder">
+                <form:errors path="name" cssClass="errorblock" cssStyle="padding-left: 160px;"/>
                 <label for="name">Your name: </label>
                 <form:input path="name" />
-                    <form:errors path="name" cssClass="errorblock"/>
             </div>
             <div class="field-holder">
+                <form:errors path="email" cssClass="errorblock" cssStyle="padding-left: 160px;"/>
                 <label for="email">Your email: </label>
                 <form:input path="email" />
-                <form:errors path="email" cssClass="errorblock"/>
             </div>
             <div class="field-holder">
+                <form:errors path="summary" cssClass="errorblock" cssStyle="padding-left: 160px;"/>
                 <label for="summary">Summary: </label>
                 <form:input path="summary" />
-                <form:errors path="summary" cssClass="errorblock"/>
             </div>
             <div class="field-holder">
+                <form:errors path="message" cssClass="errorblock" cssStyle="padding-left: 160px;"/>
                 <label for="message">Message: </label>
                 <form:textarea path="message" rows="5" cols="80" style="width" ></form:textarea>
-                <form:errors path="message" cssClass="errorblock"/>
             </div>
             <div class="field-holder">
                 <button type="submit" class="btn btn-success save">Send</button>

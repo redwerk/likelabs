@@ -2,7 +2,7 @@
 
 <div id="content">
     
-    <h1>Terms of Service</h1> 
+    <h1>Terms of Use</h1>
     <div class="text-holder">
         
     

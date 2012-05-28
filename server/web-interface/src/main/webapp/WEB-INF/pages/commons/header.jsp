@@ -53,7 +53,7 @@
                     data: data,
                     success: function(data){
                         if (data == "true") {
-                            window.location.href = "/public";
+                            window.location.href = "/";
                         } else {
                             $('#password').val("");
                             $('#authfailed').html('<spring:message code="message.auth.failed"/>');
@@ -123,13 +123,17 @@
             </div>
             <div class="right signin_block">
                 <sec:authorize access="isAuthenticated()">
-                    <div style="width: 100px; float: right;">
-                        <div><a class="btn btn-success" href="/logout">Logout</a></div> 
-                        <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                            <div><a href="/admin/panel">Admin Panel</a></div>
+                <div style=" float: right;">
+                        <sec:authorize access="hasRole('ROLE_USER,ROLE_COMPANY_ADMIN')">
+                            <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
                         </sec:authorize>
-                    </div>
-                    
+                        <sec:authorize access="hasRole('ROLE_USER')">
+                            <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
+                        </sec:authorize>
+                        &nbsp;
+                        &nbsp;
+                        <button class="btn btn-success" style="width: 100px; " onclick="document.location.href='/logout'">Logout</button>
+                </div>
                 </sec:authorize>
                 <sec:authorize access="isAnonymous()" >
                     <form onsubmit="return signIn();" id="loginForm" >
@@ -172,14 +176,43 @@
         </div>
         <div id="main-holder">
             <div id="sidebar">
-                <ul class="menu">
-                    <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/companyadmin/companies"><span class="mark company"><span></span></span>Companies</a></li>
-                    <li class=' <c:if test="${page eq 'feed'}">active</c:if>'><a href="/companyadmin/feed"><span class="mark dashboard"><span></span></span>Feed</a></li>
-                    <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/companyadmin/profile"><span class="mark profile"><span></span></span> Profile</a></li>
-                    
-                    <li class=' <c:if test="${page eq 'company'}">active</c:if>'><a href="/public"><span class="mark company"><span></span></span>Company list</a></li>
-                    <li class=' <c:if test="${page eq 'reviews'}">active</c:if>'><a href="/public/1/reviews"><span class="mark feed"><span></span></span>Company feed</a></li>
-                    
-                </ul>
+                <sec:authorize access="not isAuthenticated()">
+                    <ul class="menu">
+                        <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/public"><span class="mark company"><span></span></span>Companies</a></li>
+                        <li class=' <c:if test="${page eq 'how_it_works'}">active</c:if>'><a href="/howitworks"><span class="mark dashboard"><span></span></span>How it works</a></li>
+                        <li class=' <c:if test="${page eq 'get_started'}">active</c:if>'><a href="/getsatrted"><span class="mark profile"><span></span></span>Get Started</a></li>
+                        <li class=' <c:if test="${page eq 'terms_of_use'}">active</c:if>'><a href="/tou"><span class="mark feed"><span></span></span>Terms of Use</a></li>
+                        <li class=' <c:if test="${page eq 'about_us'}">active</c:if>'><a href="/about"><span class="mark feed"><span></span></span>About Us</a></li>
+                        <li class=' <c:if test="${page eq 'contact_us'}">active</c:if>'><a href="/contact"><span class="mark feed"><span></span></span>Contact Us</a></li>
+                    </ul>
+                </sec:authorize>
+                <sec:authorize access="hasAnyRole('ROLE_USER,ROLE_COMPANY_ADMIN')">
+                    <c:choose>
+                        <c:when test="${cabinet eq 'company_admin'}">
+                            <ul class="menu">
+                                <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/companyadmin/companies"><span class="mark company"><span></span></span>My Companies</a></li>
+                                <li class=' <c:if test="${page eq 'moderation'}">active</c:if>'><a href="/companyadmin/feed"><span class="mark feed"><span></span></span>Moderation</a></li>
+                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/companyadmin/profile"><span class="mark profile"><span></span></span>Profile</a></li>
+                            </ul>
+                        </c:when>
+                        <c:when test="${cabinet eq 'company'}">
+                            <ul class="menu">
+                                <li class=' <c:if test="${page eq 'dashboard'}">active</c:if>'><a href="/company/${companyId}/dashboard"><span class="mark dashboard"><span></span></span>Dashboard</a></li>
+                                <li class=' <c:if test="${page eq 'feed'}">active</c:if>'><a href="/public/${companyId}/reviews"><span class="mark feed"><span></span></span>Feed</a></li>
+                                <li class=' <c:if test="${page eq 'moderation'}">active</c:if>'><a href="/company/${companyId}/reviews"><span class="mark feed"><span></span></span>Moderation</a></li>
+                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/company/${companyId}/profile"><span class="mark profile"><span></span></span>Profile</a></li>
+                            </ul>
+                        </c:when>
+                        <c:when test="${cabinet eq 'user'}">
+                            <ul class="menu">
+                                <li class=' <c:if test="${page eq 'my_feed'}">active</c:if>'><a href="/user"><span class="mark feed"><span></span></span>My Feed</a></li>
+                                <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/user"><span class="mark company"><span></span></span>Settings</a></li>
+                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/user"><span class="mark profile"><span></span></span>Profile</a></li>
+                            </ul>
+                        </c:when>
+                        <c:otherwise>
+                            <%-- another--%>
+                        </c:otherwise>
+                    </c:choose>
+                </sec:authorize>
             </div>
-       

@@ -29,7 +29,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
     private UserService userService;
 
     @Autowired
-    private CompanyService CompanyService;
+    private CompanyService companyService;
 
     @Override
     public UserDetails loadUserByUsername(String idOrPhone) throws UsernameNotFoundException, DataAccessException {
@@ -57,7 +57,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (user.isSystemAdmin()) {
             authorities.add(new SimpleGrantedAuthority(AuthorityRole.ROLE_SYSTEM_ADMIN.toString()));
         }
-        if (CompanyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getCount() > 0 && user.isActive()) {
+        if (!companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems().isEmpty() && user.isActive()) {
             authorities.add(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()));
         }
         return new org.springframework.security.core.userdetails.User(user.getId().toString(), user.getPassword(), authorities);

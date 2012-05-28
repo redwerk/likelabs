@@ -47,11 +47,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/company/{companyId}")
-public class CompanyContentController {
+public class CompanyController {
 
     public static final int ITEMS_PER_PAGE_REVIEW = 8;
-    private static final String VIEW_COMPANY_REVIEWS_LIST = "company_review_list";
-    private static final String VIEW_COMPANY_CABINET = "company_cabinet";
+    private static final String VIEW_COMPANY_REVIEWS_LIST = "company/company_review_list";
+    private static final String VIEW_COMPANY_DASHBOARD = "company/dashboard";
 
     @Autowired
     private CompanyService companyService;
@@ -75,7 +75,17 @@ public class CompanyContentController {
 
          Company company = companyService.getCompany(companyId);
          model.put("companyName", company.getName());
-         return VIEW_COMPANY_CABINET;
+         return "redirect:/company/"+ companyId + "/dashboard";
+    }
+
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    public String dashboard(ModelMap model, @PathVariable Integer companyId) {
+
+         Company company = companyService.getCompany(companyId);
+         model.put("companyName", company.getName());
+         model.put("page", "dashboard");
+         model.put("cabinet", "company");
+         return VIEW_COMPANY_DASHBOARD;
     }
 
     @RequestMapping(value = "/reviews", method = RequestMethod.GET)
@@ -87,7 +97,8 @@ public class CompanyContentController {
         model.addAttribute("company", company);
         model.addAttribute("count", report.getCount());
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_REVIEW);
-        model.addAttribute("page", "company_reviews");
+        model.addAttribute("page", "moderation");
+        model.put("cabinet", "company");
         return VIEW_COMPANY_REVIEWS_LIST;
     }
 
@@ -141,7 +152,7 @@ public class CompanyContentController {
                          reviewId, review.getStatus(), sampleStatus, false);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.promo.autority.ivalide"));
+            response.put("error", messageTemplateService.getMessage("review.promo.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
             response.put("error", messageTemplateService.getMessage("review.promo.change.failed"));
@@ -163,7 +174,7 @@ public class CompanyContentController {
                          reviewId, ReviewStatus.valueOf(status.toUpperCase(Locale.ENGLISH)), sampleReviews.contains(review), false);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.status.autority.ivalide"));
+            response.put("error", messageTemplateService.getMessage("review.status.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
             response.put("error", messageTemplateService.getMessage("review.status.change.failed"));
@@ -182,7 +193,7 @@ public class CompanyContentController {
                          reviewId, review.getStatus(), false, true);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.public.autority.ivalide"));
+            response.put("error", messageTemplateService.getMessage("review.public.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
             response.put("error", messageTemplateService.getMessage("review.public.failed"));

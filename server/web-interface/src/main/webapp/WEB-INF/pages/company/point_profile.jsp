@@ -145,6 +145,7 @@
             </div>
         </div>
     </div>
-
+<div class="clear"></div>
 </div>
+
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

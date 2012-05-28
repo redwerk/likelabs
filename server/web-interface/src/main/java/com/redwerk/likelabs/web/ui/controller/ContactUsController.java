@@ -36,7 +36,7 @@ public class ContactUsController {
 
         ContactUsMessageDto message = new ContactUsMessageDto();
         model.addAttribute("message", message);
-        model.addAttribute("page", "contact");
+        model.addAttribute("page", "contact_us");
         return "contact_us";
     }
 
@@ -46,6 +46,7 @@ public class ContactUsController {
         model.addAttribute("page", "contact");
         validator.validate(message, result);
         if (result.hasErrors()) {
+            model.addAttribute("page", "contact_us");
             return "contact_us";
         }
         try {
@@ -56,6 +57,7 @@ public class ContactUsController {
             model.addAttribute("error", true);
         }
         status.setComplete();
+        model.addAttribute("page", "contact_us");
         return "contact_us_success";
     }
 
@@ -80,14 +82,14 @@ public class ContactUsController {
             if (StringUtils.isBlank(mail.getEmail())) {
                 errors.rejectValue("email", "contactus.form.required.field", "Please fill in the required fields.");
             } else if (!mailValidator.isValid(mail.getEmail())) {
-                errors.rejectValue("email", "contactus.form.ivalide.email", "Please enter valid email address.");
+                errors.rejectValue("email", "contactus.form.invalid.email", "Please enter valid email address.");
             }
             if (mail.getName().length() > DEFAULT_LENGTH) {
-                errors.rejectValue("name", "contactus.form.ivalide.long.name", "Maximum name length allowed is 40 symbols.");
+                errors.rejectValue("name", "contactus.form.invalid.long.name", "Maximum name length allowed is 40 symbols.");
             }
 
             if (mail.getSummary().length() > DEFAULT_LENGTH) {
-                errors.rejectValue("summary", "contactus.form.ivalide.long.summary", "Maximum summary length allowed is 80 symbols.");
+                errors.rejectValue("summary", "contactus.form.invalid.long.summary", "Maximum summary length allowed is 80 symbols.");
             }
         }
     }

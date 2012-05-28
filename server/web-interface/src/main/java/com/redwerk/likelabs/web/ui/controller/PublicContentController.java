@@ -70,7 +70,7 @@ public class PublicContentController {
 
         model.addAttribute("count", companyService.getCompaniesCount());
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_COMPANY);
-        model.addAttribute("page", "company");
+        model.addAttribute("page", "companies");
         return VIEW_COMPANY_LIST;
     }
 
@@ -108,7 +108,7 @@ public class PublicContentController {
         model.addAttribute("company", company);
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_POINT);
         model.addAttribute("count", pointService.getPoints(company.getId(), Pager.ALL_RECORDS).getCount());
-        model.addAttribute("page", "company");
+        model.addAttribute("page", "companies");
         return VIEW_POINTS_LIST;
     }
 
@@ -147,7 +147,8 @@ public class PublicContentController {
         model.addAttribute("company", company);
         model.addAttribute("count", report.getCount());
         model.addAttribute("items_per_page", ITEMS_PER_PAGE_REVIEW);
-        model.addAttribute("page", "reviews");
+        model.addAttribute("page", "feed");
+        model.put("cabinet", "company");
         return VIEW_REVIEWS_LIST;
     }
 

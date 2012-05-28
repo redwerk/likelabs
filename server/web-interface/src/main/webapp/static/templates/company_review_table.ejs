@@ -38,7 +38,7 @@
             </tr>
             <tr class="btn-holder">
                 <td c style="text-align: center;" colspan="2">
-                    <% if(feed.published == true ){ %>
+                    <% if(feed.published != true ){ %>
                         <button class="btn btn-success publish" type="button" onclick="updateFeed('<%=feed.id%>', 'publish', true);">Publish</button>
                     <% } else {%>
                         <span class="btn disabled">Published</span>
