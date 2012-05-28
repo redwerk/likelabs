@@ -49,10 +49,7 @@ static NSString *const GREETING = @"Start typing a message!";
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
     // Do any additional setup after loading the view from its nib.
-    UIColor *background = [[UIColor alloc] initWithPatternImage:
-                           [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
-    self.view.backgroundColor = background;
-    [background release];
+
     self.navigationBackground.image = [[UIImage imageNamed:NAVIGATION_BACKGROUND_IMG] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
     [self.navigationBackground setContentMode:UIViewContentModeScaleToFill];
     
@@ -146,14 +143,18 @@ static NSString *const GREETING = @"Start typing a message!";
 }
 
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    UIColor *background;
     if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:bgPortrait]];
         self.messageView.center = CGPointMake(384, 600);
         self.imageView.center = CGPointMake(384, 259);        
     } else {
+        background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:bgLandscape]];
         self.imageView.center = CGPointMake(224, 259);
         self.messageView.center = CGPointMake(726, 259);
     }
-    
+    self.view.backgroundColor = background;
+    [background release];
 }
 
 #pragma mark - Actions

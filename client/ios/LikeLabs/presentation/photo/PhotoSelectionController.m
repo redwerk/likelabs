@@ -175,7 +175,7 @@ NSInteger selectedIndex;
     CGFloat deleteBtnOffset = 10;
     btn.center = CGPointMake(tappedImage.frame.size.width - deleteBtnOffset, 0 + deleteBtnOffset);
     [btn addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
-    [tappedImage addSubview:btn];    
+    [tappedImage addSubview:btn];
 }
 
 - (void) resetThumbnails {

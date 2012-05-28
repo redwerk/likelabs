@@ -71,7 +71,6 @@
         [self.view addSubview:self.messageView];
     } else {
         self.lbTitle.text = [[[NSString alloc] initWithFormat:titleFormat, @"photo message"] autorelease];
-        NSLog(@"%@", self.review.reviewPhotoIndex);
         _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
         [self.view addSubview:self.imageView];
     }

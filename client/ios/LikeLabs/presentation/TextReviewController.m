@@ -90,6 +90,7 @@ float commentsContentOffset = 0;
     self.textPlaceholderActive = true;
     self.textLabel.font = [UIFont fontWithName:@"Lobster 1.4" size:23];
     [self.textView becomeFirstResponder];    
+    self.currentOrientation = self.interfaceOrientation;
 }
 
 - (void)viewDidUnload
@@ -117,6 +118,7 @@ float commentsContentOffset = 0;
 }
 
 #pragma mark - TextViewDelegate implementation
+
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if (self.textPlaceholderActive) {
