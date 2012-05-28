@@ -13,6 +13,8 @@ import com.redwerk.likelabs.domain.service.sn.exception.WrongPageUrlException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import com.redwerk.likelabs.domain.service.sn.ImageSource;
+import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -25,6 +27,10 @@ import net.sf.json.util.JSONTokener;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,11 +124,11 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
-        
+    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource){
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(API_POST_USER_MESSAGE_URL);
         postMethod.addParameter("message", message);
+        postMethod.addParameter("picture", imageSource.getImageUrl());
         postMethod.addParameter("access_token", publisher.getAccessToken());
         try {
             client.executeMethod(postMethod);
@@ -141,6 +147,7 @@ public class FacebookGateway implements SocialNetworkGateway {
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, page.getPageId()));
         postMethod.addParameter("message", message);
+        postMethod.addParameter("picture", imageSource.getImageUrl());
         postMethod.addParameter("access_token", publisher.getAccessToken());
         try {
             client.executeMethod(postMethod);
