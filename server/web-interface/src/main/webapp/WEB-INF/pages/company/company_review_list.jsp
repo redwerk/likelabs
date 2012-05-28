@@ -51,8 +51,8 @@ $(document).ready(function(){
     var options = {
         feedType: null,
         point: null,
-        dateTo: null,
-        dateFrom: null,
+        toDate: null,
+        fromDate: null,
         sortBy: null,
         page: 0,
         status: null
@@ -85,8 +85,8 @@ $(document).ready(function(){
     }
 
     function changeFilter() {
-        options.dateFrom = $("#filter_date_from").val();
-        options.dateTo = $("#filter_date_to").val();
+        options.fromDate = $("#filter_date_from").val();
+        options.toDate = $("#filter_date_to").val();
         options.feedType = $("#feed_type").val();
         options.point = $("#point").val();
         options.page = 0;
@@ -99,8 +99,8 @@ $(document).ready(function(){
     }
 
     function updateOptions() {
-        options.dateFrom = $("#filter_date_from").val();
-        options.dateTo = $("#filter_date_to").val();
+        options.fromDate = $("#filter_date_from").val();
+        options.toDate = $("#filter_date_to").val();
         options.feedType = $("#feed_type").val();
         options.point = $("#point").val();
         options.page = 0;

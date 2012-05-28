@@ -1,7 +1,8 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
-<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="" class="content_block">
+<div id="content">
+<table cellpadding="0" cellspacing="0" style="height: 100%;" summary="">
     <tr>
-        <td class="title">Welcome To Like Labs - Activation administrator company</td>
+        <td><h1>Welcome To Like Labs - Activation administrator company</h1></td>
     </tr>
     <tr>
         <td class="body">
@@ -22,4 +23,5 @@
         </td>
     </tr>
 </table>
+</div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>
