@@ -19,7 +19,7 @@
                     <input type="hidden" name="userId" value="<c:out value='${id}'/>" />
                     <input type="hidden" name="code" value="<c:out value='${activatecode}'/>" />
                     <div class="field">
-                        <button class="btn btn_success save" type="submit" style="">Activate</button>
+                        <button class="btn btn-success save" type="submit" style="">Activate</button>
                     </div>
                 </div>
             </form>

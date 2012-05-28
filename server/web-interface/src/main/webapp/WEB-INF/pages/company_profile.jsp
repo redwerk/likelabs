@@ -92,7 +92,7 @@
                                 <form:input path="email" />
                             </div>
 
-                            <div class="label"><label for="moderate1">Moderation</label><form:checkbox path="moderate" /></div>
+                                <div class="label"><label for="moderate1" style="vertical-align: middle;">Moderation</label> <form:checkbox path="moderate" cssStyle="margin: 0; vertical-align: middle;" /></div>
                             <div class="field">
                                 
                             </div>
@@ -161,7 +161,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="text-align: center; padding-top: 30px;">
-                                            <button class="btn btn_success save" type="submit">Submit</button>
+                                            <button class="btn btn-success save" type="submit">Submit</button>
                                             <button class="btn btn-info save" type="button" onclick="$('#add_administrator_dialog').dialog('close')">Cancel</button>
                                         </td>
                                     </tr>
@@ -218,7 +218,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="text-align: center; padding-top: 30px;">
-                                            <button class="btn btn_success save" type="submit">Submit</button>
+                                            <button class="btn btn-success save" type="submit">Submit</button>
                                             <button class="btn btn-info save" type="button" onclick="$('#add_social_page_dialog').dialog('close')">Cancel</button>
                                         </td>
                                     </tr>

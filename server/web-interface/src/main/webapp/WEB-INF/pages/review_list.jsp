@@ -27,8 +27,8 @@
             updateData();
         });
         
-        $(".button_filter").click(function(){
-            $(".button_filter").removeClass("active");
+        $(".status-filter label").click(function(){
+            $(".status-filter label").removeClass("active");
             $(this).toggleClass("active");
         })
         

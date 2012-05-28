@@ -38,7 +38,7 @@
                 </div>
                 <div>
                     <div class="field">
-                        Now you can go to <a href="javascript:void(0)" onclick="document.location.href='/'">Dashboard</a>
+                        Now you can go to <a href="/" >Dashboard</a>
                     </div>
                 </div>
                 <h4>Connect Social Accounts: </h4>
@@ -82,7 +82,7 @@
                     </c:if>
                 </form>
                 <div class="field">
-                    <button type="button" class="btn btn_success save" onclick="document.location.href='/'">Finish</button>
+                    <a class="btn btn-success save" href="/">Finish</button>
                 </div>
  </div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

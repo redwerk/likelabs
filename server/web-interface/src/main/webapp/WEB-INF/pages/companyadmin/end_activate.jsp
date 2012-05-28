@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="field">
-                    <button type="button" class="btn btn_success save" onclick="document.location.href='/companyadmin/activate/finish'">Finish</button>
+                    <button type="button" class="btn btn-success save" onclick="document.location.href='/companyadmin/activate/finish'">Finish</button>
                 </div>
  </div>
 <%@include  file="/WEB-INF/pages/commons/footer.jsp"%>

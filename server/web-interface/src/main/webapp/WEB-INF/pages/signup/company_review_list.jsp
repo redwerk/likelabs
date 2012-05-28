@@ -27,8 +27,8 @@
             updateData();
         });
 
-        $(".button_filter").click(function(){
-            $(".button_filter").removeClass("active");
+        $(".status-filter label").click(function(){
+            $(".status-filter label").removeClass("active");
             $(this).toggleClass("active");
         })
 
@@ -116,84 +116,65 @@
         });
     }
 </script>
-                                <table cellpadding="0" cellspacing="0" style="width: 100%;" summary="" class="content_block">
-                                    <tr>
-                                        <td style="height: 85px;">
-                                            <div class="title" style="position: relative; float: left;">Reviews for ${company.name}</div>
-                                            <div style="position: relative; float: right; padding-right: 5px;">
-                                                <select onchange="changeSort()" id="sort_by" style="width: 150px">
-                                                    <option value="">Sort By</option>
-                                                    <option value="date">Date</option>
-                                                    <option value="point">Point</option>
-                                                    <option value="review_type">Content type</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="filter admin">
-                                                <div>
-                                                    <div class="sub_title">
-                                                        <div style="display: inline-block">Contains :</div>
-                                                        <div style="display: inline-block">
-                                                            <select onchange="changeFilter()" id="feed_type">
-                                                                <option value="">Not selected</option>
-                                                                <option value="contains_text">Text</option>
-                                                                <option value="contains_photo">Photo</option>
-                                                                <option value="contains_text_and_photo">Text and Photo</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="sub_title">
-                                                        <div style="display: inline-block">Point :</div>
-                                                        <div style="display: inline-block">
-                                                            <select onchange="changeFilter()" id="point">
-                                                                <option value="">All</option>
-                                                                <c:forEach varStatus="status" var="point" items="${points}">
-                                                                    <option value="${point.id}">${point.address.addressLine1}</option>
-                                                                </c:forEach>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="sub_title">
-                                                        <div style="display: inline-block">Date :</div>
-                                                        <div style="display: inline-block">
-                                                            <input type="text" id="filter_date_from" onchange="changeFilter()" />
-                                                            -
-                                                            <input type="text" id="filter_date_to" onchange="changeFilter()" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <sec:authorize access="hasRole('ROLE_COMPANY_ADMIN')">
-                                                    <div style="margin-top: 15px; margin-left: 10px;">
-                                                        <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
-                                                        <input id="status_pending" type="radio" name="status_filter" value="pending"/>
-                                                        <input id="status_approved" type="radio" name="status_filter" value="approved"/>
-                                                        <input id="status_archived" type="radio" name="status_filter" value="archived"/>
-                                                        <input id="status_flagged" type="radio" name="status_filter" value="flagged"/>
-                                                        <input id="status_published" type="radio" name="status_filter" value="published"/>
-                                                        <input id="status_promo" type="radio" name="status_filter" value="promo"/>
+<div id="content">
+    <h1>Reviews for <a class="go-company" href="/company/${companyId}">${company.name}</a></h1>
+    <div class="order-holder">
+         <select onchange="changeSort()" id="sort_by" style="width: 150px">
+            <option value="">Sort By</option>
+            <option value="date">Date</option>
+            <option value="point">Point</option>
+            <option value="review_type">Content type</option>
+        </select>
+    </div>
+    <div class="items-holder" >  
+        <div class="filter-holder">
+            <div>
+                <label for="feed_type">Contains :</label>
+                <select onchange="changeFilter()" id="feed_type">
+                    <option value="">Not selected</option>
+                    <option value="contains_text">Text</option>
+                    <option value="contains_photo">Photo</option>
+                    <option value="contains_text_and_photo">Text and Photo</option>
+                </select>
+
+                <label for="point">Point :</label>
+                <select onchange="changeFilter()" id="point">
+                    <option value="">All</option>
+                    <c:forEach varStatus="status" var="point" items="${points}">
+                        <option value="${point.id}">${point.address.addressLine1}</option>
+                    </c:forEach>
+                </select>
+
+                <label for="filter_date_from">Date :</label>
+                <input type="text" id="filter_date_from" onchange="changeFilter()" />
+                -
+                <input type="text" id="filter_date_to" onchange="changeFilter()" />
+
+            </div>
+            <sec:authorize access="hasRole('ROLE_COMPANY_ADMIN')">
+                <div class="status-filter">
+                    <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
+                    <input id="status_pending" type="radio" name="status_filter" value="pending"/>
+                    <input id="status_approved" type="radio" name="status_filter" value="approved"/>
+                    <input id="status_archived" type="radio" name="status_filter" value="archived"/>
+                    <input id="status_flagged" type="radio" name="status_filter" value="flagged"/>
+                    <input id="status_published" type="radio" name="status_filter" value="published"/>
+                    <input id="status_promo" type="radio" name="status_filter" value="promo"/>
 
 
-                                                        <label class="button_filter" for="status_all">All</label>
-                                                        <label class="button_filter" for="status_pending">Pending</label>
-                                                        <label class="button_filter" for="status_approved">Approved</label>
-                                                        <label class="button_filter" for="status_archived">Archived</label>
-                                                        <label class="button_filter" for="status_flagged">Flagged</label>
-                                                        <label class="button_filter" for="status_published">Published</label>
-                                                        <label class="button_filter" for="status_promo">Favourites</label>
-                                                    </div>
-                                                </sec:authorize>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="body" style="width: 100%;">
-                                            <div id="feeds_table"></div>
-                                            <div style="clear: both"></div>
-                                            <div id="pager" class="pagination" style="position: relative; float: right;">asd</div>
-                                        </td>
-                                    </tr>
-                                </table>
+                    <label class="active"  for="status_all">All</label>
+                    <label for="status_pending">Pending</label>
+                    <label for="status_approved">Approved</label>
+                    <label for="status_archived">Archived</label>
+                    <label for="status_flagged">Flagged</label>
+                    <label for="status_published">Published</label>
+                    <label for="status_promo">Favourites</label>
+                </div>
+            </sec:authorize>
+        </div>
+        <div id="feeds_table" class="items-inner"></div>
+        <div id="pager" class="pager"></div>
+        <div class="clear"></div>
+    </div>
+</div>
 <%@include file="/WEB-INF/pages/commons/footer.jsp" %>

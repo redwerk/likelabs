@@ -100,7 +100,7 @@
             </tr>
             <tr>
                 <td style="text-align: center; padding-top: 30px;">
-                    <button id='confirm_dialog_ok' class="btn btn_success save" type="button">OK</button>
+                    <button id='confirm_dialog_ok' class="btn btn-success save" type="button">OK</button>
                     <button id="confirm_dialog_cancel" class="btn btn-info save" type="button">Cancel</button>
                 </td>
             </tr>

@@ -29,8 +29,8 @@ $(document).ready(function(){
             updateData();
         });
 
-        $(".button_filter").click(function(){
-            $(".button_filter").removeClass("active");
+        $(".status-filter label").click(function(){
+            $(".status-filter label").removeClass("active");
             $(this).toggleClass("active");
         })
 
@@ -147,7 +147,7 @@ $(document).ready(function(){
                     </c:forEach>
                 </select>
                 
-                <label for="point">Date :</label>
+                <label for="filter_date_from">Date :</label>
                 <input type="text" id="filter_date_from" onchange="changeFilter()" />
                 -
                 <input type="text" id="filter_date_to" onchange="changeFilter()" />

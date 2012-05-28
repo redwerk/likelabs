@@ -11,7 +11,7 @@
                             <input name="password" type="text" style="width: 180px;"/>
                         </div>
                         <div class="field">
-                            <button type="submit" class="btn btn_success save">Register</button>
+                            <button type="submit" class="btn btn-success save">Register</button>
                         </div>
                     </div>
                 </form>

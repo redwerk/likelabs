@@ -36,12 +36,15 @@
                                 }
                             </script>
                         </div>
-                        <div class="field" style="font-size: 10px;margin: 0; padding: 0">
-                            <span><input <c:out value="${checkedtos}"/> id="chekTOS" type="checkbox" name="tos" /></span>
-                            <span>I agree to the <a href="/tos" target="_blank">Terms of Service</a></span>
+                            <div class="field" style="font-size: 12px !important;" >
+                             <input <c:out value="${checkedtos}"/> id="chekTOS" type="checkbox" name="tos" style="margin: 0; vertical-align: middle;" /> 
+                            <label for="chekTOS" style="vertical-align: middle;">
+                               
+                                I agree to the
+                            </label> <a href="/tos" target="_blank" style="vertical-align: middle; padding-top: 1px; font-weight: bold;" >Terms of Service</a>
                         </div>
                         <div class="field">
-                            <button type="submit" class="btn btn_success save">Sign Up</button>
+                            <button type="submit" class="btn btn-success save">Sign Up</button>
                         </div>
                     </div>
                 </form>
