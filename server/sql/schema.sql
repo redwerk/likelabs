@@ -89,11 +89,11 @@ CREATE TABLE `point` (
 DROP TABLE IF EXISTS `point_address`;
 CREATE TABLE `point_address` (
      `point_id` BIGINT NOT NULL,
-     `city` VARCHAR(80),
-     `state` VARCHAR(80),
+     `city` VARCHAR(80) NOT NULL,
+     `state` VARCHAR(80) NOT NULL,
      `postal_code` VARCHAR(40),
-     `country` VARCHAR(80),
-     `address_line_1` VARCHAR(80),
+     `country` VARCHAR(80) NOT NULL,
+     `address_line_1` VARCHAR(80) NOT NULL,
      `address_line_2` VARCHAR(80),
      CONSTRAINT `PK_point_address` PRIMARY KEY (`point_id`),
      CONSTRAINT `FK_point_address_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE

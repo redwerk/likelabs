@@ -60,6 +60,8 @@ public class ReviewServiceImpl implements ReviewService {
         query.setContentType(queryData.getType());
         query.setPager(queryData.getPager());
         query.setSortingRule(queryData.getSortingRule());
+        query.setSampleStatus(queryData.getSampleStatus());
+        query.setPublishingStatus(queryData.getPublishingStatus());
         return query;
     }
 

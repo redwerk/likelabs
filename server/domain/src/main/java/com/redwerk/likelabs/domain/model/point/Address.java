@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.domain.model.point;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -31,6 +32,10 @@ public class Address {
 
     public Address(String city, String state, String country, String postalCode,
                    String addressLine1, String addressLine2) {
+        Validate.notEmpty(city, "city is required");
+        Validate.notEmpty(state, "state is required");
+        Validate.notEmpty(country, "country is required");
+        Validate.notEmpty(addressLine1, "addressLine1 is required");
         this.city = city;
         this.state = state;
         this.country = country;

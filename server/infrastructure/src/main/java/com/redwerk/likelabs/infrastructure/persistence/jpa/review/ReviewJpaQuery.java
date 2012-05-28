@@ -41,11 +41,11 @@ public class ReviewJpaQuery implements ReviewQuery {
                     "(:pointIds is null or r.point.id in :pointIds) and " +
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
                     "(:toDate is null or r.createdDT < :toDate) and " +
-                    "(:status is null or r.status = :status)) and " +
+                    "(:status is null or r.status = :status) and " +
                     "(:sampleStatus is null or " +
                         "(:sampleStatus = true and r in elements(r.point.company.sampleReviews)) or " +
                         "(:sampleStatus = false and r not in elements(r.point.company.sampleReviews))) and " +
-                    "(:publishingStatus is null or r.publishedInCompanySN = :publishingStatus)";
+                    "(:publishingStatus is null or r.publishedInCompanySN = :publishingStatus))";
 
     private static final String REVIEWS_QUERY = "select r {0} {1}";
 
@@ -172,7 +172,7 @@ public class ReviewJpaQuery implements ReviewQuery {
         parameters.put("pointIds", pointIds);
         parameters.put("fromDate", fromDate);
         parameters.put("toDate", toDate);
-        parameters.put("status", status);
+        parameters.put("status", (status != null) ? status.ordinal() : null);
         parameters.put("sampleStatus", sampleStatus);
         parameters.put("publishingStatus", publishingStatus);
         return parameters;
