@@ -221,7 +221,7 @@ public class Review {
     }
     
     private boolean canModerate(User user) {
-        return point.getCompany().getAdmins().contains(moderator);
+        return point.getCompany().getAdmins().contains(user);
     }
 
     // overrides
