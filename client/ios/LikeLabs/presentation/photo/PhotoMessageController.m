@@ -38,7 +38,7 @@ static NSString *const GREETING = @"Start typing a message!";
 -(id)initWithRootController:(RootPhotoController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
-        self.review = rootController.rootController.review;
+        self.review = [self.rootController getReview];
     }
     return self;
 }
@@ -47,6 +47,7 @@ static NSString *const GREETING = @"Start typing a message!";
 {
     [super viewDidLoad];
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
+    
     // Do any additional setup after loading the view from its nib.
     UIColor *background = [[UIColor alloc] initWithPatternImage:
                            [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
@@ -87,9 +88,9 @@ static NSString *const GREETING = @"Start typing a message!";
     
     self.imageView.image = photo;
     
-    CGPoint oldCenter = self.imageView.center;
+    //CGPoint oldCenter = self.imageView.center;
     self.imageView.frame = CGRectMake(0, 0, photo.size.width, photo.size.height);
-    self.imageView.center = oldCenter;
+    //self.imageView.center = oldCenter;
 }
 
 # pragma mark - Memory management
@@ -147,7 +148,9 @@ static NSString *const GREETING = @"Start typing a message!";
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
         self.messageView.center = CGPointMake(384, 600);
+        self.imageView.center = CGPointMake(384, 259);        
     } else {
+        self.imageView.center = CGPointMake(224, 259);
         self.messageView.center = CGPointMake(726, 259);
     }
     

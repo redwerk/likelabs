@@ -36,7 +36,7 @@
 -(id)initWithRootController:(UIViewController <ContainerController> *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
-        self.review = [rootController getReview];
+        self.review = [self.rootController getReview];
         self.reviewService = [rootController getReviewService];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissOverlay) name:kPrimaryPhoneDidCancel object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePhone) name:kPrimaryPhoneDone object:nil];
@@ -71,6 +71,7 @@
         [self.view addSubview:self.messageView];
     } else {
         self.lbTitle.text = [[[NSString alloc] initWithFormat:titleFormat, @"photo message"] autorelease];
+        NSLog(@"%@", self.review.reviewPhotoIndex);
         _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 191, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
         [self.view addSubview:self.imageView];
     }

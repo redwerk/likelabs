@@ -6,7 +6,7 @@
 @interface RootMessageController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
-
+@property (nonatomic, retain) Review *review;
 - (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
 - (UIViewController *)viewControllerByName:(NSString *)controllerName;
 
@@ -19,10 +19,12 @@
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
 @synthesize currentViewController = _currentViewController;
+@synthesize review = _review;
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
+        self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
     }
     return self;
 }
@@ -56,7 +58,7 @@
     
     UIViewController *vc = [self viewControllerByName:@"TextReviewController"];
     [self addChildViewController:vc];
-    vc.view.frame = self.view.bounds;   //self.view == nil!!!!??????
+    vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
     self.currentViewController = vc;
     
@@ -242,9 +244,11 @@
 }
 
 - (Review *) getReview{
-    if(!self.rootController.review){
-        self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
-    }
+    /*if(!self.rootController.review){
+        if(self.rootController.review.reviewType!=ReviewTypeText){
+            self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
+        }
+    }*/
     return self.rootController.review;
 }
 

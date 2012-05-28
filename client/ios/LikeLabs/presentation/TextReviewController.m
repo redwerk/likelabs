@@ -8,7 +8,6 @@
 static NSString *const GREETING = @"Start typing a message!";
 static NSString *const TEXT_CELL_IDENTIFIER = @"textCellIdeintifier";
 static NSString *const bgLandscape = @"textmessage_landscape.png";
-//static NSString *const bgPortrait = @"bg_portrait.png";
 static NSString *const bgPortrait = @"textmessage_portrait.png";
 
 @interface TextReviewController()
@@ -17,6 +16,8 @@ static NSString *const bgPortrait = @"textmessage_portrait.png";
 @property (nonatomic, assign) Review* review;
 @property (retain, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) BOOL textPlaceholderActive;
+@property (nonatomic, assign) UIInterfaceOrientation currentOrientation;
+
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 - (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
 - (void) scrollComments;
@@ -46,6 +47,7 @@ float commentsContentOffset = 0;
 @synthesize btnNext = _btnNext;
 @synthesize textLabel = _textLabel;
 @synthesize review = _review;
+@synthesize currentOrientation = _currentOrientation;
 
 
 #pragma mark - Lifecycle
@@ -184,7 +186,7 @@ float commentsContentOffset = 0;
     
     Review* review;// = [self.reviews objectAtIndex:i];
     if (i < 0) {
-        review = [[Review alloc] initWithReviewType:ReviewTypeText];
+        review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
         review.user.name = @"System";
         review.text = @"No promo review is avalilable at the moment. Check the internet connection and restart the application please";
     } else {
@@ -247,18 +249,20 @@ float commentsContentOffset = 0;
     [self.socialComments.layer removeAllAnimations];
 
     UIColor *background;    
-    CGFloat oldOffset = self.socialComments.contentSize.height;
+   // CGFloat oldOffset = self.socialComments.contentSize.height;
     CGFloat viewPadding = 20;
     if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
         background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
-        [self.socialComments setFrame: CGRectMake(0, 0, 250, 756)];
-        [self.socialComments setTransform:CGAffineTransformMakeRotation(-M_PI_2)];
-        
-        self.socialComments.center = CGPointMake(390, self.socialComments.frame.size.height/2+162);
-        self.textLabel.center = CGPointMake(384, 490);
-        self.textView.frame = CGRectMake(33, 520, 700, 110);
-        self.btnNext.frame = CGRectMake(33, 640, 700, 80);
-        self.socialComments.contentOffset = CGPointMake(0, self.socialComments.contentOffset.y * oldOffset/self.socialComments.contentSize.height);
+        if(!UIInterfaceOrientationIsPortrait(self.currentOrientation)){
+            [self.socialComments setFrame: CGRectMake(0, 0, 250, 756)];
+            [self.socialComments setTransform:CGAffineTransformMakeRotation(-M_PI_2)];
+            
+            self.socialComments.center = CGPointMake(390, self.socialComments.frame.size.height/2+162);
+            self.textLabel.center = CGPointMake(384, 490);
+            self.textView.frame = CGRectMake(33, 520, 700, 110);
+            self.btnNext.frame = CGRectMake(33, 640, 700, 80);
+            //self.socialComments.contentOffset = CGPointMake(0, self.socialComments.contentOffset.y * oldOffset/self.socialComments.contentSize.height);
+        }
     } else {
         background = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgLandscape]] autorelease];
         [self.socialComments setTransform:CGAffineTransformMakeRotation(0)];
@@ -268,10 +272,11 @@ float commentsContentOffset = 0;
         self.textLabel.center = CGPointMake(720, 130);
         self.textView.frame = CGRectMake(453, 150, 515, 135);
         self.btnNext.frame = CGRectMake(453, 300, 515, 85);
-        self.socialComments.contentOffset = CGPointMake(0, self.socialComments.contentOffset.y * self.socialComments.contentSize.height/oldOffset);
+        //self.socialComments.contentOffset = CGPointMake(0, self.socialComments.contentOffset.y * self.socialComments.contentSize.height/oldOffset);
     }
     self.view.backgroundColor = background;
     [self.socialComments reloadData];
+    self.currentOrientation = toInterfaceOrientation;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

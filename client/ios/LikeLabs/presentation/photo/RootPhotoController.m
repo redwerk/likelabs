@@ -4,6 +4,7 @@
 @interface RootPhotoController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
+@property (nonatomic, retain) Review *review;
 @end
 
 @implementation RootPhotoController
@@ -13,6 +14,7 @@
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
 @synthesize currentViewController = _currentViewController;
+@synthesize review = _review;
 
 #pragma mark - Initialization
 
@@ -31,10 +33,7 @@
     
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.navigationBackground.image = [[UIImage imageNamed:@"navigation_bg.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
-    //self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
     self.segmentedControl.alpha = 0;
- /*   _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
-    self.customSegmentedControl.autoresizingMask = self.segmentedControl.autoresizingMask;*/
     CGRect frame;
     if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
         frame = CGRectMake(95, 24, 660, 43);

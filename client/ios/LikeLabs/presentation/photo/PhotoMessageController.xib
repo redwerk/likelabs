@@ -139,30 +139,6 @@
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
 						<array class="NSMutableArray" key="NSSubviews">
-							<object class="IBUIButton" id="77348784">
-								<reference key="NSNextResponder" ref="471188787"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{16, 200}, {522, 86}}</string>
-								<reference key="NSSuperview" ref="471188787"/>
-								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
-								<bool key="IBUIOpaque">NO</bool>
-								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<int key="IBUIContentHorizontalAlignment">0</int>
-								<int key="IBUIContentVerticalAlignment">0</int>
-								<reference key="IBUIHighlightedTitleColor" ref="417213761"/>
-								<object class="NSColor" key="IBUINormalTitleColor">
-									<int key="NSColorSpace">1</int>
-									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
-								</object>
-								<reference key="IBUINormalTitleShadowColor" ref="266216105"/>
-								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">next_btn.png</string>
-								</object>
-								<reference key="IBUIFontDescription" ref="111434023"/>
-								<reference key="IBUIFont" ref="535761799"/>
-							</object>
 							<object class="IBUIImageView" id="219609350">
 								<reference key="NSNextResponder" ref="471188787"/>
 								<int key="NSvFlags">292</int>
@@ -214,6 +190,30 @@
 									<int key="NSfFlags">16</int>
 								</object>
 							</object>
+							<object class="IBUIButton" id="77348784">
+								<reference key="NSNextResponder" ref="471188787"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{16, 200}, {522, 86}}</string>
+								<reference key="NSSuperview" ref="471188787"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+								<int key="IBUIContentHorizontalAlignment">0</int>
+								<int key="IBUIContentVerticalAlignment">0</int>
+								<reference key="IBUIHighlightedTitleColor" ref="417213761"/>
+								<object class="NSColor" key="IBUINormalTitleColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+								</object>
+								<reference key="IBUINormalTitleShadowColor" ref="266216105"/>
+								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">next_btn.png</string>
+								</object>
+								<reference key="IBUIFontDescription" ref="111434023"/>
+								<reference key="IBUIFont" ref="535761799"/>
+							</object>
 						</array>
 						<string key="NSFrame">{{449, 111}, {555, 296}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
@@ -228,7 +228,7 @@
 					</object>
 					<object class="IBUIImageView" id="581920589">
 						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">301</int>
 						<string key="NSFrame">{{20, 111}, {409, 296}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
@@ -248,7 +248,8 @@
 						<int key="NSID">2</int>
 					</object>
 				</object>
-				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+				<bool key="IBUIAutoresizesSubviews">NO</bool>
+				<bool key="IBUIClipsSubviews">YES</bool>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
@@ -382,8 +383,8 @@
 						<int key="objectID">21</int>
 						<reference key="object" ref="471188787"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="77348784"/>
 							<reference ref="826780984"/>
+							<reference ref="77348784"/>
 							<reference ref="219609350"/>
 						</array>
 						<reference key="parent" ref="766721923"/>

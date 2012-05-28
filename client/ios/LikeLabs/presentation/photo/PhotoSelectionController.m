@@ -43,7 +43,7 @@ NSInteger selectedIndex;
 - (id)initWithRootController:(RootPhotoController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
-        self.review = rootController.rootController.review;
+        self.review = [self.rootController getReview];
     }
     return self;
 }
