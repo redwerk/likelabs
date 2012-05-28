@@ -114,7 +114,7 @@
         <select onchange="changeSort()" id="sort_by" style="width: 150px">
             <option value="">Sort By</option>
             <option value="date">Date</option>
-            <option value="point">Point</option>
+            <option value="company_and_point">Point</option>
             <option value="review_type">Content type</option>
         </select>
     </div>

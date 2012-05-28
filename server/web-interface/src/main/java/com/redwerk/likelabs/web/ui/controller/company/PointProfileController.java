@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,6 +89,11 @@ public class PointProfileController {
         if (result.hasErrors()) {
             model.addAttribute("page", "profile");
             model.put("cabinet", "company");
+            if (pointId > NEW_RECORD_ID) {
+                model.addAttribute("title", "Edit Point for ");
+            } else {
+                model.addAttribute("title", "New Point for ");
+            }
             return VIEW_POINT_PROFILE;
         }
         if (pointId > NEW_RECORD_ID) {
@@ -252,6 +258,19 @@ public class PointProfileController {
             if (!phoneValidator.isValid(point.getPhone())) {
                 errors.rejectValue("phone", "point.profile.invalid.phone", "Please enter valid field.");
             }
+
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "city",
+                    "point.profile.invalid.field.required", "Please fill in the required field.");
+
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "state",
+                    "point.profile.invalid.field.required", "Please fill in the required field.");
+
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "country",
+                    "point.profile.invalid.field.required", "Please fill in the required field.");
+
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "addressLine1",
+                    "point.profile.invalid.field.required", "Please fill in the required field.");
+
             if (point.getPhone() != null && point.getPhone().length() > LENGTH_PHONE) {
                 errors.rejectValue("phone", "point.profile.invalid.phone.length", new Byte[]{LENGTH_PHONE} ,"Maximum length allowed is " + LENGTH_PHONE +" symbols.");
             }

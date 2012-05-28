@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/pages/commons/header.jsp" %>
 
 <div id="content">
-    <h1>HOW IT WORKS</h1>
+    <h1>How It Works</h1>
     <div class="text-holder">
         <h2 >Questions</h2>
         <ol>
