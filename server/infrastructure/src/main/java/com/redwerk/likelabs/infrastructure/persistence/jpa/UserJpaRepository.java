@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class UserJpaRepository implements UserRepository {
+public class UserJpaRepository extends UserRepository {
 
     private static final String GET_ALL_USERS = "select u from User u order by u.phone";
 
@@ -52,7 +52,7 @@ public class UserJpaRepository implements UserRepository {
     }
 
     @Override
-    public void add(User user) {
+    public void addInternal(User user) {
         getEntityRepository().add(user);
     }
 

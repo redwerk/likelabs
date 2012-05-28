@@ -1,21 +1,29 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.query.Pager;
+import com.redwerk.likelabs.domain.model.user.exception.DuplicatedUserException;
 
 import java.util.List;
 
-public interface UserRepository {
-
-    User get(long id);
-
-    User find(String phone);
-
-    List<User> findAll(Pager pager);
+public abstract class UserRepository {
     
-    int getCount();
+    public abstract User get(long id);
 
-    void add(User user);
+    public abstract User find(String phone);
 
-    void remove(User user);
+    public abstract List<User> findAll(Pager pager);
+
+    public abstract int getCount();
+
+    public void add(User user) {
+        if (find(user.getPhone()) != null) {
+            throw new DuplicatedUserException(user.getPhone(), user);
+        }
+        addInternal(user);
+    }
+
+    protected abstract void addInternal(User user);
+
+    public abstract void remove(User user);
 
 }
