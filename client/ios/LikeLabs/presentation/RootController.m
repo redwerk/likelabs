@@ -1,25 +1,35 @@
 #import "RootController.h"
 #import "ChildController.h"
+#import "SettingsService.h"
+#import "SettingsDao.h"
 
 @interface RootController()
 @property (retain, nonatomic) UIViewController* currentViewController;
+@property (assign, nonatomic) SettingsService* settingsService;
+@property (assign, nonatomic) SettingsDao* dao;
 - (UIViewController *)viewControllerByName:(NSString *)controllerName;
 @end
 
 @implementation RootController
-
+static NSUInteger const HOURS_24 = 86400;
 NSString *const NAVIGTION_BG_PORTRAIT = @"navigation_bg_portrait.png";
 NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
 
 @synthesize review = _review;
 @synthesize currentViewController = _currentViewController;
 @synthesize reviewService = _reviewService;
+@synthesize loginService = _loginService;
+@synthesize settingsService = _settingsService;
+@synthesize dao = _dao;
 
 #pragma mark - Initialization
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
         _reviewService = [[ReviewService alloc] init];
+        _loginService = [[LoginService alloc] init];
+        _settingsService = self.loginService.settingsService;
+        _dao = self.loginService.dao;
     }
     return self;
 }
@@ -43,13 +53,17 @@ NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
     self.currentViewController = nil;
+    self.reviewService = nil;
+    self.loginService = nil;
+    self.review = nil;
 }
 
 - (void)dealloc {
-    [_currentViewController release];
+    [_currentViewController release];    
+    [_reviewService release];
+    [_loginService release];
+    [_review release];
     [super dealloc];
 }
 
@@ -79,6 +93,11 @@ NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
 }
 
 - (void)switchToController:(NSString *)controllerName {
+    
+    if ([controllerName isEqualToString:@"SplashScreenController"] && [[NSDate date] timeIntervalSinceDate:self.dao.lastUpdate] > HOURS_24) {            
+        [self.settingsService getSettings];        
+    }
+    
     UIViewController *vc = [self viewControllerByName:controllerName];
     [self addChildViewController:vc];
     [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{

@@ -5,7 +5,7 @@
 
 @interface AppDelegate()
 
-@property (nonatomic, retain) SettingsService* settingsService;
+@property (nonatomic, retain) SettingsDao* settingsDao;
 
 @end
 
@@ -13,16 +13,15 @@
 
 @synthesize window = _window;
 @synthesize rootController = _rootController;
-@synthesize settingsService = _settingsService;
+@synthesize settingsDao = _settingsDao;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];	
 
     [TestFlight takeOff:@"c64efb5c4a86d134fcc09ee1e7693304_NDY4MjgyMDExLTEyLTE0IDAxOjAwOjExLjUwMDcwMg"];
-    [SettingsDao setUserDefaults];
-    _settingsService = [[SettingsService alloc] init];
-    [self.settingsService getSettings];    
+    _settingsDao = [[SettingsDao alloc] init];
+    [self.settingsDao setUserDefaults];
    
     [self.window setRootViewController:self.rootController];
     [self.window makeKeyAndVisible];
@@ -60,16 +59,18 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
-{
+{    
     /*
      Called when the application is about to terminate.
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+    self.settingsDao.apiKey = @"";
+    self.settingsDao.tabletId = NSUIntegerMax;
 }
 
 - (void)dealloc {
-    [_settingsService release];
+    [_settingsDao release];
     [_window release];
     [_rootController release];
     [super dealloc];

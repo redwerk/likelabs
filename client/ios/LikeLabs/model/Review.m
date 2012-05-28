@@ -125,7 +125,6 @@ static NSString* const IMAGE_URL_KEY = @"imageUrl";
     [xmlWriter writeEndElement];//recipients
     
     [xmlWriter writeEndElement];//review
-    [xmlWriter writeEndDocument];//just in case
     NSString* xml = [NSString stringWithString:[xmlWriter toString]];
     [xmlWriter release];
     return xml;

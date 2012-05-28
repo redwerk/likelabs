@@ -16,6 +16,7 @@ NSString *const kLogoutViewDidDismiss = @"LogoutViewDidDismiss";
 @synthesize submitButton = _submitButton;
 @synthesize rootController = _rootController;
 @synthesize alertLogout = _alertLogout;
+@synthesize mode = _mode;
 
 NSString *bgLandscape = @"bg_landscape.png";
 NSString *bgPortrait = @"bg_portrait.png";
@@ -24,6 +25,7 @@ NSString *bgPortrait = @"bg_portrait.png";
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
+        self.mode = ControllerModeLogin;
     }
     return self;
 }
@@ -35,7 +37,7 @@ NSString *bgPortrait = @"bg_portrait.png";
 }
 
 -(void)viewDidLoad {   
-    [super viewDidLoad];    
+    [super viewDidLoad];
     
     self.view.frame = [UIScreen mainScreen].bounds;
     
@@ -70,7 +72,11 @@ NSString *bgPortrait = @"bg_portrait.png";
         [self.inputPassword becomeFirstResponder];
     } else if (textField == self.inputPassword) {
         [textField resignFirstResponder];
-        [self formSubmit:nil];
+        if (self.mode == ControllerModeLogin) {
+            [self formSubmit:nil];
+        } else {
+            [self logout:nil];
+        }
     }
     return YES;
 }
@@ -93,9 +99,7 @@ NSString *bgPortrait = @"bg_portrait.png";
 }
 
 - (IBAction)formSubmit:(id)sender {    
-    LoginService *loginService = [[LoginService alloc] init];
-    BOOL loginSuccessfull = [loginService checkLogin:self.inputCode.text andPassword:self.inputPassword.text];
-    [loginService release];
+    BOOL loginSuccessfull = [self.rootController.loginService checkLogin:self.inputCode.text andPassword:self.inputPassword.text];
     
     if (loginSuccessfull) {
         [self.rootController switchToController:@"SplashScreenController"];
@@ -109,11 +113,10 @@ NSString *bgPortrait = @"bg_portrait.png";
 
 - (IBAction)logout:(id)sender
 {
-    LoginService *loginService = [[LoginService alloc] init];
-    BOOL loginSuccessfull = [loginService checkLogout:self.inputCode.text andPassword:self.inputPassword.text];
-    [loginService release];
+    BOOL logoutSuccessfull = [self.rootController.loginService checkLogout:self.inputCode.text andPassword:self.inputPassword.text];
     
-    if (loginSuccessfull) {
+    if (logoutSuccessfull) {
+        [[UIApplication sharedApplication].delegate applicationWillTerminate:[UIApplication sharedApplication]];
         exit(0);
     } else {
         _alertLogout = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 

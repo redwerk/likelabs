@@ -21,8 +21,8 @@
 @synthesize dao = _dao;
 @synthesize promoReviews = _promoReviews;
 
-static NSUInteger const DEFAULT_TABLET_ID = 1;
 static NSString *const REVIEW_KEY = @"review";
+static NSUInteger const SETTINGS_RESPONSE_STATUS_OK = 200;
 
 - (id)init {
     if (self = [super init]) {
@@ -32,7 +32,8 @@ static NSString *const REVIEW_KEY = @"review";
 }
 
 - (void)getSettings {    
-    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:[URLUtil getSettingsUrlForTablet:DEFAULT_TABLET_ID]];
+    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:[URLUtil getSettingsUrlForTablet:self.dao.tabletId]];
+    [request addRequestHeader:TABLET_API_KEY value:self.dao.apiKey];
     [request setDelegate:self];
     [request startAsynchronous];
 }
@@ -40,8 +41,11 @@ static NSString *const REVIEW_KEY = @"review";
 #pragma mark - Get settings (initial)
 
 - (void)requestFinished:(ASIHTTPRequest *)request {
-    NSLog(@"Response status: %d", request.responseStatusCode);
-    NSLog(@"Response string: %@", request.responseString);
+    NSLog(@"Settings response status: %d", request.responseStatusCode);
+    NSLog(@"Settings response string: %@", request.responseString);
+    if (request.responseStatusCode == SETTINGS_RESPONSE_STATUS_OK) {
+        self.dao.lastUpdate = [NSDate date];
+    }
     
     NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:request.responseData];
     SettingsParser* settingsParser = [[SettingsParser alloc] init];
@@ -69,6 +73,7 @@ static NSString *const REVIEW_KEY = @"review";
             ASIHTTPRequest *photoRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:review.imageUrl]];
             [photoRequest setDelegate:self];
             photoRequest.userInfo = [NSDictionary dictionaryWithObject:review forKey:REVIEW_KEY];
+            [photoRequest addRequestHeader:TABLET_API_KEY value:self.dao.apiKey];
             [photoRequest setDidFinishSelector:@selector(photoReceived:)];
             [photoRequest setDidFailSelector:@selector(photoRequestFailed:)];
             [photoRequest startAsynchronous];
@@ -96,6 +101,7 @@ static NSString *const REVIEW_KEY = @"review";
 - (void)getLogoByUrl:(NSString*) logoUrl {
     ASIHTTPRequest *logoRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:logoUrl]];
     [logoRequest setDelegate:self];
+    [logoRequest addRequestHeader:TABLET_API_KEY value:self.dao.apiKey];
     [logoRequest setDidFinishSelector:@selector(logoReceived:)];
     [logoRequest setDidFailSelector:@selector(logoRequestFailed:)];
     [logoRequest startAsynchronous];
@@ -117,6 +123,7 @@ static NSString *const REVIEW_KEY = @"review";
     self.dao = nil;
     [_dao release];
     [_promoReviews release];
+    [super dealloc];
 }
 
 @end

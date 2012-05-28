@@ -1,6 +1,8 @@
 #import "WelcomeScreenController.h"
 #import "RootController.h"
 #import "LoginController.h"
+#import "SettingsDao.h"
+#import <AVFoundation/AVFoundation.h>
 
 static NSString *const bgLandscape = @"welcome_landscape_bg.png";
 static NSString *const bgPortrait = @"welcome_portrait_bg.png";
@@ -10,6 +12,7 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 @property (retain,nonatomic) RootController* rootController;
 @property (nonatomic, retain) LoginController* overlayLogout;
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
+- (void) setLogo: (UIImage *)logo;
 @end
 
 @implementation WelcomeScreenController
@@ -58,11 +61,28 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
                            [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
     self.view.backgroundColor = background;
     [background release];
+        
+    SettingsDao* dao = [[SettingsDao alloc] init];
+    [self setLogo:dao.logo];
     
     [self.textLabel setFont:[UIFont fontWithName:@"Lobster 1.4" size:50]];
-    [self.textLabel setText:[NSString stringWithFormat: WELCOME_VENDOR_MSG, @"[Vendor Name]"]];
+    [self.textLabel setText:[NSString stringWithFormat: WELCOME_VENDOR_MSG, dao.companyName]];
     
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
+}
+
+- (void) setLogo: (UIImage *)logo {
+
+    CGSize const MAX_LOGO_SIZE = CGSizeMake(232, 90);
+    if(logo.size.height > MAX_LOGO_SIZE.height || logo.size.width > MAX_LOGO_SIZE.width) {
+        CGFloat scale = MIN(MAX_LOGO_SIZE.width / logo.size.width, MAX_LOGO_SIZE.height / logo.size.height);
+        logo = [UIImage imageWithCGImage:logo.CGImage scale:1.0/scale orientation:logo.imageOrientation];
+    }
+    self.imageCompany.image = logo;
+    
+    CGPoint oldCenter = self.imageCompany.center;
+    self.imageCompany.frame = CGRectMake(0, 0, logo.size.width, logo.size.height);
+    self.imageCompany.center = oldCenter;
 }
 
 - (void)viewDidUnload
@@ -161,7 +181,7 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 - (IBAction)exitApp:(id)sender 
 {
     _overlayLogout = [[LoginController alloc] initWithRootController:self.rootController];
-    
+    self.overlayLogout.mode = ControllerModeLogout;
     [self.rootController.view addSubview:self.overlayLogout.view];
     [self.overlayLogout setSubmitButtonName:@"Logout"];
     [self.overlayLogout.submitButton removeTarget:self.overlayLogout action:@selector(formSubmit:) forControlEvents:UIControlEventTouchUpInside];

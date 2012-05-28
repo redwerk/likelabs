@@ -144,6 +144,7 @@
 		FF892216156BF8FC00BD93D0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF892215156BF8FC00BD93D0 /* SystemConfiguration.framework */; };
 		FF8B67661562A92500BC6BEA /* divider_nd.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8B67651562A92500BC6BEA /* divider_nd.png */; };
 		FF8BDEFE156E61380066291A /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FF8BDEFD156E61380066291A /* Settings.bundle */; };
+		FFB6BAC31573A35500CF4B45 /* LoginParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FFB6BAC21573A35500CF4B45 /* LoginParser.m */; };
 		FFC60FE0155BCC5E00F4368A /* PhotoSelectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */; };
 		FFC60FE1155BCC5E00F4368A /* PhotoSelectionController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */; };
 		FFC60FE8155BE72500F4368A /* share_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FFC60FE7155BE72500F4368A /* share_btn.png */; };
@@ -342,6 +343,8 @@
 		FF8B676415628E2000BC6BEA /* ContainerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContainerController.h; path = LikeLabs/presentation/protocols/ContainerController.h; sourceTree = "<group>"; };
 		FF8B67651562A92500BC6BEA /* divider_nd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = divider_nd.png; sourceTree = "<group>"; };
 		FF8BDEFD156E61380066291A /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		FFB6BAC11573A35500CF4B45 /* LoginParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginParser.h; sourceTree = "<group>"; };
+		FFB6BAC21573A35500CF4B45 /* LoginParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginParser.m; sourceTree = "<group>"; };
 		FFC60FDD155BCC5E00F4368A /* PhotoSelectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSelectionController.h; path = LikeLabs/presentation/photo/PhotoSelectionController.h; sourceTree = "<group>"; };
 		FFC60FDE155BCC5E00F4368A /* PhotoSelectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSelectionController.m; path = LikeLabs/presentation/photo/PhotoSelectionController.m; sourceTree = "<group>"; };
 		FFC60FDF155BCC5E00F4368A /* PhotoSelectionController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoSelectionController.xib; path = LikeLabs/presentation/photo/PhotoSelectionController.xib; sourceTree = "<group>"; };
@@ -708,6 +711,8 @@
 			children = (
 				FF881DDE156F9E2C0056E209 /* SettingsParser.h */,
 				FF881DDF156F9E2C0056E209 /* SettingsParser.m */,
+				FFB6BAC11573A35500CF4B45 /* LoginParser.h */,
+				FFB6BAC21573A35500CF4B45 /* LoginParser.m */,
 			);
 			path = xmlparsers;
 			sourceTree = "<group>";
@@ -956,6 +961,7 @@
 				9F194DA7156E2A0000095C21 /* Photo.m in Sources */,
 				FF56EAA3156EAB3900220650 /* URLUtil.m in Sources */,
 				FF881DE0156F9E2C0056E209 /* SettingsParser.m in Sources */,
+				FFB6BAC31573A35500CF4B45 /* LoginParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
