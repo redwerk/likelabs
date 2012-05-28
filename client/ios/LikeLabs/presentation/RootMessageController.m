@@ -244,11 +244,6 @@
 }
 
 - (Review *) getReview{
-    /*if(!self.rootController.review){
-        if(self.rootController.review.reviewType!=ReviewTypeText){
-            self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
-        }
-    }*/
     return self.rootController.review;
 }
 
