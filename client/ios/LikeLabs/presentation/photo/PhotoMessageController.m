@@ -8,6 +8,8 @@
 @property (nonatomic,retain) RootPhotoController *rootController;
 @property (nonatomic, assign) BOOL textPlaseholderActive;
 @property (nonatomic, assign) Review* review;
+
+- (void) setPhoto: (UIImage *)photo ;
 @end
 
 @implementation PhotoMessageController
@@ -15,6 +17,7 @@
 @synthesize navigationBackground = _navigationBackground;
 @synthesize textView = _textView;
 @synthesize imageView = _imageView;
+@synthesize messageView = _messageView;
 @synthesize review = _review;
 
 static NSString *const bgLandscape = @"bg_landscape.png";
@@ -43,6 +46,7 @@ static NSString *const GREETING = @"Start typing a message!";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     // Do any additional setup after loading the view from its nib.
     UIColor *background = [[UIColor alloc] initWithPatternImage:
                            [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
@@ -69,8 +73,9 @@ static NSString *const GREETING = @"Start typing a message!";
         self.textView.textColor = [UIColor lightGrayColor];
     }
     [self.textView becomeFirstResponder];    
-    
+    self.imageView.layer.borderWidth =2;
     [self setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
+    [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0];
 }
 
 #pragma mark - Review management
@@ -95,6 +100,7 @@ static NSString *const GREETING = @"Start typing a message!";
     [self setNavigationBackground:nil];
     [self setTextView:nil];
     [self setImageView:nil];
+    [self setMessageView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -107,6 +113,7 @@ static NSString *const GREETING = @"Start typing a message!";
     [_rootController release];
     [_textView release];
     [_imageView release];
+    [_messageView release];
     [super dealloc];
 }
 
@@ -135,6 +142,15 @@ static NSString *const GREETING = @"Start typing a message!";
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+-(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
+        self.messageView.center = CGPointMake(384, 600);
+    } else {
+        self.messageView.center = CGPointMake(726, 259);
+    }
+    
 }
 
 #pragma mark - Actions

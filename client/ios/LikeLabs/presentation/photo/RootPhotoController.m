@@ -28,14 +28,22 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.navigationBackground.image = [[UIImage imageNamed:@"navigation_bg.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
-    self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
+    //self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
     self.segmentedControl.alpha = 0;
-    _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
-    self.customSegmentedControl.autoresizingMask = self.segmentedControl.autoresizingMask;
+ /*   _customSegmentedControl = [[CustomizableSegmentedControl alloc] initWithFrame:self.segmentedControl.frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self];
+    self.customSegmentedControl.autoresizingMask = self.segmentedControl.autoresizingMask;*/
+    CGRect frame;
+    if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
+        frame = CGRectMake(95, 24, 660, 43);
+    } else {
+        frame = CGRectMake(95, 24, 916, 43);      
+    }
+    self.customSegmentedControl = [[[CustomizableSegmentedControl alloc] initWithFrame:frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self] autorelease];
     [self.headerView addSubview:self.customSegmentedControl];
-    
+
     UIViewController *vc = [self viewControllerByName:@"PhotoSelectionController"];
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
@@ -193,6 +201,14 @@
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateNormal];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateDisabled];
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
+    
+    if(UIInterfaceOrientationIsPortrait(orientation)){
+        self.customSegmentedControl.frame = CGRectMake(90, 24, 660, 43);
+        self.navigationBackground.image = [UIImage imageNamed:NAVIGTION_BG_PORTRAIT];
+    } else {
+        self.customSegmentedControl.frame = CGRectMake(90, 24, 915, 43); 
+        self.navigationBackground.image = [UIImage imageNamed:NAVIGTION_BG_LANDSCAPE];
+    }
 }
 
 #pragma mark - ContainerController implementation
@@ -228,6 +244,7 @@
     
     switch (newSegmentIndex) {
         case 0:
+
             [self switchToController:@"PhotoSelectionController"];
             break;
         case 1:
