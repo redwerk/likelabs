@@ -62,18 +62,19 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     self.view.backgroundColor = background;
     [background release];
         
-    SettingsDao* dao = [[[SettingsDao alloc] init] autorelease];
+    SettingsDao* dao = [[SettingsDao alloc] init];
     [self setLogo:dao.logo];
-    
+       
     [self.textLabel setFont:[UIFont fontWithName:@"Lobster 1.4" size:50]];
     [self.textLabel setText:[NSString stringWithFormat: WELCOME_VENDOR_MSG, dao.companyName]];
+    [dao release];
     
     [self layoutSubviewsForInterfaceOrientation:self.interfaceOrientation];
 }
 
 - (void) setLogo: (UIImage *)logo {
 
-    CGSize const MAX_LOGO_SIZE = CGSizeMake(232, 90);
+    CGSize const MAX_LOGO_SIZE = CGSizeMake(232, 85);
     if(logo.size.height > MAX_LOGO_SIZE.height || logo.size.width > MAX_LOGO_SIZE.width) {
         CGFloat scale = MIN(MAX_LOGO_SIZE.width / logo.size.width, MAX_LOGO_SIZE.height / logo.size.height);
         logo = [UIImage imageWithCGImage:logo.CGImage scale:1.0/scale orientation:logo.imageOrientation];

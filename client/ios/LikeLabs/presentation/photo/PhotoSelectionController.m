@@ -21,7 +21,6 @@
 @implementation PhotoSelectionController
 static NSString *const bgLandscape = @"photo_selection_bg_landscape.png";
 static NSString *const bgPortrait = @"photo_selection_bg_portrait.png";
-static NSString *const NAVIGATION_BACKGROUND_IMG = @"navigation_bg.png";
 static NSString *const NAV_BTN_NORMAL_IMG = @"navigation_button_normal.png";
 static NSString *const NAV_BTN_SELECTED_IMG = @"navigation_button_selected.png";
 static NSString *const NAV_DIVIDER_NN_IMG = @"navigation_divider_nn.png";
@@ -31,8 +30,6 @@ const float selectedScaleFactor = 1.5;
 const float deletedPhotoAlpha = 0.5;
 NSInteger selectedIndex;
 
-@synthesize segmentedControl = _segmentedControl;
-@synthesize navigationBackground = _navigationBackground;
 @synthesize imageView = _imageView;
 @synthesize thumbnailsView = _thumbnailsView;
 @synthesize submitButton = _submitButton;
@@ -55,8 +52,6 @@ NSInteger selectedIndex;
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0]; 
     
-    self.navigationBackground.image = [[UIImage imageNamed:NAVIGATION_BACKGROUND_IMG] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
-    self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowOffset = CGSizeMake(0, 5);
@@ -68,9 +63,7 @@ NSInteger selectedIndex;
 
 - (void)viewDidUnload
 {
-    [self setSegmentedControl:nil];
     [self setRootController:nil];
-    [self setNavigationBackground:nil];
     [self setImageView:nil];
     [self setThumbnailsView:nil];
 
@@ -81,12 +74,9 @@ NSInteger selectedIndex;
 }
 
 - (void)dealloc {
-    [_segmentedControl release];
     [_rootController release];
-    [_navigationBackground release];
     [_imageView release];
     [_thumbnailsView release];
-
     [_submitButton release];
     [super dealloc];
 }
@@ -271,12 +261,6 @@ NSInteger selectedIndex;
 
 - (IBAction)shareThisPhoto:(id)sender {
     [self.rootController step];
-}
-
-- (IBAction)navigationChanged:(UISegmentedControl *)sender {
-    if (sender.selectedSegmentIndex == 1) {
-        [self shareThisPhoto:sender];
-    }
 }
 
 @end

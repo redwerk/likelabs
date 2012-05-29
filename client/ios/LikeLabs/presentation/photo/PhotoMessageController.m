@@ -13,8 +13,6 @@
 @end
 
 @implementation PhotoMessageController
-@synthesize segmentedControl = _segmentedControl;
-@synthesize navigationBackground = _navigationBackground;
 @synthesize textView = _textView;
 @synthesize imageView = _imageView;
 @synthesize messageView = _messageView;
@@ -22,7 +20,6 @@
 
 static NSString *const bgLandscape = @"bg_landscape.png";
 static NSString *const bgPortrait = @"bg_portrait.png";
-static NSString *const NAVIGATION_BACKGROUND_IMG = @"navigation_bg.png";
 static NSString *const NAV_BTN_NORMAL_IMG = @"navigation_button_normal.png";
 static NSString *const NAV_BTN_SELECTED_IMG = @"navigation_button_selected.png";
 static NSString *const NAV_DIVIDER_NN_IMG = @"navigation_divider_nn.png";
@@ -46,12 +43,8 @@ static NSString *const GREETING = @"Start typing a message!";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    
-    // Do any additional setup after loading the view from its nib.
 
-    self.navigationBackground.image = [[UIImage imageNamed:NAVIGATION_BACKGROUND_IMG] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
-    [self.navigationBackground setContentMode:UIViewContentModeScaleToFill];
+    [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOffset = CGSizeMake(5, 5);
@@ -98,20 +91,14 @@ static NSString *const GREETING = @"Start typing a message!";
 
 - (void)viewDidUnload
 {
-    [self setSegmentedControl:nil];
-    [self setNavigationBackground:nil];
     [self setTextView:nil];
     [self setImageView:nil];
     [self setMessageView:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
     [self setRootController:nil];
 }
 
 - (void)dealloc {
-    [_navigationBackground release];
-    [_segmentedControl release];
     [_rootController release];
     [_textView release];
     [_imageView release];

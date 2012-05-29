@@ -11,7 +11,7 @@ static NSString *const API_KEY_KEY = @"apiKey";
 static NSString *const LAST_UPDATE_KEY = @"lastUpdate";
 
 static NSString *const DEFAULT_LOGO_IMAGE_NAME = @"welcome_company.png";
-static NSString *const DEFAULT_SERVER_URL = @"http://10.0.1.47:8080";
+static NSString *const DEFAULT_SERVER_URL = @"http://likelabs.redwerk.com";
 static NSString *const DEFAULT_COMPANY_NAME = @"[Vendor Name]";
 
 @interface SettingsDao()

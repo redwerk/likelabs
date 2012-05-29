@@ -12,7 +12,6 @@
 @end
 
 @implementation RootPhotoController
-@synthesize segmentedControl = _segmentedControl;
 @synthesize headerView = _headerView;
 @synthesize navigationBackground = _navigationBackground;
 @synthesize rootController = _rootController;
@@ -37,7 +36,6 @@
     
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.navigationBackground.image = [[UIImage imageNamed:@"navigation_bg.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
-    self.segmentedControl.alpha = 0;
     CGRect frame;
     if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
         frame = CGRectMake(95, 24, 660, 43);
@@ -61,7 +59,6 @@
 
 - (void)viewDidUnload
 {
-    [self setSegmentedControl:nil];
     [self setHeaderView:nil];
     [self setCustomSegmentedControl:nil];
     [self setNavigationBackground:nil];
@@ -72,7 +69,6 @@
 
 - (void)dealloc {
     [_customSegmentedControl release];
-    [_segmentedControl release];
     [_headerView release];
     [_navigationBackground release];
     [super dealloc];

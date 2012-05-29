@@ -46,6 +46,8 @@ static NSUInteger const STATUS_LOGOUT_OK = 204;
             self.dao.tabletId = loginParser.tabletId;
             self.dao.apiKey = loginParser.apiKey;
             
+            [loginParser release];
+            
             [self.settingsService getSettings];            
             
             return true;
@@ -84,7 +86,8 @@ static NSUInteger const STATUS_LOGOUT_OK = 204;
     [writer writeEndElement];//password
     
     [writer writeEndElement];//credentials
-    NSString* xml = writer.toString;
+    NSString* xml = [NSString stringWithString:[writer toString]];
+    [writer release];
     NSLog(@"xml: %@", xml);
     return xml;
 }

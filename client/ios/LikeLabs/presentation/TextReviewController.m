@@ -142,7 +142,7 @@ float commentsContentOffset = 0;
 #pragma mark - TableViewDelegate implementation
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return ROWS_ENDLESS;
+    return (self.reviews.count > 0) ? ROWS_ENDLESS : 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -188,14 +188,7 @@ float commentsContentOffset = 0;
         titleLabel = (UILabel*)[cell viewWithTag:2];
     }
     
-    Review* review;// = [self.reviews objectAtIndex:i];
-    if (i < 0) {
-        review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
-        review.user.name = @"System";
-        review.text = @"No promo review is avalilable at the moment. Check the internet connection and restart the application please";
-    } else {
-        review = [self.reviews objectAtIndex:i];
-    }
+    Review* review = [self.reviews objectAtIndex:i];
 
     CGFloat textHeight = [self getTextHeight:review.text font:[UIFont systemFontOfSize:FONT_SIZE]];
     CGFloat titleHeight = [self getTextHeight:review.user.name font:[UIFont boldSystemFontOfSize:FONT_SIZE]];

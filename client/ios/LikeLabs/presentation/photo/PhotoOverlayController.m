@@ -93,8 +93,6 @@ int myPhoneSemaphore;
 #pragma mark - TextField delegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-   // NSLog(@"%@",textField.selectedTextRange.start);
-    //UITextRange* textRange = [[[UITextRange alloc] init] autorelease];
     if (self.textPlaceholderActive) {
         if (string.length == 0) return NO;
         self.textField.text = @"";

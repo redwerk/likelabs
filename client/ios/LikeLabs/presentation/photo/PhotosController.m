@@ -5,7 +5,7 @@
 #import "Review.h"
 
 static NSString *const NAVBAR_BACKGROUND_IMG = @"navigation_bar_bg.png";
-static NSString *const NAVIGATION_BACKGROUND_IMG = @"navigation_bg.png";
+static NSString *const NAVIGATION_BACKGROUND_IMG = @"navigation_bg_landscape.png";
 static NSString *const NAV_BTN_NORMAL_IMG = @"navigation_button_normal.png";
 static NSString *const NAV_BTN_SELECTED_IMG = @"navigation_button_selected.png";
 static NSString *const NAV_DIVIDER_NN_IMG = @"navigation_divider_nn.png";

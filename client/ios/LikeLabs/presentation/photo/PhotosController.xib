@@ -93,7 +93,7 @@
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">navigation_bg.png</string>
+									<string key="NSResourceName">navigation_bg_landscape.png</string>
 								</object>
 							</object>
 							<object class="IBUISegmentedControl" id="15180205">
@@ -179,7 +179,6 @@
 								<string key="NSFrame">{{436, 481}, {152, 153}}</string>
 								<reference key="NSSuperview" ref="196865847"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -638,7 +637,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="navigation_bg.png">{917, 51}</string>
+			<string key="navigation_bg_landscape.png">{917, 51}</string>
 			<string key="navigation_home_btn.png">{50, 50}</string>
 			<string key="take_photo_btn.png">{152, 153}</string>
 		</dictionary>
