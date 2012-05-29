@@ -4,7 +4,8 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
-import com.redwerk.likelabs.domain.model.tablet.exception.TabletNotFoundException;
+import com.redwerk.likelabs.domain.model.tablet.exception.TabletByApiKeyNotFoundException;
+import com.redwerk.likelabs.domain.model.tablet.exception.TabletByIdNotFoundException;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -37,7 +38,7 @@ public class TabletJpaRepository implements TabletRepository {
     public Tablet get(long id) {
         Tablet tablet = getEntityRepository().findById(id);
         if (tablet == null) {
-            throw new TabletNotFoundException(id);
+            throw new TabletByIdNotFoundException(id);
         }
         return tablet;
     }
@@ -46,7 +47,11 @@ public class TabletJpaRepository implements TabletRepository {
     public Tablet get(String apiKey) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("apiKey", apiKey);
-        return getEntityRepository().findSingleEntity(GET_TABLET_BY_API_KEY, parameters);
+        Tablet tablet = getEntityRepository().findSingleEntity(GET_TABLET_BY_API_KEY, parameters);
+        if (tablet == null) {
+            throw new TabletByApiKeyNotFoundException(apiKey);
+        }
+        return tablet;
     }
 
     @Override

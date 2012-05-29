@@ -85,24 +85,26 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(readOnly = true)
     public Report<CompanyReportItem> getCompanies(Pager pager) {
-        return getReport(companyRepository.findAll(pager));
+        return new Report<CompanyReportItem>(
+                getReportItems(companyRepository.findAll(pager)), companyRepository.getCount());
     }
 
     @Override
     @Transactional(readOnly = true)
     public Report<CompanyReportItem> getCompanies(long adminId, Pager pager) {
         User admin = userRepository.get(adminId);
-        return getReport(companyRepository.findAll(admin, pager));
+        return new Report<CompanyReportItem>(
+                getReportItems(companyRepository.findAll(admin, pager)), companyRepository.getCount(admin));
     }
 
-    private Report<CompanyReportItem> getReport(List<Company> companies) {
+    private List<CompanyReportItem> getReportItems(List<Company> companies) {
         List<CompanyReportItem> items = new ArrayList<CompanyReportItem>(companies.size());
         for (Company c: companies) {
             int pointsNum = pointRepository.getCount(c);
             int reviewsNum = reviewRepository.getQuery().setCompanyIds(Arrays.asList(c.getId())).getCount();
             items.add(new CompanyReportItem(c, pointsNum, reviewsNum));
         }
-        return new Report<CompanyReportItem>(items, companyRepository.getCount());
+        return items;
     }
 
     @Override
