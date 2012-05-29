@@ -15,6 +15,7 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.web.ui.controller.dto.ProfileData;
 import com.redwerk.likelabs.web.ui.validator.ProfileValidator;
@@ -77,6 +78,10 @@ public class CompanyAdminController {
         model.addAttribute("profile", new ProfileData(user.getPhone(), "", user.getEmail()));
         model.addAttribute("page", "profile");
         model.put("cabinet", "company_admin");
+        List<UserSocialAccount> accounts = user.getAccounts();
+        for (UserSocialAccount a : accounts) {
+            model.addAttribute(a.getType().toString(), true);
+        }
         return VIEW_PROFILE;
     }
 
