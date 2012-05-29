@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.domain.model.company;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.company.exception.CompanyLogoTooBigException;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewRegistrationAgent;
 import com.redwerk.likelabs.domain.model.review.ReviewStatus;
@@ -19,6 +20,8 @@ import java.util.*;
 @Table(name = "company")
 public class Company {
     
+    private static final int MAX_LOGO_ALLOWED_SIZE = 1048576;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -64,7 +67,7 @@ public class Company {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        this.logo = logo;
+        setLogoInternal(logo);
     }
 
     public Company(String name, String phone, String email) {
@@ -116,8 +119,16 @@ public class Company {
     }
 
     public void setLogo(byte[] logo) {
+        setLogoInternal(logo);
+    }
+
+    private void setLogoInternal(byte[] logo) {
+        if (logo.length > MAX_LOGO_ALLOWED_SIZE) {
+            throw new CompanyLogoTooBigException(logo.length, MAX_LOGO_ALLOWED_SIZE);
+        }
         this.logo = logo;
     }
+
     
     // social accounts
 
