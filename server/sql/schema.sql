@@ -126,7 +126,6 @@ CREATE TABLE `review` (
      `moderated_dt` DATETIME,
      `point_id` BIGINT NOT NULL,
      CONSTRAINT `PK_review` PRIMARY KEY (`id`),
-     CONSTRAINT `UC_review_author_created_dt` UNIQUE(`author_id`, `created_dt`),
      CONSTRAINT `FK_review_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE,
      CONSTRAINT `FK_review_photo` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`) ON DELETE SET NULL,
      CONSTRAINT `FK_review_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
@@ -136,7 +135,6 @@ CREATE TABLE `review` (
 DROP TABLE IF EXISTS `review_recipient`;
 CREATE TABLE `review_recipient` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
-     `type` VARCHAR(1) NOT NULL,
      `is_notified` TINYINT(1) NOT NULL,
      `review_id` BIGINT NOT NULL,
      CONSTRAINT `PK_recipient` PRIMARY KEY (`id`),

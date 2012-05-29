@@ -9,6 +9,8 @@ public interface TabletRepository {
 
     Tablet get(long id);
 
+    Tablet get(String apiKey);
+
     Tablet find(String login);
 
     List<Tablet> findAll(Point point, Pager pager);

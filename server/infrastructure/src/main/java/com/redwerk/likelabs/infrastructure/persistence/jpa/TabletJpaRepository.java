@@ -26,6 +26,8 @@ public class TabletJpaRepository implements TabletRepository {
 
     private static final String GET_TABLET_BY_LOGIN = "select t from Tablet t where t.login = :login";
 
+    private static final String GET_TABLET_BY_API_KEY = "select t from Tablet t where t.apiKey = :apiKey";
+
     @PersistenceContext
     private EntityManager em;
 
@@ -38,6 +40,13 @@ public class TabletJpaRepository implements TabletRepository {
             throw new TabletNotFoundException(id);
         }
         return tablet;
+    }
+
+    @Override
+    public Tablet get(String apiKey) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("apiKey", apiKey);
+        return getEntityRepository().findSingleEntity(GET_TABLET_BY_API_KEY, parameters);
     }
 
     @Override

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "review_recipient")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, columnDefinition = "type", length = 1)
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING, length = 1)
 public abstract class Recipient {
 
     @Id

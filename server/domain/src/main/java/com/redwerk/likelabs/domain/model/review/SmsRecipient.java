@@ -8,12 +8,14 @@ import org.apache.log4j.Logger;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "review_email_recipient")
+@Table(name = "review_sms_recipient")
+@PrimaryKeyJoinColumn(name="recipient_id")
 @DiscriminatorValue("s")
-class SmsRecipient extends Recipient {
+public class SmsRecipient extends Recipient {
 
     private String phone;
 

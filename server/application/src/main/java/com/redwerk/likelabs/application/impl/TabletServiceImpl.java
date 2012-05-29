@@ -67,6 +67,11 @@ public class TabletServiceImpl implements TabletService {
     }
 
     @Override
+    public long getTabletId(String apiKey) {
+        return tabletRepository.get(apiKey).getId();
+    }
+
+    @Override
     public boolean canLogout(long tabletId, String logoutPassword) {
         Tablet tablet = tabletRepository.get(tabletId);
         return tablet.getLogoutPassword().equals(logoutPassword);

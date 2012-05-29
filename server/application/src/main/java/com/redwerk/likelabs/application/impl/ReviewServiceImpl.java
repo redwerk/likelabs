@@ -149,7 +149,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
-        return getReviewRegistrator().createAndRegisterReview(tabletRepository.get(tabletId), text, phone, photos, recipients);
+        return getReviewRegistrator().createAndRegisterReview(tabletRepository.get(tabletId), phone, text, photos, recipients);
     }
     
     @Override
