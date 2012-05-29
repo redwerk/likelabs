@@ -116,10 +116,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     @Override
     public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
-            String photoId = "";
-            if (imageSource != null) {
-                photoId = uploadPhoto(imageSource.getImageBytes(), publisher);
-            }
+            String photoId = (imageSource != null)? uploadPhoto(imageSource.getImageBytes(), publisher) : "";
             
             String url = MessageFormat.format(API_POST_USER_MESSAGE_TEMPLATE, publisher.getAccountId(), URLEncoder.encode(message, "UTF-8"), photoId, publisher.getAccessToken());
             String data = requestApiData(url);
@@ -147,7 +144,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
      * @param publisher 
      * @return Photo ID
      */
-    public String uploadPhoto(byte[] image, UserSocialAccount publisher) {
+    private String uploadPhoto(byte[] image, UserSocialAccount publisher) {
         JSONObject server = requestApiDataJson(MessageFormat.format(API_GET_UPLOAD_SERVER, publisher.getAccountId(), publisher.getAccessToken()));
         String uploadUrl = server.getString("upload_url");
         try {
@@ -177,16 +174,13 @@ public class VKontakteGateway implements SocialNetworkGateway {
             log.debug(ex, ex);
         }
         
-        return null;
+        return "";
     }
 
     @Override
     public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
-            String photoId = "";
-            if (imageSource != null) {
-                photoId = uploadPhoto(imageSource.getImageBytes(), publisher);
-            }
+            String photoId = (imageSource != null)? uploadPhoto(imageSource.getImageBytes(), publisher) : "";
             
             String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE,  "-" + page.getPageId(), URLEncoder.encode(message, "UTF-8"), photoId, publisher.getAccessToken());
             String data = requestApiData(url);
@@ -217,7 +211,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
         }
         return false;
     }
-    protected String requestApiData(String url) {
+    private String requestApiData(String url) {
         if (StringUtils.isEmpty(url)) throw new IllegalArgumentException("Url must be not empty");
         
         HttpClient client = new HttpClient();
@@ -232,7 +226,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
         return data;
     }
     
-    public JSONObject requestApiDataJson(String url){
+    private JSONObject requestApiDataJson(String url){
         String data = requestApiData(url);
         JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
         if (json.containsKey("response")) {
