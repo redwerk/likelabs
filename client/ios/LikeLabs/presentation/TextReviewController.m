@@ -11,7 +11,7 @@ static NSString *const bgLandscape = @"textmessage_landscape.png";
 static NSString *const bgPortrait = @"textmessage_portrait.png";
 
 @interface TextReviewController()
-@property (retain, nonatomic) RootMessageController* rootController;
+@property (retain, nonatomic) UIViewController <ContainerController>* rootController;
 @property (retain, nonatomic) NSArray* reviews;
 @property (nonatomic, assign) Review* review;
 @property (retain, nonatomic) NSTimer* timer;
@@ -52,12 +52,12 @@ float commentsContentOffset = 0;
 
 #pragma mark - Lifecycle
 
-- (id)initWithRootController:(RootMessageController *)rootController {
+- (id)initWithRootController:(UIViewController <ContainerController> *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
         SettingsDao* dao = [[SettingsDao alloc] init];
         self.reviews = dao.textReviews;
-        self.review = self.rootController.rootController.review;
+        self.review = [self.rootController getReview];//.rootController.rootController.review;
         [dao release];
     }
     return self;
@@ -118,7 +118,9 @@ float commentsContentOffset = 0;
 }
 
 #pragma mark - TextViewDelegate implementation
-
+- (BOOL) resignFirstResponder {
+    return [self.textView resignFirstResponder ];
+}
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     if (self.textPlaceholderActive) {
@@ -291,6 +293,7 @@ float commentsContentOffset = 0;
     if (self.textPlaceholderActive) {
         return;
     }
+    
     [[self.rootController getReview] setText:self.textView.text];
     [self.rootController step];
 }

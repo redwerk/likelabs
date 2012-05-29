@@ -5,6 +5,10 @@
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
 @property (nonatomic, retain) Review *review;
+
+- (NSMutableArray*) getButtons;
+- (NSMutableDictionary*) getDividers;
+- (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
 @end
 
 @implementation RootPhotoController
@@ -216,7 +220,7 @@
     return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
 }
 
-- (void)switchToController:(NSString *)controllerName {
+/*- (void)switchToController:(NSString *)controllerName {
     UIViewController *vc = [self viewControllerByName:controllerName];
     [self addChildViewController:vc];
     [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
@@ -229,39 +233,51 @@
         [self.currentViewController removeFromParentViewController];
         self.currentViewController = vc;
     }];
-}
+}*/
 
 #pragma mark - CustomSegmentedControlDelegate implementation
 
 - (void)selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl *)sender {
     UIButton* selectedBtn = [self.customSegmentedControl.buttons objectAtIndex:newSegmentIndex];
     selectedBtn.enabled = YES;
+    [self.currentViewController resignFirstResponder];
     
     for (UIButton* btn in self.customSegmentedControl.buttons) {
         btn.userInteractionEnabled = (btn != selectedBtn);
     }
-    
-    switch (newSegmentIndex) {
-        case 0:
-
-            [self switchToController:@"PhotoSelectionController"];
-            break;
-        case 1:
-            [self switchToController:@"PhotoMessageController"];
-            break;
-        case 2:
-            [self switchToController:@"PhotoShareController"];
-            break;
-        case 3:
-            self.customSegmentedControl.userInteractionEnabled = NO;
-            [self switchToController:@"PhotoFinishedController"];
-            break;
+    if(oldSegmentIndex!=newSegmentIndex){
+        NSString *controllerName = @"";
+        switch (newSegmentIndex) {
+            case 0:
+                controllerName = @"PhotoSelectionController";
+                //[self switchToController:@"PhotoSelectionController"];
+                break;
+            case 1:
+                controllerName = @"PhotoMessageController";
+                //[self switchToController:@"PhotoMessageController"];
+                break;
+            case 2:
+                controllerName = @"PhotoShareController";
+                //[self switchToController:@"PhotoShareController"];
+                break;
+            case 3:
+                controllerName = @"PhotoFinishedController";
+                self.customSegmentedControl.userInteractionEnabled = NO;
+                //[self switchToController:@"PhotoFinishedController"];
+                break;
+        }
+        if(oldSegmentIndex<newSegmentIndex){
+            [self.rootController switchToController:controllerName rootController:self];
+        } else {
+            [self.rootController switchBackToController:controllerName rootController:self];
+        }
     }
 }
 
 #pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
+    [self.currentViewController resignFirstResponder];
     [self.rootController switchToController:@"SplashScreenController"];
 }
 
@@ -276,5 +292,18 @@
 - (ReviewService *) getReviewService{
     return self.rootController.reviewService;
 }
+
+- (UIViewController *) getCurrentController{
+    return self.currentViewController;
+}
+
+- (void) setCurrentController:(UIViewController *)controller{
+    self.currentViewController = controller;
+}
+
+-(void)bringHeaderViewToFront{
+    [self.view bringSubviewToFront:self.headerView];
+}
+
 
 @end

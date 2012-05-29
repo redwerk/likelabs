@@ -5,7 +5,7 @@
 #import "Review.h"
 
 @interface PhotoSelectionController ()
-@property (nonatomic, retain) RootPhotoController *rootController;
+@property (nonatomic, retain) UIViewController <ContainerController> *rootController;
 @property (nonatomic, assign) Review *review;
 - (void) populateWithPhotos;
 - (void) setPhoto: (UIImage *)photo;
@@ -40,7 +40,7 @@ NSInteger selectedIndex;
 @synthesize review = _review;
 
 #pragma mark - Initialization
-- (id)initWithRootController:(RootPhotoController *)rootController {
+- (id)initWithRootController:(UIViewController <ContainerController> *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
         self.review = [self.rootController getReview];

@@ -62,13 +62,13 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     self.view.backgroundColor = background;
     [background release];
         
-    SettingsDao* dao = [[SettingsDao alloc] init];
+    SettingsDao* dao = [[[SettingsDao alloc] init] autorelease];
     [self setLogo:dao.logo];
     
     [self.textLabel setFont:[UIFont fontWithName:@"Lobster 1.4" size:50]];
     [self.textLabel setText:[NSString stringWithFormat: WELCOME_VENDOR_MSG, dao.companyName]];
     
-    [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
+    [self layoutSubviewsForInterfaceOrientation:self.interfaceOrientation];
 }
 
 - (void) setLogo: (UIImage *)logo {
@@ -202,6 +202,6 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 
 - (IBAction)showHome:(id)sender 
 {
-    [self.rootController switchToController:@"SplashScreenController"];
+    [self.rootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
 }
 @end

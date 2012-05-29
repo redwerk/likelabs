@@ -14,6 +14,7 @@
 static NSUInteger const HOURS_24 = 86400;
 NSString *const NAVIGTION_BG_PORTRAIT = @"navigation_bg_portrait.png";
 NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
+CGFloat const SLIDE_SPEED = 0.5;
 
 @synthesize review = _review;
 @synthesize currentViewController = _currentViewController;
@@ -92,12 +93,87 @@ NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
     return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
 }
 
+- (UIViewController *)viewControllerByName:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root{
+    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
+}
+
+- (void)switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root {
+    UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
+    vc.view.frame = root.view.bounds;
+    [root addChildViewController:vc];
+    [root.view addSubview:vc.view];
+    [vc.view layoutSubviews];
+    [vc.view setNeedsLayout];
+    vc.view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
+    [UIView animateWithDuration:SLIDE_SPEED animations: ^{
+
+        [root getCurrentController].view.center = CGPointMake(-0.5*vc.view.frame.size.width, vc.view.frame.size.height/2);
+        vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
+    } completion:^(BOOL finished){
+        [[root getCurrentController].view removeFromSuperview];
+        [vc didMoveToParentViewController:root];
+        [[root getCurrentController] removeFromParentViewController];
+        [root setCurrentController:vc];
+    }];
+
+     
+     
+    if([root respondsToSelector:@selector(bringHeaderViewToFront)]){
+        [root bringHeaderViewToFront];
+    }
+}
+
+- (void) switchBackToController:(NSString *)controllerName rootController:(UIViewController<ContainerController> *)root{
+    UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
+    [root.view addSubview:vc.view];
+    [root addChildViewController:vc];
+    vc.view.frame = root.view.bounds; 
+    vc.view.center = CGPointMake(vc.view.frame.size.width*-.5, vc.view.frame.size.height/2);
+
+    [UIView animateWithDuration:SLIDE_SPEED animations: ^{
+
+        [root getCurrentController].view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
+        vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
+    } completion:^(BOOL finished){
+        [[root getCurrentController].view removeFromSuperview];
+        [vc didMoveToParentViewController:root];
+        [[root getCurrentController] removeFromParentViewController];
+        [root setCurrentController:vc];
+    }];
+
+    if([root respondsToSelector:@selector(bringHeaderViewToFront)]){
+        [root bringHeaderViewToFront];
+    }
+}
+
 - (void)switchToController:(NSString *)controllerName {
     
     if ([controllerName isEqualToString:@"SplashScreenController"] && [[NSDate date] timeIntervalSinceDate:self.dao.lastUpdate] > HOURS_24) {            
         [self.settingsService getSettings];        
     }
     
+    UIViewController *vc = [self viewControllerByName:controllerName];
+    vc.view.frame = self.view.bounds;
+    [self.view addSubview:vc.view];
+    [self addChildViewController:vc];
+    vc.view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
+    
+    [UIView animateWithDuration:SLIDE_SPEED animations: ^{
+        self.currentViewController.view.center = CGPointMake(-1*(vc.view.frame.size.width/2), vc.view.frame.size.height/2);
+        vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
+    } completion:^(BOOL finished){
+        [self.currentViewController.view removeFromSuperview];
+        [vc didMoveToParentViewController:self];
+        [self.currentViewController removeFromParentViewController];
+        self.currentViewController = vc;
+    }];
+
+    
+    if([self respondsToSelector:@selector(bringHeaderViewToFront)]){
+        [self bringHeaderViewToFront];
+    }
+
+   /* 
     UIViewController *vc = [self viewControllerByName:controllerName];
     [self addChildViewController:vc];
     [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
@@ -108,7 +184,14 @@ NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
         [vc didMoveToParentViewController:self];
         [self.currentViewController removeFromParentViewController];
         self.currentViewController = vc;
-    }];
+    }];*/
+}
+
+- (UIViewController *) getCurrentController{
+    return self.currentViewController;
+}
+- (void) setCurrentController:(UIViewController *)controller{
+    self.currentViewController = controller;
 }
 
 @end

@@ -22,12 +22,15 @@ static float const TIMER_DELAY = 0.2;
 @property (nonatomic, retain) PhotoPickerController *photoPicker;
 @property (assign) NSInteger photoNumber;
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
+@property (nonatomic, retain) UIViewController* currentViewController;
+
 - (NSMutableArray*) getButtons;
 - (NSMutableArray*) getWidths;
 - (NSMutableDictionary*) getDividersDictionary;
 - (void) initCapture;
 - (void) pictureN;
 - (void) countDown;
+- (void) setPhotoTitlesForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 @end
 
 @implementation PhotosController
@@ -47,6 +50,7 @@ static float const TIMER_DELAY = 0.2;
 @synthesize photoPicker = _photoPicker;
 @synthesize photoNumber = _photoNumber;
 @synthesize customSegmentedControl = _customSegmentedControl;
+@synthesize currentViewController = _currentViewController;
 
 
 #pragma mark - Initialization
@@ -108,6 +112,7 @@ static float const TIMER_DELAY = 0.2;
     [self setPhotosWillBeTakenLabel:nil];
     [self setGetReadyLabel:nil];
     [self setCustomSegmentedControl:nil];
+    [self setCurrentViewController:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -127,6 +132,7 @@ static float const TIMER_DELAY = 0.2;
     [_photosWillBeTakenLabel release];
     [_getReadyLabel release];
     [_customSegmentedControl release];
+    [_currentViewController release];
     [super dealloc];
 }
 
@@ -338,6 +344,18 @@ static float const TIMER_DELAY = 0.2;
 
 - (IBAction)goHome:(id)sender {
     [self.rootController switchToController:@"SplashScreenController"];
+}
+
+- (UIViewController *) getCurrentController{
+    return self.currentViewController;
+}
+
+- (void) setCurrentController:(UIViewController *)controller{
+    self.currentViewController = controller;
+}
+
+-(void)bringHeaderViewToFront{
+    //[self.view bringSubviewToFront:self.headerView];
 }
 
 @end

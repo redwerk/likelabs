@@ -212,23 +212,32 @@
 - (void)selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl *)sender {
     UIButton* selectedBtn = [self.customSegmentedControl.buttons objectAtIndex:newSegmentIndex];
     selectedBtn.enabled = YES;
-    
+    [self.currentViewController resignFirstResponder];
     for (UIButton* btn in self.customSegmentedControl.buttons) {
         btn.userInteractionEnabled = (btn != selectedBtn);
     }
+    NSString *controllerName = @"";
     
     if(oldSegmentIndex!=newSegmentIndex){
         switch (newSegmentIndex) {
             case 0:
-                [self switchToController:@"TextReviewController"];
+                controllerName=@"TextReviewController";
+                
                 break;
             case 1:
-                [self switchToController:@"PhotoShareController"];
+                controllerName=@"PhotoShareController";
+                //[self switchToController:@"PhotoShareController" rootController:self];
                 break;
             case 2:
+                controllerName=@"PhotoFinishedController";
                 self.customSegmentedControl.userInteractionEnabled = NO;
-                [self switchToController:@"PhotoFinishedController"];
+                //[self switchToController:@"PhotoFinishedController" rootController:self];
                 break;
+        }
+        if(oldSegmentIndex<newSegmentIndex){
+            [self.rootController switchToController:controllerName rootController:self];
+        } else {
+            [self.rootController switchBackToController:controllerName rootController:self];
         }
     }
 }
@@ -236,7 +245,8 @@
 #pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
-    [self.rootController switchToController:@"SplashScreenController"];
+    [self.currentViewController resignFirstResponder];
+    [self.rootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
 }
 
 - (void)step {
@@ -250,6 +260,18 @@
 - (ReviewService *) getReviewService{
     
     return self.rootController.reviewService;
+}
+
+- (UIViewController *) getCurrentController{
+    return self.currentViewController;
+}
+
+- (void) setCurrentController:(UIViewController *)controller{
+    self.currentViewController = controller;
+}
+
+-(void)bringHeaderViewToFront{
+    [self.view bringSubviewToFront:self.headerView];
 }
 
 @end

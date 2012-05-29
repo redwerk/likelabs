@@ -5,7 +5,7 @@
 #import "Review.h"
 
 @interface PhotoMessageController ()
-@property (nonatomic,retain) RootPhotoController *rootController;
+@property (nonatomic,retain) UIViewController <ContainerController> *rootController;
 @property (nonatomic, assign) BOOL textPlaseholderActive;
 @property (nonatomic, assign) Review* review;
 
@@ -35,7 +35,7 @@ static NSString *const GREETING = @"Start typing a message!";
 
 
 #pragma mark - Initialization
--(id)initWithRootController:(RootPhotoController *)rootController {
+-(id)initWithRootController:(UIViewController <ContainerController> *)rootController {
     if (self = [super init]) {
         self.rootController = rootController;
         self.review = [self.rootController getReview];
@@ -74,6 +74,10 @@ static NSString *const GREETING = @"Start typing a message!";
     self.imageView.layer.borderWidth =2;
     [self setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
     [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0];
+}
+
+- (BOOL) resignFirstResponder {
+    return [self.textView resignFirstResponder ];
 }
 
 #pragma mark - Review management
