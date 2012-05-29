@@ -4,7 +4,7 @@
     var pointId = <c:out value="${pointId}" default="0"/>;
 
     $(document).ready(function(){
-        $("#add_tablet_dialog").dialog({ autoOpen: false, title: "Attach tablet", close: function(){document.getElementById("add_tablet_form").reset();}, modal: true, width: 350, height: 200});
+        $("#add_tablet_dialog").dialog({ autoOpen: false, title: "Attach tablet", close: function(){document.getElementById("add_tablet_form").reset();}, modal: true, width: 360, height: 220});
     })
     var tablet = {
         login : null,

@@ -930,7 +930,7 @@ input:focus, textarea:focus {
     margin-bottom: 20px;
 }
 .filter-holder input{padding: 2px 5px; width: 75px;}
-.filter-holder label{width: 70px; text-align: right; display:inline-block; font-weight: bold; }
+.filter-holder label{width: 67px; text-align: right; display:inline-block; font-weight: bold; }
 .filter-holder select{ width: 120px;}
 .filter-holder label:first-child{margin-left: 0;}
 

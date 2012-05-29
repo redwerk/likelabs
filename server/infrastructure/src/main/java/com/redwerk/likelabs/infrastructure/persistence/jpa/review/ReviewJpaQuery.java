@@ -5,6 +5,7 @@ import com.redwerk.likelabs.domain.model.review.SortingCriteria;
 import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.*;
+import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 
 import java.text.MessageFormat;
@@ -36,7 +37,7 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     private static final String REVIEWS_FILTER =
             "from Review r where ((:authorId is null or r.author.id = :authorId) and " +
-                    "(:moderatorId is null or r.moderator.id = :moderatorId) and " +
+                    "(:admin is null or :admin in elements(r.point.company.admins)) and " +
                     "(:filterByCompanies = false or r.point.company.id in (:companyIds)) and " +
                     "(:filterByPoints = false or r.point.id in (:pointIds)) and " +
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
@@ -56,7 +57,7 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     private Long authorId;
 
-    private Long moderatorId;
+    private User admin;
 
     private boolean filterByCompanies = false;
 
@@ -94,8 +95,8 @@ public class ReviewJpaQuery implements ReviewQuery {
     }
 
     @Override
-    public ReviewQuery setModeratorId(Long moderatorId) {
-        this.moderatorId = moderatorId;
+    public ReviewQuery setAdmin(User admin) {
+        this.admin = admin;
         return this;
     }
 
@@ -171,7 +172,7 @@ public class ReviewJpaQuery implements ReviewQuery {
     private Map<String, Object> getParameters() {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("authorId", authorId);
-        parameters.put("moderatorId", moderatorId);
+        parameters.put("admin", admin);
         parameters.put("companyIds", companyIds);
         parameters.put("filterByCompanies", filterByCompanies);
         parameters.put("pointIds", pointIds);
