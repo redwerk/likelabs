@@ -16,7 +16,7 @@
 			<key>AutocorrectionType</key>
 			<string>No</string>
 			<key>DefaultValue</key>
-			<string>http://10.0.1.47:8080</string>
+			<string>http://likelabs.redwerk.com</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>Key</key>
