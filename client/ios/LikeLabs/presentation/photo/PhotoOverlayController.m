@@ -6,6 +6,11 @@
 - (BOOL) validatePhone;
 - (void) layoutSubviewsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
 - (void) savePhone;
+
+- (NSString*) maskPhoneNumber:(NSString*)phone inRange:(NSRange)range insertString:(NSString *)string;
+- (BOOL)isNumber:(NSString*)string;
+- (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range;
+- (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range;
 @end
 
 @implementation PhotoOverlayController
@@ -13,7 +18,7 @@ NSString *const kPrimaryPhoneDidCancel = @"PrimaryPhoneDidCancel";
 NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
 NSString *const phoneFormat = @"8(___)___-____";
 NSString *const phoneDigitMask = @"_";
-int myPhoneSemaphore;
+int cursorPos;
 
 
 @synthesize textField = _textField;
@@ -26,7 +31,6 @@ int myPhoneSemaphore;
     if (self = [super init]) {
         self.phone = phone;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
-        myPhoneSemaphore = 1;
     }
     return self;
 }
@@ -40,14 +44,20 @@ int myPhoneSemaphore;
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     if (self.phone && self.phone.length) {
         self.textField.text = self.phone;
-        self.textField.textColor = [UIColor blackColor];
         self.textPlaceholderActive = NO;
     } else {
         self.textField.text = self.textField.placeholder;
-        self.textField.textColor = [UIColor grayColor];
         self.textPlaceholderActive = YES;
     }
     [self.textField becomeFirstResponder];    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (!self.phone || !self.phone.length) {
+        UITextPosition* newPosition = [self.textField positionFromPosition:self.textField.beginningOfDocument offset:2];
+        self.textField.selectedTextRange = [self.textField textRangeFromPosition:newPosition toPosition:newPosition];
+    }
 }
 
 #pragma mark - Memory management
@@ -96,27 +106,25 @@ int myPhoneSemaphore;
     if (self.textPlaceholderActive) {
         if (string.length == 0) return NO;
         self.textField.text = @"";
-        self.textField.textColor = [UIColor blackColor];
         self.textPlaceholderActive = NO;
     } 
-    return YES;
+    NSString* phone = textField.text;
+    
+    NSString* number = [self maskPhoneNumber:phone inRange:range insertString:string];
+    
+    textField.text = number;
+    NSRange currentCursorPos = [self convertFromPhoneToTextFieldRange:NSMakeRange(cursorPos, 1)];
+    UITextPosition* newPosition = [textField positionFromPosition:textField.beginningOfDocument offset:currentCursorPos.location];
+    textField.selectedTextRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
+    
+    return NO;
 }
 
 - (void)textFieldDidChange {
     if (!self.textPlaceholderActive && self.textField.text.length == 0) {
-        self.textField.textColor = [UIColor grayColor];
         self.textField.text = self.textField.placeholder;
         self.textPlaceholderActive = YES;
     }
-    
-    NSString* res = [self maskPhoneNumber:self.textField.text];
-    if (res == @"")
-    {
-        myPhoneSemaphore = 0;
-        return;
-    }
-    
-    self.textField.text = res;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -143,56 +151,95 @@ int myPhoneSemaphore;
     [[NSNotificationCenter defaultCenter] postNotificationName:kPrimaryPhoneDone object:nil];    
 }
 
-- (NSString*) maskPhoneNumber:(NSString*) phone
+- (NSString*) maskPhoneNumber:(NSString*)phone inRange:(NSRange)range insertString:(NSString *)string
 {
-    static int deleteIndex = 0;
-    
-    if (myPhoneSemaphore) return @"";
-    myPhoneSemaphore = 1;
-    
-    NSString* input = [NSString stringWithString:phone];
-    if (phone.length == 1) 
-        input = phoneFormat;
-    
-    if (input.length < phoneFormat.length)
+    if (phone.length == 0)
     {
-        NSMutableString* afterDelete = [NSMutableString stringWithString:[NSString stringWithFormat:@"%@%@", input, phoneDigitMask]];
-        if (deleteIndex > 1)
+        phone = [NSString stringWithFormat:@"%@", phoneFormat];
+        range = NSMakeRange(2, 1);
+    }
+    
+    phone = [phone stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    phone = [phone stringByReplacingOccurrencesOfString:@")" withString:@""];
+    phone = [phone stringByReplacingOccurrencesOfString:phoneDigitMask withString:@""];
+    phone = [phone stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    
+    cursorPos = 0;
+    NSMutableString* phoneNumber = [NSMutableString stringWithString:phone];
+    cursorPos = [self convertFromTextFieldToPhoneRange:range].location+1;
+    if (cursorPos > phone.length)
+        cursorPos = phone.length;
+    
+    if (string.length == 1)
+    {
+        if ([self isNumber:string])
+            [phoneNumber insertString:string atIndex:cursorPos];
+        else
+            cursorPos--;
+    }
+    else
+    {
+        if (![[NSString stringWithFormat:@"%c", [phoneFormat characterAtIndex:range.location]] isEqualToString:phoneDigitMask])
+            cursorPos--;
+        if (range.location > 1) {
+            [phoneNumber deleteCharactersInRange:NSMakeRange(cursorPos == phone.length ? cursorPos-1 : cursorPos, 1)];
+        }
+        cursorPos = cursorPos == phone.length ? cursorPos-2 : cursorPos-1;
+    }
+    
+    phone = phoneNumber;
+    
+    NSMutableString* number = [NSMutableString stringWithString:phoneFormat];
+    
+    for (int i = 1; i < phone.length; i++)
+    {
+        NSRange nextNumber = [number rangeOfString:phoneDigitMask];
+        if (nextNumber.location == NSNotFound)
         {
-            [afterDelete replaceCharactersInRange:NSMakeRange(deleteIndex, phoneFormat.length-deleteIndex) withString:[phoneFormat substringFromIndex:deleteIndex]];
-            
-            deleteIndex--;
-            
-            if (deleteIndex > 1)
-            {
-                while (!isdigit([afterDelete characterAtIndex:deleteIndex]))
-                    deleteIndex--;
-            }
+            break;
         }
         
-        return afterDelete;
+        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", [phone characterAtIndex:i]]];
     }
-    
-    NSRange nextNumber = [input rangeOfString:phoneDigitMask];
-    if (nextNumber.location != NSNotFound)
-        deleteIndex = nextNumber.location;
-    
-    char lastInputChar = [phone characterAtIndex:[phone length] - 1];
-    
-    NSMutableString* number = [NSMutableString stringWithString:input];
-    if (number.length > phoneFormat.length)
-        [number replaceCharactersInRange:NSMakeRange(phoneFormat.length, 1) withString:@""];
-    
-    if (nextNumber.location == NSNotFound)
-    {
-        myPhoneSemaphore = 1;
-        return number;
-    }
-    if (isdigit(lastInputChar))
-        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", lastInputChar]];
-    
     
     return number;
+}
+
+- (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range
+{
+    int pos = 0;
+    for (int i = 0; i < range.location; i++)
+    {
+        if ([[NSString stringWithFormat:@"%c", [phoneFormat characterAtIndex:i]] isEqualToString:phoneDigitMask])
+            pos++;
+    }
+    
+    return NSMakeRange(pos, 1);
+}
+
+- (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range
+{
+    if (range.location == 0 || range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location)
+        return NSMakeRange(2,1);
+    int pos = 0;
+    int phonePos = range.location;
+    while (phonePos && pos < phoneFormat.length) {
+        if ([[NSString stringWithFormat:@"%c", [phoneFormat characterAtIndex:pos]] isEqualToString:phoneDigitMask])
+            phonePos--;
+        pos++;
+    }
+    
+    return NSMakeRange(pos, 1);
+}
+
+- (BOOL)isNumber:(NSString*)string
+{
+    for (int i = 0; i < string.length; i++)
+    {
+        if (!isdigit([string characterAtIndex:i]))
+            return NO;
+    }
+    return YES;
 }
 
 #pragma mark - Actions

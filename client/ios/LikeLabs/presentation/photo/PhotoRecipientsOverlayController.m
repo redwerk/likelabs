@@ -4,6 +4,11 @@
 @interface PhotoRecipientsOverlayController ()
 @property (nonatomic, assign) ContactType contactType;
 @property (nonatomic, assign) BOOL textPlaceholderActive;
+
+- (NSString*) maskPhoneNumber:(NSString*)phone inRange:(NSRange)range insertString:(NSString *)string;
+- (BOOL)isNumber:(NSString*)string;
+- (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range;
+- (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range;
 @end
 
 @implementation PhotoRecipientsOverlayController
@@ -12,7 +17,7 @@ NSString *const kRecipientsDone = @"RecipientsDone";
 NSUInteger const BTN_TAG_OFFSET = 50;
 NSString *const phoneRecipientsFormat = @"8(___)___-____";
 NSString *const phoneRecipientsDigitMask = @"_";
-int myPhoneSemaphore;
+int cursorPos;
 
 @synthesize recipientsView;
 @synthesize recipientContactField;
@@ -27,7 +32,6 @@ int myPhoneSemaphore;
         self.recipients = recipients;
         self.contactType = contactType;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
-        myPhoneSemaphore = 1;
     }
     return self;
 }
@@ -41,16 +45,26 @@ int myPhoneSemaphore;
     self.recipientContactField.frame = CGRectMake(0, 0, 377, 75);  
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     if (self.contactType == ContactTypePhone) {
-        self.recipientContactField.placeholder = self.recipientContactField.text =  @"8(XXX)XXX-XXXX";
+        self.recipientContactField.placeholder = self.recipientContactField.text =  @"8(___)___-____";
         self.recipientContactField.keyboardType = UIKeyboardTypePhonePad;
+        self.recipientContactField.textColor = [UIColor blackColor];
     } else {
         self.recipientContactField.placeholder = self.recipientContactField.text = @"my@email.com";    
         self.recipientContactField.keyboardType = UIKeyboardTypeEmailAddress;
+        self.recipientContactField.textColor = [UIColor grayColor];
     }
     self.textPlaceholderActive = YES;
-    self.recipientContactField.textColor = [UIColor grayColor];
+    
     [self layoutRecipients];
     [self.recipientContactField becomeFirstResponder];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (self.contactType == ContactTypePhone) {
+        UITextPosition* newPosition = [self.recipientContactField positionFromPosition:self.recipientContactField.beginningOfDocument offset:2];
+        self.recipientContactField.selectedTextRange = [self.recipientContactField textRangeFromPosition:newPosition toPosition:newPosition];
+    }
 }
 
 #pragma mark - Memory management
@@ -117,6 +131,19 @@ int myPhoneSemaphore;
         self.recipientContactField.textColor = [UIColor blackColor];
         self.textPlaceholderActive = NO;
     } 
+    
+    if (self.contactType == ContactTypePhone) {
+        NSString* phone = textField.text;
+        
+        NSString* number = [self maskPhoneNumber:phone inRange:range insertString:string];
+        
+        textField.text = number;
+        NSRange currentCursorPos = [self convertFromPhoneToTextFieldRange:NSMakeRange(cursorPos, 1)];
+        UITextPosition* newPosition = [textField positionFromPosition:textField.beginningOfDocument offset:currentCursorPos.location];
+        textField.selectedTextRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
+        
+        return NO;
+    }
     return YES;
 }
 
@@ -125,17 +152,6 @@ int myPhoneSemaphore;
         self.recipientContactField.textColor = [UIColor grayColor];
         self.recipientContactField.text = self.recipientContactField.placeholder;
         self.textPlaceholderActive = YES;
-    }
-    
-    if (self.contactType == ContactTypePhone) {
-        NSString* res = [self maskPhoneNumber:self.recipientContactField.text];
-        if (res == @"")
-        {
-            myPhoneSemaphore = 0;
-            return;
-        }
-        
-        self.recipientContactField.text = res;
     }
 }
 
@@ -176,55 +192,95 @@ int myPhoneSemaphore;
     [[NSNotificationCenter defaultCenter] postNotificationName:kRecipientsDone object:nil];
 }
 
-- (NSString*) maskPhoneNumber:(NSString*) phone{
-    static int deleteIndex = 0;
-    
-    if (myPhoneSemaphore) return @"";
-    myPhoneSemaphore = 1;
-    
-    NSString* input = [NSString stringWithString:phone];
-    if (phone.length == 1) 
-        input = phoneRecipientsFormat;
-    
-    if (input.length < phoneRecipientsFormat.length)
+- (NSString*) maskPhoneNumber:(NSString*)phone inRange:(NSRange)range insertString:(NSString *)string
+{
+    if (phone.length == 0)
     {
-        NSMutableString* afterDelete = [NSMutableString stringWithString:[NSString stringWithFormat:@"%@%@", input, phoneRecipientsDigitMask]];
-        if (deleteIndex > 1)
+        phone = [NSString stringWithFormat:@"%@", phoneRecipientsFormat];
+        range = NSMakeRange(2, 1);
+    }
+    
+    phone = [phone stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    phone = [phone stringByReplacingOccurrencesOfString:@")" withString:@""];
+    phone = [phone stringByReplacingOccurrencesOfString:phoneRecipientsDigitMask withString:@""];
+    phone = [phone stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    
+    cursorPos = 0;
+    NSMutableString* phoneNumber = [NSMutableString stringWithString:phone];
+    cursorPos = [self convertFromTextFieldToPhoneRange:range].location+1;
+    if (cursorPos > phone.length)
+        cursorPos = phone.length;
+    
+    if (string.length == 1)
+    {
+        if ([self isNumber:string])
+            [phoneNumber insertString:string atIndex:cursorPos];
+        else
+            cursorPos--;
+    }
+    else
+    {
+        if (![[NSString stringWithFormat:@"%c", [phoneRecipientsFormat characterAtIndex:range.location]] isEqualToString:phoneRecipientsDigitMask])
+            cursorPos--;
+        if (range.location > 1) {
+            [phoneNumber deleteCharactersInRange:NSMakeRange(cursorPos == phone.length ? cursorPos-1 : cursorPos, 1)];
+        }
+        cursorPos = cursorPos == phone.length ? cursorPos-2 : cursorPos-1;
+    }
+    
+    phone = phoneNumber;
+    
+    NSMutableString* number = [NSMutableString stringWithString:phoneRecipientsFormat];
+    
+    for (int i = 1; i < phone.length; i++)
+    {
+        NSRange nextNumber = [number rangeOfString:phoneRecipientsDigitMask];
+        if (nextNumber.location == NSNotFound)
         {
-            [afterDelete replaceCharactersInRange:NSMakeRange(deleteIndex, phoneRecipientsFormat.length-deleteIndex) withString:[phoneRecipientsFormat substringFromIndex:deleteIndex]];
-            
-            deleteIndex--;
-            
-            if (deleteIndex > 1)
-            {
-                while (!isdigit([afterDelete characterAtIndex:deleteIndex]))
-                    deleteIndex--;
-            }
+            break;
         }
         
-        return afterDelete;
+        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", [phone characterAtIndex:i]]];
     }
-    
-    NSRange nextNumber = [input rangeOfString:phoneRecipientsDigitMask];
-    if (nextNumber.location != NSNotFound)
-        deleteIndex = nextNumber.location;
-    
-    char lastInputChar = [phone characterAtIndex:[phone length] - 1];
-    
-    NSMutableString* number = [NSMutableString stringWithString:input];
-    if (number.length > phoneRecipientsFormat.length)
-        [number replaceCharactersInRange:NSMakeRange(phoneRecipientsFormat.length, 1) withString:@""];
-    
-    if (nextNumber.location == NSNotFound)
-    {
-        myPhoneSemaphore = 1;
-        return number;
-    }
-    if (isdigit(lastInputChar))
-        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", lastInputChar]];
-    
     
     return number;
+}
+
+- (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range
+{
+    int pos = 0;
+    for (int i = 0; i < range.location; i++)
+    {
+        if ([[NSString stringWithFormat:@"%c", [phoneRecipientsFormat characterAtIndex:i]] isEqualToString:phoneRecipientsDigitMask])
+            pos++;
+    }
+    
+    return NSMakeRange(pos, 1);
+}
+
+- (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range
+{
+    if (range.location == 0 || range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location)
+        return NSMakeRange(2,1);
+    int pos = 0;
+    int phonePos = range.location;
+    while (phonePos && pos < phoneRecipientsFormat.length) {
+        if ([[NSString stringWithFormat:@"%c", [phoneRecipientsFormat characterAtIndex:pos]] isEqualToString:phoneRecipientsDigitMask])
+            phonePos--;
+        pos++;
+    }
+    
+    return NSMakeRange(pos, 1);
+}
+
+- (BOOL)isNumber:(NSString*)string
+{
+    for (int i = 0; i < string.length; i++)
+    {
+        if (!isdigit([string characterAtIndex:i]))
+            return NO;
+    }
+    return YES;
 }
 
 #pragma mark - Rotation
