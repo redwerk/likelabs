@@ -3,6 +3,8 @@
         var feed = feeds[key];
         var date = new Date(feed.date);
         var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        if (feed.message)
+            feed.message = (feed.message.length > 95)? feed.message.substring(0, 92) + "..." : feed.message;
 %>
 <div class="item-wrapper" id="feed_item_<%=feed.id%>">
     <div class="item-cmd">

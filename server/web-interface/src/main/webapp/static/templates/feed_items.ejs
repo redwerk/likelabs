@@ -1,6 +1,8 @@
 <% 
     for (var i=0, len=reviews.length ; i<len ;++i ) {
     var review = reviews[i];
+    if (review.message)
+        review.message = (review.message.length > 95)? review.message.substring(0, 92) + "..." : review.message;
 %>
 <div class="item-wrapper" review-id="<%=review.id%>" company-id="<%=review.companyId%>" >
     <div class="item-cmd">
