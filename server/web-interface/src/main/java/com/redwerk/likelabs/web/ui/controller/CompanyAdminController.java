@@ -326,7 +326,7 @@ public class CompanyAdminController {
             reviewJson.put("companyId", review.getPoint().getCompany().getId().toString()); // todo: ???
             reviewJson.put("message", review.getMessage());
             reviewJson.put("name", review.getAuthor().getName());
-            reviewJson.put("date", review.getCreatedDT().toString());
+            reviewJson.put("date", DATE_FORMAT.format(review.getCreatedDT()));
             reviewJson.put("status", review.getStatus().toString()); 
             reviewJson.put("published", review.isPublishedInCompanySN());
             reviewJson.put("promo", sampleReviews.contains(review) ? true : false);

@@ -185,6 +185,9 @@
                     success: function(data){
                        if(data.error){
                            errorDialog("Request error", data.error);
+                       } else {
+                            pagerOptions.resetPager = true;
+                            loadData(0);
                        }
                     },
                     error:function(jqXHR, textStatus){                        
@@ -219,6 +222,8 @@
                                 $me.addClass('active');
                                 $me.attr('title', 'Remove from favourites');
                             }
+                            pagerOptions.resetPager = true;
+                            loadData(0);
                         }
                     },
                     error:function(jqXHR, textStatus){
@@ -244,6 +249,8 @@
                             errorDialog("Error update review", response.error);
                         } else{
                             $me.replaceWith('<span class="btn disabled">Published<'+'/span>');
+                            pagerOptions.resetPager = true;
+                            loadData(0);
                         }
                     },
                     error:function(jqXHR, textStatus){
@@ -280,7 +287,7 @@
                var value = $(this).val();
                if(value === ''){
                     $('#point').attr('disabled','disabled').html('<option value="" >All</option>').val('');
-               } else{
+                } else{
                     value = parseInt(value, 10);
                     var points = companiesPoints[ value].points;
                     var i, len, pointsOption = '', pointsValues = [];
@@ -291,9 +298,9 @@
                     pointsOption = '<option value="'+pointsValues.join()+'" >All</option>' + pointsOption;
                     $('#point').html(pointsOption);
                     $('#point').removeAttr('disabled');
-                    pagerOptions.resetPager = true;
-                    loadData(0);
-               }
+                }
+                pagerOptions.resetPager = true;
+                loadData(0);
             });
             $('#point').attr('disabled','disabled');
         });
