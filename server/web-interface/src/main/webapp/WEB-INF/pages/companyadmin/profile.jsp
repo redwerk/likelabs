@@ -55,7 +55,7 @@
                 <c:otherwise>
                      <li class="vk-btn"><i class="icon"></i> <a id="connectToVK" href="#">Connect with VK</a></li>
                 </c:otherwise>
-            </c:choose>            
+            </c:choose>           
         </ul>
     </div>
 
@@ -95,11 +95,11 @@
             },
             messages: {
                 phone: {
-                    required: "Please provide a phone number",
+                    required: "Please enter valid phone number.",
                     minlength: "Please enter valid phone number"
                 },	
                 email: {
-                    required: "Please provide an email",
+                    required: "Please enter valid email address",
                     email: "Please enter valid email address"
                 },
                 password: {

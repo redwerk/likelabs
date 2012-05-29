@@ -50,26 +50,13 @@ a:hover {
 .clear {
     clear:both;
 }
-label, input, button, textarea {
-    font-size: 13px;
-    font-weight: normal;
-    line-height: 18px;
-}
+
+
 
 input, button, textarea {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
-input, textarea, .uneditable-input {
-    background-color: #FFFFFF;
-    border: 1px solid #CCCCCC;
-    border-radius: 3px;
-    display: inline-block;
-    font-size: 13px;
-    height: 18px;
-    line-height: 18px;
-    margin-bottom: 9px;
-    padding: 10px;
-}
+
 
 .text-holder p {
     margin-bottom: 10px;
@@ -383,7 +370,7 @@ input, textarea {
 }
 
 #sidebar .menu li:hover {
-    padding-left: 1px;
+   /* padding-left: 1px;*/
 }
 #sidebar .menu li.active a .mark{
     width: 100px;
@@ -517,7 +504,7 @@ input, textarea {
     cursor: pointer;
 }
 .social-buttons li:hover {
-   margin-left:  1px;
+  
 }
 
 .social-buttons li p, .social-buttons li a {
@@ -566,26 +553,28 @@ input, textarea {
 .social-buttons .linked:hover{
     margin-left: 0;
 }
-.social-buttons .linked a:hover{
-    text-decoration: underline;
-}
+
+/*
+.social-buttons i.icon*/
 
 .social-buttons .fb-btn{     background-position: left -68px;}
 .social-buttons .fb-btn a{     background-position: right -68px;}
-.social-buttons .fb-btn i.icon{ background-position: 17px 15px; }
+.social-buttons .fb-btn i.icon{ background-position: 10px 15px; }
 
 .social-buttons .vk-btn{     background-position: left -152px;}
 .social-buttons .vk-btn a{     background-position: right -152px;}
-.social-buttons .vk-btn i.icon{ background-position: 17px -70px; }
-
-.social-buttons .twi-btn{     background-position: left -218px;}
-.social-buttons .twi-btn a{     background-position: right -218px;}
-.social-buttons .twi-btn i.icon{ background-position: 17px -135px; }
+.social-buttons .vk-btn i.icon{ background-position: 10px -59px }
 
 .social-buttons .unlink{
     color:#c43131;
 }
 
+.social-buttons .fb-btn.linked i.icon{
+    background-position: 10px -143px;
+}
+.social-buttons .vk-btn.linked i.icon{
+    background-position: 10px -240px;
+}
 
 .company-logo{
     padding: 10px 10px 30px 10px;
@@ -622,6 +611,22 @@ input, textarea {
     -webkit-font-smoothing: antialiased;    
 }
 
+.field-holder label, .field-holder input, .field-holder textarea {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 18px;
+}
+.field-holder input, .field-holder textarea, .field-holder uneditable-input {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 13px;
+    height: 18px;
+    line-height: 18px;
+    margin-bottom: 9px;
+    padding: 10px;
+}
 .field-holder{
     display: block;
     margin-bottom: 10px;

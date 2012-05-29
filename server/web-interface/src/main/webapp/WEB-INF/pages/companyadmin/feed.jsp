@@ -4,7 +4,7 @@
 <form id="formFilter" action="/" method="post" onsubmit="return false;">
     <style type="text/css">
         .filter-holder label{
-            width: 80px;
+            width: 90px;
         }
         .filter-holder select{
             width: 200px;
@@ -28,15 +28,16 @@
             <div>
                 <label for="contentType">Contains:</label>
                 <select id="contentType" name="contentType">
-                        <option value="CONTAINS_TEXT_AND_PHOTO">Any content</option>
-                        <option value="CONTAINS_PHOTO">Images</option>
-                        <option value="CONTAINS_TEXT">Text</option>
-                    </select>
+                     <option value="">Not selected</option>
+                     <option value="CONTAINS_TEXT">Text</option>
+                     <option value="CONTAINS_PHOTO">Photo</option>                        
+                     <option value="CONTAINS_TEXT_AND_PHOTO">Text and Photo</option>
+                </select>
                 <label for="startDate">Date:</label> <input name="startDate" type="text" id="startDate" /> 
                     - <input name="endDate" type="text" id="endDate" />
             </div>
             <div>
-                <label for="location">Companyes:</label>
+                <label for="location" >Companies:</label>
                 <select name="companyes" id="companyes">
                     <option value="">All</option>
                 </select>
