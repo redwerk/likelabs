@@ -181,9 +181,9 @@
 		0AAB5597153F577400649AB4 /* SettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsService.m; path = LikeLabs/services/SettingsService.m; sourceTree = "<group>"; };
 		0AAB559A153F577400649AB4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = LikeLabs/model/User.h; sourceTree = "<group>"; };
 		0AAB559B153F577400649AB4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = LikeLabs/model/User.m; sourceTree = "<group>"; };
-		0AAB55B1153F59BB00649AB4 /* TextReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextReviewController.h; path = LikeLabs/presentation/TextReviewController.h; sourceTree = "<group>"; };
-		0AAB55B2153F59BB00649AB4 /* TextReviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextReviewController.m; path = LikeLabs/presentation/TextReviewController.m; sourceTree = "<group>"; };
-		0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TextReviewController.xib; path = LikeLabs/presentation/TextReviewController.xib; sourceTree = "<group>"; };
+		0AAB55B1153F59BB00649AB4 /* TextReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReviewController.h; sourceTree = "<group>"; };
+		0AAB55B2153F59BB00649AB4 /* TextReviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReviewController.m; sourceTree = "<group>"; };
+		0AAB55B3153F59BB00649AB4 /* TextReviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextReviewController.xib; sourceTree = "<group>"; };
 		9F1681F9157379C800A52657 /* welcome_company.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_company.png; sourceTree = "<group>"; };
 		9F1681FA157379C800A52657 /* welcome_exitbtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_exitbtn.png; sourceTree = "<group>"; };
 		9F1681FB157379C800A52657 /* welcome_homebtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_homebtn.png; sourceTree = "<group>"; };
@@ -239,9 +239,9 @@
 		9FA71C25156F9A7000931601 /* photo_selection_bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_selection_bg_landscape.png; path = LikeLabs/resources/photo_selection_bg_landscape.png; sourceTree = "<group>"; };
 		9FA71C27156F9A8100931601 /* photo_selection_bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_selection_bg_portrait.png; path = LikeLabs/resources/photo_selection_bg_portrait.png; sourceTree = "<group>"; };
 		9FAE11C2156B93FE00CA20C7 /* Lobster.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Lobster.otf; path = LikeLabs/resources/Lobster.otf; sourceTree = "<group>"; };
-		9FAE11CA156B971400CA20C7 /* RootMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootMessageController.h; path = LikeLabs/presentation/RootMessageController.h; sourceTree = "<group>"; };
-		9FAE11CB156B971400CA20C7 /* RootMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootMessageController.m; path = LikeLabs/presentation/RootMessageController.m; sourceTree = "<group>"; };
-		9FAE11CC156B971400CA20C7 /* RootMessageController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = RootMessageController.xib; path = LikeLabs/presentation/RootMessageController.xib; sourceTree = "<group>"; };
+		9FAE11CA156B971400CA20C7 /* RootMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootMessageController.h; sourceTree = "<group>"; };
+		9FAE11CB156B971400CA20C7 /* RootMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootMessageController.m; sourceTree = "<group>"; };
+		9FAE11CC156B971400CA20C7 /* RootMessageController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootMessageController.xib; sourceTree = "<group>"; };
 		E77C329A15500D8B0057A34F /* SplashScreenController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SplashScreenController.h; path = LikeLabs/presentation/SplashScreenController.h; sourceTree = "<group>"; };
 		E77C329B15500D8B0057A34F /* SplashScreenController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SplashScreenController.m; path = LikeLabs/presentation/SplashScreenController.m; sourceTree = "<group>"; };
 		E77C329C15500D8B0057A34F /* SplashScreenController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = SplashScreenController.xib; path = LikeLabs/presentation/SplashScreenController.xib; sourceTree = "<group>"; };
@@ -617,6 +617,7 @@
 				9FAE11CC156B971400CA20C7 /* RootMessageController.xib */,
 			);
 			name = message;
+			path = LikeLabs/presentation/message;
 			sourceTree = "<group>";
 		};
 		FF32DBA5156381A10020357B /* photo */ = {
@@ -717,6 +718,7 @@
 			isa = PBXGroup;
 			children = (
 				9F1681F8157379C800A52657 /* welcome */,
+				FF853C8415616C61003F0374 /* navigation */,
 				9FA71C27156F9A8100931601 /* photo_selection_bg_portrait.png */,
 				9FA71C25156F9A7000931601 /* photo_selection_bg_landscape.png */,
 				9F194DB8156E9D7800095C21 /* thankyou_bg_landscape.png */,
@@ -729,7 +731,6 @@
 				9F99D12D156A7E6600DACCC5 /* text-block-portrait.png */,
 				9F99D12E156A7E6600DACCC5 /* textmessage_landscape.png */,
 				9F99D12F156A7E6600DACCC5 /* textmessage_portrait.png */,
-				FF853C8415616C61003F0374 /* navigation */,
 				FF8254FC1563CD13007F42E1 /* add_mail.png */,
 				FF8254FD1563CD13007F42E1 /* add_phone.png */,
 				FF669B7F155C5DC30097515A /* delete_btn.png */,
