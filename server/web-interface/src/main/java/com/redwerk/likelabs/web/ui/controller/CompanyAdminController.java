@@ -47,7 +47,7 @@ public class CompanyAdminController {
     private static final String PROFILE_REDIRECT_URL = "redirect:/companyadmin/profile";
     private static final int COMPANY_LIST_PAGE_SIZE = 10;
     private static final int REVIEW_LIST_PAGE_SIZE = 8;
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     private static final String LOGO_LINK_TEMPLATE = "/public/{0}/logo";
     private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/public/review/{0}/photo";
     private static final String PARAM_FACEBOOK_ACCOUNT = "facebook";
@@ -227,7 +227,7 @@ public class CompanyAdminController {
             return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
         }
         Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.attachAccount(userId, SocialNetworkType.FACEBOOK, code);
+        userService.attachAccount(userId, SocialNetworkType.VKONTAKTE, code);
         return endRedirect(null);
     }
 

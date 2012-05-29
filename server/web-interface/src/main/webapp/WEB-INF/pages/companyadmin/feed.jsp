@@ -265,8 +265,8 @@
         
         $(document).ready(function(){
             loadData(0);
-            $('#startDate').datepicker({dateFormat: "mm/dd/yy"});
-            $('#endDate').datepicker({dateFormat: "mm/dd/yy"});
+            $('#startDate').datepicker({dateFormat: "dd/mm/yy"});
+            $('#endDate').datepicker({dateFormat: "dd/mm/yy"});
             $('.status-filter input[name=status]').change(function(){
                 pagerOptions.resetPager = true;
                 loadData(0);
