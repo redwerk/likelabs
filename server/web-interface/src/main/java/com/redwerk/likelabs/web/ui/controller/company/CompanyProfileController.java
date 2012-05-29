@@ -11,6 +11,7 @@ import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.company.exception.CompanyLogoTooBigException;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
@@ -99,16 +100,27 @@ public class CompanyProfileController {
         }
         try {
             if (session.getAttribute("logo") != null && (Long)((Map<String,Object>)session.getAttribute("logo")).get("companyId") == companyId) {
-                companyService.updateCompany(companyId, 
-                                 new CompanyData(companyDto.getName(), companyDto.getPhone(), companyDto.getEmail(), companyDto.isModerate()),
-                                 (byte[])((Map<String,Object>)session.getAttribute("logo")).get("image"));
+                byte[] image = (byte[])((Map<String,Object>)session.getAttribute("logo")).get("image");
+                companyService.updateCompany(companyId,
+                                 new CompanyData(companyDto.getName(), companyDto.getPhone(), companyDto.getEmail(), companyDto.isModerate()), image);
             } else {
                 companyService.updateCompany(companyId,
                                  new CompanyData(companyDto.getName(), companyDto.getPhone(), companyDto.getEmail(), companyDto.isModerate()));
             }
+        } catch (CompanyLogoTooBigException e) {
+            log.error(e, e);
+            model.addAttribute("error",true);
+            model.addAttribute("message","The image size should not exceed 1Mb.");
+            model.addAttribute("page", "profile");
+            model.put("cabinet", "company");
+            session.removeAttribute("logo");
+            return VIEW_COMPANY_PROFILE;
         } catch (Exception e) {
             log.error(e, e);
             model.addAttribute("error",true);
+            model.addAttribute("message","Server error. Try again later.");
+            model.addAttribute("page", "profile");
+            model.put("cabinet", "company");
             return VIEW_COMPANY_PROFILE;
         }
         model.clear();

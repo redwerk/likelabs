@@ -15,7 +15,7 @@
     </style>
     <h1>My Feed</h1> 
     <div class="order-holder">
-        <select style="width: 100px;" id="sortingCriteria" name="sortingCriteria">
+        <select style="width: 150px;" id="sortingCriteria" name="sortingCriteria">
         <option value="DATE">Date</option>
         <option value="COMPANY_AND_POINT">Company / Point</option>
         <option value="REVIEW_TYPE">Review type</option>
@@ -65,7 +65,7 @@
                 <label for="statusArchived" >Archived</label>
                 <label for="statusFlagged" >Flagged</label>
                 <label for="statusPublished" >Published</label>
-                <label for="statusPromo">Promo</label>
+                <label for="statusPromo">Favourites</label>
             </div>
         </div>
         <div id="feedContainer" class="items-inner">

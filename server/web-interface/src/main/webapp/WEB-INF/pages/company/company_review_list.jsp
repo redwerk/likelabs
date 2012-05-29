@@ -119,7 +119,7 @@ $(document).ready(function(){
     }
 </script>
 <div id="content">
-    <h1>Moderation reviews for ${company.name}</h1>
+    <h1>Reviews for ${company.name}</h1>
     <div class="order-holder">
         <select onchange="changeSort()" id="sort_by" style="width: 150px">
             <option value="">Sort By</option>

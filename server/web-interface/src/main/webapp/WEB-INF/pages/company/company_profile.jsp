@@ -4,6 +4,10 @@
     $(document).ready(function(){
         $("#add_administrator_dialog").dialog({ autoOpen: false, title: "Add administrator", close: function(){document.getElementById("add_administrator_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
         $("#add_social_page_dialog").dialog({ autoOpen: false, title: "Add social page", close: function(){document.getElementById("add_social_page_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
+        <c:if test="${error eq true}">
+            errorDialog("Error", '<c:out value="${message}"/>');
+        </c:if>
+        
     })
     function addAdmin() {
         $.post("/company/" + companyId + "/profile/admin", $("#add_administrator_form").serialize(), function(response){

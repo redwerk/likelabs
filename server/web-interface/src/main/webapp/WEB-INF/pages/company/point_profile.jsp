@@ -4,7 +4,7 @@
     var pointId = <c:out value="${pointId}" default="0"/>;
 
     $(document).ready(function(){
-        $("#add_tablet_dialog").dialog({ autoOpen: false, title: "Attach tablet", close: function(){document.getElementById("add_tablet_form").reset();}, modal: true, width: 450, height: 300});
+        $("#add_tablet_dialog").dialog({ autoOpen: false, title: "Attach tablet", close: function(){document.getElementById("add_tablet_form").reset();}, modal: true, width: 350, height: 200});
     })
     var tablet = {
         login : null,
@@ -19,7 +19,7 @@
                 return;
             }
             $("#add_tablet_dialog").dialog("close");
-            window.location.reload();
+            document.location.href = document.location.href;
         });
     }
     function deleteTablet(id) {
@@ -32,7 +32,7 @@
                         errorDialog("Error deleting tablet", response.error);
                         return;
                     }
-                    window.location.reload();
+                    document.location.href = document.location.href;
                 }
             })});
     }
@@ -98,7 +98,7 @@
                 <div class="left label">Attached Tablets</div>
                 <div class="right"><a href="javascript:void(0);" onclick="$('#add_tablet_dialog').dialog('open');">add</a></div>
             </div>
-            <table cellpadding="0" cellspacing="1" style="width: 100%; border: solid 1px #d2d9df" summary="" class="content_table field">
+            <table cellpadding="0" cellspacing="1" style="width: 600px; border: solid 1px #d2d9df" summary="" class="content_table field">
                 <thead style="height: 30px;">
                     <tr style="background-color: #efefef">
                         <th>Login</th>
@@ -119,7 +119,7 @@
                 </c:forEach>
 
             </table>
-            <div id="add_tablet_dialog" style="width: 400px;">
+            <div id="add_tablet_dialog" style="width: 350px;">
                 <form action="" onsubmit="return false;" id="add_tablet_form">
                     <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
                         <tr>

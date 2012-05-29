@@ -121,7 +121,7 @@
     <div class="items-holder" >      
 
         <div class="filter-holder">
-            <label for="feed_type">Contains :</label>
+            <label for="feed_type" style="width: 90px;">Contains :</label>
             <select onchange="changeFilter()" id="feed_type">
                 <option value="">Not selected</option>
                 <option value="contains_text">Text</option>
