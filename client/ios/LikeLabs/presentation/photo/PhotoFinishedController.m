@@ -130,6 +130,6 @@
 #pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
-    [self.rootController goHome:sender];
+    [(RootPhotoController*)self.rootController goHome:sender];
 }
 @end
