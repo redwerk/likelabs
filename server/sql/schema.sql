@@ -173,7 +173,7 @@ CREATE TABLE `event` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `type` TINYINT NOT NULL,
      `created_dt` DATETIME NOT NULL,
-     `notified_dt` DATETIME NOT NULL,
+     `notified_dt` DATETIME,
      `user_id` BIGINT NOT NULL,
      `review_id` BIGINT NOT NULL,
      CONSTRAINT `PK_event` PRIMARY KEY (`id`),
