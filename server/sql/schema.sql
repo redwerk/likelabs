@@ -37,7 +37,7 @@ CREATE TABLE `user_event_type` (
 DROP TABLE IF EXISTS `photo`;
 CREATE TABLE `photo` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
-     `image` BLOB NOT NULL,
+     `image` MEDIUMBLOB NOT NULL,
      `created_dt` DATETIME NOT NULL,
      `status` TINYINT NOT NULL,
      `user_id` BIGINT NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `company` (
      `phone` VARCHAR(20) NOT NULL,
      `email` VARCHAR(40) NOT NULL,
      `moderate_reviews` TINYINT(1) NOT NULL,
-     `logo` BLOB,
+     `logo` MEDIUMBLOB,
      CONSTRAINT `PK_company` PRIMARY KEY (`id`),
      CONSTRAINT `UC_company_name` UNIQUE(`name`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
@@ -126,6 +126,7 @@ CREATE TABLE `review` (
      `moderated_dt` DATETIME,
      `point_id` BIGINT NOT NULL,
      CONSTRAINT `PK_review` PRIMARY KEY (`id`),
+
      CONSTRAINT `FK_review_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE,
      CONSTRAINT `FK_review_photo` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`) ON DELETE SET NULL,
      CONSTRAINT `FK_review_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,

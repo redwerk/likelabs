@@ -37,8 +37,8 @@ public class ReviewJpaQuery implements ReviewQuery {
     private static final String REVIEWS_FILTER =
             "from Review r where ((:authorId is null or r.author.id = :authorId) and " +
                     "(:moderatorId is null or r.moderator.id = :moderatorId) and " +
-                    "(:companyIds is null or r.point.company.id in :companyIds) and " +
-                    "(:pointIds is null or r.point.id in :pointIds) and " +
+                    "(:filterByCompanies = false or r.point.company.id in (:companyIds)) and " +
+                    "(:filterByPoints = false or r.point.id in (:pointIds)) and " +
                     "(:fromDate is null or r.createdDT >= :fromDate) and " +
                     "(:toDate is null or r.createdDT < :toDate) and " +
                     "(:status is null or r.status = :status) and " +
@@ -58,7 +58,11 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     private Long moderatorId;
 
+    private boolean filterByCompanies = false;
+
     private List<Long> companyIds;
+
+    private boolean filterByPoints = false;
 
     private List<Long> pointIds;
 
@@ -97,15 +101,15 @@ public class ReviewJpaQuery implements ReviewQuery {
 
     @Override
     public ReviewQuery setCompanyIds(List<Long> companyIds) {
-        this.companyIds =
-                (companyIds != null && companyIds.isEmpty()) ? null : companyIds;
+        this.companyIds = (companyIds != null && companyIds.isEmpty()) ? null : companyIds;
+        this.filterByCompanies = (this.companyIds != null);
         return this;
     }
 
     @Override
     public ReviewQuery setPointIds(List<Long> pointIds) {
-        this.pointIds =
-                (pointIds != null && pointIds.isEmpty()) ? null : pointIds;
+        this.pointIds = (pointIds != null && pointIds.isEmpty()) ? null : pointIds;
+        this.filterByPoints = (this.pointIds != null);
         return this;
     }
 
@@ -169,7 +173,9 @@ public class ReviewJpaQuery implements ReviewQuery {
         parameters.put("authorId", authorId);
         parameters.put("moderatorId", moderatorId);
         parameters.put("companyIds", companyIds);
+        parameters.put("filterByCompanies", filterByCompanies);
         parameters.put("pointIds", pointIds);
+        parameters.put("filterByPoints", filterByPoints);
         parameters.put("fromDate", fromDate);
         parameters.put("toDate", toDate);
         parameters.put("status", (status != null) ? status.ordinal() : null);
