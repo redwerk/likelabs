@@ -28,27 +28,23 @@ public class ReferenceResource {
 
     @Autowired
     private TabletService tabletService;
-
-
-    private static final String TABLET_ID_PLACEHOLDER =  "TABLET_ID"; 
-
+    
 
     @GET
     public ReferenceData getReferenceData(@Context UriInfo uriInfo, 
             @HeaderParam(TabletSecurityFilter.HEADER_TABLET_API_KEY) String apiKey) {
 
         LinkBuilder linkBuilder = new LinkBuilder(uriInfo);
-        List<LinkElement> links = Lists.newArrayList();        
-        if(apiKey == null) {
-            linkBuilder.setParam(LinkBuilder.Param.TABLET_ID, TABLET_ID_PLACEHOLDER);
+        List<LinkElement> links = Lists.newArrayList();       
+        Long tabletId = null;
+        try {
+            tabletId = tabletService.getTabletId(apiKey);
+        } catch (TabletNotFoundException ex) {
+           //api-key invalid, so just show link to login
+        }        
+        if(apiKey == null || tabletId == null) {
             links.add(new LinkElement(linkBuilder.buildFor(LinkBuilder.Url.LOGIN)));
         } else {
-            Object tabletId;
-            try {
-                tabletId = tabletService.getTabletId(apiKey);
-            } catch (TabletNotFoundException ex) {
-                tabletId = TABLET_ID_PLACEHOLDER;
-            }
             linkBuilder.setParam(LinkBuilder.Param.TABLET_ID, tabletId);
             links.add(new LinkElement(linkBuilder.buildFor(LinkBuilder.Url.TABLET_SETTINGS)));
             links.add(new LinkElement(linkBuilder.buildFor(LinkBuilder.Url.REVIEWS)));
