@@ -1,21 +1,21 @@
 package com.redwerk.likelabs.web.rest.dto.exposable;
 
-import java.util.Map;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.redwerk.likelabs.web.rest.dto.exposable.adapter.MapAdapter;
 
 @XmlRootElement(name="references")
 public class ReferenceData {
     
-    @XmlJavaTypeAdapter(MapAdapter.class)
-    private final Map<String, String> links;
-
+    @XmlElementWrapper(name="links")
+    @XmlElement(name="link")
+    private List<LinkElement> links;
     
-    public ReferenceData(Map<String, String> links) {
+
+    public ReferenceData(List<LinkElement> links) {
         this.links = links;
     }
     
@@ -25,7 +25,7 @@ public class ReferenceData {
         this(null);
     }
 
-    public Map<String, String> getLinks() {
+    public List<LinkElement> getLinks() {
         return links;
     }
 }

@@ -37,7 +37,8 @@ public class TabletSecurityFilter implements Filter {
     private TabletService tabletService;
 
     private final Set<String> bypassedPaths = new HashSet<String>() {{
-        add(LinkBuilder.Url.TABLETS_BASE);
+        add("/");
+        add(null);  //root restapi path
         add(LinkBuilder.Url.LOGIN);
     }};
 
@@ -59,8 +60,13 @@ public class TabletSecurityFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest)req;
         HttpServletResponse response = (HttpServletResponse)resp;      
         LOG.debug("got request to filter: {}", request);
-        String apiKey = request.getHeader(HEADER_TABLET_API_KEY);       
-        if (apiKey != null) {
+        String apiKey = request.getHeader(HEADER_TABLET_API_KEY);
+        
+        if(!bypassedPaths.contains(request.getPathInfo())) {
+            if (apiKey == null) {
+                createUnauthorizedResponse(response);
+                return;  
+            }
             Long tabletId = getTabletId(request);
             if(tabletId == null) {
                 createNotFoundResponse(response);
@@ -75,10 +81,9 @@ public class TabletSecurityFilter implements Filter {
                 createNotFoundResponse(response);
                 return;  		
             }
-        } else if(!bypassedPaths.contains(request.getPathInfo())) {
-            createUnauthorizedResponse(response);
-            return;
+ 
         }
+        LOG.debug("resolution: request allowed");
         chain.doFilter(request, response);
     }
 
