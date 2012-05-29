@@ -19,6 +19,7 @@ import com.redwerk.likelabs.domain.service.dto.PhotoData;
 import com.redwerk.likelabs.domain.service.dto.RecipientData;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
+import org.apache.commons.lang.Validate;
 
 import java.util.List;
 
@@ -57,8 +58,13 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
     @Override
     public Review createAndRegisterReview(Tablet tablet, String authorPhone, String text, List<PhotoData> photos,
                                           List<RecipientData> recipients) {
+        Validate.notNull(tablet, "tablet is required for review creation");
+        Validate.notEmpty(authorPhone, "authorPhone is required for review creation");
+        Validate.notNull(photos, "photos cannot be null");
+        Validate.notNull(recipients, "recipients cannot be null");
+
         User author = getOrCreateUser(authorPhone);
-        Photo reviewPhoto = processPhotosAndGetSelected(author, photos);
+        Photo reviewPhoto = photos.isEmpty() ? null : processPhotosAndGetSelected(author, photos);
         Review review = Review.createReview(author, tablet.getPoint(), text, reviewPhoto);
         processRecipients(review, recipients);
         reviewRepository.add(review);

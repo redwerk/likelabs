@@ -73,8 +73,6 @@ public class Review {
     public static Review createReview(User author, Point point, String message, Photo photo) {
         Validate.notNull(author, "author is required for review");
         Validate.notNull(point, "point is required for review");
-        Validate.notNull(message, "message is required for review");
-        Validate.notNull(photo, "photo is required for review");
         Review review = new Review(author, point, message, photo);
         point.registerReview(review, new ReviewRegistrationAgent() {
             @Override
