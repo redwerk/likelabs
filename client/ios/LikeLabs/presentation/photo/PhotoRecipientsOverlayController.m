@@ -9,6 +9,10 @@
 - (BOOL)isNumber:(NSString*)string;
 - (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range;
 - (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range;
+- (void) layoutRecipients;
+- (BOOL) validatePhone;
+- (BOOL) validateEmail;
+- (void) saveConact;
 @end
 
 @implementation PhotoRecipientsOverlayController

@@ -9,6 +9,7 @@
 @property (nonatomic, retain) AVCaptureStillImageOutput *imageOutput;
 @property (assign) NSInteger seconds;
 - (void) initCapture;
+- (void) captureImage;
 @end
 
 @implementation PhotoPickerController
