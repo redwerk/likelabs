@@ -102,7 +102,7 @@ NSString *bgPortrait = @"bg_portrait.png";
     BOOL loginSuccessfull = [self.rootController.loginService checkLogin:self.inputCode.text andPassword:self.inputPassword.text];
     
     if (loginSuccessfull) {
-        [self.rootController switchToController:@"SplashScreenController"];
+        [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
     } else {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 
                                                         delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];

@@ -7,7 +7,6 @@
 @property (retain, nonatomic) UIViewController* currentViewController;
 @property (assign, nonatomic) SettingsService* settingsService;
 @property (assign, nonatomic) SettingsDao* dao;
-- (UIViewController *)viewControllerByName:(NSString *)controllerName;
 @end
 
 @implementation RootController
@@ -42,7 +41,7 @@ CGFloat const SLIDE_SPEED = 0.5;
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
-    UIViewController *vc = [self viewControllerByName:@"LoginController"];
+    UIViewController *vc = [RootController viewControllerByName:@"LoginController" rootController:self];
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
@@ -89,15 +88,11 @@ CGFloat const SLIDE_SPEED = 0.5;
 
 #pragma mark - ContainerController implementation
 
-- (UIViewController *)viewControllerByName:(NSString *)controllerName {
-    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
-}
-
-- (UIViewController *)viewControllerByName:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root{
++ (UIViewController *) viewControllerByName:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root{
     return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
 }
 
-- (void)switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root {
++ (void) switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root {
     UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
     vc.view.frame = root.view.bounds;
     [root addChildViewController:vc];
@@ -123,7 +118,7 @@ CGFloat const SLIDE_SPEED = 0.5;
     }
 }
 
-- (void) switchBackToController:(NSString *)controllerName rootController:(UIViewController<ContainerController> *)root{
++ (void) switchBackToController:(NSString *)controllerName rootController:(UIViewController<ContainerController> *)root{
     UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
     [root.view addSubview:vc.view];
     [root addChildViewController:vc];
@@ -146,50 +141,10 @@ CGFloat const SLIDE_SPEED = 0.5;
     }
 }
 
-- (void)switchToController:(NSString *)controllerName {
-    
-    if ([controllerName isEqualToString:@"SplashScreenController"] && [[NSDate date] timeIntervalSinceDate:self.dao.lastUpdate] > HOURS_24) {            
-        [self.settingsService getSettings];        
-    }
-    
-    UIViewController *vc = [self viewControllerByName:controllerName];
-    vc.view.frame = self.view.bounds;
-    [self.view addSubview:vc.view];
-    [self addChildViewController:vc];
-    vc.view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
-    
-    [UIView animateWithDuration:SLIDE_SPEED animations: ^{
-        self.currentViewController.view.center = CGPointMake(-1*(vc.view.frame.size.width/2), vc.view.frame.size.height/2);
-        vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
-    } completion:^(BOOL finished){
-        [self.currentViewController.view removeFromSuperview];
-        [vc didMoveToParentViewController:self];
-        [self.currentViewController removeFromParentViewController];
-        self.currentViewController = vc;
-    }];
-
-    
-    if([self respondsToSelector:@selector(bringHeaderViewToFront)]){
-        [self bringHeaderViewToFront];
-    }
-
-   /* 
-    UIViewController *vc = [self viewControllerByName:controllerName];
-    [self addChildViewController:vc];
-    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
-        [self.currentViewController.view removeFromSuperview];
-        vc.view.frame = self.view.bounds;
-        [self.view addSubview:vc.view];
-    } completion:^(BOOL finished) {
-        [vc didMoveToParentViewController:self];
-        [self.currentViewController removeFromParentViewController];
-        self.currentViewController = vc;
-    }];*/
-}
-
 - (UIViewController *) getCurrentController{
     return self.currentViewController;
 }
+
 - (void) setCurrentController:(UIViewController *)controller{
     self.currentViewController = controller;
 }

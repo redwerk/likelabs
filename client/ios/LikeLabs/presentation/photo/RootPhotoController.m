@@ -45,7 +45,7 @@
     self.customSegmentedControl = [[[CustomizableSegmentedControl alloc] initWithFrame:frame buttons:[self getButtons] widths:nil dividers:[self getDividers] dividerWidth:22 delegate:self] autorelease];
     [self.headerView addSubview:self.customSegmentedControl];
 
-    UIViewController *vc = [self viewControllerByName:@"PhotoSelectionController"];
+    UIViewController *vc = [RootController viewControllerByName:@"PhotoSelectionController" rootController:self];
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
@@ -210,27 +210,6 @@
     }
 }
 
-#pragma mark - ContainerController implementation
-
-- (UIViewController *)viewControllerByName:(NSString *)controllerName {
-    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
-}
-
-/*- (void)switchToController:(NSString *)controllerName {
-    UIViewController *vc = [self viewControllerByName:controllerName];
-    [self addChildViewController:vc];
-    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0.5 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
-        [self.currentViewController.view removeFromSuperview];
-        vc.view.frame = self.view.bounds;
-        [self.view addSubview:vc.view];
-        [self.view bringSubviewToFront:self.headerView];
-    } completion:^(BOOL finished) {
-        [vc didMoveToParentViewController:self];
-        [self.currentViewController removeFromParentViewController];
-        self.currentViewController = vc;
-    }];
-}*/
-
 #pragma mark - CustomSegmentedControlDelegate implementation
 
 - (void)selectedIndexChangedFrom:(NSUInteger)oldSegmentIndex to:(NSUInteger)newSegmentIndex setnder:(CustomizableSegmentedControl *)sender {
@@ -263,9 +242,9 @@
                 break;
         }
         if(oldSegmentIndex<newSegmentIndex){
-            [self.rootController switchToController:controllerName rootController:self];
+            [RootController switchToController:controllerName rootController:self];
         } else {
-            [self.rootController switchBackToController:controllerName rootController:self];
+            [RootController switchBackToController:controllerName rootController:self];
         }
     }
 }
@@ -274,7 +253,7 @@
 
 - (IBAction)goHome:(id)sender {
     [self.currentViewController resignFirstResponder];
-    [self.rootController switchToController:@"SplashScreenController"];
+    [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
 }
 
 - (void)step {

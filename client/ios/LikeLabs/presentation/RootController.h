@@ -13,6 +13,7 @@ extern NSString *const NAVIGTION_BG_LANDSCAPE;
 @property (nonatomic, retain) ReviewService *reviewService;
 @property (nonatomic, retain) LoginService *loginService;
 
-- (UIViewController *)viewControllerByName:(NSString *)controllerName;
-
++ (void) switchBackToController:(NSString *)controllerName rootController:(UIViewController<ContainerController> *)root;
++ (void) switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root;
++ (UIViewController *) viewControllerByName:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root;
 @end

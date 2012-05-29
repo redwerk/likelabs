@@ -302,7 +302,7 @@ static float const TIMER_DELAY = 0.2;
     if (self.photoNumber <= 5) {
         [self getReady];
     } else {
-        [self.rootController switchToController:@"RootPhotoController"];
+        [RootController switchToController:@"RootPhotoController" rootController:self.rootController];
     }
 }
 
@@ -343,7 +343,7 @@ static float const TIMER_DELAY = 0.2;
 #pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
-    [self.rootController switchToController:@"SplashScreenController"];
+    [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
 }
 
 - (UIViewController *) getCurrentController{

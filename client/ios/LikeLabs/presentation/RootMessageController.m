@@ -8,12 +8,10 @@
 @property (nonatomic, retain) UIViewController* currentViewController;
 @property (nonatomic, retain) Review *review;
 - (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
-- (UIViewController *)viewControllerByName:(NSString *)controllerName;
 
 @end
 
 @implementation RootMessageController
-@synthesize segmentedControl = _segmentedControl;
 @synthesize headerView = _headerView;
 @synthesize navigationBackground = _navigationBackground;
 @synthesize rootController = _rootController;
@@ -45,7 +43,6 @@
     // Do any additional setup after loading the view from its nib.
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
-    self.segmentedControl.alpha = 0;
     CGRect frame;
     if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
         frame = CGRectMake(95, 24, 660, 43);
@@ -56,7 +53,7 @@
 
     [self.headerView addSubview:self.customSegmentedControl];
     
-    UIViewController *vc = [self viewControllerByName:@"TextReviewController"];
+    UIViewController *vc = [RootController viewControllerByName:@"TextReviewController" rootController:self];
     [self addChildViewController:vc];
     vc.view.frame = self.view.bounds;
     [self.view addSubview:vc.view];
@@ -70,8 +67,22 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.headerView = nil;
+    self.navigationBackground = nil;
+    self.rootController = nil;
+    self.customSegmentedControl = nil;
+    self.currentViewController = nil;
+    self.review = nil;
+}
+
+- (void)dealloc {
+    [_headerView release];
+    [_navigationBackground release];
+    [_rootController release];
+    [_customSegmentedControl release];
+    [_currentViewController release];
+    [_review release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -184,27 +195,6 @@
 
 }
 
-#pragma mark - ContainerController implementation
-
-- (UIViewController *)viewControllerByName:(NSString *)controllerName {
-    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
-}
-
-- (void)switchToController:(NSString *)controllerName {
-    UIViewController *vc = [self viewControllerByName:controllerName];
-    [self addChildViewController:vc];
-    [self transitionFromViewController:self.currentViewController toViewController:vc duration:0 options:UIViewAnimationOptionTransitionFlipFromLeft animations: ^{
-        [self.currentViewController.view removeFromSuperview];
-        vc.view.frame = self.view.bounds;
-        [self.view addSubview:vc.view];
-        [self.view bringSubviewToFront:self.headerView];
-    } completion:^(BOOL finished) {
-        [vc didMoveToParentViewController:self];
-        [self.currentViewController removeFromParentViewController];
-        [self.currentViewController viewDidUnload];
-        self.currentViewController = vc;
-    }];
-}
 
 #pragma mark - CustomSegmentedControlDelegate implementation
 
@@ -235,9 +225,9 @@
                 break;
         }
         if(oldSegmentIndex<newSegmentIndex){
-            [self.rootController switchToController:controllerName rootController:self];
+            [RootController switchToController:controllerName rootController:self];
         } else {
-            [self.rootController switchBackToController:controllerName rootController:self];
+            [RootController switchBackToController:controllerName rootController:self];
         }
     }
 }
@@ -246,7 +236,7 @@
 
 - (IBAction)goHome:(id)sender {
     [self.currentViewController resignFirstResponder];
-    [self.rootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
+    [RootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
 }
 
 - (void)step {

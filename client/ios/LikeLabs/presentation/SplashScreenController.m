@@ -61,6 +61,6 @@
 }
 
 - (IBAction)showWelcomeScreen:(id)sender {
-    [self.rootController switchToController:@"WelcomeScreenController"];
+    [RootController switchToController:@"WelcomeScreenController" rootController:self.rootController];
 }
 @end

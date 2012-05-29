@@ -172,11 +172,11 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 }
 
 - (IBAction)showTextScreen:(id)sender {
-    [self.rootController switchToController:@"RootMessageController"];
+    [RootController switchToController:@"RootMessageController" rootController:self.rootController];
 }
 
 - (IBAction)showPhotoScreen:(id)sender {
-    [self.rootController switchToController:@"PhotosController"];
+    [RootController switchToController:@"PhotosController" rootController:self.rootController];
 }
 
 - (IBAction)exitApp:(id)sender 
@@ -203,6 +203,6 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 
 - (IBAction)showHome:(id)sender 
 {
-    [self.rootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
+    [RootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
 }
 @end
