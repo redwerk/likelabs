@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.domain.model.review;
 
 import com.redwerk.likelabs.domain.model.query.Pager;
+import com.redwerk.likelabs.domain.model.user.User;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +10,7 @@ public interface ReviewQuery {
 
     ReviewQuery setAuthorId(Long authorId);
     
-    ReviewQuery setModeratorId(Long moderatorId);
+    ReviewQuery setAdmin(User admin);
 
     ReviewQuery setCompanyIds(List<Long> companyIds);
 
