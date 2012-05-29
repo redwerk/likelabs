@@ -119,7 +119,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public Report<Review> getModeratorReviews(long moderatorId, ReviewStatus status, ReviewQueryData queryData) {
         ReviewQuery query = getQuery(queryData)
-                .setModeratorId(moderatorId)
+                .setAdmin(userRepository.get(moderatorId))
                 .setStatus(status);
         return new Report<Review>(getLoadedReviews(query.findReviews()), query.getCount());
     }
