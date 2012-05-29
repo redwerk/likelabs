@@ -75,6 +75,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public Report<Review> getPublicReviews(long companyId, ReviewQueryData queryData) {
         ReviewQuery query = getQuery(queryData).setCompanyIds(Arrays.asList(companyId));
+        query.setStatus(ReviewStatus.APPROVED);
         return new Report<Review>(getLoadedReviews(query.findReviews()), query.getCount());
     }
 
