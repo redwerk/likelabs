@@ -8,12 +8,14 @@ import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.application.dto.user.UserData;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.web.ui.controller.dto.ProfileData;
 import com.redwerk.likelabs.web.ui.validator.ProfileValidator;
 import java.text.DateFormat;
@@ -21,7 +23,11 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -36,12 +42,20 @@ public class CompanyAdminController {
     private static final String VIEW_PROFILE = "companyadmin/profile";
     private static final String VIEW_COMPANY_LIST = "companyadmin/list";
     private static final String VIEW_REVIEW_LIST = "companyadmin/feed";
-    private static final String PROFILE_REDIRECT_URL = "redirect:/companyadmin/companies";
+    private static final String COMPANIES_REDIRECT_URL = "redirect:/companyadmin/companies";
+    private static final String PROFILE_REDIRECT_URL = "redirect:/companyadmin/profile";
     private static final int COMPANY_LIST_PAGE_SIZE = 10;
     private static final int REVIEW_LIST_PAGE_SIZE = 8;
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
     private static final String LOGO_LINK_TEMPLATE = "/public/{0}/logo";
     private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/public/review/{0}/photo";
+    private static final String PARAM_FACEBOOK_ACCOUNT = "facebook";
+    private static final String PARAM_VKONTACTE_ACCOUNT = "vkontakte";
+    private static final String PARAM_ERROR_NOT_LINK_ACCOUNT = "not_link";
+    private static final String PARAM_ERROR_NOT_UNLINK_ACCOUNT = "not_unlink";
+    
+    private final Logger log = LogManager.getLogger(getClass());
+
     @Autowired
     private CompanyService companyService;
     @Autowired
@@ -69,7 +83,7 @@ public class CompanyAdminController {
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public String profileSave(ModelMap model, @ModelAttribute("profile") ProfileData profileData,
             BindingResult result) {
-        User user = userService.findUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         new ProfileValidator().validate(profileData, result);
         if (!result.hasErrors()) {
             userService.updateUser(user.getId(),
@@ -79,7 +93,7 @@ public class CompanyAdminController {
                     user.isPublishInSN(),
                     false,
                     new HashSet<EventType>()));
-            return PROFILE_REDIRECT_URL;
+            return COMPANIES_REDIRECT_URL;
         } else {
             model.put("cabinet", "company_admin");
             return VIEW_PROFILE;
@@ -133,7 +147,7 @@ public class CompanyAdminController {
             @RequestParam(value = "point", defaultValue = "") String pointFilterParam,
             @RequestParam(value = "startDate", defaultValue = "") String startDateParam,
             @RequestParam(value = "endDate", defaultValue = "") String endDateParam,
-            @RequestParam(value = "content", defaultValue = "") String contentFilterParam,
+            @RequestParam(value = "contentType", defaultValue = "") String contentFilterParam,
             @RequestParam(value = "sortingCriteria", defaultValue = "") String sortingCriteriaParam) {
 
         ModelMap modelMap = new ModelMap();
@@ -182,6 +196,64 @@ public class CompanyAdminController {
 
     }
 
+    @RequestMapping(value = "/linkfacebook", method = RequestMethod.GET)
+    public String linkFacebook(ModelMap model, HttpServletRequest request,
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "error", required = false) String error) {
+        if (StringUtils.isNotBlank(error)) {
+            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
+        }
+        if (StringUtils.isBlank(code)) {
+            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
+        }
+        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.attachAccount(userId, SocialNetworkType.FACEBOOK, code);
+        return endRedirect(null);
+    }
+
+    @RequestMapping(value = "/linkvkontakte", method = RequestMethod.GET)
+    public String linkVkontakte(ModelMap model, HttpServletRequest request,
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "error", required = false) String error) {
+        if (StringUtils.isNotBlank(error)) {
+            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
+        }
+        if (StringUtils.isBlank(code)) {
+            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
+        }
+        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.attachAccount(userId, SocialNetworkType.FACEBOOK, code);
+        return endRedirect(null);
+    }
+
+    @RequestMapping(value = "/unlinkaccount", method = RequestMethod.GET)
+    public String unlinkSocialAccount(ModelMap model, @RequestParam(value = "account", required = true) String account) {
+
+        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        try {
+            if (account.equals(PARAM_FACEBOOK_ACCOUNT)) {
+                userService.detachAccount(userId, SocialNetworkType.FACEBOOK);
+            }
+            if (account.equals(PARAM_VKONTACTE_ACCOUNT)) {
+                userService.detachAccount(userId, SocialNetworkType.VKONTAKTE);
+            }
+        } catch (IllegalArgumentException e) {
+            log.error(e,e);
+            return endRedirect(PARAM_ERROR_NOT_UNLINK_ACCOUNT);
+        } catch (AccountNotExistsException e) {
+            log.error(e,e);
+            return endRedirect(PARAM_ERROR_NOT_UNLINK_ACCOUNT);
+        }
+        return endRedirect(null);
+    }
+
+    private String endRedirect(String errorParam) {
+        if (errorParam != null) {
+            return PROFILE_REDIRECT_URL.concat("?error=" + errorParam);
+        }
+        return PROFILE_REDIRECT_URL;
+    }
+    
     private ReviewQueryData buildReviewQuery(String pointFilterParam,
             String contentFilterParam,
             String startDateParam,
@@ -202,7 +274,7 @@ public class CompanyAdminController {
 
         try {
             if (StringUtils.isNotEmpty(startDateParam)) {
-                startDate = DATE_FORMAT.getInstance().parse(startDateParam);
+                startDate = DATE_FORMAT.parse(startDateParam);
             }
             if (StringUtils.isNotEmpty(endDateParam)) {
                 endDate = DATE_FORMAT.parse(endDateParam);
@@ -212,7 +284,9 @@ public class CompanyAdminController {
         }
 
         if (StringUtils.isNotEmpty(pointFilterParam)) {
-            pointFilter.add(Long.parseLong(pointFilterParam));
+            for (String pointId : StringUtils.split(pointFilterParam, ",")) {
+                pointFilter.add(Long.parseLong(pointId));
+            }
         }
         if (StringUtils.isNotEmpty(contentFilterParam)) {
             contentFilter = ContentTypeFilter.valueOf(contentFilterParam);

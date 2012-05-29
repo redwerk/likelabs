@@ -34,7 +34,7 @@
                     <li class="fb-btn linked">
                         <i class="icon"></i>
                         <p>Facebook is linked to Like Labs. 
-                            <a href="/companyadmin/activate/unlinkaccount?account=facebook" class="unlink">Unlink</a>
+                            <a href="/companyadmin/unlinkaccount?account=facebook" class="unlink">Unlink</a>
                         </p>
                     </li>
                 </c:when>
@@ -48,7 +48,7 @@
                     <li class="vk-btn linked">
                         <i class="icon"></i>
                         <p>Facebook is linked to Like Labs. 
-                            <a href="/companyadmin/activate/unlinkaccount?account=vkontakte" class="unlink">Unlink</a>
+                            <a href="/companyadmin/unlinkaccount?account=vkontakte" class="unlink">Unlink</a>
                         </p>
                     </li>
                 </c:when>
@@ -65,8 +65,8 @@
     (function($){
         var fbApiKey = <spring:message code="app.facebook.clientid"/>;
         var vkApiKey = <spring:message code="app.vkontakte.clientid"/>;        
-        var fbRedirectUrl =  window.location.protocol+ '//' + window.location.host + '/companyadmin/activate/linkfacebook';
-        var vkRedirectUrl =  window.location.protocol+ '//' + window.location.host + '/companyadmin/activate/linkvkontakte';
+        var fbRedirectUrl =  window.location.protocol+ '//' + window.location.host + '/companyadmin/linkfacebook';
+        var vkRedirectUrl =  window.location.protocol+ '//' + window.location.host + '/companyadmin/linkvkontakte';
         
         var fbConnectUrl = "https://www.facebook.com/dialog/oauth?scope=email,publish_stream,manage_pages&client_id=" + fbApiKey + "&redirect_uri=" + fbRedirectUrl;
         var vkConnectUrl = "http://oauth.vk.com/authorize?response_type=code&scope=friends,notify,wall,groups&client_id=" + vkApiKey + "&redirect_uri=" + vkRedirectUrl;

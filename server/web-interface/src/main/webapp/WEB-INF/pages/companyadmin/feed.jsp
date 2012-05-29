@@ -140,7 +140,7 @@
                 error: function(jqXHR, textStatus, errorThrown){
                   
                    if(textStatus !== 'abort'){
-                       alert("Server temporarily unavailable");
+                        errorDialog("Request error", textStatus);
                    }
                    $('#content').unmask();
                     
@@ -176,7 +176,7 @@
                 var $me = $(this);
                 var $wrapper = $me.parents('.item-wrapper').mask('Please wait...');
                 var id = $wrapper.attr('review-id');
-                var companyId = $wrapper.attr('review-id');
+                var companyId = $wrapper.attr('company-id');
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -184,7 +184,7 @@
                     data: {status: $me.val().toLowerCase()},
                     success: function(data){
                        if(data.error){
-                           alert(data.error);
+                           errorDialog("Request error", data.error);
                        }
                     },
                     error:function(jqXHR, textStatus){                        
@@ -202,7 +202,7 @@
                 var $me = $(this);
                 var $wrapper = $me.parents('.item-wrapper').mask('Please wait...');
                 var id = $wrapper.attr('review-id');
-                var companyId = $wrapper.attr('review-id');
+                var companyId = $wrapper.attr('company-id');
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -233,7 +233,7 @@
                 var $me = $(this);
                 var $wrapper = $me.parents('.item-wrapper').mask('Please wait...');
                 var id = $wrapper.attr('review-id');
-                var companyId = $wrapper.attr('review-id');
+                var companyId = $wrapper.attr('company-id');
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -258,8 +258,8 @@
         
         $(document).ready(function(){
             loadData(0);
-            $('#startDate').datepicker({dateFormat: "mm/dd/yyyy"});
-            $('#endDate').datepicker({dateFormat: "mm/dd/yyyy"});
+            $('#startDate').datepicker({dateFormat: "mm/dd/yy"});
+            $('#endDate').datepicker({dateFormat: "mm/dd/yy"});
             $('.status-filter input[name=status]').change(function(){
                 pagerOptions.resetPager = true;
                 loadData(0);
@@ -268,6 +268,7 @@
                 $('.status-filter label[for='+ statusId+']').addClass('active');
             });
             $('#startDate').add('#endDate').add('#sortingCriteria').add('#contentType').add('#point').change(function(){
+                pagerOptions.resetPager = true;
                 loadData(0);
             });
             
@@ -278,16 +279,20 @@
             $('#companyes').append(companiesOption).change(function(){
                var value = $(this).val();
                if(value === ''){
-                    $('#point').attr('disabled','disabled').html('').val('');
+                    $('#point').attr('disabled','disabled').html('<option value="" >All</option>').val('');
                } else{
                     value = parseInt(value, 10);
                     var points = companiesPoints[ value].points;
-                    var i, len, pointsOption = '<option value="" >All</'+'option>';
+                    var i, len, pointsOption = '', pointsValues = [];
                     for(i = 0, len = points.length; i< len; ++i){
                         pointsOption += '<option value="'+ points[i].id +'" >' + points[i].name + '</option>';
+                        pointsValues.push(points[i].id);
                     }
+                    pointsOption = '<option value="'+pointsValues.join()+'" >All</option>' + pointsOption;
                     $('#point').html(pointsOption);
                     $('#point').removeAttr('disabled');
+                    pagerOptions.resetPager = true;
+                    loadData(0);
                }
             });
             $('#point').attr('disabled','disabled');

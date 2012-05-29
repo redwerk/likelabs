@@ -27,7 +27,7 @@
             </tr>
             <tr class="btn-holder">
                 <td style="text-align: center;" colspan="2">
-                    <% if(review.published == true ){ %>
+                    <% if(review.published != true ){ %>
                         <button class="btn btn-success publish" type="button">Publish</button>
                     <% } else {%>
                         <span class="btn disabled">Published</span>
