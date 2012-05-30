@@ -8,19 +8,19 @@
         <div class="checkbox-holder">
             <table cellpadding="0" cellspacing="0" summary="">
                 <tr>
-                    <td style="vertical-align: top; width: 20px;"><input type="checkbox" /></td>
+                    <td style="vertical-align: top; width: 30px; text-align: center"><input type="checkbox" /></td>
                     <td>Publish the reviews to my Facebook and VK pages (if connected)</td>
                 </tr>
                 <tr>
-                    <td style="vertical-align: top; width: 20px;"><input type="checkbox" /></td>
+                    <td style="vertical-align: top; width: 30px; text-align: center"><input type="checkbox" /></td>
                     <td>Notify me when I add a new review</td>
                 </tr>
                 <tr>
-                    <td style="vertical-align: top; width: 20px;"><input type="checkbox" /></td>
+                    <td style="vertical-align: top; width: 30px; text-align: center"><input type="checkbox" /></td>
                     <td>Notify me of any new reviews for the point if I am the client there</td>
                 </tr>
                 <tr>
-                    <td style="vertical-align: top; width: 20px;"><input type="checkbox" /></td>
+                    <td style="vertical-align: top; width: 30px; text-align: center"><input type="checkbox" /></td>
                     <td>Notify me when the administrator approves my review</td>
                 </tr>
             </table>

@@ -70,13 +70,6 @@ public class UserController {
 
     private final Logger log = LogManager.getLogger(getClass());
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String cabinet(ModelMap model) {
-        model.put("cabinet", "user");
-        model.put("page", "my_feed");
-        return VIEW_USER_CABINET;
-    }
-
     @RequestMapping("/profile")
     public String profile(ModelMap model) {
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
@@ -107,7 +100,7 @@ public class UserController {
         return VIEW_USER_SETTINGS;
     }
 
-    @RequestMapping(value = "/reviews", method = RequestMethod.GET)
+    @RequestMapping(value = {"/reviews", "/", "", "/reviews/*"}, method = RequestMethod.GET)
     public String reviewsPublic(ModelMap model) {
         long companyId = 1;
         Company company = companyService.getCompany(companyId);
