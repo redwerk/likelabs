@@ -126,6 +126,9 @@
 		FF8547271576423900E240BF /* start_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8547261576423900E240BF /* start_btn.png */; };
 		FF85472A15764AD600E240BF /* share_your_smile_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85472815764AD600E240BF /* share_your_smile_landscape.png */; };
 		FF85472B15764AD600E240BF /* share_your_smile_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85472915764AD600E240BF /* share_your_smile_portrait.png */; };
+		FF85473415765B6F00E240BF /* promo_bg_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85473115765B6F00E240BF /* promo_bg_blue.png */; };
+		FF85473515765B6F00E240BF /* promo_bg_yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85473215765B6F00E240BF /* promo_bg_yellow.png */; };
+		FF85473615765B6F00E240BF /* promo_photo_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85473315765B6F00E240BF /* promo_photo_bg.png */; };
 		FF86F7E21565181800BCE123 /* PhotoRecipientsOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF86F7E01565181700BCE123 /* PhotoRecipientsOverlayController.m */; };
 		FF86F7E31565181800BCE123 /* PhotoRecipientsOverlayController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF86F7E11565181800BCE123 /* PhotoRecipientsOverlayController.xib */; };
 		FF87485D1559348A0010D272 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87485C1559348A0010D272 /* AVFoundation.framework */; };
@@ -323,6 +326,9 @@
 		FF8547261576423900E240BF /* start_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = start_btn.png; sourceTree = "<group>"; };
 		FF85472815764AD600E240BF /* share_your_smile_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share_your_smile_landscape.png; path = LikeLabs/resources/share_your_smile_landscape.png; sourceTree = "<group>"; };
 		FF85472915764AD600E240BF /* share_your_smile_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share_your_smile_portrait.png; path = LikeLabs/resources/share_your_smile_portrait.png; sourceTree = "<group>"; };
+		FF85473115765B6F00E240BF /* promo_bg_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promo_bg_blue.png; sourceTree = "<group>"; };
+		FF85473215765B6F00E240BF /* promo_bg_yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promo_bg_yellow.png; sourceTree = "<group>"; };
+		FF85473315765B6F00E240BF /* promo_photo_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promo_photo_bg.png; sourceTree = "<group>"; };
 		FF86F7DF1565181700BCE123 /* PhotoRecipientsOverlayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoRecipientsOverlayController.h; path = LikeLabs/presentation/photo/PhotoRecipientsOverlayController.h; sourceTree = "<group>"; };
 		FF86F7E01565181700BCE123 /* PhotoRecipientsOverlayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoRecipientsOverlayController.m; path = LikeLabs/presentation/photo/PhotoRecipientsOverlayController.m; sourceTree = "<group>"; };
 		FF86F7E11565181800BCE123 /* PhotoRecipientsOverlayController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoRecipientsOverlayController.xib; path = LikeLabs/presentation/photo/PhotoRecipientsOverlayController.xib; sourceTree = "<group>"; };
@@ -746,6 +752,17 @@
 			path = LikeLabs/resources/buttons;
 			sourceTree = "<group>";
 		};
+		FF85473015765B6F00E240BF /* promo */ = {
+			isa = PBXGroup;
+			children = (
+				FF85473115765B6F00E240BF /* promo_bg_blue.png */,
+				FF85473215765B6F00E240BF /* promo_bg_yellow.png */,
+				FF85473315765B6F00E240BF /* promo_photo_bg.png */,
+			);
+			name = promo;
+			path = LikeLabs/resources/promo;
+			sourceTree = "<group>";
+		};
 		FF881DDD156F9E130056E209 /* xmlparsers */ = {
 			isa = PBXGroup;
 			children = (
@@ -760,6 +777,7 @@
 		FFC05FD7155D3F510057A670 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FF85473015765B6F00E240BF /* promo */,
 				FF8547251576423900E240BF /* buttons */,
 				FF85472015763DE100E240BF /* backgrounds */,
 				FF8004E0157535E700BE18B6 /* fonts */,
@@ -953,6 +971,9 @@
 				FF8547271576423900E240BF /* start_btn.png in Resources */,
 				FF85472A15764AD600E240BF /* share_your_smile_landscape.png in Resources */,
 				FF85472B15764AD600E240BF /* share_your_smile_portrait.png in Resources */,
+				FF85473415765B6F00E240BF /* promo_bg_blue.png in Resources */,
+				FF85473515765B6F00E240BF /* promo_bg_yellow.png in Resources */,
+				FF85473615765B6F00E240BF /* promo_photo_bg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
