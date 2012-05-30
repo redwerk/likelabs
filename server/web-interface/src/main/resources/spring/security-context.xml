@@ -16,7 +16,7 @@
         <logout invalidate-session="true"
                         logout-url="/logout"
                         logout-success-url="/index" />
-        <anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />
+        <anonymous username="0" granted-authority="ROLE_ANONYMOUS" />
         <remember-me key="LikeLabsWebSite"/>
     </http>
 

@@ -47,7 +47,7 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     private static final String clientSecret = "app.facebook.secretkey";
     
-    private static final String redirectUri = "/signup/linkfacebook";
+    private static final String redirectUri = "/connector/facebook";
 
     private static final String API_URL = "https://graph.facebook.com/";
     

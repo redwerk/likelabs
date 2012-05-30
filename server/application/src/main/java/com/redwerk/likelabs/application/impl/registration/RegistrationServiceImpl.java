@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.redwerk.likelabs.application.template.MessageTemplateService;
-import com.redwerk.likelabs.domain.service.UserRegistrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +16,7 @@ import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPas
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
 import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
 import com.redwerk.likelabs.application.messaging.SmsService;
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
@@ -106,19 +106,39 @@ public class RegistrationServiceImpl implements RegistrationService {
     public void activateCompanyAdmin(long userId) {
         User user = userRepository.get(userId);
         List<UserSocialAccount> accounts = user.getAccounts();
-        if (accounts.size() == 0) {
+        if (accounts.isEmpty()) {
             throw new AbsentSocialAccountException(user);
         }
         List<Company> companies = companyRepository.findAll(user, Pager.ALL_RECORDS);
-        if (companies.size() == 0) {
+        if (companies.isEmpty()) {
             throw new AbsentCompanyException(user);
         }
         for (Company company : companies) {
+            Set<CompanySocialPage> pagesFb = company.getSocialPages(SocialNetworkType.FACEBOOK);
+            Set<CompanySocialPage> pagesVk = company.getSocialPages(SocialNetworkType.VKONTAKTE);
+            if (!pagesFb.isEmpty()) {
+                boolean flag = false;
+                for (UserSocialAccount account : accounts) {
+                    if (account.getType() == SocialNetworkType.FACEBOOK) {
+                        flag = true;
+                    }
+                }
+                if (!flag) throw new PageAccessLevelException(user, null);
+            }
+            if (!pagesVk.isEmpty()) {
+                boolean flag = false;
+                for (UserSocialAccount account : accounts) {
+                    if (account.getType() == SocialNetworkType.VKONTAKTE) {
+                        flag = true;
+                    }
+                }
+                if (!flag) throw new PageAccessLevelException(user, null);
+            }
             for (UserSocialAccount account : accounts) {
                 Set<CompanySocialPage> pages = company.getSocialPages(account.getType());
                 for (CompanySocialPage page : pages) {
                     if (!gatewayFactory.getGateway(account.getType()).isAdminFor(account, page)) {
-                        throw new PageAccessLevelException(user, page);
+                       throw new PageAccessLevelException(user, page);
                     }
                 }
             }

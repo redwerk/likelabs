@@ -8,15 +8,12 @@ import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.application.dto.user.UserData;
-import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
-import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.web.ui.controller.dto.ProfileData;
 import com.redwerk.likelabs.web.ui.validator.ProfileValidator;
 import java.text.DateFormat;
@@ -24,8 +21,6 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -78,10 +73,6 @@ public class CompanyAdminController {
         model.addAttribute("profile", new ProfileData(user.getPhone(), "", user.getEmail()));
         model.addAttribute("page", "profile");
         model.put("cabinet", "company_admin");
-        List<UserSocialAccount> accounts = user.getAccounts();
-        for (UserSocialAccount a : accounts) {
-            model.addAttribute(a.getType().toString(), true);
-        }
         return VIEW_PROFILE;
     }
 
@@ -123,7 +114,6 @@ public class CompanyAdminController {
 
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         Report<CompanyReportItem> companiesResult = companyService.getCompanies(user.getId(), new Pager(offset, count));
-
         modelMap.put("companies", buildCompaniesJson(companiesResult.getItems()));
         modelMap.put("count", companiesResult.getCount());
         return modelMap;
@@ -201,64 +191,6 @@ public class CompanyAdminController {
 
     }
 
-    @RequestMapping(value = "/linkfacebook", method = RequestMethod.GET)
-    public String linkFacebook(ModelMap model, HttpServletRequest request,
-            @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "error", required = false) String error) {
-        if (StringUtils.isNotBlank(error)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        if (StringUtils.isBlank(code)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.attachAccount(userId, SocialNetworkType.FACEBOOK, code);
-        return endRedirect(null);
-    }
-
-    @RequestMapping(value = "/linkvkontakte", method = RequestMethod.GET)
-    public String linkVkontakte(ModelMap model, HttpServletRequest request,
-            @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "error", required = false) String error) {
-        if (StringUtils.isNotBlank(error)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        if (StringUtils.isBlank(code)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        userService.attachAccount(userId, SocialNetworkType.VKONTAKTE, code);
-        return endRedirect(null);
-    }
-
-    @RequestMapping(value = "/unlinkaccount", method = RequestMethod.GET)
-    public String unlinkSocialAccount(ModelMap model, @RequestParam(value = "account", required = true) String account) {
-
-        Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        try {
-            if (account.equals(PARAM_FACEBOOK_ACCOUNT)) {
-                userService.detachAccount(userId, SocialNetworkType.FACEBOOK);
-            }
-            if (account.equals(PARAM_VKONTACTE_ACCOUNT)) {
-                userService.detachAccount(userId, SocialNetworkType.VKONTAKTE);
-            }
-        } catch (IllegalArgumentException e) {
-            log.error(e,e);
-            return endRedirect(PARAM_ERROR_NOT_UNLINK_ACCOUNT);
-        } catch (AccountNotExistsException e) {
-            log.error(e,e);
-            return endRedirect(PARAM_ERROR_NOT_UNLINK_ACCOUNT);
-        }
-        return endRedirect(null);
-    }
-
-    private String endRedirect(String errorParam) {
-        if (errorParam != null) {
-            return PROFILE_REDIRECT_URL.concat("?error=" + errorParam);
-        }
-        return PROFILE_REDIRECT_URL;
-    }
-    
     private ReviewQueryData buildReviewQuery(String pointFilterParam,
             String contentFilterParam,
             String startDateParam,

@@ -7,14 +7,10 @@ import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLe
 import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
-import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
-import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
-import java.util.List;
+import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +35,11 @@ public class CompanyAdminActivationController {
     private static final String VIEW_START_ACTIVATE = "companyadmin/activate";
 
     private static final String MSG_INCORECT_PASSWORD = "message.auth.invalid.password";
-    private static final String MSG_NOT_LINK_ACCOUNT = "message.registration.failed.link.sn";
-    private static final String MSG_NOT_UNLINK_ACCOUNT = "message.registration.failed.unlink.sn";
-    private static final String MSG_NOT_ADMIN = "message.registration.invalid.activate.admin";
+    private static final String MSG_NOT_ADMIN = "message.registration.invalid.admin.activate";
+    private static final String MSG_NOT_ATTACHED_ACCOUNT = "message.registration.invalid.admin.not.account";
     
-    private static final String PARAM_FACEBOOK_ACCOUNT = "facebook";
-    private static final String PARAM_VKONTACTE_ACCOUNT = "vkontakte";
-    private static final String PARAM_ERROR_NOT_LINK_ACCOUNT = "not_link";
-    private static final String PARAM_ERROR_NOT_UNLINK_ACCOUNT = "not_unlink";
+    private static final String RESPONSE_KEY_SUCCESS = "success";
+    private static final String RESPONSE_KEY_MESSAGE = "message";
     private static final String PARAM_ERROR_NOT_ADMIN = "not_admin";
     private static final String PARAM_ERROR_ALREADY_ACTIVE = "already_active";
 
@@ -132,46 +125,44 @@ public class CompanyAdminActivationController {
             return "redirect:/companyadmin/activate/success?error=" + PARAM_ERROR_ALREADY_ACTIVE;
         }
         if (error != null) {
-            if (error.equals(PARAM_ERROR_NOT_LINK_ACCOUNT)) {
-                model.addAttribute("errorlink", messageTemplateService.getMessage(MSG_NOT_LINK_ACCOUNT));
-            }
-            if (error.equals(PARAM_ERROR_NOT_UNLINK_ACCOUNT)) {
-                model.addAttribute("errorUnlink", messageTemplateService.getMessage(MSG_NOT_UNLINK_ACCOUNT));
-            }
             if (error.equals(PARAM_ERROR_NOT_ADMIN)) {
                 model.addAttribute("error_not_admin", messageTemplateService.getMessage(MSG_NOT_ADMIN));
             }
         }
-        List<UserSocialAccount> accounts = user.getAccounts();
-        for (UserSocialAccount a : accounts) {
-            model.addAttribute(a.getType().toString(), true);
-        }
         return VIEW_END_ACTIVATE;
     }
 
-    @RequestMapping(value = "/finish", method = RequestMethod.GET)
+    @RequestMapping(value = "/finish", method = RequestMethod.POST)
     public String finish(ModelMap model, HttpSession session, HttpServletRequest request) {
 
         try {
-            Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
-            if (id == null) {
+            Long userId = (Long)session.getAttribute(PARAM_SESSION_USERID);
+            if (userId == null) {
                 return "redirect:/";
             }
-            User user = userService.getUser(id);
-            if (user == null) {
-                return "redirect:/";
-            }
+            User user = userService.getUser(userId);
             if (!user.getPassword().equals((String)session.getAttribute(PARAM_SESSION_PASSWORD))) {
                 return "redirect:/";
             }
             registrationService.activateCompanyAdmin(user.getId());
             authenticateUser(request, user.getId(), user.getPassword());
+            model.put("success", true);
+        } catch (UserNotFoundException e) {
+            log.error(e,e);
+            return "redirect:/";
         } catch (AbsentSocialAccountException e) {
-            return endRedirect(PARAM_ERROR_NOT_ADMIN);
-        } catch (AbsentCompanyException e) {
-            return endRedirect(PARAM_ERROR_NOT_ADMIN);
+            model.put(RESPONSE_KEY_SUCCESS, false);
+            model.put(RESPONSE_KEY_MESSAGE, messageTemplateService.getMessage(MSG_NOT_ATTACHED_ACCOUNT));
+            log.error(e,e);
+            return VIEW_END_ACTIVATE;
         } catch (PageAccessLevelException e) {
-            return endRedirect(PARAM_ERROR_NOT_ADMIN);
+            model.put(RESPONSE_KEY_SUCCESS, false);
+            model.put(RESPONSE_KEY_MESSAGE, messageTemplateService.getMessage(MSG_NOT_ADMIN));
+            log.error(e,e);
+            return VIEW_END_ACTIVATE;
+        } catch (AbsentCompanyException e) {
+            log.error(e,e);
+            return "redirect:/";
         }
         return "redirect:/companyadmin/activate/success";
     }
@@ -182,72 +173,6 @@ public class CompanyAdminActivationController {
 
         if (error != null) model.addAttribute(PARAM_ERROR_ALREADY_ACTIVE, true);
         return VIEW_SUCCESS_ACTIVATE;
-    }
-
-    @RequestMapping(value = "/linkfacebook", method = RequestMethod.GET)
-    public String linkFacebook(ModelMap model, HttpServletRequest request,
-            @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "error", required = false) String error) {
-
-        if (StringUtils.isNotBlank(error)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        if (StringUtils.isBlank(code)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        HttpSession session = request.getSession(true);
-        Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
-        User user = userService.getUser(id);
-        userService.attachAccount(user.getId(), SocialNetworkType.FACEBOOK, code);
-        return endRedirect(null);
-    }
-
-
-    @RequestMapping(value = "/linkvkontakte", method = RequestMethod.GET)
-    public String linkVkontakte(ModelMap model, HttpServletRequest request,
-            @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "error", required = false) String errorVkontakte) {
-        if (StringUtils.isNotBlank(errorVkontakte)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        if (StringUtils.isBlank(code)) {
-            return endRedirect(PARAM_ERROR_NOT_LINK_ACCOUNT);
-        }
-        HttpSession session = request.getSession(true);
-            Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
-            User user = userService.getUser(id);
-        userService.attachAccount(user.getId(), SocialNetworkType.VKONTAKTE, code);
-        return endRedirect(null);
-    }
-
-
-    @RequestMapping(value = "/unlinkaccount", method = RequestMethod.GET)
-    public String unlinkSocialAccount(ModelMap model, @RequestParam(value = "account", required = true) String account) {
-
-        User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
-        try {
-            if (account.equals(PARAM_FACEBOOK_ACCOUNT)) {
-                userService.detachAccount(user.getId(), SocialNetworkType.FACEBOOK);
-            }
-            if (account.equals(PARAM_VKONTACTE_ACCOUNT)) {
-                userService.detachAccount(user.getId(), SocialNetworkType.VKONTAKTE);
-            }
-        } catch (IllegalArgumentException e) {
-            log.error(e,e);
-            return endRedirect(PARAM_ERROR_NOT_UNLINK_ACCOUNT);
-        } catch (AccountNotExistsException e) {
-            log.error(e,e);
-            return endRedirect(PARAM_ERROR_NOT_UNLINK_ACCOUNT);
-        }
-        return endRedirect(null);
-    }
-
-
-    private String endRedirect(String errorParam) {
-        if (errorParam != null) {
-            return "redirect:/companyadmin/activate/end".concat("?error=" + errorParam);
-        }
-        return "redirect:/companyadmin/activate/end";
     }
 
     private void authenticateUser(HttpServletRequest request, Long userId, String password) {
