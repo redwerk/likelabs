@@ -16,8 +16,8 @@
 @implementation PhotoPickerController
 
 static const float PADDING = 20;
-static const int COUNTER_LENGTH = 1;
-static const float TIMER_INTERVAL = 0.2;
+static const int COUNTER_LENGTH = 3;
+static const float TIMER_INTERVAL = 1;
 NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
 
 @synthesize label = _label;
