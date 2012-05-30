@@ -752,7 +752,7 @@ input[type=submit], input[type=button], button {
     line-height: normal;
     padding: 0px 20px;
     color: #fff;
-    margin-right:  10px;
+    margin-right: 10px;
 }
 
 #footer{
@@ -859,4 +859,24 @@ input[type=submit], input[type=button], button {
 }
 #footer .social-links li.skype a:hover{
     background-position: 0 -47px;
+}
+
+.checkbox-holder td{
+    padding: 5px 0;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background: url("/static/images/social-logos.png") no-repeat;
+    display: inline-block;
+    margin: 3px;
+}
+
+.social-icon.fb {
+    background-position: left -150px;
+}
+
+.social-icon.vk {
+    background-position: left -248px;
 }

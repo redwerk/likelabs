@@ -130,6 +130,31 @@ input, textarea {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+.btn-primary,
+.btn-primary:hover,
+.btn-warning,
+.btn-warning:hover,
+.btn-danger,
+.btn-danger:hover,
+.btn-success,
+.btn-success:hover,
+.btn-info,
+.btn-info:hover,
+.btn-inverse,
+.btn-inverse:hover {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-primary.active,
+.btn-warning.active,
+.btn-danger.active,
+.btn-success.active,
+.btn-info.active,
+.btn-inverse.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .btn:hover,
 .btn:active,
 .btn.active,
@@ -164,9 +189,7 @@ input, textarea {
 }
 
 .btn:focus {
-  outline: thin dotted #333;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
+    outline: 0;
 }
 
 .btn.active,
@@ -862,7 +885,7 @@ input:focus, textarea:focus {
     margin: 0 auto;
     font-weight: bold;
     color: #fff;
-    display: block;
+    display: inline-block;
     text-shadow: none;
     width: 100px;
 }
@@ -1129,4 +1152,8 @@ a.ui-selectmenu:hover{text-decoration: none;}
 }
 .go-company:hover{
     text-decoration: none;
+}
+
+.item-wrapper.photo:hover{
+    border: 1px solid #D1D1D1;
 }

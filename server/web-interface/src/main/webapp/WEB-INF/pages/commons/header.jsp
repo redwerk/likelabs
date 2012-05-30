@@ -205,9 +205,10 @@
                         </c:when>
                         <c:when test="${cabinet eq 'user'}">
                             <ul class="menu">
-                                <li class=' <c:if test="${page eq 'my_feed'}">active</c:if>'><a href="/user"><span class="mark feed"><span></span></span>My Feed</a></li>
-                                <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/user"><span class="mark company"><span></span></span>Settings</a></li>
-                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/user"><span class="mark profile"><span></span></span>Profile</a></li>
+                                <li class=' <c:if test="${page eq 'my_feed'}">active</c:if>'><a href="/user/reviews"><span class="mark feed"><span></span></span>My Feed</a></li>
+                                <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/user/settings"><span class="mark company"><span></span></span>Settings</a></li>
+                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/user/profile"><span class="mark profile"><span></span></span>Profile</a></li>
+                                <li class=' <c:if test="${page eq 'my_photos'}">active</c:if>'><a href="/user/photos"><span class="mark dashboard"><span></span></span>My Photos</a></li>
                             </ul>
                         </c:when>
                         <c:otherwise>

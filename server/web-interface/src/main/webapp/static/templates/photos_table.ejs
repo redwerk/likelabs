@@ -1,0 +1,17 @@
+<%
+    for (var key=0; key<photos.length;key++) {
+        var photo = photos[key];
+        photo.active = key%2==0 ? 'true' : 'false';
+%>
+<div class="item-wrapper photo" id="photo_item_<%=photo.id%>" style="height: 330px;">
+    <div class="item-data">
+        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=photo.id%>/photo" alt=""/></div>
+        <div class="description" style="text-align: center;">
+            <button style="width: 120px; height: 32px;" type="button" class="btn btn-success <%= photo.active == 'false'? 'disabled' : ''%>" <%= photo.active == 'false'? 'disabled=\'disabled\'' : ''%> >Active</button>
+            <button style="width: 120px; height: 32px;" type="button" class="btn btn-success <%= photo.active == 'true'? 'disabled' : ''%>" <%= photo.active == 'true'? 'disabled=\'disabled\'' : ''%> >Delete</button>
+        </div>
+    </div>
+</div>
+<%
+    }
+%>

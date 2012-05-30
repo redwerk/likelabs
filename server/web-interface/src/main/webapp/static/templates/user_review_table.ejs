@@ -1,0 +1,54 @@
+<%
+    for (var key=0; key<feeds.length;key++) {
+        var feed = feeds[key];
+        var date = new Date(feed.date);
+        var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        
+        
+        // TODO: replace test data
+        feed.status = key%2==0? "approved" : "pending";
+        feed.active = key%2==0? true : false;
+%>
+<div class="item-wrapper" id="feed_item_<%=feed.id%>">
+    <div class="item-cmd">
+        <table>
+            <tr class="odd">
+                <td>Taken:</td>
+                <td><%=date_str%></td>
+            </tr>
+            <tr>
+                <td>Point name:</td>
+                <td><%=feed.point%></td>
+            </tr>
+            <tr>
+                <td>Status:</td>
+                <td><%=feed.status%></td>
+            </tr>
+            <tr>
+                <td>Shared On:</td>
+                <td>
+                    <div class="social-icon fb"></div>
+                    <div class="social-icon vk"></div>
+                </td>
+            </tr>
+            <tr class="btn-holder">
+                <td style="text-align: center;" colspan="2">
+                    <button class="btn btn-info publish" type="button" onclick="editFeedDialog('<%= feed.id %>', '<%= feed.message %>')">Edit</button>
+                </td>
+            </tr>
+            <tr class="btn-holder">
+                <td style="text-align: center;" colspan="2">
+                    <button class="btn btn-success publish <%=feed.active? 'disabled' : '' %>" type="button">Active</button>
+                    <button class="btn btn-success publish <%=feed.active? '' : 'disabled' %>" type="button" style="margin-left: 20px">Remove</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="item-data">
+        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=feed.id%>/photo" alt=""/></div>
+        <div class="description"><%= feed.message %></div>
+    </div>
+</div>
+<%
+    }
+%>
