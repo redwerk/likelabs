@@ -16,4 +16,7 @@ extern NSString *const NAVIGTION_BG_LANDSCAPE;
 + (void) switchBackToController:(NSString *)controllerName rootController:(UIViewController<ContainerController> *)root;
 + (void) switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root;
 + (UIViewController *) viewControllerByName:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root;
+
+- (void) checkForSettings;
+
 @end

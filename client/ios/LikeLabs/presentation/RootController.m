@@ -11,6 +11,7 @@
 
 @implementation RootController
 static NSUInteger const HOURS_24 = 86400;
+static NSString *const SETTINGS_RETRIEVING_CONTROLLER_NAME = @"SplashScreenController";
 NSString *const NAVIGTION_BG_PORTRAIT = @"navigation_bg_portrait.png";
 NSString *const NAVIGTION_BG_LANDSCAPE = @"navigation_bg_landscape.png";
 CGFloat const SLIDE_SPEED = 0.5;
@@ -93,6 +94,10 @@ CGFloat const SLIDE_SPEED = 0.5;
 }
 
 + (void) switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root {
+    if ([controllerName isEqualToString:SETTINGS_RETRIEVING_CONTROLLER_NAME] && [root isKindOfClass:[RootController class]]) {
+        [(RootController*)root checkForSettings];
+    }
+    
     UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
     vc.view.frame = root.view.bounds;
     [root addChildViewController:vc];
@@ -119,6 +124,10 @@ CGFloat const SLIDE_SPEED = 0.5;
 }
 
 + (void) switchBackToController:(NSString *)controllerName rootController:(UIViewController<ContainerController> *)root{
+    if ([controllerName isEqualToString:SETTINGS_RETRIEVING_CONTROLLER_NAME] && [root isKindOfClass:[RootController class]]) {
+        [(RootController*)root checkForSettings];
+    }
+    
     UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
     [root.view addSubview:vc.view];
     [root addChildViewController:vc];
@@ -139,6 +148,12 @@ CGFloat const SLIDE_SPEED = 0.5;
     if([root respondsToSelector:@selector(bringHeaderViewToFront)]){
         [root bringHeaderViewToFront];
     }
+}
+
+- (void) checkForSettings {
+    if ([[NSDate date] timeIntervalSinceDate:self.dao.lastUpdate] > HOURS_24) {            
+        [self.settingsService getSettings];        
+    }    
 }
 
 - (UIViewController *) getCurrentController{

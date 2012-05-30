@@ -110,7 +110,6 @@ NSInteger selectedIndex;
             Photo* reviewPhoto = [photos objectAtIndex:i];
             UIImage *photo = reviewPhoto.image;
             CGFloat scale = MIN(maxPhotoSize.width / photo.size.width, maxPhotoSize.height / photo.size.height);
-            NSLog(@"imageOrientation: %d", photo.imageOrientation);
             photo = [UIImage imageWithCGImage:photo.CGImage scale:1.0/scale orientation:photo.imageOrientation];
             photo = [self imageWithBorderFromImage:photo];
             imageView = [[UIImageView alloc] initWithImage:photo];

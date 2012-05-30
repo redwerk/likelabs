@@ -13,7 +13,7 @@ static NSString *const NAV_DIVIDER_SN_IMG = @"navigation_divider_sn.png";
 static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 static NSString *const GET_READY_MSG = @"Get Ready!";
 static NSString *const PHOTO_N_OF_5_MSG = @"Picture %d of 5";
-static float const TIMER_DELAY = 0.2;
+static float const TIMER_DELAY = 2;
 
 @interface PhotosController()
 @property (retain,nonatomic) RootController* rootController;
