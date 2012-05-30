@@ -6,7 +6,6 @@
 @property (nonatomic, retain) UIViewController* currentViewController;
 @property (nonatomic, retain) Review *review;
 - (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
-- (UIViewController *)viewControllerByName:(NSString *)controllerName;
 
 @end
 
@@ -178,12 +177,6 @@
 -(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
     [self setLabelsForInterfaceOrientation:toInterfaceOrientation];
 
-}
-
-#pragma mark - ContainerController implementation
-
-- (UIViewController *)viewControllerByName:(NSString *)controllerName {
-    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
 }
 
 #pragma mark - CustomSegmentedControlDelegate implementation

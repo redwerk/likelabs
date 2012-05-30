@@ -93,10 +93,6 @@ CGFloat const SLIDE_SPEED = 0.5;
     return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
 }
 
-- (UIViewController *)viewControllerByName:(NSString *)controllerName {
-    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
-}
-
 + (void) switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root {
     if ([controllerName isEqualToString:SETTINGS_RETRIEVING_CONTROLLER_NAME] && [root isKindOfClass:[RootController class]]) {
         [(RootController*)root checkForSettings];
