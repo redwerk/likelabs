@@ -129,6 +129,8 @@
 		FF85473415765B6F00E240BF /* promo_bg_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85473115765B6F00E240BF /* promo_bg_blue.png */; };
 		FF85473515765B6F00E240BF /* promo_bg_yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85473215765B6F00E240BF /* promo_bg_yellow.png */; };
 		FF85473615765B6F00E240BF /* promo_photo_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF85473315765B6F00E240BF /* promo_photo_bg.png */; };
+		FF85473A15765E1D00E240BF /* TextSampleReview.m in Sources */ = {isa = PBXBuildFile; fileRef = FF85473915765E1D00E240BF /* TextSampleReview.m */; };
+		FF85473D157671C300E240BF /* PhotoSampleReview.m in Sources */ = {isa = PBXBuildFile; fileRef = FF85473C157671C300E240BF /* PhotoSampleReview.m */; };
 		FF86F7E21565181800BCE123 /* PhotoRecipientsOverlayController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF86F7E01565181700BCE123 /* PhotoRecipientsOverlayController.m */; };
 		FF86F7E31565181800BCE123 /* PhotoRecipientsOverlayController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF86F7E11565181800BCE123 /* PhotoRecipientsOverlayController.xib */; };
 		FF87485D1559348A0010D272 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF87485C1559348A0010D272 /* AVFoundation.framework */; };
@@ -329,6 +331,10 @@
 		FF85473115765B6F00E240BF /* promo_bg_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promo_bg_blue.png; sourceTree = "<group>"; };
 		FF85473215765B6F00E240BF /* promo_bg_yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promo_bg_yellow.png; sourceTree = "<group>"; };
 		FF85473315765B6F00E240BF /* promo_photo_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promo_photo_bg.png; sourceTree = "<group>"; };
+		FF85473815765E1D00E240BF /* TextSampleReview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextSampleReview.h; path = LikeLabs/presentation/controls/TextSampleReview.h; sourceTree = "<group>"; };
+		FF85473915765E1D00E240BF /* TextSampleReview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextSampleReview.m; path = LikeLabs/presentation/controls/TextSampleReview.m; sourceTree = "<group>"; };
+		FF85473B157671C300E240BF /* PhotoSampleReview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoSampleReview.h; path = LikeLabs/presentation/controls/PhotoSampleReview.h; sourceTree = "<group>"; };
+		FF85473C157671C300E240BF /* PhotoSampleReview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoSampleReview.m; path = LikeLabs/presentation/controls/PhotoSampleReview.m; sourceTree = "<group>"; };
 		FF86F7DF1565181700BCE123 /* PhotoRecipientsOverlayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoRecipientsOverlayController.h; path = LikeLabs/presentation/photo/PhotoRecipientsOverlayController.h; sourceTree = "<group>"; };
 		FF86F7E01565181700BCE123 /* PhotoRecipientsOverlayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotoRecipientsOverlayController.m; path = LikeLabs/presentation/photo/PhotoRecipientsOverlayController.m; sourceTree = "<group>"; };
 		FF86F7E11565181800BCE123 /* PhotoRecipientsOverlayController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoRecipientsOverlayController.xib; path = LikeLabs/presentation/photo/PhotoRecipientsOverlayController.xib; sourceTree = "<group>"; };
@@ -686,6 +692,10 @@
 				FF853C81156164C5003F0374 /* CustomizableSegmentedControl.m */,
 				FF890A42156664F000481237 /* UIImageWithReview.h */,
 				FF890A43156664F000481237 /* UIImageWithReview.m */,
+				FF85473815765E1D00E240BF /* TextSampleReview.h */,
+				FF85473915765E1D00E240BF /* TextSampleReview.m */,
+				FF85473B157671C300E240BF /* PhotoSampleReview.h */,
+				FF85473C157671C300E240BF /* PhotoSampleReview.m */,
 			);
 			name = controls;
 			sourceTree = "<group>";
@@ -1025,6 +1035,8 @@
 				FF56EAA3156EAB3900220650 /* URLUtil.m in Sources */,
 				FF881DE0156F9E2C0056E209 /* SettingsParser.m in Sources */,
 				FFB6BAC31573A35500CF4B45 /* LoginParser.m in Sources */,
+				FF85473A15765E1D00E240BF /* TextSampleReview.m in Sources */,
+				FF85473D157671C300E240BF /* PhotoSampleReview.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

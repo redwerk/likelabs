@@ -200,7 +200,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
                                                                      io = UIImageOrientationLeft;
                                                                      break;
                                                              }
-                                                             UIImage* tmp = [UIImage imageWithCGImage:[[UIImage alloc] initWithData:imageData].CGImage scale:1.0 orientation:io];
+                                                             UIImage* tmp = [UIImage imageWithCGImage:[UIImage imageWithData:imageData].CGImage scale:1.0 orientation:io];
                                                              _image = [self scaleAndRotateImage:tmp];
                                                              
                                                              [[NSNotificationCenter defaultCenter] postNotificationName:kImageCapturedSuccessfully object:nil];
