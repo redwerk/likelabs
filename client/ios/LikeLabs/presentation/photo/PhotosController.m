@@ -287,6 +287,7 @@ static float const TIMER_DELAY = 2;
 
 - (void)countDown{
     _photoPicker = [[PhotoPickerController alloc] init];
+    [self.photoPicker setTimerDelay:2];
     [self presentModalViewController:self.photoPicker animated:NO];
     [self.captureSession stopRunning];
 }
@@ -343,7 +344,7 @@ static float const TIMER_DELAY = 2;
 #pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
-    [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
+    [self.rootController goHome];
 }
 
 - (UIViewController *) getCurrentController{
@@ -352,10 +353,6 @@ static float const TIMER_DELAY = 2;
 
 - (void) setCurrentController:(UIViewController *)controller{
     self.currentViewController = controller;
-}
-
--(void)bringHeaderViewToFront{
-    //[self.view bringSubviewToFront:self.headerView];
 }
 
 @end

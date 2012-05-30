@@ -3,7 +3,7 @@
 
 typedef enum {ControllerModeLogin, ControllerModeLogout} ControllerMode;
 
-@interface LoginController : UIViewController <UITextFieldDelegate, ChildController, UIAlertViewDelegate>
+@interface LoginController : UIViewController <UITextFieldDelegate, ChildController, UIAlertViewDelegate, ContainerController>
 
 extern NSString *const kLogoutViewDidDismiss;
 
@@ -16,5 +16,6 @@ extern NSString *const kLogoutViewDidDismiss;
 - (IBAction)logout:(id)sender;
 
 - (void)setSubmitButtonName:(NSString*)name;
+- (void) setControllerMode:(ControllerMode) mode;
 
 @end

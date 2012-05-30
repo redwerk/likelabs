@@ -38,6 +38,10 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
     return self;
 }
 
+- (void)setTimerDelay:(CGFloat) delay {
+    self.seconds = delay;
+}
+
 -(void)viewDidLayoutSubviews {
     [self willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
 }
@@ -50,7 +54,7 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
     [self initCapture];
     [self.view bringSubviewToFront:self.img];
     [self.view bringSubviewToFront:self.label];
-    self.seconds = COUNTER_LENGTH;
+//    self.seconds = COUNTER_LENGTH;
     _timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
 }
 
@@ -62,6 +66,12 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
     } else {
         self.label.text = [NSString stringWithFormat:@"%d", self.seconds];
     }
+}
+
+- (void) onTimerLoop {
+    [self.timer invalidate];
+    [self captureImage];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(onTimerLoop) userInfo:nil repeats:YES];
 }
 
 - (void)viewDidUnload
@@ -105,7 +115,6 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
             self.previewLayer.frame = CGRectMake(0, 0, viewSize.height, viewSize.width);
             break;
     }
-    
     
     CGSize imgSize = self.img.frame.size;
     CGSize labelSize = self.label.frame.size;

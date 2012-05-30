@@ -122,6 +122,7 @@ NSString *bgPortrait = @"bg_portrait.png";
         _alertLogout = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 
                                                         delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [_alertLogout show];
+        
     }    
 }
 
@@ -129,13 +130,29 @@ NSString *bgPortrait = @"bg_portrait.png";
 {
     if (alertView == self.alertLogout)
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kLogoutViewDidDismiss object:nil];
+        [RootController switchToController:@"WelcomeScreenController" rootController:self.rootController];        
     }
 }
 
 - (void)setSubmitButtonName:(NSString *)name
 {
     [self.submitButton setTitle:name forState:UIControlStateNormal];
+}
+
+- (UIViewController *) getCurrentController{
+    return self;
+}
+
+- (void) setCurrentController:(UIViewController *)controller{
+    
+}
+
+- (void) setControllerMode:(ControllerMode) mode{
+    if(mode == ControllerModeLogout){
+        [self.submitButton setTitle:@"Logout" forState:UIControlStateNormal];
+        [self.submitButton removeTarget:self action:@selector(formSubmit:) forControlEvents:UIControlEventTouchUpInside];
+        [self.submitButton addTarget:self action:@selector(logout:) forControlEvents:UIControlEventTouchUpInside];
+    }
 }
 
 @end

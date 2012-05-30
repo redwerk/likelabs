@@ -1,13 +1,12 @@
 #import "RootMessageController.h"
 #import <AVFoundation/AVFoundation.h>
 
-
-
 @interface RootMessageController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
 @property (nonatomic, retain) Review *review;
 - (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
+- (UIViewController *)viewControllerByName:(NSString *)controllerName;
 
 @end
 
@@ -43,6 +42,7 @@
     // Do any additional setup after loading the view from its nib.
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.navigationBackground.contentMode = UIViewContentModeScaleToFill;
+    self.customSegmentedControl.alpha = 0;
     CGRect frame;
     if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
         frame = CGRectMake(95, 24, 660, 43);
@@ -53,36 +53,14 @@
 
     [self.headerView addSubview:self.customSegmentedControl];
     
-    UIViewController *vc = [RootController viewControllerByName:@"TextReviewController" rootController:self];
-    [self addChildViewController:vc];
-    vc.view.frame = self.view.bounds;
-    [self.view addSubview:vc.view];
-    self.currentViewController = vc;
-    
-    [self setLabelsForInterfaceOrientation:[self interfaceOrientation]];
-    [self.view bringSubviewToFront:self.headerView];
-    
+    [RootController switchToController:@"TextReviewController" rootController:self];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    self.headerView = nil;
-    self.navigationBackground = nil;
-    self.rootController = nil;
-    self.customSegmentedControl = nil;
-    self.currentViewController = nil;
-    self.review = nil;
-}
-
-- (void)dealloc {
-    [_headerView release];
-    [_navigationBackground release];
-    [_rootController release];
-    [_customSegmentedControl release];
-    [_currentViewController release];
-    [_review release];
-    [super dealloc];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -195,6 +173,11 @@
 
 }
 
+#pragma mark - ContainerController implementation
+
+- (UIViewController *)viewControllerByName:(NSString *)controllerName {
+    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
+}
 
 #pragma mark - CustomSegmentedControlDelegate implementation
 
@@ -212,16 +195,13 @@
         switch (newSegmentIndex) {
             case 0:
                 controllerName=@"TextReviewController";
-                
                 break;
             case 1:
                 controllerName=@"PhotoShareController";
-                //[self switchToController:@"PhotoShareController" rootController:self];
                 break;
             case 2:
                 controllerName=@"PhotoFinishedController";
                 self.customSegmentedControl.userInteractionEnabled = NO;
-                //[self switchToController:@"PhotoFinishedController" rootController:self];
                 break;
         }
         if(oldSegmentIndex<newSegmentIndex){

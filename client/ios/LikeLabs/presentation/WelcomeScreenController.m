@@ -35,7 +35,6 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     if (self = [super init]) 
     {
         self.rootController = rootController;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissOverlay) name:kLogoutViewDidDismiss object:nil];
     }
     return self;
 }
@@ -165,12 +164,6 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     [background release];
 }
 
-- (void)dismissOverlay {
-    [self.overlayLogout.view removeFromSuperview];
-    self.overlayLogout = nil;
-    [_overlayLogout release];
-}
-
 - (IBAction)showTextScreen:(id)sender {
     [RootController switchToController:@"RootMessageController" rootController:self.rootController];
 }
@@ -182,11 +175,8 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 - (IBAction)exitApp:(id)sender 
 {
     _overlayLogout = [[LoginController alloc] initWithRootController:self.rootController];
-    self.overlayLogout.mode = ControllerModeLogout;
-    [self.rootController.view addSubview:self.overlayLogout.view];
-    [self.overlayLogout setSubmitButtonName:@"Logout"];
-    [self.overlayLogout.submitButton removeTarget:self.overlayLogout action:@selector(formSubmit:) forControlEvents:UIControlEventTouchUpInside];
-    [self.overlayLogout.submitButton addTarget:self.overlayLogout action:@selector(logout:) forControlEvents:UIControlEventTouchUpInside];
+    [RootController switchBackToViewController:_overlayLogout rootController:self.rootController];
+    [_overlayLogout setControllerMode:ControllerModeLogout];
 }
 
 - (IBAction)shareFacebook:(id)sender {
@@ -203,6 +193,6 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 
 - (IBAction)showHome:(id)sender 
 {
-    [RootController switchBackToController:@"SplashScreenController" rootController:self.rootController];
+    [self.rootController goHome];
 }
 @end

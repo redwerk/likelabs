@@ -225,20 +225,16 @@
         switch (newSegmentIndex) {
             case 0:
                 controllerName = @"PhotoSelectionController";
-                //[self switchToController:@"PhotoSelectionController"];
                 break;
             case 1:
                 controllerName = @"PhotoMessageController";
-                //[self switchToController:@"PhotoMessageController"];
                 break;
             case 2:
                 controllerName = @"PhotoShareController";
-                //[self switchToController:@"PhotoShareController"];
                 break;
             case 3:
                 controllerName = @"PhotoFinishedController";
                 self.customSegmentedControl.userInteractionEnabled = NO;
-                //[self switchToController:@"PhotoFinishedController"];
                 break;
         }
         if(oldSegmentIndex<newSegmentIndex){
@@ -253,7 +249,7 @@
 
 - (IBAction)goHome:(id)sender {
     [self.currentViewController resignFirstResponder];
-    [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
+    [self.rootController goHome];
 }
 
 - (void)step {

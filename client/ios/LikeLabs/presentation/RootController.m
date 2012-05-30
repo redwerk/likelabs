@@ -93,6 +93,10 @@ CGFloat const SLIDE_SPEED = 0.5;
     return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
 }
 
+- (UIViewController *)viewControllerByName:(NSString *)controllerName {
+    return [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:self] autorelease];
+}
+
 + (void) switchToController:(NSString *)controllerName rootController:(UIViewController <ContainerController> *) root {
     if ([controllerName isEqualToString:SETTINGS_RETRIEVING_CONTROLLER_NAME] && [root isKindOfClass:[RootController class]]) {
         [(RootController*)root checkForSettings];
@@ -150,6 +154,28 @@ CGFloat const SLIDE_SPEED = 0.5;
     }
 }
 
++ (void) switchBackToViewController:(UIViewController *)vc rootController:(UIViewController<ContainerController> *)root {
+    [root.view addSubview:vc.view];
+    [root addChildViewController:vc];
+    vc.view.frame = root.view.bounds; 
+    vc.view.center = CGPointMake(vc.view.frame.size.width*-.5, vc.view.frame.size.height/2);
+    
+    [UIView animateWithDuration:SLIDE_SPEED animations: ^{
+        
+        [root getCurrentController].view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
+        vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
+    } completion:^(BOOL finished){
+        [[root getCurrentController].view removeFromSuperview];
+        [vc didMoveToParentViewController:root];
+        [[root getCurrentController] removeFromParentViewController];
+        [root setCurrentController:vc];
+    }];
+    
+    if([root respondsToSelector:@selector(bringHeaderViewToFront)]){
+        [root bringHeaderViewToFront];
+    }
+}
+
 - (void) checkForSettings {
     if ([[NSDate date] timeIntervalSinceDate:self.dao.lastUpdate] > HOURS_24) {            
         [self.settingsService getSettings];        
@@ -162,6 +188,10 @@ CGFloat const SLIDE_SPEED = 0.5;
 
 - (void) setCurrentController:(UIViewController *)controller{
     self.currentViewController = controller;
+}
+
+- (void) goHome{
+   [RootController switchBackToController:@"SplashScreenController" rootController:self];
 }
 
 @end
