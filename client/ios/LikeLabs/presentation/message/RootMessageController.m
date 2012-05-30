@@ -53,7 +53,14 @@
 
     [self.headerView addSubview:self.customSegmentedControl];
     
-    [RootController switchToController:@"TextReviewController" rootController:self];
+    UIViewController *vc = [RootController viewControllerByName:@"TextReviewController" rootController:self];
+    [self addChildViewController:vc];
+    vc.view.frame = self.view.bounds;
+    [self.view addSubview:vc.view];
+    self.currentViewController = vc;
+    
+    [self setLabelsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
+    [self.view bringSubviewToFront:self.headerView];
 }
 
 - (void)viewDidUnload
