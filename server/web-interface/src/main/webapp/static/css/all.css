@@ -884,7 +884,7 @@ input:focus, textarea:focus {
     padding: 5px 10px;
     margin: 0 auto;
     font-weight: bold;
-    color: #fff;
+/*    color: #fff;*/
     display: inline-block;
     text-shadow: none;
     width: 100px;
