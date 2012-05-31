@@ -52,7 +52,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/company/{companyId}/profile")
 public class CompanyProfileController {
 
-    private final static int NEW_RECORD_ID = 0;
     private final static String VIEW_COMPANY_PROFILE = "company/company_profile";
     private final static Byte MAX_LENGTH_PHONE = 20;
     private final static Byte MAX_LENGTH_EMAIL = 40;
@@ -71,15 +70,9 @@ public class CompanyProfileController {
     @RequestMapping(method = RequestMethod.GET)
     public String initForm(ModelMap model, @PathVariable Integer companyId) {
 
-        CompanyDto company;
-        if (companyId > NEW_RECORD_ID) {
-            Company c = companyService.getCompany(companyId);
-            company = new CompanyDto(c.getId(),c.getName(), c.getPhone(), c.getEmail(), c.isModerateReviews());
-            model.addAttribute("title", "Edit Company Profile");
-        } else {
-            model.addAttribute("title", "New Company Profile");
-            company = new CompanyDto();
-        }
+        Company c = companyService.getCompany(companyId);
+        CompanyDto company = new CompanyDto(c.getId(),c.getName(), c.getPhone(), c.getEmail(), c.isModerateReviews());
+        model.addAttribute("title", "Edit Company Profile");
         model.addAttribute("company", company);
         model.addAttribute("page", "profile");
         model.put("cabinet", "company");

@@ -62,8 +62,7 @@ public class CompanyAdminActivationController {
     private MessageTemplateService messageTemplateService;
 
     @Autowired
-    GatewayFactory gatewayFactory;
-
+    private GatewayFactory gatewayFactory;
 
     @RequestMapping(method = RequestMethod.GET)
     public String activateAdminGet(ModelMap model,
@@ -77,7 +76,7 @@ public class CompanyAdminActivationController {
             }
             if (registrationService.validateAdminCode(userId, confirmCode)) {
                 if (user.isActive()) {
-                    return "redirect:/companadminy/activate/success?error=already_active";
+                    return "redirect:/companyadmin/activate/success?error=already_active";
                 }
                 model.addAttribute("activatecode", confirmCode);
                 model.addAttribute("id", userId);
@@ -146,6 +145,7 @@ public class CompanyAdminActivationController {
             }
             registrationService.activateCompanyAdmin(user.getId());
             authenticateUser(request, user.getId(), user.getPassword());
+            session.removeAttribute(PARAM_SESSION_USERID);
             model.put("success", true);
         } catch (UserNotFoundException e) {
             log.error(e,e);
@@ -166,7 +166,6 @@ public class CompanyAdminActivationController {
         }
         return "redirect:/companyadmin/activate/success";
     }
-
 
     @RequestMapping(value = "/success", method = RequestMethod.GET)
     public String success(ModelMap model, @RequestParam(value = "error", required = false) String error) {

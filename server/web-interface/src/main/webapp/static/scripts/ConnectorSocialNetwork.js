@@ -10,7 +10,7 @@ $(document).ready(function(){
 });
 function linkFacebook() {
     var url = "https://www.facebook.com/dialog/oauth?client_id=" + id_Facebook + "&redirect_uri=" + redirect_url_fasebook + "&scope=email,publish_stream,manage_pages" + "&display=popup";
-    window.open(url, 'connector_popup', 'width=800,height=600,resizable=yes');
+    window.open(url, 'connector_popup', 'width=900,height=700,resizable=yes');
 }
 function linkVKontacte() {
     var url = "http://oauth.vk.com/authorize?client_id=" + id_VKontakte + "&redirect_uri=" + redirect_url_vkontakte + "&response_type=code" + "&scope=friends,notify,wall,groups" + "&display=popup";

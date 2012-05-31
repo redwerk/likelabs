@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/company/{companyId}")
 public class CompanyController {
 
-    public static final int ITEMS_PER_PAGE_REVIEW = 8;
+    private static final int ITEMS_PER_PAGE_REVIEW = 8;
     private static final String VIEW_COMPANY_REVIEWS_LIST = "company/company_review_list";
     private static final String VIEW_COMPANY_DASHBOARD = "company/dashboard";
 
@@ -63,18 +63,13 @@ public class CompanyController {
     private ReviewService reviewService;
 
     @Autowired
-    private UserService iewService;
-
-    @Autowired
     private MessageTemplateService messageTemplateService;
 
     private final Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(method = RequestMethod.GET)
-    public String cabinet(ModelMap model, @PathVariable Integer companyId) {
+    public String cabinet(ModelMap model, @PathVariable Long companyId) {
 
-         Company company = companyService.getCompany(companyId);
-         model.put("companyName", company.getName());
          return "redirect:/company/"+ companyId + "/dashboard";
     }
 
@@ -89,7 +84,7 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/reviews", method = RequestMethod.GET)
-    public String reviewsCompany(ModelMap model, @PathVariable Integer companyId) {
+    public String reviewsCompany(ModelMap model, @PathVariable Long companyId) {
 
         Company company = companyService.getCompany(companyId);
         Report<Point> report = pointService.getPoints(companyId, Pager.ALL_RECORDS);
