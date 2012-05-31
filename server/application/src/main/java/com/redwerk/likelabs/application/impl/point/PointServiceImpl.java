@@ -34,6 +34,12 @@ public class PointServiceImpl implements PointService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Point> getPoints(long companyId, long clientId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Point getPoint(long pointId) {
         return pointRepository.get(pointId);
     }

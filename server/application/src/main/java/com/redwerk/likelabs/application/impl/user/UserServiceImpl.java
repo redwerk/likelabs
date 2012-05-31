@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.application.impl.user;
 
 import com.redwerk.likelabs.application.UserService;
+import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
@@ -54,14 +55,20 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
+    public Report<User> getUsers(Pager pager) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public User getUser(long userId) {
         User user = userRepository.get(userId);
         return getLoadedUser(user);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public User findUser(String phone) {
         User user = userRepository.find(phone);
         return (user != null) ? getLoadedUser(user) : null;

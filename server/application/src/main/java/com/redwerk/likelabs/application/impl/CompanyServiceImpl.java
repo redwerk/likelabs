@@ -109,6 +109,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Company> getCompanies(long clientId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public int getCompaniesCount() {
         return companyRepository.getCount();
     }
