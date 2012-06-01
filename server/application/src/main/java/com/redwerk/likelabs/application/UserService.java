@@ -32,8 +32,4 @@ public interface UserService {
     void deleteUser(long userId);
 
 
-    List<Photo> getPhotos(long userId, PhotoStatus photoStatus);
-    
-    void updatePhoto(long photoId, PhotoStatus photoStatus);
-    
 }

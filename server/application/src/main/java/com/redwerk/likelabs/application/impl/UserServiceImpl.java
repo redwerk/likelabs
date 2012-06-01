@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.application.impl.user;
+package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
@@ -37,9 +37,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private PhotoRepository photoRepository;
 
     @Autowired
     private EmailService emailService;
@@ -142,17 +139,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(long userId) {
         User user = userRepository.get(userId);
         userRepository.remove(user);
-    }
-
-    @Override
-    public List<Photo> getPhotos(long userId, PhotoStatus photoStatus) {
-        User user = userRepository.get(userId);
-        return photoRepository.findAll(user, photoStatus, Pager.ALL_RECORDS);
-    }
-
-    @Override
-    public void updatePhoto(long photoId, PhotoStatus photoStatus) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }
