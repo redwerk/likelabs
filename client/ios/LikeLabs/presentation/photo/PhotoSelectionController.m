@@ -56,6 +56,7 @@ const float deletedPhotoAlpha = 0.5;
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowOffset = CGSizeMake(0, 5);
     self.imageView.layer.shadowRadius = 10;
+    self.imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.imageView.bounds].CGPath;
 }
 
 #pragma mark - Memory management;

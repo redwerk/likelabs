@@ -111,12 +111,12 @@ NSString *const GET_READY_MSG = @"Get Ready!";
 }
 
 - (void) countDown {
+    self.messageLabel.hidden = YES;
+    self.messageView.hidden = YES;
     self.label.text = [NSString stringWithFormat:@"%d", self.seconds];
     if (self.seconds == 0) {
         [self.timer invalidate];
         self.label.hidden = YES;
-        self.messageView.hidden = YES;
-        self.messageLabel.hidden = YES;
         self.seconds = 5;
         [self onTimer];
     } else {
