@@ -11,13 +11,20 @@ public interface CompanyRepository {
     
     Company find(String name);
     
+
     List<Company> findAll(Pager pager);
 
-    List<Company> findAll(User admin, Pager pager);
-    
+    List<Company> findForAdmin(User admin, Pager pager);
+
+    List<Company> findForClient(User client, Pager pager);
+
+
     int getCount();
 
-    int getCount(User admin);
+    int getCountForAdmin(User admin);
+
+    int getCountForClient(User client);
+
 
     void add(Company company);
 

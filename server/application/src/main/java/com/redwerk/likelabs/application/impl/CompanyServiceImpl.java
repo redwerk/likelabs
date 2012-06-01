@@ -91,10 +91,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public Report<CompanyReportItem> getCompanies(long adminId, Pager pager) {
+    public Report<CompanyReportItem> getCompaniesForAdmin(long adminId, Pager pager) {
         User admin = userRepository.get(adminId);
         return new Report<CompanyReportItem>(
-                getReportItems(companyRepository.findAll(admin, pager)), companyRepository.getCount(admin));
+                getReportItems(companyRepository.findForAdmin(admin, pager)), companyRepository.getCountForAdmin(admin));
     }
 
     private List<CompanyReportItem> getReportItems(List<Company> companies) {
@@ -109,21 +109,15 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Company> getCompanies(long clientId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Company> getCompaniesForClient(long clientId) {
+        User client = userRepository.get(clientId);
+        return companyRepository.findForClient(client, Pager.ALL_RECORDS);
     }
 
     @Override
     @Transactional(readOnly = true)
     public int getCompaniesCount() {
         return companyRepository.getCount();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public int getCompaniesCount(long adminId) {
-        User admin = userRepository.get(adminId);
-        return companyRepository.getCount(admin);
     }
 
     @Override

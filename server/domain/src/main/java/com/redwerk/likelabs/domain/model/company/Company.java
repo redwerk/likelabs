@@ -171,7 +171,7 @@ public class Company {
     public boolean removeAdmin(User admin, CompanyRepository companyRepository, UserRepository userRepository) {
         boolean isRemoved = admins.remove(admin);
         if (isRemoved) {
-            if (companyRepository.getCount(admin) == 0) {
+            if (companyRepository.getCountForAdmin(admin) == 0) {
                 userRepository.remove(admin);
             }
         }

@@ -53,8 +53,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Report<User> getUsers(Pager pager) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Report<User> getRegularUsers(Pager pager) {
+        return new Report<User>(
+                userRepository.findRegular(pager),
+                userRepository.getRegularCount()
+        );
     }
 
     @Override

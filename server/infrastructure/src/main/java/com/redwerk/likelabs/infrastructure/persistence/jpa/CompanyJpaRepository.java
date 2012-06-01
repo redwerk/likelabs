@@ -22,11 +22,21 @@ public class CompanyJpaRepository implements CompanyRepository {
 
     private static final String GET_COMPANY_BY_NAME = "select c from Company c where c.name = :name order by c.id";
 
+
     private static final String ADMIN_FILTER = "from Company c join c.admins a where a.id = :adminId";
 
-    private static final String GET_COMPANIES_BY_ADMIN = "select c " + ADMIN_FILTER + " order by c.name";
+    private static final String GET_COMPANIES_FOR_ADMIN = "select c " + ADMIN_FILTER + " order by c.name";
 
-    private static final String GET_COMPANIES_COUNT_BY_ADMIN = "select count(c) " + ADMIN_FILTER;
+    private static final String GET_COMPANIES_COUNT_FOR_ADMIN = "select count(c) " + ADMIN_FILTER;
+
+
+    private static final String CLIENT_FILTER =
+            "from Company c where exists (select r.id from Review r where r.author.id = :clientId and r.point.company.id = c.id)";
+
+    private static final String GET_COMPANIES_FOR_CLIENT = "select c " + CLIENT_FILTER + " order by c.name";
+
+    private static final String GET_COMPANIES_COUNT_FOR_CLIENT = "select count(c) " + CLIENT_FILTER;
+
 
     @PersistenceContext
     private EntityManager em;
@@ -56,10 +66,18 @@ public class CompanyJpaRepository implements CompanyRepository {
     }
 
     @Override
-    public List<Company> findAll(User admin, Pager pager) {
+    public List<Company> findForAdmin(User admin, Pager pager) {
         return getEntityRepository().findEntityList(
-                GET_COMPANIES_BY_ADMIN,
+                GET_COMPANIES_FOR_ADMIN,
                 Collections.<String, Object>singletonMap("adminId", admin.getId()),
+                pager);
+    }
+
+    @Override
+    public List<Company> findForClient(User client, Pager pager) {
+        return getEntityRepository().findEntityList(
+                GET_COMPANIES_FOR_CLIENT,
+                Collections.<String, Object>singletonMap("clientId", client.getId()),
                 pager);
     }
 
@@ -69,10 +87,17 @@ public class CompanyJpaRepository implements CompanyRepository {
     }
 
     @Override
-    public int getCount(User admin) {
+    public int getCountForAdmin(User admin) {
         return getEntityRepository().getCount(
-                GET_COMPANIES_COUNT_BY_ADMIN,
+                GET_COMPANIES_COUNT_FOR_ADMIN,
                 Collections.<String, Object>singletonMap("adminId", admin.getId()));
+    }
+
+    @Override
+    public int getCountForClient(User client) {
+        return getEntityRepository().getCount(
+                GET_COMPANIES_COUNT_FOR_CLIENT,
+                Collections.<String, Object>singletonMap("clientId", client.getId()));
     }
 
     @Override

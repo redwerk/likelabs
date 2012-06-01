@@ -9,6 +9,9 @@ import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.point.PointRepository;
 import java.util.List;
+
+import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,9 @@ public class PointServiceImpl implements PointService {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -34,8 +40,10 @@ public class PointServiceImpl implements PointService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Point> getPoints(long companyId, long clientId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<Point> getPointsForClient(long companyId, long clientId) {
+        Company company = companyRepository.get(companyId);
+        User client = userRepository.get(clientId);
+        return pointRepository.findAll(company, client, Pager.ALL_RECORDS);
     }
 
     @Override

@@ -38,7 +38,11 @@ public class EntityJpaRepository<T, ID extends Serializable> {
     }
 
     public int getCount() {
-        return getCount(String.format(COUNT_QUERY, entityClass.getName()), Collections.<String, Object>emptyMap());
+        return getCount(String.format(COUNT_QUERY, entityClass.getName()));
+    }
+
+    public int getCount(String queryString) {
+        return getCount(queryString, Collections.<String, Object>emptyMap());
     }
 
     public int getCount(String queryString, Map<String, Object> parameters) {

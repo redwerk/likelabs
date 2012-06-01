@@ -11,7 +11,7 @@ public interface PointService {
 
     Report<Point> getPoints(long companyId, Pager pager);
 
-    List<Point> getPoints(long companyId, long clientId);
+    List<Point> getPointsForClient(long companyId, long clientId);
 
     Point getPoint(long pointId);
     

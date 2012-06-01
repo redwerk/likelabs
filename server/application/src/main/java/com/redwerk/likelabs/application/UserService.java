@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface UserService {
 
-    Report<User> getUsers(Pager pager);
+    Report<User> getRegularUsers(Pager pager);
 
     User getUser(long userId);
 

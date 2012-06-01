@@ -109,7 +109,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (accounts.isEmpty()) {
             throw new AbsentSocialAccountException(user);
         }
-        List<Company> companies = companyRepository.findAll(user, Pager.ALL_RECORDS);
+        List<Company> companies = companyRepository.findForAdmin(user, Pager.ALL_RECORDS);
         if (companies.isEmpty()) {
             throw new AbsentCompanyException(user);
         }

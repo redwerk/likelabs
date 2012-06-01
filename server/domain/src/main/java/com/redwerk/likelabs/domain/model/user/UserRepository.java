@@ -13,7 +13,11 @@ public abstract class UserRepository {
 
     public abstract List<User> findAll(Pager pager);
 
+    public abstract List<User> findRegular(Pager pager);
+
     public abstract int getCount();
+
+    public abstract int getRegularCount();
 
     public void add(User user) {
         if (find(user.getPhone()) != null) {

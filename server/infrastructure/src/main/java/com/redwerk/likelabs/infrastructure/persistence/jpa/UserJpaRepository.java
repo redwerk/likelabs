@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,19 @@ import java.util.Map;
 @Repository
 public class UserJpaRepository extends UserRepository {
 
-    private static final String GET_ALL_USERS = "select u from User u order by u.phone";
+    private static final String GET_ALL_USERS = "select u from User u join u.accounts a order by a.name, u.phone";
+
+
+    private static final String REGULAR_USERS_FILTER =
+            "from User u join u.accounts a where not exists (select adm.id from Company.admins adm where adm.id = u.id)";
+
+    private static final String GET_REGULAR_USERS = "select u " + REGULAR_USERS_FILTER + " order by a.name, u.phone";
+
+    private static final String GET_REGULAR_USERS_COUNT = "select count(u) " + REGULAR_USERS_FILTER;
+
 
     private static final String GET_USER_BY_PHONE = "select u from User u where u.phone = :phone";
+
 
     @PersistenceContext
     private EntityManager em;
@@ -47,8 +58,18 @@ public class UserJpaRepository extends UserRepository {
     }
 
     @Override
+    public List<User> findRegular(Pager pager) {
+        return getEntityRepository().findEntityList(GET_REGULAR_USERS, pager);
+    }
+
+    @Override
     public int getCount() {
         return getEntityRepository().getCount();
+    }
+
+    @Override
+    public int getRegularCount() {
+        return getEntityRepository().getCount(GET_REGULAR_USERS_COUNT);
     }
 
     @Override

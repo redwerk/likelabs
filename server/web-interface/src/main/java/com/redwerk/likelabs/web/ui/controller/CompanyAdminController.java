@@ -108,7 +108,7 @@ public class CompanyAdminController {
         ModelMap modelMap = new ModelMap();
 
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
-        Report<CompanyReportItem> companiesResult = companyService.getCompanies(user.getId(), new Pager(offset, count));
+        Report<CompanyReportItem> companiesResult = companyService.getCompaniesForAdmin(user.getId(), new Pager(offset, count));
         modelMap.put("companies", buildCompaniesJson(companiesResult.getItems()));
         modelMap.put("count", companiesResult.getCount());
         return modelMap;
@@ -118,7 +118,7 @@ public class CompanyAdminController {
     public String reviewList(ModelMap model) {
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
         Map<String, List<Point>> companiesPointsMap = new HashMap<String, List<Point>>();
-        List<CompanyReportItem> companies = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
+        List<CompanyReportItem> companies = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
         for (CompanyReportItem company : companies) {
             List<Point> points = pointService.getPoints(company.getCompany().getId(), Pager.ALL_RECORDS).getItems();
             companiesPointsMap.put(company.getCompany().getName(), points);
@@ -174,7 +174,7 @@ public class CompanyAdminController {
                 reviewQueryData);
         
         Set<Review> sampleReviews = new HashSet<Review>();
-        List<CompanyReportItem> companies = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
+        List<CompanyReportItem> companies = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
         for (CompanyReportItem company : companies) {
             Company fullCompany = companyService.getCompany(company.getCompany().getId());
             sampleReviews.addAll(fullCompany.getSampleReviews());

@@ -4,7 +4,6 @@ package com.redwerk.likelabs.infrastructure.security;
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
 import com.redwerk.likelabs.domain.model.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,7 +56,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (user.isSystemAdmin()) {
             authorities.add(new SimpleGrantedAuthority(AuthorityRole.ROLE_SYSTEM_ADMIN.toString()));
         }
-        if (!companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems().isEmpty() && user.isActive()) {
+        if (!companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems().isEmpty() && user.isActive()) {
             authorities.add(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()));
         }
         return new org.springframework.security.core.userdetails.User(user.getId().toString(), user.getPassword(), authorities);
