@@ -2,6 +2,7 @@
 #import "ChildController.h"
 #import "SettingsService.h"
 #import "SettingsDao.h"
+#import "QuartzCore/QuartzCore.h"
 
 @interface RootController()
 @property (retain, nonatomic) UIViewController* currentViewController;
@@ -97,7 +98,7 @@ CGFloat const SLIDE_SPEED = 0.5;
     if ([controllerName isEqualToString:SETTINGS_RETRIEVING_CONTROLLER_NAME] && [root isKindOfClass:[RootController class]]) {
         [(RootController*)root checkForSettings];
     }
-    
+    root.view.userInteractionEnabled = NO;
     UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
     vc.view.frame = root.view.bounds;
     [root addChildViewController:vc];
@@ -110,6 +111,7 @@ CGFloat const SLIDE_SPEED = 0.5;
         [root getCurrentController].view.center = CGPointMake(-0.5*vc.view.frame.size.width, vc.view.frame.size.height/2);
         vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
     } completion:^(BOOL finished){
+        root.view.userInteractionEnabled = YES;
         [[root getCurrentController].view removeFromSuperview];
         [vc didMoveToParentViewController:root];
         [[root getCurrentController] removeFromParentViewController];
@@ -127,7 +129,7 @@ CGFloat const SLIDE_SPEED = 0.5;
     if ([controllerName isEqualToString:SETTINGS_RETRIEVING_CONTROLLER_NAME] && [root isKindOfClass:[RootController class]]) {
         [(RootController*)root checkForSettings];
     }
-    
+    root.view.userInteractionEnabled = NO;
     UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
     [root.view addSubview:vc.view];
     [root addChildViewController:vc];
@@ -143,6 +145,7 @@ CGFloat const SLIDE_SPEED = 0.5;
         [vc didMoveToParentViewController:root];
         [[root getCurrentController] removeFromParentViewController];
         [root setCurrentController:vc];
+        root.view.userInteractionEnabled = YES;
     }];
 
     if([root respondsToSelector:@selector(bringHeaderViewToFront)]){
@@ -151,6 +154,7 @@ CGFloat const SLIDE_SPEED = 0.5;
 }
 
 + (void) switchBackToViewController:(UIViewController *)vc rootController:(UIViewController<ContainerController> *)root {
+    root.view.userInteractionEnabled = NO;
     [root.view addSubview:vc.view];
     [root addChildViewController:vc];
     vc.view.frame = root.view.bounds; 
@@ -165,6 +169,7 @@ CGFloat const SLIDE_SPEED = 0.5;
         [vc didMoveToParentViewController:root];
         [[root getCurrentController] removeFromParentViewController];
         [root setCurrentController:vc];
+        root.view.userInteractionEnabled = YES;
     }];
     
     if([root respondsToSelector:@selector(bringHeaderViewToFront)]){

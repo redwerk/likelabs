@@ -1,12 +1,13 @@
 #import <UIKit/UIKit.h>
+#import "ChildController.h"
+#import "ContainerController.h"
 
-@interface PhotoPickerController : UIViewController 
-
-extern NSString *const kImageCapturedSuccessfully;
+@interface PhotoPickerController : UIViewController <ChildController, ContainerController>
 
 @property (retain, nonatomic) IBOutlet UILabel *label;
-@property (retain, nonatomic) IBOutlet UIImageView *img;
-@property (retain, nonatomic) UIImage *image;
+@property (retain, nonatomic) IBOutlet UIView *messageView;
+@property (retain, nonatomic) IBOutlet UILabel *messageLabel;
+@property (retain, nonatomic) IBOutlet UIButton *startButton;
 
-- (void)setTimerDelay:(CGFloat) delay;
+- (IBAction)start:(id)sender;
 @end

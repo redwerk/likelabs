@@ -12,7 +12,6 @@
 - (void) resetThumbnails;
 - (UIImage*)imageWithBorderFromImage:(UIImage*)source;
 - (void) deletePhoto: (UIButton *) sender;
-- (NSInteger)getIndexFrom:(NSInteger)infiniteScrollSectionIndex dataSize:(NSInteger)dataSize;
 - (void) selectThumbnail:(UIView*) thumbnail;
 - (void) dimThumbnail: (UIView*) thumbnail;
 - (BOOL) selectNewPhotoBeforeDeletingPhotoAtIndex:(NSUInteger) deletedPhotoIndex;
@@ -28,7 +27,7 @@ static NSString *const NAV_DIVIDER_SN_IMG = @"navigation_divider_sn.png";
 static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 const float selectedScaleFactor = 1.5;
 const float deletedPhotoAlpha = 0.5;
-NSInteger selectedIndex;
+
 
 @synthesize imageView = _imageView;
 @synthesize thumbnailsView = _thumbnailsView;
@@ -51,12 +50,12 @@ NSInteger selectedIndex;
     // Do any additional setup after loading the view from its nib.
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0]; 
-    
+    [self didRotateFromInterfaceOrientation:self.interfaceOrientation];
+    [self selectThumbnail:[self.thumbnailsView.subviews objectAtIndex:self.review.reviewPhotoIndex]];
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowOffset = CGSizeMake(0, 5);
     self.imageView.layer.shadowRadius = 10;
-    
 }
 
 #pragma mark - Memory management;
@@ -83,89 +82,84 @@ NSInteger selectedIndex;
 
 #pragma mark - Photo management
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
-        return 135;
-    } else {
-        return 119;
-    }
-}
-
--(NSInteger)getIndexFrom:(NSInteger)infiniteScrollSectionIndex dataSize:(NSInteger)dataSize {
-    return infiniteScrollSectionIndex % dataSize;
-}
-
 - (void)populateWithPhotos {
-    NSMutableArray *photos = self.review.photos;
-    
     CGPoint photosOffset = CGPointMake(0, 0);
     CGSize maxPhotoSize = CGSizeMake(128.0, 114.0);
     int photosPadding = 10;
-
     for (int i=0; i<5; i++) {
-
         UIImageView *imageView = (UIImageView *) [self.thumbnailsView viewWithTag:(i+1)];
         if(!imageView) {
-//            Photo* reviewPhoto = [[Photo alloc] initWithImage: [[UIImage imageNamed:@"thankyou_bg_landscape.png"] autorelease]];//[photos objectAtIndex:i];
-            Photo* reviewPhoto = [photos objectAtIndex:i];
+            Photo* reviewPhoto = [self.review.photos objectAtIndex:i];
             UIImage *photo = reviewPhoto.image;
             CGFloat scale = MIN(maxPhotoSize.width / photo.size.width, maxPhotoSize.height / photo.size.height);
+            
             photo = [UIImage imageWithCGImage:photo.CGImage scale:1.0/scale orientation:photo.imageOrientation];
-            photo = [self imageWithBorderFromImage:photo];
-            imageView = [[UIImageView alloc] initWithImage:photo];
+                              imageView = [[UIImageView alloc] initWithImage:[self imageWithBorderFromImage:photo]];
             if (reviewPhoto.status == PhotoStatusDeleted) {
                 [self dimThumbnail:imageView];
             }
+            [self.thumbnailsView addSubview:imageView];
+            
+            imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+            imageView.layer.shadowOffset = CGSizeMake(0, 6);
+            imageView.layer.shadowOpacity = 0.75;
+            imageView.layer.shadowRadius = 11;
+            imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:imageView.bounds].CGPath;
+            imageView.tag = i + 1;
+            imageView.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
+            [imageView addGestureRecognizer:tapGesture];
+            [tapGesture release];  
         }
+        
         if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
             imageView.center = CGPointMake(photosOffset.x + (maxPhotoSize.width + photosPadding)* i + maxPhotoSize.width / 2, photosOffset.y + (maxPhotoSize.height /2 ) );
         } else {
             imageView.center = CGPointMake(photosOffset.x + maxPhotoSize.width / 2, photosOffset.y + (maxPhotoSize.height + photosPadding) * i + maxPhotoSize.height / 2);
         }
-        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-        imageView.layer.shadowOffset = CGSizeMake(0, 6);
-        imageView.layer.shadowOpacity = 0.75;
-        imageView.layer.shadowRadius = 21;
-        imageView.tag = i + 1;
-        imageView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
-        [imageView addGestureRecognizer:tapGesture];
-        [tapGesture release];        
-        
-        [self.thumbnailsView addSubview:imageView];
     }
-    [self selectThumbnail:[self.thumbnailsView.subviews objectAtIndex:self.review.reviewPhotoIndex]];
 }
 
-- (void) previewTouched: (UITapGestureRecognizer*) gesture {   
-    UIView* tappedImage = gesture.view;
-    if (tappedImage.subviews.count > 0 || tappedImage.alpha == deletedPhotoAlpha) {
-        return;
+- (void) previewTouched: (UITapGestureRecognizer*) gesture { 
+    if(self.thumbnailsView.userInteractionEnabled) {
+        self.thumbnailsView.userInteractionEnabled = NO;
+        UIView* tappedImage = gesture.view;
+        tappedImage.userInteractionEnabled = NO;
+
+        if (tappedImage.subviews.count > 0 || tappedImage.alpha == deletedPhotoAlpha) {
+            return;
+        }
+        [self selectThumbnail:tappedImage];
+        
     }
-    [self selectThumbnail:tappedImage];
 }
 
 - (void) selectThumbnail:(UIView*) thumbnail {
     UIView* tappedImage = thumbnail;
     [self resetThumbnails];
     [self setPhoto:((Photo*)[self.review.photos objectAtIndex:tappedImage.tag - 1]).image];
-    //[self setPhoto:[[UIImage imageNamed:@"thankyou_bg_landscape.png"] autorelease]];
     self.review.reviewPhotoIndex = tappedImage.tag - 1;
     
     CGPoint oldCenter = tappedImage.center;
-    tappedImage.frame = CGRectMake(0, 0, tappedImage.frame.size.width * selectedScaleFactor, tappedImage.frame.size.height * selectedScaleFactor);
-    tappedImage.center = oldCenter;
-    [self.thumbnailsView bringSubviewToFront:tappedImage];
-    
+
     UIImage *btnImg = [UIImage imageNamed:@"delete_btn.png"];
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.tag = tappedImage.tag;
     [btn setImage:btnImg forState:UIControlStateNormal];
     btn.frame = CGRectMake(0, 0, btnImg.size.width, btnImg.size.height);
-    CGFloat deleteBtnOffset = 10;
-    btn.center = CGPointMake(tappedImage.frame.size.width - deleteBtnOffset, 0 + deleteBtnOffset);
-    [btn addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
-    [tappedImage addSubview:btn];
+
+    [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
+        tappedImage.frame = CGRectMake(0, 0, tappedImage.frame.size.width * selectedScaleFactor, tappedImage.frame.size.height * selectedScaleFactor);
+    } completion:^(BOOL finished){   
+        self.thumbnailsView.userInteractionEnabled = YES;
+        btn.userInteractionEnabled = YES;
+        btn.center = CGPointMake(tappedImage.frame.size.width - 10, 10);
+        [btn addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
+        [tappedImage addSubview:btn];
+    }];
+    
+    tappedImage.center = oldCenter;
+    [self.thumbnailsView bringSubviewToFront:tappedImage];
 }
 
 - (void) resetThumbnails {
@@ -174,7 +168,7 @@ NSInteger selectedIndex;
             CGPoint center = thumbnail.center;
             thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
             thumbnail.center = center;
-
+            thumbnail.userInteractionEnabled = YES;
             [thumbnail.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         }
     }
@@ -205,7 +199,10 @@ NSInteger selectedIndex;
 }
 
 - (void) dimThumbnail: (UIView*) thumbnail {    
-    thumbnail.alpha = deletedPhotoAlpha;    
+    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationCurveLinear animations:^{
+        thumbnail.alpha = deletedPhotoAlpha;
+    } completion:nil];
+        
 }
 
 - (UIImage*)imageWithBorderFromImage:(UIImage*)source {
@@ -241,7 +238,7 @@ NSInteger selectedIndex;
     return YES;
 }
 
--(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+- (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval) duration {
     [self populateWithPhotos];
     if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
         self.view.backgroundColor  = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
@@ -254,7 +251,6 @@ NSInteger selectedIndex;
         self.imageView.center = CGPointMake(622, 348);
         self.submitButton.center = CGPointMake(622, 674);
     }
-
 }
 
 #pragma mark - Actions

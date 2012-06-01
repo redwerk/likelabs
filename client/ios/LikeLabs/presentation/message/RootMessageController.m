@@ -166,10 +166,10 @@
     [enterInfoBtn setTitle:enterInfoTitle forState:UIControlStateSelected];
 
     if(UIInterfaceOrientationIsPortrait(orientation)){
-        self.customSegmentedControl.frame = CGRectMake(90, 24, 661, 43);
+        self.customSegmentedControl.frame = CGRectMake(90, 24, 660, 43);
         self.navigationBackground.image = [UIImage imageNamed:NAVIGTION_BG_PORTRAIT];
     } else {
-        self.customSegmentedControl.frame = CGRectMake(90, 24, 916, 43); 
+        self.customSegmentedControl.frame = CGRectMake(90, 24, 915, 43); 
         self.navigationBackground.image = [UIImage imageNamed:NAVIGTION_BG_LANDSCAPE];
     }
 }

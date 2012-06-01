@@ -1,16 +1,25 @@
 #import <AVFoundation/AVFoundation.h>
 #import <ImageIO/ImageIO.h>
 #import "PhotoPickerController.h"
+#import "Photo.h"
+#import "Review.h"
+#import "RootController.h"
 
 @interface PhotoPickerController ()
+@property (nonatomic, retain) RootController *rootController;
+@property (nonatomic, assign) Review *review;
 @property (nonatomic, retain) AVCaptureSession *captureSession;
 @property (nonatomic, retain) AVCaptureVideoPreviewLayer *previewLayer;
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) AVCaptureStillImageOutput *imageOutput;
 @property (assign) NSInteger seconds;
+
 - (void) initCapture;
 - (void) captureImage;
 - (UIImage *)scaleAndRotateImage:(UIImage *)image;
+- (void) countDown;
+- (void) onTimer;
+
 @end
 
 @implementation PhotoPickerController
@@ -18,84 +27,123 @@
 static const float PADDING = 20;
 static const int COUNTER_LENGTH = 3;
 static const float TIMER_INTERVAL = 1;
-NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
+NSString *const FIRST_MSG = @"When you are ready click the photo icon to start the camera. 5 photos will be taken with a 2 second interval.";
+NSString *const GET_READY_MSG = @"Get Ready!";
 
+@synthesize rootController = _rootController;
+@synthesize review = _review;
 @synthesize label = _label;
-@synthesize img = _img;
 @synthesize captureSession = _captureSession;
 @synthesize previewLayer = _previewLayer;
 @synthesize timer = _timer;
 @synthesize imageOutput = _imageOutput;
-@synthesize image = _image;
+@synthesize messageView = _messageView;
+@synthesize messageLabel = _messageLabel;
+@synthesize startButton = _startButton;
 @synthesize seconds = _seconds;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+- (id)initWithRootController:(RootController *) rootController {
+    if (self = [super init]) {
+        self.rootController = rootController;
+        self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypePhoto] autorelease];
+        self.review = self.rootController.review;
     }
     return self;
-}
-
-- (void)setTimerDelay:(CGFloat) delay {
-    self.seconds = delay;
-}
-
--(void)viewDidLayoutSubviews {
-    [self willRotateToInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation duration:0];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self initCapture];
+    
     // Do any additional setup after loading the view from its nib.
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
-    [self initCapture];
-    [self.view bringSubviewToFront:self.img];
-    [self.view bringSubviewToFront:self.label];
-//    self.seconds = COUNTER_LENGTH;
-    _timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+    
+    [self.view bringSubviewToFront:self.startButton];
+    
+    self.messageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"instruction_banner_bg.png"]];
+    [self.view bringSubviewToFront:self.messageView];
+    
+    [self.view bringSubviewToFront:self.messageLabel];
+    self.messageLabel.text = FIRST_MSG;
+    
 }
 
-- (void) onTimer {
-    self.seconds--;
-    if (self.seconds == 0) {
-        [self.timer invalidate];
-        [self captureImage];
-    } else {
-        self.label.text = [NSString stringWithFormat:@"%d", self.seconds];
-    }
-}
-
-- (void) onTimerLoop {
-    [self.timer invalidate];
-    [self captureImage];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(onTimerLoop) userInfo:nil repeats:YES];
+- (void)viewDidLayoutSubviews {
+    [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
 }
 
 - (void)viewDidUnload
 {
+    [self setRootController:nil];
     [self setCaptureSession:nil];
     [self setPreviewLayer:nil];
-    [self setImg:nil];
     [self setLabel:nil];
     [self setTimer:nil];
     [self setImageOutput:nil];
+    [self setMessageView:nil];
+    [self setMessageLabel:nil];
+    [self setStartButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
 - (void)dealloc {
-//    self.image = nil;
+    [_rootController release];
     [_captureSession release];
     [_previewLayer release];
-    [_img release];
     [_label release];
     [_imageOutput release];
-//    [_image release];
+    [_messageView release];
+    [_messageLabel release];
+    [_startButton release];
     [super dealloc];
+}
+
+- (IBAction)start:(id)sender {
+    self.startButton.hidden = YES;
+    self.messageLabel.text = GET_READY_MSG;
+    
+    [self.view bringSubviewToFront:self.label];
+    self.seconds = 3;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+}
+
+- (void) countDown {
+    self.label.text = [NSString stringWithFormat:@"%d", self.seconds];
+    if (self.seconds == 0) {
+        [self.timer invalidate];
+        self.label.hidden = YES;
+        self.messageView.hidden = YES;
+        self.messageLabel.hidden = YES;
+        self.seconds = 5;
+        [self onTimer];
+    } else {
+        self.label.hidden = NO;
+        self.seconds--;
+    }
+}
+
+- (void) onTimer {
+    if (self.seconds == 0) {
+        [self.timer invalidate];
+        [RootController switchToController:@"RootPhotoController" rootController:self.rootController];
+    } else {
+        [self captureImage];
+        [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            self.view.alpha = 0;
+        } completion:^(BOOL finished){
+            [UIView animateWithDuration:.1 delay:0.1 options:UIViewAnimationOptionCurveLinear animations:^{
+                self.view.alpha = 1;
+            } completion:^(BOOL finished){
+                
+            }];
+        }];
+        self.seconds--;
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(onTimer) userInfo:nil repeats:NO];
+    }
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -104,38 +152,13 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    self.previewLayer.orientation = toInterfaceOrientation;    
+
     CGSize viewSize = self.view.frame.size;
-    switch (toInterfaceOrientation) {
-        case UIInterfaceOrientationPortrait:
-        case UIInterfaceOrientationPortraitUpsideDown:
-            self.previewLayer.frame = CGRectMake(0, 0, viewSize.width, viewSize.height);
-            break;           
-        default:
-            self.previewLayer.frame = CGRectMake(0, 0, viewSize.height, viewSize.width);
-            break;
-    }
-    
-    CGSize imgSize = self.img.frame.size;
-    CGSize labelSize = self.label.frame.size;
-    switch (toInterfaceOrientation) {
-        case UIInterfaceOrientationLandscapeLeft:
-            self.img.center = CGPointMake(viewSize.height - imgSize.width/2 - PADDING, viewSize.width/2 - imgSize.height/2);
-            self.label.center = CGPointMake(viewSize.height - labelSize.width/2 - PADDING, viewSize.width/2 + labelSize.height/2);
-            break;
-        case UIInterfaceOrientationLandscapeRight:
-            self.img.center = CGPointMake(imgSize.width/2 + PADDING, viewSize.width/2 - imgSize.height/2);
-            self.label.center = CGPointMake(labelSize.width/2 + PADDING, viewSize.width/2 + labelSize.height/2);
-            break;
-        case UIInterfaceOrientationPortrait:
-            self.img.center = CGPointMake(viewSize.width/2 - imgSize.width/2 + PADDING, imgSize.height/2 + PADDING);
-            self.label.center = CGPointMake(viewSize.width/2 + labelSize.width/2 - PADDING, labelSize.height/2 + PADDING);
-            break;
-        case UIInterfaceOrientationPortraitUpsideDown:
-            self.img.center = CGPointMake(viewSize.width/2 - imgSize.width/2 + PADDING, viewSize.height - imgSize.height/2 - PADDING);
-            self.label.center = CGPointMake(viewSize.width/2 + labelSize.width/2 - PADDING, viewSize.height - imgSize.height/2 - PADDING);
-            break;
-    }
+    self.label.center = CGPointMake(viewSize.width/2, viewSize.height/2);
+    self.startButton.center = CGPointMake(viewSize.width/2, viewSize.height-184);
+    self.messageLabel.center = CGPointMake(viewSize.width/2, 40);
+    self.previewLayer.frame = self.view.frame;
+    self.previewLayer.orientation = toInterfaceOrientation;    
 }
 
 - (void)initCapture {
@@ -158,14 +181,13 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
 	_captureSession = [[AVCaptureSession alloc] init];
 	[self.captureSession addInput:captureInput];
     [self.captureSession addOutput:self.imageOutput];    
-    [self.captureSession setSessionPreset:AVCaptureSessionPresetHigh];
+    [self.captureSession setSessionPreset:AVCaptureSessionPresetPhoto];
     
 	self.previewLayer = [AVCaptureVideoPreviewLayer layerWithSession: self.captureSession];
 	self.previewLayer.frame = self.view.frame;
     self.previewLayer.orientation = [UIApplication sharedApplication].statusBarOrientation;
 	self.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 	[self.view.layer addSublayer: self.previewLayer];
-    
 	[self.captureSession startRunning];	
 }
 
@@ -183,28 +205,29 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
         }
 	}
 	[self.imageOutput captureStillImageAsynchronouslyFromConnection:videoConnection 
-                                                         completionHandler:^(CMSampleBufferRef imageSampleBuffer, NSError *error) { 
-                                                             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];    
-                                                             UIImageOrientation io;
-                                                             switch (self.interfaceOrientation) {
-                                                                 case UIInterfaceOrientationPortrait:
-                                                                     io = UIImageOrientationRight;
-                                                                     break;
-                                                                 case UIInterfaceOrientationLandscapeLeft:
-                                                                     io = UIImageOrientationUp;
-                                                                     break;
-                                                                 case UIInterfaceOrientationLandscapeRight:
-                                                                     io = UIImageOrientationDown;
-                                                                     break;
-                                                                 case UIInterfaceOrientationPortraitUpsideDown:
-                                                                     io = UIImageOrientationLeft;
-                                                                     break;
-                                                             }
-                                                             UIImage* tmp = [UIImage imageWithCGImage:[UIImage imageWithData:imageData].CGImage scale:1.0 orientation:io];
-                                                             _image = [self scaleAndRotateImage:tmp];
-                                                             
-                                                             [[NSNotificationCenter defaultCenter] postNotificationName:kImageCapturedSuccessfully object:nil];
-                                                         }];
+         completionHandler:^(CMSampleBufferRef imageSampleBuffer, NSError *error) { 
+             NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];    
+             UIImageOrientation io;
+             switch (self.interfaceOrientation) {
+                 case UIInterfaceOrientationPortrait:
+                     io = UIImageOrientationRight;
+                     break;
+                 case UIInterfaceOrientationLandscapeLeft:
+                     io = UIImageOrientationUp;
+                     break;
+                 case UIInterfaceOrientationLandscapeRight:
+                     io = UIImageOrientationDown;
+                     break;
+                 case UIInterfaceOrientationPortraitUpsideDown:
+                     io = UIImageOrientationLeft;
+                     break;
+             }
+             UIImage* tmp = [UIImage imageWithCGImage:[[[UIImage alloc] initWithData:imageData] autorelease].CGImage scale:1.0 orientation:io];
+             Photo* photo = [[Photo alloc] initWithImage: [self scaleAndRotateImage:tmp]];
+
+             [self.review.photos addObject: photo];
+             [photo release];
+         }];
 }
 
 - (UIImage *)scaleAndRotateImage:(UIImage *)image {
@@ -300,5 +323,12 @@ NSString *const kImageCapturedSuccessfully = @"ImageCapturedSuccessfully";
     return imageCopy;
 }
 
+- (UIViewController *) getCurrentController{
+    return self;
+}
+
+- (void) setCurrentController:(UIViewController *)controller{
+    
+}
 
 @end

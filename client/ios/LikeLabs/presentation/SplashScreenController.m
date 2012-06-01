@@ -14,6 +14,7 @@
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 - (NSArray*) getReviewsLayouts: (NSArray*) reviews;
 - (void) showNextReview;
+- (void) setLogo: (UIImage *)logo;
 @end;
 
 @implementation SplashScreenController

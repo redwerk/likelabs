@@ -169,7 +169,7 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 }
 
 - (IBAction)showPhotoScreen:(id)sender {
-    [RootController switchToController:@"PhotosController" rootController:self.rootController];
+    [RootController switchToController:@"PhotoPickerController" rootController:self.rootController];
 }
 
 - (IBAction)exitApp:(id)sender 
