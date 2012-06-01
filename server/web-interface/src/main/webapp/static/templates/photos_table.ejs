@@ -7,7 +7,8 @@
     <div class="item-data">
         <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=photo.id%>/photo" alt=""/></div>
         <div class="description btn-holder" style="text-align: center;">
-            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.active == 'false'? 'btn-success' : 'btn-info'%> publish" ><%= photo.active == 'false'? 'Activate' : 'Deactivate'%></button>
+            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.active == 'true'? 'disabled' : 'btn-success'%> publish" >Activate</button>
+            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.active == 'false'? 'disabled' : 'btn-success'%> publish" >Delete</button>
         </div>
     </div>
 </div>
