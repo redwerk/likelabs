@@ -126,12 +126,14 @@ img {
     padding: 4px;
     text-align: center;
     height: 40px;
+    border: solid 1px #d2d9df;
 }
 
 .content_table td{
     padding: 4px;
     text-align: center;
     height: 40px;
+    border: solid 1px #d2d9df;
 }
 
 a {
@@ -879,4 +881,16 @@ input[type=submit], input[type=button], button {
 
 .social-icon.vk {
     background-position: left -248px;
+}
+
+.settings_table th {
+    border: solid 1px #d2d9df;
+}
+
+.settings_table td {
+    border: solid 1px #d2d9df;
+}
+
+.settings_table td select {
+    width: 150px;
 }

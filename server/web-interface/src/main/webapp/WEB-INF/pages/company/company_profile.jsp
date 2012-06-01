@@ -74,6 +74,15 @@
                 }
             })});
     }
+    
+    function editUserDialog(id, phone, email, password){
+        $("#add_administrator_phone").val(phone);
+        $("#add_administrator_email").val(email);
+        $("#add_administrator_password").val(password);
+        $("#add_administrator_id").val(id);
+        $("#add_administrator_dialog").dialog('open');
+    }
+
 </script>
 <div id="content">
     <h1>${title}</h1> 
@@ -140,7 +149,7 @@
                             <thead style="height: 30px;">
                                 <tr style="background-color: #efefef">
                                     <th>Name</th>
-                                    <th width="30">&nbsp;</th>
+                                    <th width="40">&nbsp;</th>
                                 </tr>
                             </thead>
 
@@ -148,12 +157,18 @@
                             <c:forEach items="${admins}" var="admin">
                                 <tr style="background-color: #fdfeff">
                                     <td>${admin.name}</td>
-                                    <td><a href="javascript:void(0);" onclick="deleteAdmin(${admin.id})"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a></td>
+                                    <td>
+                                        <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                                            <a href="javascript:void(0);" onclick="editUserDialog('1', '+123456789', 'test@test.com', '12345');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
+                                        </sec:authorize>
+                                        <a href="javascript:void(0);" onclick="deleteAdmin(${admin.id})"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </table>
                         <div id="add_administrator_dialog">
                             <form action="" onsubmit="addAdmin();return false;" id="add_administrator_form">
+                                <input type="hidden" name="id" id="add_administrator_id"/>
                                 <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
                                     <tr>
                                         <td><label for="add_administrator_phone">Phone: </label></td>
@@ -163,6 +178,12 @@
                                         <td><label for="add_administrator_email">Email: </label></td>
                                         <td><input type="text" name="email" id="add_administrator_email"/></td>
                                     </tr>
+                                    <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                                        <tr>
+                                            <td><label for="add_administrator_password">Password: </label></td>
+                                            <td><input type="text" name="password" id="add_administrator_password"/></td>
+                                        </tr>
+                                    </sec:authorize>
                                     <tr>
                                         <td colspan="2" style="text-align: center; padding-top: 30px;">
                                             <button class="btn btn-success save" type="submit">Submit</button>
@@ -187,7 +208,6 @@
                         <div class="field" style="padding-top: 19px;">
                             <div class="left label">Social pages</div>
                             <div class="right"><a href="javascript:void(0);" onclick="$('#add_social_page_dialog').dialog('open');">add</a></div>
-
                         </div>
                         <table cellpadding="0" cellspacing="1" style="width: 100%; border: solid 1px #d2d9df" summary="" class="content_table field">
                             <thead style="height: 30px;">

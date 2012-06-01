@@ -57,6 +57,9 @@ public class RootController {
         if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_ANONYMOUS.toString()))) {
             return "redirect:/public";
         }
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_SYSTEM_ADMIN.toString()))) {
+            return "redirect:/admin";
+        }
         if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()))) {
             return "redirect:/companyadmin";
         }

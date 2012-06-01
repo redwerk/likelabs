@@ -27,6 +27,7 @@
         </fieldset>
     </form:form>
     <div class="right-col">
+        <sec:authorize access="not hasRole('ROLE_SYSTEM_ADMIN')">
         <ul class="social-buttons">
             <li><h3>Connect Social Accounts:</h3></li>
             <c:choose>
@@ -57,6 +58,7 @@
                 </c:otherwise>
             </c:choose>           
         </ul>
+        </sec:authorize>
     </div>
 
     <div class="clear"></div>
