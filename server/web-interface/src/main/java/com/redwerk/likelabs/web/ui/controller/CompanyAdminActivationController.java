@@ -123,7 +123,7 @@ public class CompanyAdminActivationController {
         if (user.isActive()) {
             authenticateUser(request, user.getId(), user.getPassword());
             model.put(RESPONSE_KEY_SUCCESS, false);
-            List<CompanyReportItem> report = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
+            List<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
             if (!report.isEmpty()) {
                 model.put("companyName", report.get(0).getCompany().getName());
             }
@@ -151,7 +151,7 @@ public class CompanyAdminActivationController {
             }
             registrationService.activateCompanyAdmin(user.getId());
             authenticateUser(request, user.getId(), user.getPassword());
-            List<CompanyReportItem> report = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
+            List<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
             if (!report.isEmpty()) {
                 model.put("companyName", report.get(0).getCompany().getName());
             }
