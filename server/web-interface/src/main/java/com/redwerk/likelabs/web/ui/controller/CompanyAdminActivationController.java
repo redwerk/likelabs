@@ -1,14 +1,18 @@
 package com.redwerk.likelabs.web.ui.controller;
 
+import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.UserService;
+import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.application.impl.registration.exception.AbsentSocialAccountException;
 import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLevelException;
 import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
@@ -62,10 +66,10 @@ public class CompanyAdminActivationController {
     private MessageTemplateService messageTemplateService;
 
     @Autowired
-    private GatewayFactory gatewayFactory;
+    private CompanyService companyService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String activateAdminGet(ModelMap model,
+    public String activateAdminGet(ModelMap model, HttpServletRequest request,
                                    @RequestParam("userId") Long userId,
                                    @RequestParam("code") String confirmCode) {
         try {
@@ -75,9 +79,6 @@ public class CompanyAdminActivationController {
                 return VIEW_START_ACTIVATE;
             }
             if (registrationService.validateAdminCode(userId, confirmCode)) {
-                if (user.isActive()) {
-                    return "redirect:/companyadmin/activate/success?error=already_active";
-                }
                 model.addAttribute("activatecode", confirmCode);
                 model.addAttribute("id", userId);
             } else {
@@ -121,7 +122,12 @@ public class CompanyAdminActivationController {
         User user = userService.getUser(id);
         if (user.isActive()) {
             authenticateUser(request, user.getId(), user.getPassword());
-            return "redirect:/companyadmin/activate/success?error=" + PARAM_ERROR_ALREADY_ACTIVE;
+            model.put(RESPONSE_KEY_SUCCESS, false);
+            List<CompanyReportItem> report = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
+            if (!report.isEmpty()) {
+                model.put("companyName", report.get(0).getCompany().getName());
+            }
+            return VIEW_SUCCESS_ACTIVATE;
         }
         if (error != null) {
             if (error.equals(PARAM_ERROR_NOT_ADMIN)) {
@@ -145,8 +151,11 @@ public class CompanyAdminActivationController {
             }
             registrationService.activateCompanyAdmin(user.getId());
             authenticateUser(request, user.getId(), user.getPassword());
-            session.removeAttribute(PARAM_SESSION_USERID);
-            model.put("success", true);
+            List<CompanyReportItem> report = companyService.getCompanies(user.getId(), Pager.ALL_RECORDS).getItems();
+            if (!report.isEmpty()) {
+                model.put("companyName", report.get(0).getCompany().getName());
+            }
+            model.put(RESPONSE_KEY_SUCCESS, true);
         } catch (UserNotFoundException e) {
             log.error(e,e);
             return "redirect:/";
@@ -164,13 +173,6 @@ public class CompanyAdminActivationController {
             log.error(e,e);
             return "redirect:/";
         }
-        return "redirect:/companyadmin/activate/success";
-    }
-
-    @RequestMapping(value = "/success", method = RequestMethod.GET)
-    public String success(ModelMap model, @RequestParam(value = "error", required = false) String error) {
-
-        if (error != null) model.addAttribute(PARAM_ERROR_ALREADY_ACTIVE, true);
         return VIEW_SUCCESS_ACTIVATE;
     }
 

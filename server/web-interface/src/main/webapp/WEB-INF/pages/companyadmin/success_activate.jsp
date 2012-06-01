@@ -8,14 +8,17 @@
         <td class="body">
             <div>
                 <c:choose>
-                    <c:when test="${already_active eq true}">
+                    <c:when test="${success eq false}">
                         <div class="field">
-                            <span class="errorblock" >You have already activated your administrator account for ${company}.</span> Now you can go to <a href="/" >Dashboard.</a>
+                            <span class="errorblock" >You have already activated your administrator account for ${companyName}.</span> <br>
+                            Now you can go to <a href="/" >Dashboard.</a>
                         </div>
                     </c:when>
                     <c:otherwise>
                         <div class="field">
-                            Congratulations! You have successfully registered your administrator account for ${company}. Now you can go to <a href="/">Dashboard.</a>
+                            Congratulations!<br>
+                            You have successfully registered your administrator account for ${companyName}.<br>
+                            Now you can go to <a href="/">Dashboard.</a>
                         </div>
                     </c:otherwise>
                 </c:choose>
