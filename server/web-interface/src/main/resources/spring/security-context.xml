@@ -16,8 +16,8 @@
         <logout invalidate-session="true"
                         logout-url="/logout"
                         logout-success-url="/index" />
-        <anonymous username="0" granted-authority="ROLE_ANONYMOUS" />
-        <remember-me key="LikeLabsWebSite"/>
+        <anonymous key="LikeLabsWebSiteKey" username="0" granted-authority="ROLE_ANONYMOUS" />
+        <remember-me key="LikeLabsWebSiteKey"/>
     </http>
 
     <authentication-manager alias="authenticationManager">

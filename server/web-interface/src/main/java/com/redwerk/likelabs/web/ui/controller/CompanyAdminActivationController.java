@@ -9,11 +9,11 @@ import com.redwerk.likelabs.application.impl.registration.exception.PageAccessLe
 import com.redwerk.likelabs.application.impl.registration.exception.AbsentCompanyException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,7 +23,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,8 +70,11 @@ public class CompanyAdminActivationController {
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private RememberMeServices rememberMeServices;
+
     @RequestMapping(method = RequestMethod.GET)
-    public String activateAdminGet(ModelMap model, HttpServletRequest request,
+    public String activateAdminGet(ModelMap model, HttpSession session, 
                                    @RequestParam("userId") Long userId,
                                    @RequestParam("code") String confirmCode) {
         try {
@@ -92,7 +97,7 @@ public class CompanyAdminActivationController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String activateAdminPost(ModelMap model, HttpSession session,
+    public String activateAdminPost(ModelMap model, HttpSession session, HttpServletRequest request, HttpServletResponse response,
                                     @RequestParam("userId") Long userId,
                                     @RequestParam("code") String confirmCode,
                                     @RequestParam("password") String password) {
@@ -100,6 +105,11 @@ public class CompanyAdminActivationController {
         try {
             User user = userService.getUser(userId);
             if (registrationService.validateAdminPassword(user.getId(), password) && registrationService.validateAdminCode(userId, confirmCode)) {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth != null){
+                    new SecurityContextLogoutHandler().logout(request, response, auth);
+                    rememberMeServices.loginFail(request, response);
+                }
                 session.setAttribute(PARAM_SESSION_USERID, userId);
                 session.setAttribute(PARAM_SESSION_PASSWORD, password);
                 return "redirect:/companyadmin/activate/end";

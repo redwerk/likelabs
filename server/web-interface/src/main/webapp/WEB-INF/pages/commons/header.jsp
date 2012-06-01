@@ -41,8 +41,10 @@
                 }
                 var data = {
                     "j_username":$('#username').val(),
-                    "j_password":$('#password').val(),
-                    "_spring_security_remember_me":$('#mem').val()};
+                    "j_password":$('#password').val()};
+                if (document.getElementById("mem").checked) {
+                    data._spring_security_remember_me = "on";
+                }
                 $.ajax({
                     url: "/login",
                     async: false,

@@ -1,12 +1,14 @@
 package com.redwerk.likelabs.web.ui.controller;
 
 import com.redwerk.likelabs.application.CompanyService;
+import com.redwerk.likelabs.application.PhotoService;
 import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.company.Company;
+import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.ContentTypeFilter;
@@ -62,6 +64,9 @@ public class PublicContentController {
 
     @Autowired
     private ReviewService reviewService;
+
+    @Autowired
+    private PhotoService photoService;
     
     private final Logger log = LogManager.getLogger(getClass());
 
@@ -215,6 +220,23 @@ public class PublicContentController {
             response.setContentType("image");
             out = response.getOutputStream();
             out.write(photo);
+            out.close();
+        } catch (IOException e) {
+            log.error(e, e);
+        }
+    }
+
+    @RequestMapping(value = "/photo/{photoId}", method = RequestMethod.GET)
+    public void getPhoto(@PathVariable Integer photoId,
+            HttpServletResponse response) {
+
+        ServletOutputStream out = null;
+        try {
+            Photo photo = photoService.getPhotos(photoId);
+            if (photo == null) return;
+            response.setContentType("image");
+            out = response.getOutputStream();
+            out.write(photo.getImage());
             out.close();
         } catch (IOException e) {
             log.error(e, e);
