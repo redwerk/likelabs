@@ -27,8 +27,7 @@ public class EmailRecipient extends Recipient {
 
     @Override
     protected boolean sendNotification(RecipientNotifier notifier) {
-        Review review = getReview();
-        return notifier.notifyByEmail(email, review.getId(), review.getAuthor().getName());
+        return notifier.notifyByEmail(email, getReview());
     }
 
     // overrides

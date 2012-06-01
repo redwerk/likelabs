@@ -27,8 +27,7 @@ public class SmsRecipient extends Recipient {
 
     @Override
     protected boolean sendNotification(RecipientNotifier notifier) {
-        Review review = getReview();
-        return notifier.notifyBySms(phone, review.getId(), review.getAuthor().getName());
+        return notifier.notifyBySms(phone, getReview());
     }
 
     // overrides

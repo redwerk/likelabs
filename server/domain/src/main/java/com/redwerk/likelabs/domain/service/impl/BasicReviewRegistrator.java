@@ -68,7 +68,7 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
         Review review = Review.createReview(author, tablet.getPoint(), text, reviewPhoto);
         processRecipients(review, recipients);
         reviewRepository.add(review);
-        // review.notifyRecipients(recipientNotifier);
+        review.notifyRecipients(recipientNotifier);
         author.registerReview(review, eventRepository, gatewayFactory, imageSourceFactory);
         return review;
     }

@@ -113,6 +113,10 @@ public class Review {
         return point;
     }
 
+    public Company getCompany() {
+        return point.getCompany();
+    }
+
     public User getAuthor() {
         return author;
     }
