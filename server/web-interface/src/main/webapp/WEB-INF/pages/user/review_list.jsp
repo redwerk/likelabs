@@ -15,29 +15,28 @@
         }
     }
     
-    
     $(document).ready(function(){
         $("#filter_date_from").datepicker({dateFormat: "dd/mm/yy"});
         $("#filter_date_to").datepicker({dateFormat: "dd/mm/yy"});
         initPager();
-        
         $("input[name=status_filter]").change(function(){
             updateOptions();
             updateData();
         });
-        
         $(".status-filter label").click(function(){
             $(".status-filter label").removeClass("active");
             $(this).toggleClass("active");
         })
-        
-        
         var filter_status = $("input[name=status_filter]:checked").val();
         filter_status = filter_status? filter_status : "all";
         $("label[for=status_" + filter_status + "]").click();
         
         $("#edit_feed_dialog").dialog({ autoOpen: false, title: "Edit feed", close: function(){document.getElementById("edit_feed_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
-        
+
+        for (var key=0; key < companies.length; key++) {
+            var company = companies[key];
+            $("#company").append($("<option></option>").val(company.id).text(company.name));
+        }
     });
 
 
@@ -48,37 +47,89 @@
     }
 
     var options = {
-        feed_type: null,
+        feedType: null,
         point: null,
-        date_to: null,
-        date_from: null,
-        sort_by: null,
-        page_number: 0,
-        status: null
+        toDate: null,
+        fromDate: null,
+        sortBy: null,
+        page: 0,
+        status: null,
+        company: ""
     };
-    
+
     function pageSelectCallback(page_index, jq) {
-        options.page_number = page_index;
+        options.page = page_index;
         if (force_update)
             updateData();
         return false;
     }
     var force_update = true;
     
-    var test_data = {"data":[{"id":16,"message":"message16","point":"12345 Sample1 Street","name":"Anonymous","date":1333621680000},{"id":15,"message":"message15","point":"12345 Sample1 Street","name":"Anonymous","date":1330946880000},{"id":14,"message":"message14","point":"12345 Sample2 Street","name":"Anonymous","date":1315218480000},{"id":11,"message":"message11","point":"12345 Sample2 Street","name":"Anonymous","date":1315218480000},{"id":13,"message":"message13","point":"12345 Sample1 Street","name":"Anonymous","date":1315132080000},{"id":12,"message":"message12","point":"12345 Sample2 Street","name":"Anonymous","date":1315045680000},{"id":10,"message":"message10","point":"12345 Sample1 Street","name":"Anonymous","date":1314959280000},{"id":1,"message":null,"point":"12345 Sample1 Street","name":"Anonymous","date":1314872881000}],"count":16};
     function updateData() {
-        $.get("/user/reviews/", options, function(response){
-            response = test_data;
-            if (response.error) {
-                console.warn(response.error);
+        if (!options.company) options.point = "";
+        $.get("/user/${userId}/feed/data", options, function(response){
+            if (!response.success) {
+                errorDialog("Server error", response.message);
                 return;
             }
             pager_options.items_count = response.count;
             force_update = false;
-            initPager(options.page_number);
+            initPager(options.page);
             force_update = true;
             fillTable(response.data);
         });
+    }
+
+    function getCompany(companyId) {
+        
+        if (!companyId) return null;
+        companyId = parseInt(companyId);
+        for (var key=0; key<companies.length; key++) {
+            if (companyId == parseInt(companies[key].id)) {
+                return companies[key];
+            }
+        }
+        return null;
+    }
+
+    function updatePoints(companyId){
+        var select = $("<select></select>")
+        .attr("onchange", "changeFilter()")
+        .attr("id", "point")
+        .css("width", "192px");
+        select.append($("<option></option>").val("").text("All"));
+
+        var company = getCompany(companyId);
+
+
+        if (company && company.points && company.points.length > 0 ) {
+            for (var key = 0; key < company.points.length; key++) {
+                var point = company.points[key];
+                var option = $("<option></option>").val(point.id).text(point.address);
+                select.append(option);
+            }
+        }
+        if (!$("#company").val()) {
+            select.attr("disabled", "disabled");
+        } else {
+            select.removeAttr("disabled");
+        }
+        $("#point").replaceWith(select);
+    }
+
+    function changeCompany(){
+        if (!$("#company").val()) {
+            $("#point").val("");
+            $("#point").attr("disabled");
+        } else {
+            $("#point").removeAttr("disabled");
+        }
+
+        options.company = $("#company").val();
+        options.point = "";
+        updatePoints($("#company").val());
+        updateData();
+        
     }
 
     function fillTable(data) {
@@ -87,26 +138,27 @@
     }
     
     function changeFilter() {
-        options.date_from = $("#filter_date_from").val();
-        options.date_to = $("#filter_date_to").val();
-        options.feed_type = $("#feed_type").val();
-        options.point = $("#point").val();
-        options.page_number = 0;
+        options.fromDate = $("#filter_date_from").val();
+        options.toDate = $("#filter_date_to").val();
+        options.feedType = $("#feed_type").val();
+        options.company = $("#company").val();
+        options.point = $("#point").val() != null ? $("#point").val() : "";
+        options.page = 0;
         initPager();
     }
     
     function changeSort() {
-        options.sort_by = $("#sort_by").val();
+        options.sortBy = $("#sort_by").val();
         updateData();
     }
     
     function updateOptions() {
-        options.date_from = $("#filter_date_from").val();
-        options.date_to = $("#filter_date_to").val();
-        options.feed_type = $("#feed_type").val();
-        options.point = $("#point").val();
-        options.page_number = 0;
-        options.sort_by = $("#sort_by").val();
+        options.fromDate = $("#filter_date_from").val();
+        options.toDate = $("#filter_date_to").val();
+        options.feedType = $("#feed_type").val();
+        options.point = $("#point").val() != null ? $("#point").val() : "";
+        options.page = 0;
+        options.sortBy = $("#sort_by").val();
         options.status = $("input[name=status_filter]:checked").val();
     }
     
@@ -116,11 +168,54 @@
         $("#edit_feed_dialog").dialog("open");
     }
     
-    function submitEditDialog(){
-        $.get("/user/reviews", $("#edit_feed_form").serialize());
+    function submitEditDialog(id){
         $("#edit_feed_dialog").dialog("close");
+        $.post("/user/${userId}/feed/"+ id +"/edit", $("#edit_feed_form").serialize(), function(response) {
+            if (!response.success) {
+                errorDialog("Error edit review", response.message);
+                return;
+            }
+            updateData(); 
+        });
     }
+
+    function removeReview(id) {
+        confirmDialog("Remove review from Social networks", "Are you sure?", function(){
+            $.ajax({
+                url: "/user/${userId}/feed/"+ id +"/remove",
+                type: "DELETE",
+                success: function(response){
+                    if (!response.success) {
+                        errorDialog("Error removing review", response.message);
+                        return;
+                    }
+                    updateData();
+                }
+            });
+        });
+    }
+    var companies = [
+        <c:forEach var="company" items="${companies}" varStatus="c">
+        {
+            "id": "${company.id}",
+            "name": "${company.name}",
+            "points" : [
+            <c:forEach var="point" items="${company.points}" varStatus="p" >
+                    {"id" : "${point.id}", "address": "${point.addressLine1}"}<c:if test="${(p.index +1) lt company.pointsCount}">,</c:if>
+            </c:forEach>
+            ]
+        }<c:if test="${(c.index +1) lt count}">,</c:if>
+        </c:forEach>
+    ]
 </script>
+<style type="text/css">
+    .filter-holder label{
+        width: 90px;
+    }
+    .filter-holder select{
+        width: 200px;
+    }
+</style>
 <div id="content">
     <h1>
         My Feed
@@ -136,26 +231,29 @@
     <div class="items-holder" >      
 
         <div class="filter-holder">
-            <label for="feed_type" style="width: 90px">Contains :</label>
-            <select onchange="changeFilter()" id="feed_type">
-                <option value="">Not selected</option>
-                <option value="contains_text">Text</option>
-                <option value="contains_photo">Photo</option>
-                <option value="contains_text_and_photo">Text and Photo</option>
-            </select>
-            
-            <label for="point">Point :</label>
-            <select onchange="changeFilter()" id="point">
-                <option value="">All</option>
-                <c:forEach varStatus="status" var="point" items="${points}">
-                    <option value="${point.id}">${point.address.addressLine1}</option>
-                </c:forEach>
-            </select>
-            
-            <label for="filter_date_from">Date :</label>
-            <input type="text" id="filter_date_from" onchange="changeFilter()" />
-            -
-            <input type="text" id="filter_date_to" onchange="changeFilter()" />
+            <div>
+                <label for="feed_type">Contains:</label>
+                <select id="feed_type" onchange="changeFilter()">
+                    <option value="">Not selected</option>
+                    <option value="contains_text">Text</option>
+                    <option value="contains_photo">Photo</option>
+                    <option value="contains_text_and_photo">Text and Photo</option>
+                </select>
+                <label for="filter_date_from">Date :</label>
+                <input type="text" id="filter_date_from" onchange="changeFilter()" />
+                -
+                <input type="text" id="filter_date_to" onchange="changeFilter()" />
+            </div>
+            <div>
+                <label for="location" >Companies:</label>
+                <select id="company" onchange="changeCompany()">
+                    <option value="">All</option>
+                </select>
+                <label for="point">Point:</label>
+                <select onchange="changeFilter()" id="point" style="width: 190px;" disabled="">
+                    <option value="">All</option>
+                </select>
+            </div>
         </div>
         <div id="feeds_table" class="items-inner"></div>
         <div id="pager" class="pager"></div>
@@ -163,7 +261,7 @@
     </div>
 </div>
 <div id="edit_feed_dialog" class="hidden">
-    <form action="" onsubmit="submitEditDialog();return false;" id="edit_feed_form">
+    <form action="" onsubmit="submitEditDialog($('#edit_feed_id').val());return false;" id="edit_feed_form">
         <input type="hidden" name="id" id="edit_feed_id"/>
         <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
             <tr>

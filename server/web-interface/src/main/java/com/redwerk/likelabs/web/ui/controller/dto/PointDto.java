@@ -29,6 +29,11 @@ public class PointDto {
     public PointDto() {
     }
 
+    public PointDto(Long id, String addressLine1) {
+        this.id = id;
+        this.addressLine1 = addressLine1;
+    }
+
     public PointDto(Point p) {
         Address a = p.getAddress();
         if (a != null) {

@@ -3,11 +3,6 @@
         var feed = feeds[key];
         var date = new Date(feed.date);
         var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-        
-        
-        // TODO: replace test data
-        feed.status = key%2==0? "approved" : "pending";
-        feed.active = key%2==0? true : false;
 %>
 <div class="item-wrapper" id="feed_item_<%=feed.id%>">
     <div class="item-cmd">
@@ -27,15 +22,17 @@
             <tr>
                 <td>Shared On:</td>
                 <td>
-                    <div class="social-icon fb"></div>
-                    <div class="social-icon vk"></div>
+                    <% if (feed.active) { %>
+                        <div class="social-icon fb"></div>
+                        <div class="social-icon vk"></div>
+                    <% } %>
                 </td>
             </tr>
             <tr><td colspan="2">&nbsp;</td></tr>
             <tr class="btn-holder">
                 <td style="text-align: center;" colspan="2">
                     <button class="btn btn-info publish" type="button" onclick="editFeedDialog('<%= feed.id %>', '<%= feed.message %>')">Edit</button>
-                    <button class="btn <%=feed.status != 'approved'? 'btn-success' : 'disabled' %> publish" type="button" style="margin-left: 20px">Remove</button>
+                    <button class="btn <%=feed.status != 'approved'? 'btn-success' : 'disabled' %> publish" type="button" onclick="removeReview(<%= feed.id %>);" style="margin-left: 20px">Remove</button>
                 </td>
             </tr>
         </table>

@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 public class ReviewFilterDto {
 
     //params reguest
+    private Long company = null;
     private Long point = null;
     private String feedType = null;
     private String sortBy = null;
@@ -44,7 +45,15 @@ public class ReviewFilterDto {
         }
         this.status = status;
     }
-    
+
+    public Long getCompany() {
+        return company;
+    }
+
+    public void setCompany(Long company) {
+        this.company = company;
+    }
+
     public String getFeedType() {
         return feedType;
     }

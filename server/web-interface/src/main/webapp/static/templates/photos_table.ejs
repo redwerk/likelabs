@@ -1,14 +1,13 @@
 <%
     for (var key=0; key<photos.length;key++) {
         var photo = photos[key];
-        photo.active = key%2==0 ? 'true' : 'false';
 %>
 <div class="item-wrapper photo" id="photo_item_<%=photo.id%>" style="height: 330px;">
     <div class="item-data">
-        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=photo.id%>/photo" alt=""/></div>
+        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/photo/<%=photo.id%>" alt=""/></div>
         <div class="description btn-holder" style="text-align: center;">
-            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.active == 'true'? 'disabled' : 'btn-success'%> publish" >Activate</button>
-            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.active == 'false'? 'disabled' : 'btn-success'%> publish" >Delete</button>
+            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.status == 'active'? 'disabled' : 'btn-success'%> publish" onclick="changeStatusPhoto(<%=photo.id %>,'active')">Activate</button>
+            <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.status == 'deleted'? 'disabled' : 'btn-success'%> publish" onclick="changeStatusPhoto(<%=photo.id %>,'deleted')">Delete</button>
         </div>
     </div>
 </div>

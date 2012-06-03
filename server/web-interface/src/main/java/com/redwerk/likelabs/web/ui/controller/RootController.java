@@ -63,7 +63,7 @@ public class RootController {
         if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()))) {
             return "redirect:/companyadmin";
         }
-        return "redirect:/user";
+        return "redirect:/user/" + auth.getName();
     }
 
     @RequestMapping(value = "/activatemail", method = RequestMethod.GET)

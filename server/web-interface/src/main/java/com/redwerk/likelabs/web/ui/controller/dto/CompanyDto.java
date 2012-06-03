@@ -1,5 +1,9 @@
 package com.redwerk.likelabs.web.ui.controller.dto;
 
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
+
 public class CompanyDto {
 
     private Long id = 0L;
@@ -7,14 +11,21 @@ public class CompanyDto {
     private String phone;
     private String email;
     private Boolean moderate = false;
+    private List<PointDto> points = new ArrayList<PointDto>();
 
     public CompanyDto() {
     }
+
 
     public CompanyDto(String name, String phone, String email) {
         this.name = name;
         this.phone = phone;
         this.email = email;
+    }
+
+    public CompanyDto(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public CompanyDto(Long id, String name, String phone, String email, Boolean moderate) {
@@ -65,6 +76,30 @@ public class CompanyDto {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Boolean getModerate() {
+        return moderate;
+    }
+
+    public void setModerate(Boolean moderate) {
+        this.moderate = moderate;
+    }
+
+    public List<PointDto> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<PointDto> points) {
+        this.points = points;
+    }
+
+    public void addPoint(PointDto point) {
+        points.add(point);
+    }
+
+    public int getPointsCount() {
+        return points.size();
     }
 
     @Override

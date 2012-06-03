@@ -1,9 +1,8 @@
 <%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript">
-    var companyId = <c:out value="${company.id}"/>;
     var pager_options = {
-        items_count: <c:out value="${count}"/>,
+        items_count: 0,
         config: {
             items_per_page : <c:out value="${items_per_page}"/>,
             next_text : "&gt;",
@@ -31,10 +30,8 @@
             $(".status-filter label").removeClass("active");
             $(this).toggleClass("active");
         })
-        
-        
         var filter_status = $("input[name=status_filter]:checked").val();
-        filter_status = filter_status? filter_status : "all";
+        filter_status = filter_status ? filter_status : "all";
         $("label[for=status_" + filter_status + "]").click();
         
     });
@@ -52,7 +49,7 @@
         date_to: null,
         date_from: null,
         sort_by: null,
-        page_number: 0,
+        page: 0,
         status: null
     };
     
@@ -60,22 +57,21 @@
 
     
     function pageSelectCallback(page_index, jq) {
-        options.page_number = page_index;
+        options.page = page_index;
         if (force_update)
             updateData();
         return false;
     }
     var force_update = true;
     function updateData() {
-        $.get("/public/" + companyId + "/reviews", options, function(response){
-            response = test_data;
-            if (response.error) {
-                console.warn(response.error);
+        $.get("/user/${userId}/photo/data", options, function(response){
+            if (!response.success) {
+                errorDialog("Error load photo", response.message);
                 return;
             }
             pager_options.items_count = response.count;
             force_update = false;
-            initPager(options.page_number);
+            initPager(options.page);
             force_update = true;
             fillTable(response.data);
         });
@@ -91,7 +87,7 @@
         options.date_to = $("#filter_date_to").val();
         options.feed_type = $("#feed_type").val();
         options.point = $("#point").val();
-        options.page_number = 0;
+        options.page = 0;
         initPager();
     }
     
@@ -105,9 +101,19 @@
         options.date_to = $("#filter_date_to").val();
         options.feed_type = $("#feed_type").val();
         options.point = $("#point").val();
-        options.page_number = 0;
+        options.page = 0;
         options.sort_by = $("#sort_by").val();
         options.status = $("input[name=status_filter]:checked").val();
+    }
+
+    function  changeStatusPhoto(id,status) {
+        $.post("/user/${userId}/photo/"+ id +"/status", {"status": status}, function(response) {
+            if (!response.success) {
+                errorDialog("Error change status photo", response.message);
+                return;
+            }
+            updateData();
+        });
     }
 </script>
 <div id="content">
