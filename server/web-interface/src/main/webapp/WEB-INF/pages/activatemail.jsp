@@ -1,11 +1,11 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
 <div id="content">
-    <h1>Welcome To Like Labs - activation e-mail</h1>
+    <h1>Welcome To Like Labs - Email verification completed</h1>
 
     <c:choose>
         <c:when test="${empty error}">
             <div class="field">
-                Email was successfully verified! Now you can go to <a href="javascript:void(0)" onclick="document.location.href='/'">Dashboard</a>
+                Your email was successfully verified! Now you can go to <a href="javascript:void(0)" onclick="document.location.href='/'">Dashboard.</a>
             </div>
         </c:when>
         <c:otherwise>

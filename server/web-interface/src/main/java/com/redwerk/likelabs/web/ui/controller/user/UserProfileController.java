@@ -10,6 +10,7 @@ import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
 import java.util.HashSet;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,9 @@ public class UserProfileController {
             model.put("cabinet", "user");
             return VIEW_USER_PROFILE;
         }
-        userService.updateUser(userId, new UserData(user.getPhone(), user.getPassword(), user.getEmail(), user.getPublishInSN(), false, user.getEnabledEvents()));
+        User userOldData = userService.getUser(userId);
+        String password = StringUtils.isBlank(user.getPassword()) ? userOldData.getPassword() : user.getPassword();
+        userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), false, userOldData.getEnabledEvents()));
         status.setComplete();
         model.clear();
         return "redirect:/user/" + userId;
@@ -89,12 +92,10 @@ public class UserProfileController {
             if (!phoneValidator.isValid(user.getPhone())) {
                 errors.rejectValue("phone", "user.profile.invalid.phone", "Please enter valid phone number.");
             }
-
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password",
-                    "user.profile.invalid.password", "Required password.");
-
-            if (!user.getPassword().equals(user.getConfirmPassword())) {
-                errors.rejectValue("confirmPassword", "user.profile.invalid.confirmpassword", "The passwords do not match.");
+            if (StringUtils.isNotBlank(user.getPassword())) {
+                if (!user.getPassword().equals(user.getConfirmPassword())) {
+                    errors.rejectValue("confirmPassword", "user.profile.invalid.confirmpassword", "The passwords do not match.");
+                }
             }
             if (user.getPhone() != null && user.getPhone().length() > MAX_LENGTH_PHONE) {
                 errors.rejectValue("phone", "user.profile.invalid.length.phone", new Byte[]{MAX_LENGTH_PHONE} ,

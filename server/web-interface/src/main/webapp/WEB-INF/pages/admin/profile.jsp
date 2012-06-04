@@ -25,12 +25,12 @@
         </div>
         <div class="field-holder">
             <form:label path="password">New password:</form:label>
-            <form:password path="password" showPassword="true"/>
+            <form:password path="password"/>
             <form:errors path="password" cssClass="errorblock" cssStyle="font-weight: normal;"/>
         </div>
         <div class="field-holder">
             <form:label path="confirmPassword">Confirm password:</form:label>
-            <form:password path="confirmPassword" showPassword="true"/>
+            <form:password path="confirmPassword"/>
             <form:errors path="confirmPassword" cssClass="errorblock" cssStyle="font-weight: normal;"/>
         </div>
         <div class="field-holder">
@@ -46,14 +46,14 @@
                     <a href="javascript:void(0);" onclick="unlink('facebook')" class="unlink">Unlink</a>
                 </p>
             </li>
-            <li class="fb-btn" id="fb_Btn" ><i class="icon"></i><a id="connectToFB" href="javascript:void(0);" onclick="linkFacebook()" >Connect with Facebook</a></li>
+            <li class="fb-btn" id="fb_Btn" ><i class="icon"></i><a id="connectToFB" href="javascript:void(0);" onclick="linkFacebook();" >Connect with Facebook</a></li>
             <li class="vk-btn linked" id="vk_Btn_Linked" style="display: none;">
                 <i class="icon" ></i>
                 <p>VKontakte is linked to Like Labs.
                     <a href="javascript:void(0);" onclick="unlink('vkontakte')" class="unlink">Unlink</a>
                 </p>
             </li>
-            <li class="vk-btn" id="vk_Btn"><i class="icon"></i> <a id="connectToVK"href="javascript:void(0);" onclick="linkVKontacte()">Connect with VK</a></li>
+            <li class="vk-btn" id="vk_Btn"><i class="icon"></i> <a id="connectToVK" href="javascript:void(0);" onclick="linkVKontacte();">Connect with VK</a></li>
         </ul>
     </div>
     <div class="clear"></div>

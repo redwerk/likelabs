@@ -172,8 +172,8 @@ public class UserContentController {
     public String submitSettings(ModelMap model, @PathVariable Long userId,
                      @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
         try {
-            User u = userService.getUser(userId);
-            userService.updateUser(userId, new UserData(user.getPhone(), user.getPassword(), user.getEmail(), user.getPublishInSN(), false, user.getEnabledEvents()));
+            User userOldData = userService.getUser(userId);
+            userService.updateUser(userId, new UserData(userOldData.getPhone(), userOldData.getPassword(), userOldData.getEmail(), user.getPublishInSN(), false, user.getEnabledEvents()));
             status.setComplete();
             model.clear();
         } catch (Exception e) {

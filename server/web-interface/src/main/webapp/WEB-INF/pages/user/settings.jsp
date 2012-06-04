@@ -37,9 +37,6 @@ $(document).ready(function(){
         </div>
         <div class="clear"></div>
     </div>
-        <form:hidden path="phone"/>
-        <form:hidden path="email"/>
-        <form:hidden path="password"/>
     </form:form>
 </div>
 
