@@ -30,12 +30,16 @@
         </div>
         <div class="field-holder">
             <form:label path="confirmPassword">Confirm password:</form:label>
-            <form:password path="confirmPassword" />
+            <form:password path="confirmPassword" showPassword="true" />
             <form:errors path="confirmPassword" cssClass="errorblock" cssStyle="font-weight: normal;"/>
         </div>
         <div class="field-holder">
             <form:button  class="btn btn-success save" type="submit">Save</form:button> or &nbsp;<a href="/user/${userId}">Cancel</a>
         </div>
+            <form:hidden path="publishInSN"/>
+            <form:hidden path="eventReviewCreated"/>
+            <form:hidden path="eventClientReviewCreated"/>
+            <form:hidden path="eventReviewApproved"/>
     </form:form>
     <div class="right-col">
         <sec:authorize access="not hasRole('ROLE_SYSTEM_ADMIN')">

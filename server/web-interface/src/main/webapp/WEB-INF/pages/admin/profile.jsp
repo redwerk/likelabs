@@ -12,7 +12,7 @@
 <div id="content">
     <h1>Edit Your Profile</h1>
     <form:form modelAttribute="user" class="cmxform profile" method="POST">
-        <form:hidden path="id" disabled="true"/>
+        <form:hidden path="id"/>
         <div class="field-holder">
             <form:label path="phone">Phone Number:</form:label>
             <form:input path="phone" />
@@ -30,7 +30,7 @@
         </div>
         <div class="field-holder">
             <form:label path="confirmPassword">Confirm password:</form:label>
-            <form:password path="confirmPassword" />
+            <form:password path="confirmPassword" showPassword="true"/>
             <form:errors path="confirmPassword" cssClass="errorblock" cssStyle="font-weight: normal;"/>
         </div>
         <div class="field-holder">

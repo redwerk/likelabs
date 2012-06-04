@@ -216,17 +216,17 @@
                                 <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/user/${userId}/profile"><span class="mark profile"><span></span></span>Profile</a></li>
                             </ul>
                         </c:when>
-                        <c:when test="${cabinet eq 'admin'}">
-                            <ul class="menu">
-                                <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/admin/companies"><span class="mark feed"><span></span></span>Companies</a></li>
-                                <li class=' <c:if test="${page eq 'users'}">active</c:if>'><a href="/admin/users"><span class="mark dashboard"><span></span></span>Users</a></li>
-                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/admin/profile"><span class="mark profile"><span></span></span>Profile</a></li>
-                                <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/admin/settings"><span class="mark company"><span></span></span>Settings</a></li>
-                            </ul>
-                        </c:when>
                         <c:otherwise>
                             <%-- another--%>
                         </c:otherwise>
                     </c:choose>
+                </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                    <ul class="menu">
+                        <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/admin/companies"><span class="mark feed"><span></span></span>Companies</a></li>
+                        <li class=' <c:if test="${page eq 'users'}">active</c:if>'><a href="/admin/users"><span class="mark dashboard"><span></span></span>Users</a></li>
+                        <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/admin/profile"><span class="mark profile"><span></span></span>Profile</a></li>
+                        <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/admin/settings"><span class="mark company"><span></span></span>Settings</a></li>
+                    </ul>
                 </sec:authorize>
             </div>

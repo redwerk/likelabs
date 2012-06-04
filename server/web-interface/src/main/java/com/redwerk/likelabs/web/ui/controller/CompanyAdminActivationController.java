@@ -11,6 +11,7 @@ import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
+import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,7 +98,7 @@ public class CompanyAdminActivationController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String activateAdminPost(ModelMap model, HttpSession session, HttpServletRequest request, HttpServletResponse response,
+    public String activateAdminPost(ModelMap model, HttpServletRequest request, HttpServletResponse response,
                                     @RequestParam("userId") Long userId,
                                     @RequestParam("code") String confirmCode,
                                     @RequestParam("password") String password) {
@@ -110,6 +111,7 @@ public class CompanyAdminActivationController {
                     new SecurityContextLogoutHandler().logout(request, response, auth);
                     rememberMeServices.loginFail(request, response);
                 }
+                HttpSession session = request.getSession(true);
                 session.setAttribute(PARAM_SESSION_USERID, userId);
                 session.setAttribute(PARAM_SESSION_PASSWORD, password);
                 return "redirect:/companyadmin/activate/end";
@@ -182,6 +184,11 @@ public class CompanyAdminActivationController {
         } catch (AbsentCompanyException e) {
             log.error(e,e);
             return "redirect:/";
+        } catch (AccessTokenExpiredException e) {
+            model.put(RESPONSE_KEY_SUCCESS, false);
+            model.put(RESPONSE_KEY_MESSAGE, "Old attached account. Reattach accounts.");
+            log.error(e,e);
+            return VIEW_END_ACTIVATE;
         }
         return VIEW_SUCCESS_ACTIVATE;
     }

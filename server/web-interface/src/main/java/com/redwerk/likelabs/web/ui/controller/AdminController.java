@@ -11,6 +11,7 @@ import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.web.ui.controller.dto.ProfileData;
+import com.redwerk.likelabs.web.ui.controller.dto.UserDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +133,7 @@ public class AdminController {
     @RequestMapping(value="/profile")
     public String profile(ModelMap model) {
         User user = userService.getUser(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()));
-        model.put("profile", new ProfileData(user.getPhone(), "", user.getEmail()));
+        model.put("user", new UserDto(user));
         model.put("cabinet", "admin");
         model.put("page", "profile");
         return "admin/profile";

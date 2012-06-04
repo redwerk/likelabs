@@ -42,8 +42,7 @@ public class UserProfileController {
     @RequestMapping(method = RequestMethod.GET)
     public String initForm(ModelMap model, @PathVariable Integer userId) {
 
-        User u = userService.getUser(userId);
-        UserDto user = new UserDto(u.getId(), u.getPhone(), u.getEmail(), u.getPassword(), u.getPassword());
+        UserDto user = new UserDto(userService.getUser(userId));
         model.put("user", user);
         model.put("page", "profile");
         model.put("cabinet", "user");
@@ -60,7 +59,7 @@ public class UserProfileController {
             model.put("cabinet", "user");
             return VIEW_USER_PROFILE;
         }
-        userService.updateUser(userId, new UserData(user.getPhone(), user.getPassword(), user.getEmail(), true, false, new HashSet<EventType>()));
+        userService.updateUser(userId, new UserData(user.getPhone(), user.getPassword(), user.getEmail(), user.getPublishInSN(), false, user.getEnabledEvents()));
         status.setComplete();
         model.clear();
         return "redirect:/user/" + userId;
