@@ -16,8 +16,7 @@ public class UserData {
 
     private final Set<EventType> enabledEvents;
 
-    public UserData(String phone, String password, String email, boolean publishInSN, boolean notifyIfClient,
-                    Set<EventType> enabledEvents) {
+    public UserData(String phone, String password, String email, boolean publishInSN, Set<EventType> enabledEvents) {
         this.phone = phone;
         this.password = password;
         this.email = email;

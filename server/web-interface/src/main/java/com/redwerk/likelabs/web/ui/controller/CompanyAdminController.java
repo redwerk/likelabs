@@ -82,7 +82,6 @@ public class CompanyAdminController {
                     StringUtils.isBlank(profileData.getPassword()) ? user.getPassword() : profileData.getPassword(),
                     profileData.getEmail(),
                     user.isPublishInSN(),
-                    false,
                     new HashSet<EventType>()));
             return COMPANIES_REDIRECT_URL;
         } else {

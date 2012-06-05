@@ -233,7 +233,7 @@ public class PublicContentController {
 
         ServletOutputStream out = null;
         try {
-            Photo photo = photoService.getPhotos(photoId);
+            Photo photo = photoService.getPhoto(photoId);
             if (photo == null) return;
             response.setContentType("image");
             out = response.getOutputStream();

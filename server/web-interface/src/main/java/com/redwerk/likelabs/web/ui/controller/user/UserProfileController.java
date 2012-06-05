@@ -62,7 +62,7 @@ public class UserProfileController {
         }
         User userOldData = userService.getUser(userId);
         String password = StringUtils.isBlank(user.getPassword()) ? userOldData.getPassword() : user.getPassword();
-        userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), false, userOldData.getEnabledEvents()));
+        userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
         status.setComplete();
         model.clear();
         return "redirect:/user/" + userId;

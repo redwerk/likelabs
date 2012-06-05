@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-@XmlType(name="hjhjkh")
 @XmlRootElement(name="review")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ReviewPrototype {

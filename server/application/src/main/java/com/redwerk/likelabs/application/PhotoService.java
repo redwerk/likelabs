@@ -9,7 +9,7 @@ public interface PhotoService {
 
     List<Photo> getPhotos(long userId, PhotoStatus photoStatus);
 
-    Photo getPhotos(long photoId);
+    Photo getPhoto(long photoId);
 
     void updatePhoto(long photoId, PhotoStatus photoStatus);
 

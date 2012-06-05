@@ -7,6 +7,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.base.CharMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,13 +35,18 @@ public class ReviewsResource {
     @Consumes(MediaType.APPLICATION_XML)
     public void addReview(ReviewPrototype reviewProto) {
         LOG.info("got new review to create: {}", reviewProto);
-        Review review = reviewService.createReview(tabletId, reviewProto.getAuthorPhone(), reviewProto.getText(), 
+        Review review = reviewService.createReview(tabletId, getNormalizedPhone(reviewProto.getAuthorPhone()),
+                reviewProto.getText(),
                 DataConverter.convertPhotos(reviewProto.getPhotos()), 
                 DataConverter.convertRecipients(reviewProto.getRecipients()));
-        if(review == null) {
+        if (review == null) {
             LOG.error("review creating failed, reviewProto: {}", reviewProto);
             throw new WebApplicationException();
         }
+    }
+    
+    private String getNormalizedPhone(String phone) {
+        return "+" + CharMatcher.DIGIT.retainFrom(phone);
     }
     
     @Path("{reviewId}")

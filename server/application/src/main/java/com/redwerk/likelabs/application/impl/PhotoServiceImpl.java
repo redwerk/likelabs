@@ -31,7 +31,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Photo getPhotos(long photoId) {
+    public Photo getPhoto(long photoId) {
         return photoRepository.get(photoId);
     }
 

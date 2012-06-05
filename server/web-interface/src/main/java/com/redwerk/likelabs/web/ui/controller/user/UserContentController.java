@@ -172,7 +172,8 @@ public class UserContentController {
                      @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
         try {
             User userOldData = userService.getUser(userId);
-            userService.updateUser(userId, new UserData(userOldData.getPhone(), userOldData.getPassword(), userOldData.getEmail(), user.getPublishInSN(), false, user.getEnabledEvents()));
+            userService.updateUser(userId, new UserData(userOldData.getPhone(), userOldData.getPassword(),
+                    userOldData.getEmail(), user.getPublishInSN(), user.getEnabledEvents()));
             status.setComplete();
             model.clear();
         } catch (Exception e) {
