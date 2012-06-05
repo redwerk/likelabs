@@ -2,6 +2,7 @@ package com.redwerk.likelabs.application.notification;
 
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.messaging.SmsService;
+import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
@@ -60,7 +61,7 @@ public class RecipientNotifierImpl implements RecipientNotifier {
             emailService.sendMessage(email, messageService.getMessage(NOTIFICATION_SENDER),
                     messageService.getMessage(NOTIFICATION_SUBJECT), getMessageText(review, false));
         }
-        catch (SmsMessagingException e) {
+        catch (EmailMessagingException e) {
             LOGGER.error("cannot notify review recipient by email " + email, e);
             return false;
         }

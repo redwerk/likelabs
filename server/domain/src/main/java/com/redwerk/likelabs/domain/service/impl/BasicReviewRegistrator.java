@@ -73,6 +73,14 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
         return review;
     }
 
+    private User getOrCreateUser(String phone) {
+        User user = userRepository.find(phone);
+        if (user == null) {
+            user = userRegistrator.registerUser(phone);
+        }
+        return user;
+    }
+
     private Photo processPhotosAndGetSelected(User author, List<PhotoData> photos) {
         Photo selectedPhoto = null;
         for (PhotoData photoData: photos) {
@@ -97,14 +105,6 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
             review.addRecipient(
                     recipientFactory.createReviewRecipient(review, recipientData.getType(), recipientData.getAddress()));
         }
-    }
-
-    private User getOrCreateUser(String phone) {
-        User user = userRepository.find(phone);
-        if (user == null) {
-            user = userRegistrator.registerUser(phone);
-        }
-        return user;
     }
 
 }

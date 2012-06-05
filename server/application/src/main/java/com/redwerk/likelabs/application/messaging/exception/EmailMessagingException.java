@@ -14,6 +14,6 @@ public class EmailMessagingException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "not send mail for address:" + email;
+        return "email was not sent to address: " + email;
     }
 }
