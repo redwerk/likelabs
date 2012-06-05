@@ -7,6 +7,7 @@ import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
+import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +25,10 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Photo> getPhotos(long userId, PhotoStatus photoStatus) {
+    public List<Photo> getPhotos(long userId, PhotoStatus photoStatus, Pager pager) {
+        Validate.isTrue((photoStatus != null) && (photoStatus != PhotoStatus.SELECTED), "wrong photo status");
         User user = userRepository.get(userId);
-        return photoRepository.findAll(user, photoStatus, Pager.ALL_RECORDS);
+        return photoRepository.findAll(user, photoStatus, pager);
     }
 
     @Override
