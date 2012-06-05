@@ -4,6 +4,7 @@
 #import "Review.h"
 #import "TextSampleReview.h"
 #import "PhotoSampleReview.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface SplashScreenController()
 @property (retain, nonatomic) RootController* rootController;
@@ -11,15 +12,20 @@
 @property (retain, nonatomic) NSArray* reviews;
 @property (retain, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) NSUInteger reviewIndex;
+@property (assign, nonatomic) BOOL pauseTimer;
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 - (NSArray*) getReviewsLayouts: (NSArray*) reviews;
 - (void) showNextReview;
+- (NSUInteger) nextReviewIndex;
 - (void) setLogo: (UIImage *)logo;
 @end;
 
 @implementation SplashScreenController
 
 static CGFloat const TIMER_INTERVAL = 1;
+static CGFloat const REVIEW_SPEED = 500; //pixel / second
+static CGFloat const MAX_ANGLE_PORTRAIT = 12;
+static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
 
 @synthesize startBtn = _startBtn;
 @synthesize socialButtonsView = _socialButtonsView;
@@ -30,6 +36,7 @@ static CGFloat const TIMER_INTERVAL = 1;
 @synthesize reviews = _reviews;
 @synthesize timer = _timer;
 @synthesize reviewIndex = _reviewIndex;
+@synthesize pauseTimer = _pauseTimer;
 
 @synthesize rootController = _rootController;
 
@@ -40,6 +47,8 @@ static CGFloat const TIMER_INTERVAL = 1;
         self.rootController = rootController;
         _dao = [[SettingsDao alloc] init];
         self.reviews = [self getReviewsLayouts: self.dao.promoReviews];
+        self.reviewIndex = 0;
+        self.pauseTimer = NO;
     }
     return self;
 }
@@ -49,11 +58,13 @@ static CGFloat const TIMER_INTERVAL = 1;
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self setLogo:self.dao.logo];
+//    self.reviewBox.layer.borderColor = [UIColor whiteColor].CGColor;
+//    self.reviewBox.layer.borderWidth = 1;
     [self layoutSubviewsForInterfaceOrientation:self.interfaceOrientation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    _timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(showNextReview) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(showNextReview) userInfo:nil repeats:YES];
     [self showNextReview];
 }
 
@@ -112,6 +123,7 @@ static CGFloat const TIMER_INTERVAL = 1;
         } else {
             layout = [[PhotoSampleReview alloc] initWithText:review.text andPhoto:((Photo*)[review.photos objectAtIndex:0]).image];
         }
+        
         [reviewLayouts addObject:layout];
         [layout release];
     }
@@ -119,15 +131,49 @@ static CGFloat const TIMER_INTERVAL = 1;
 }
 
 - (void) showNextReview {
+    if (self.pauseTimer) return;
+    UIView* bottomMostReview = [self.reviews objectAtIndex:self.nextReviewIndex];
+    [UIView animateWithDuration:TIMER_INTERVAL delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        bottomMostReview.alpha = 0;
+    } completion:^(BOOL finished) {}];
+    
     UIView* review = [self.reviews objectAtIndex:self.reviewIndex];
-    review.center = CGPointMake(self.reviewBox.frame.size.width/2, self.reviewBox.frame.size.height/2);
+    
+    
+    review.alpha = 1;    
+    review.transform = CGAffineTransformIdentity;
+    review.center = CGPointMake(self.reviewBox.frame.size.width/2, -review.frame.size.height/2);
     [self.reviewBox addSubview:review];
-    if (self.reviewIndex == self.reviews.count - 1) {
-        self.reviewIndex = 0;
-        [[self.reviewBox.subviews objectAtIndex:0] removeFromSuperview];
-    } else {
-        self.reviewIndex++;
-    }
+    CGSize reviewSize = review.frame.size;
+    CGSize boxSize = self.reviewBox.frame.size;
+    
+    CGFloat ty1 = reviewSize.height;
+    [UIView animateWithDuration: ty1 / REVIEW_SPEED delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{        
+        review.transform = CGAffineTransformMakeTranslation(0, ty1);
+    } completion:^(BOOL finished) {
+        CGFloat maxAlpha = (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? MAX_ANGLE_PORTRAIT : MAX_ANGLE_LANDSCAPE);
+        CGFloat alpha = (-maxAlpha + arc4random_uniform(maxAlpha*2)) * M_PI / 180.0;
+        CGFloat c = sqrtf(reviewSize.width * reviewSize.width + reviewSize.height * reviewSize.height);
+        CGFloat dx = c * cos(atanf(reviewSize.height / reviewSize.width ) - fabsf(alpha));
+        CGFloat dy = c * cos(atanf(reviewSize.width  / reviewSize.height) - fabsf(alpha));
+        
+        
+        CGFloat tx2 = - (boxSize.width - dx) / 2 + arc4random_uniform(boxSize.width - dx);
+        
+        CGFloat ddy = (dy - reviewSize.height) / 2;
+        CGFloat ty2 = ddy + arc4random_uniform(boxSize.height - dy/2 - reviewSize.height / 2 - ddy);
+        
+        [UIView animateWithDuration: sqrtf(tx2*tx2 + ty2*ty2) / REVIEW_SPEED delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            review.transform = CGAffineTransformTranslate(review.transform,tx2, ty2);
+            review.transform = CGAffineTransformRotate(review.transform, alpha);
+        } completion:^(BOOL finished) {}];
+    }]; 
+        
+    self.reviewIndex = self.nextReviewIndex;
+}
+
+- (NSUInteger) nextReviewIndex {
+    return (self.reviewIndex == self.reviews.count -1) ? 0 : self.reviewIndex + 1;
 }
 
 #pragma mark - Rotation
@@ -138,7 +184,15 @@ static CGFloat const TIMER_INTERVAL = 1;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    self.pauseTimer = YES;
+    for (UIView* view in self.reviewBox.subviews) {
+        [view removeFromSuperview];
+    }
     [self layoutSubviewsForInterfaceOrientation:toInterfaceOrientation];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    self.pauseTimer = NO;
 }
 
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation {
@@ -150,7 +204,7 @@ static CGFloat const TIMER_INTERVAL = 1;
         self.shareYourSmileImg.frame = CGRectMake(128, 125, 507, 51);
         self.shareYourSmileImg.image = [UIImage imageNamed:@"share_your_smile_portrait.png"];
         self.companyLogo.frame = CGRectMake(268, 17, 232, 85);
-        self.reviewBox.frame = CGRectMake(21, 511, 734, 495);
+        self.reviewBox.frame = CGRectMake(15, 500, 740, 500);
     } else { //LANDSCAPE
         background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splash_bg_landscape.png"]];
         self.startBtn.frame = CGRectMake(701, 444, 272, 272);
@@ -158,7 +212,7 @@ static CGFloat const TIMER_INTERVAL = 1;
         self.shareYourSmileImg.frame = CGRectMake(682, 180, 310, 98);
         self.shareYourSmileImg.image = [UIImage imageNamed:@"share_your_smile_landscape.png"];
         self.companyLogo.frame = CGRectMake(721, 47, 232, 85);
-        self.reviewBox.frame = CGRectMake(24, 32, 610, 710);
+        self.reviewBox.frame = CGRectMake(15, 20, 620, 720);
     }
     self.view.backgroundColor = background;
     [background release];
