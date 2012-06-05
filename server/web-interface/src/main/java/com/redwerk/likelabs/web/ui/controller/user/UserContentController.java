@@ -109,10 +109,10 @@ public class UserContentController {
             Pager pager = new Pager(page * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
             List<Photo> photos;
             if (statusFilter != null) {
-                photos = photoService.getPhotos(userId, statusFilter, Pager.ALL_RECORDS);
+                photos = photoService.getPhotos(userId, statusFilter, Pager.ALL_RECORDS).getItems();
             } else {
-                photos = photoService.getPhotos(userId, PhotoStatus.ACTIVE, Pager.ALL_RECORDS);
-                photos.addAll(photoService.getPhotos(userId, PhotoStatus.DELETED, Pager.ALL_RECORDS));
+                photos = photoService.getPhotos(userId, PhotoStatus.ACTIVE, Pager.ALL_RECORDS).getItems();
+                photos.addAll(photoService.getPhotos(userId, PhotoStatus.DELETED, Pager.ALL_RECORDS).getItems());
             }
             List<Map> data = new ArrayList<Map>();
             for (Photo photo : photos) {

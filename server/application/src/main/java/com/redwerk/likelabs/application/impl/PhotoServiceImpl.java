@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.PhotoService;
+import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
@@ -25,10 +26,13 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Photo> getPhotos(long userId, PhotoStatus photoStatus, Pager pager) {
+    public Report<Photo> getPhotos(long userId, PhotoStatus photoStatus, Pager pager) {
         Validate.isTrue((photoStatus != null) && (photoStatus != PhotoStatus.SELECTED), "wrong photo status");
         User user = userRepository.get(userId);
-        return photoRepository.findAll(user, photoStatus, pager);
+        return new Report<Photo>(
+                photoRepository.findAll(user, photoStatus, pager),
+                photoRepository.getCount(user, photoStatus)
+        );
     }
 
     @Override
