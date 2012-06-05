@@ -123,14 +123,13 @@ const float deletedPhotoAlpha = 0.5;
 
 - (void) previewTouched: (UITapGestureRecognizer*) gesture { 
     if(self.thumbnailsView.userInteractionEnabled) {
-        self.thumbnailsView.userInteractionEnabled = NO;
-        UIView* tappedImage = gesture.view;
-        tappedImage.userInteractionEnabled = NO;
-
-        if (tappedImage.subviews.count > 0 || tappedImage.alpha == deletedPhotoAlpha) {
+        if (gesture.view.subviews.count > 0 || gesture.view.alpha == deletedPhotoAlpha || (gesture.view
+            .tag-1)==self.review.reviewPhotoIndex) {
             return;
         }
-        [self selectThumbnail:tappedImage];
+        [self.thumbnailsView setUserInteractionEnabled:NO];
+        [gesture.view setUserInteractionEnabled:NO];
+        [self selectThumbnail:gesture.view];
         
     }
 }
@@ -151,25 +150,36 @@ const float deletedPhotoAlpha = 0.5;
 
     [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
         tappedImage.frame = CGRectMake(0, 0, tappedImage.frame.size.width * selectedScaleFactor, tappedImage.frame.size.height * selectedScaleFactor);
-    } completion:^(BOOL finished){   
-        self.thumbnailsView.userInteractionEnabled = YES;
-        btn.userInteractionEnabled = YES;
-        btn.center = CGPointMake(tappedImage.frame.size.width - 10, 10);
-        [btn addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
-        [tappedImage addSubview:btn];
+        tappedImage.layer.shadowPath = [UIBezierPath bezierPathWithRect:tappedImage.bounds].CGPath;
+    } completion:^(BOOL finished){  
+        if(finished) {
+            self.thumbnailsView.userInteractionEnabled = YES;
+            thumbnail.userInteractionEnabled = YES;
+            btn.userInteractionEnabled = YES;
+        }
+        
     }];
     
     tappedImage.center = oldCenter;
     [self.thumbnailsView bringSubviewToFront:tappedImage];
+    [tappedImage addSubview:btn];
+    btn.center = CGPointMake(tappedImage.frame.size.width - 10, 10);
+    [btn addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
 }
 
 - (void) resetThumbnails {
     for (UIImageView* thumbnail in self.thumbnailsView.subviews) {
         if (thumbnail.subviews.count > 0) {
             CGPoint center = thumbnail.center;
-            thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
+            [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
+                thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
+            } completion:^(BOOL finished){ 
+                thumbnail.userInteractionEnabled = YES; 
+            }];
+            //thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
             thumbnail.center = center;
-            thumbnail.userInteractionEnabled = YES;
+            
+            thumbnail.layer.shadowPath = [UIBezierPath bezierPathWithRect:thumbnail.bounds].CGPath;
             [thumbnail.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         }
     }
@@ -179,7 +189,6 @@ const float deletedPhotoAlpha = 0.5;
     if ([self selectNewPhotoBeforeDeletingPhotoAtIndex: sender.tag - 1]) {
         Photo* deletedPhoto = [self.review.photos objectAtIndex:sender.tag - 1];
         deletedPhoto.status = PhotoStatusDeleted;
-        
         [self dimThumbnail:[self.thumbnailsView viewWithTag:sender.tag]];
         [sender removeFromSuperview];
     }
@@ -230,6 +239,7 @@ const float deletedPhotoAlpha = 0.5;
     CGPoint oldCenter = self.imageView.center;
     self.imageView.frame = CGRectMake(0, 0, photo.size.width, photo.size.height);
     self.imageView.center = oldCenter;
+    self.imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.imageView.bounds].CGPath;
 }
 
 #pragma mark - Rotation
