@@ -35,10 +35,6 @@
     <sec:authorize access="not isAuthenticated()">
         <script type="text/javascript">
             function signIn() {
-                if ($('#username').val()[0] != "+") {
-                    $('#authfailed').html('<spring:message code="message.auth.failed"/>');
-                    return false;
-                }
                 var data = {
                     "j_username":$('#username').val(),
                     "j_password":$('#password').val()};

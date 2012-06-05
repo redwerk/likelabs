@@ -124,11 +124,9 @@
 
         <div class="filter-holder">
             <div style="margin-top: 0px; margin-left: 10px;" class="status-filter">
-                <input id="status_all" type="radio" name="status_filter" value="" checked="checked"/>
-                <input id="status_active" type="radio" name="status_filter" value="active"/>
+                <input id="status_active" type="radio" name="status_filter" value="active" checked="checked"/>
                 <input id="status_deleted" type="radio" name="status_filter" value="deleted"/>
 
-                <label class="button_filter" for="status_all">All</label>
                 <label class="button_filter" for="status_active">Active</label>
                 <label class="button_filter" for="status_deleted">Deleted</label>
             </div>

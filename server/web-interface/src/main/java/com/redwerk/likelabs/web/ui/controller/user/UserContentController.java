@@ -101,11 +101,10 @@ public class UserContentController {
         ModelMap response = new ModelMap();
         try {    
             PhotoStatus statusFilter = null;
-            if ("active".equals(status)) {
-                statusFilter = PhotoStatus.ACTIVE;
-            }
             if ("deleted".equals(status)) {
                 statusFilter = PhotoStatus.DELETED;
+            } else {
+                statusFilter = PhotoStatus.ACTIVE;
             } 
             Pager pager = new Pager(page * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
             List<Photo> photos;

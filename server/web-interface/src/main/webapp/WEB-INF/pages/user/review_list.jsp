@@ -169,7 +169,6 @@
     }
     
     function submitEditDialog(id){
-        $("#edit_feed_dialog").dialog("close");
         $.post("/user/${userId}/feed/"+ id +"/edit", $("#edit_feed_form").serialize(), function(response) {
             if (!response.success) {
                 errorDialog("Error edit review", response.message);
@@ -177,6 +176,7 @@
             }
             updateData(); 
         });
+        $("#edit_feed_dialog").dialog("close");
     }
 
     function removeReview(id) {
