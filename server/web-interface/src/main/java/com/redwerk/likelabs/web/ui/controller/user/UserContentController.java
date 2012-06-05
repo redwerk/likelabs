@@ -10,14 +10,12 @@ import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
-import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.ContentTypeFilter;
 import com.redwerk.likelabs.domain.model.review.Review;
-import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.review.SortingCriteria;
 import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
@@ -35,13 +33,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.expression.ParseException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -59,25 +57,31 @@ import org.springframework.web.bind.support.SessionStatus;
 @RequestMapping(value = "/user/{userId}")
 public class UserContentController {
 
-    private static final String VIEW_USER_PROFILE = "user/profile";
     private static final String VIEW_USER_PHOTOS = "user/photos";
     private static final String VIEW_USER_SETTINGS = "user/settings";
     private static final String VIEW_REVIEWS_LIST = "user/review_list";
     private static final int ITEMS_PER_PAGE = 8;
+
     @Autowired
     private CompanyService companyService;
+
     @Autowired
     private PointService pointService;
+
     @Autowired
     private ReviewService reviewService;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private PhotoService photoService;
+
     @Autowired
     private MessageTemplateService messageTemplateService;
     private final Logger log = LogManager.getLogger(getClass());
 
+    //@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN') or (hasRole('ROLE_USER') and #userId.toString() == authentication.name")
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public String cabinet(ModelMap model, @PathVariable Long userId) {
 
@@ -100,22 +104,14 @@ public class UserContentController {
 
         ModelMap response = new ModelMap();
         try {    
-            PhotoStatus statusFilter = null;
+            PhotoStatus statusFilter = PhotoStatus.ACTIVE;
             if ("deleted".equals(status)) {
                 statusFilter = PhotoStatus.DELETED;
-            } else {
-                statusFilter = PhotoStatus.ACTIVE;
             } 
             Pager pager = new Pager(page * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
-            List<Photo> photos;
-            if (statusFilter != null) {
-                photos = photoService.getPhotos(userId, statusFilter, Pager.ALL_RECORDS).getItems();
-            } else {
-                photos = photoService.getPhotos(userId, PhotoStatus.ACTIVE, Pager.ALL_RECORDS).getItems();
-                photos.addAll(photoService.getPhotos(userId, PhotoStatus.DELETED, Pager.ALL_RECORDS).getItems());
-            }
+            Report<Photo> photos = photoService.getPhotos(userId, statusFilter, pager);
             List<Map> data = new ArrayList<Map>();
-            for (Photo photo : photos) {
+            for (Photo photo : photos.getItems()) {
                 if (photo.getStatus().equals(PhotoStatus.ACTIVE) || photo.getStatus().equals(PhotoStatus.DELETED)) {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("id", photo.getId());
@@ -124,7 +120,7 @@ public class UserContentController {
                 }
             }
             response.put("data", data);
-            response.put("count", photos.size());
+            response.put("count", photos.getCount());
             response.put("success", true);
         } catch (Exception e) {
             log.error(e,e);

@@ -5,9 +5,11 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <http use-expressions="true" access-denied-page="/WEB-INF/pages/error/access-denied.jsp">
-
-        <intercept-url pattern="/admin*" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
+    <http use-expressions="true">
+      
+        <!--
+            <intercept-url pattern="/admin*" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
+        -->
         <form-login login-page="/index"
                             default-target-url="/dashboard"
                             authentication-success-handler-ref="authSuccessHandler"
@@ -17,10 +19,14 @@
                         logout-url="/logout"
                         logout-success-url="/index" />
         <anonymous key="LikeLabsWebSiteKey" username="0" granted-authority="ROLE_ANONYMOUS" />
-        <remember-me key="LikeLabsWebSiteKey"/>
-    </http>
 
+        <remember-me key="LikeLabsWebSiteKey" user-service-ref="rememberMeUserDetailsService"/>
+
+        <access-denied-handler error-page="/WEB-INF/pages/error/access-denied.jsp"/>
+
+    </http>
+    
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="securityUserDetailsService"/>
+        <authentication-provider user-service-ref="loginUserDetailsService"/>
     </authentication-manager>
 </beans:beans>
