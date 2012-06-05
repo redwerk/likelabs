@@ -84,12 +84,20 @@
                 <td><input type="text" name="name" id="add_company_name"/></td>
             </tr>
             <tr>
-                <td><label for="add_company_phone" style="width: 160px;">Administrator Phone: </label></td>
+                <td><label for="add_company_phone" style="width: 160px;">Company Phone: </label></td>
                 <td><input type="text" name="phone" id="add_company_phone"/></td>
             </tr>
             <tr>
-                <td><label for="add_company_email" style="width: 160px;">Administrator Email: </label></td>
+                <td><label for="add_company_email" style="width: 160px;">Company Email: </label></td>
                 <td><input type="text" name="email" id="add_company_email"/></td>
+            </tr>
+            <tr>
+                <td><label for="add_company_admin_phone" style="width: 160px;">Administrator Phone: </label></td>
+                <td><input type="text" name="admin_phone" id="add_company_admin_phone"/></td>
+            </tr>
+            <tr>
+                <td><label for="add_company_admin_email" style="width: 160px;">Administrator Email: </label></td>
+                <td><input type="text" name="admin_email" id="add_company_admin_email"/></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center; padding-top: 30px;">

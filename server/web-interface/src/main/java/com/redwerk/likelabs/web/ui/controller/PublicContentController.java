@@ -178,6 +178,7 @@ public class PublicContentController {
                 map.put("name", review.getAuthor().getName());
                 map.put("date", review.getCreatedDT());
                 map.put("point", review.getPoint().getAddress().getAddressLine1());
+                map.put("containsPhoto", review.getPhoto() != null);
                 map.put("id", review.getId());
                 data.add(map);
             }

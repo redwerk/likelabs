@@ -263,6 +263,7 @@ public class CompanyAdminController {
             reviewJson.put("published", review.isPublishedInCompanySN());
             reviewJson.put("promo", sampleReviews.contains(review) ? true : false);
             reviewJson.put("point", review.getPoint().getAddress().getAddressLine1());
+            reviewJson.put("containsPhoto", review.getPhoto() != null);
             reviewJson.put("photo", MessageFormat.format(PHOTO_REVIEW_LINK_TEMPLATE, String.valueOf(review.getId())));
             result.add(reviewJson);
         }

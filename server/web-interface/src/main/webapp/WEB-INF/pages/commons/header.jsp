@@ -122,18 +122,15 @@
             <div class="right signin_block">
                 <sec:authorize access="isAuthenticated()">
                 <div style=" float: right;">
-                        <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                            <button style="width: 130px;" class="btn btn-success" onclick="document.location.href='/admin'">Admin Cabinet</button>
-                        </sec:authorize>
-                        <sec:authorize access="hasRole('ROLE_USER,ROLE_COMPANY_ADMIN')">
-                            <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
-                        </sec:authorize>
-                        <sec:authorize access="hasRole('ROLE_USER')">
-                            <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
-                        </sec:authorize>
-                        &nbsp;
-                        &nbsp;
-                        <button class="btn btn-success" style="width: 100px; " onclick="document.location.href='/logout'">Logout</button>
+                    <sec:authorize access="hasRole('ROLE_USER,ROLE_COMPANY_ADMIN')">
+                        <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
+                    </sec:authorize>
+                    <sec:authorize access="hasRole('ROLE_USER')">
+                        <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
+                    </sec:authorize>
+                    &nbsp;
+                    &nbsp;
+                    <button class="btn btn-success" style="width: 100px; " onclick="document.location.href='/logout'">Logout</button>
                 </div>
                 </sec:authorize>
                 <sec:authorize access="isAnonymous()" >
@@ -187,7 +184,7 @@
                         <li class=' <c:if test="${page eq 'contact_us'}">active</c:if>'><a href="/contact"><span class="mark feed"><span></span></span>Contact Us</a></li>
                     </ul>
                 </sec:authorize>
-                <sec:authorize access="hasAnyRole('ROLE_USER,ROLE_COMPANY_ADMIN')">
+                <sec:authorize access="hasAnyRole('ROLE_USER,ROLE_COMPANY_ADMIN,ROLE_SYSTEM_ADMIN')">
                     <c:choose>
                         <c:when test="${cabinet eq 'company_admin'}">
                             <ul class="menu">
@@ -212,17 +209,17 @@
                                 <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/user/${userId}/profile"><span class="mark profile"><span></span></span>Profile</a></li>
                             </ul>
                         </c:when>
+                        <c:when test="${cabinet eq 'admin'}">
+                            <ul class="menu">
+                                <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/admin/companies"><span class="mark feed"><span></span></span>Companies</a></li>
+                                <li class=' <c:if test="${page eq 'users'}">active</c:if>'><a href="/admin/users"><span class="mark dashboard"><span></span></span>Users</a></li>
+                                <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/admin/profile"><span class="mark profile"><span></span></span>Profile</a></li>
+                                <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/admin/settings"><span class="mark company"><span></span></span>Settings</a></li>
+                            </ul>
+                        </c:when>
                         <c:otherwise>
                             <%-- another--%>
                         </c:otherwise>
                     </c:choose>
-                </sec:authorize>
-                <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                    <ul class="menu">
-                        <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/admin/companies"><span class="mark feed"><span></span></span>Companies</a></li>
-                        <li class=' <c:if test="${page eq 'users'}">active</c:if>'><a href="/admin/users"><span class="mark dashboard"><span></span></span>Users</a></li>
-                        <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/admin/profile"><span class="mark profile"><span></span></span>Profile</a></li>
-                        <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/admin/settings"><span class="mark company"><span></span></span>Settings</a></li>
-                    </ul>
                 </sec:authorize>
             </div>

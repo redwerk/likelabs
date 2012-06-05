@@ -113,6 +113,7 @@ public class CompanyController {
                 map.put("message", review.getMessage());
                 map.put("name", review.getAuthor().getName());
                 map.put("date", review.getCreatedDT());
+                map.put("containsPhoto", review.getPhoto() != null);
                 if (review.getPoint().getAddress() != null) {
                     map.put("point", review.getPoint().getAddress().getAddressLine1());
                 }

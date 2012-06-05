@@ -829,24 +829,24 @@ input:focus, textarea:focus {
     display: block;
     z-index: 20;
 }
-.item-wrapper table{
+.item-wrapper .item-cmd table{
     margin: 15px auto 0 auto;
     width: 290px;
      
 }
-.item-wrapper table tr{
+.item-wrapper .item-cmd table tr{
     background: url("/static/images/black_10.png");
     height: 52px;
 }
-.item-wrapper table tr.odd {
+.item-wrapper .item-cmd table tr.odd {
      background: url("/static/images/black_20.png");
 }
 
-.item-wrapper table tr a.comments {
+.item-wrapper .item-cmd table tr a.comments {
     color: #38bbec;
 }
 
-.item-wrapper table tr td{
+.item-wrapper .item-cmd table tr td{
    padding: 0 10px;
 }
 
@@ -858,7 +858,7 @@ input:focus, textarea:focus {
     position: relative;
     padding: 10px 15px;
     
-    height: 330;
+    height: 330px;
 }
 
 .item-data .photo {
