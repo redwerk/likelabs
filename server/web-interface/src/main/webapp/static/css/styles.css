@@ -894,3 +894,8 @@ input[type=submit], input[type=button], button {
 .settings_table td select {
     width: 150px;
 }
+
+.review_table td {
+    padding: 5px;
+    vertical-align: top;
+}

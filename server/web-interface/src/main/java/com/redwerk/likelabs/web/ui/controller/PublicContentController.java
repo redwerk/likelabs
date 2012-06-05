@@ -279,4 +279,10 @@ public class PublicContentController {
        Pager pager = new Pager(page * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
        return new ReviewQueryData(pointIds, fromDate, toDate, contentType, null, null, pager, sort);
     }
+
+    @RequestMapping(value = {"/review/{reviewId}/"}, method = RequestMethod.GET)
+    public String reviewDetails(ModelMap model) {
+        return "review_details";
+    }
+
 }

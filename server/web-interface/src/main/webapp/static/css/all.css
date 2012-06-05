@@ -493,6 +493,14 @@ input, textarea {
     margin-bottom: 20px;
 }
 
+#content h2{
+    font-family: 'Lobster', Arial, Verdana, Helvetica, Sans-serif;
+    font-size: 20pt;
+    border-bottom: #d5dbe1 solid 1px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
 .social-buttons{
     
 }
