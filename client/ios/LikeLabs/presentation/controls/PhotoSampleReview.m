@@ -26,6 +26,8 @@
         self.label.font = [UIFont fontWithName:@"BadScript-Regular.otf" size:20];
         self.label.textAlignment = UITextAlignmentCenter;
         self.label.text = text;
+        self.label.numberOfLines = 2;
+        self.label.lineBreakMode = UILineBreakModeTailTruncation;
         [self addSubview:self.label];
         
         self.clipsToBounds = NO;

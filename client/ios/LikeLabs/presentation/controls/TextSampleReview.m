@@ -11,6 +11,8 @@
         self.textColor = [UIColor darkGrayColor];
         self.font = [UIFont fontWithName:@"BadScript-Regular.otf" size:20];
         self.textAlignment = UITextAlignmentCenter;
+        self.lineBreakMode = UILineBreakModeTailTruncation;
+        self.numberOfLines = 6;
         self.text = text;
         
         self.clipsToBounds = NO;

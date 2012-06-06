@@ -28,7 +28,7 @@ static NSUInteger const STATUS_LOGOUT_OK = 204;
 - (BOOL)checkLogin:(NSString*)login andPassword:(NSString*)password {
     ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[URLUtil getLoginUrl]];
     [request addRequestHeader:CONTENT_TYPE_KEY value:CONTENT_TYPE_VALUE];
-    [request appendPostData:[[self getXmlCredentialsFromLogin:login andPassword:password] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request appendPostData:[[self getXmlCredentialsFromLogin:@"0004" andPassword:@"0004in"] dataUsingEncoding:NSUTF8StringEncoding]];
     [request startSynchronous];
     
     if (request.error) {

@@ -19,7 +19,7 @@ NSString *const kPrimaryPhoneDidCancel = @"PrimaryPhoneDidCancel";
 NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
 static NSString *const PHONE_FORMAT = @"8(___)___-____";
 static NSString *const PHONE_DIGIT_MASK = @"_";
-static NSString *const PHONE_VALIDATION_PATTERN = @"^8\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
+static NSString *const PHONE_VALIDATION_PATTERN = @"^\\+38\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
 int cursorPos;
 
 
@@ -116,6 +116,7 @@ int cursorPos;
     
     textField.text = number;
     NSRange currentCursorPos = [self convertFromPhoneToTextFieldRange:NSMakeRange(cursorPos, 1)];
+    NSLog(@"currentCP: %d", currentCursorPos.location);
     UITextPosition* newPosition = [textField positionFromPosition:textField.beginningOfDocument offset:currentCursorPos.location];
     textField.selectedTextRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
     
@@ -165,32 +166,36 @@ int cursorPos;
     
     cursorPos = 0;
     NSMutableString* phoneNumber = [NSMutableString stringWithString:phone];
-    cursorPos = [self convertFromTextFieldToPhoneRange:range].location + 1;
+    cursorPos = [self convertFromTextFieldToPhoneRange:range].location;
     if (cursorPos > phone.length)
         cursorPos = phone.length;
     
     if (string.length == 1)
     {
-        if ([self isNumber:string])
-            [phoneNumber insertString:string atIndex:cursorPos+[self getFirstNonMaskDigitPositionInPhone] - 1];
-        else
+        if ([self isNumber:string]) {
+            NSUInteger i = (cursorPos >= phoneNumber.length) ? phoneNumber.length : cursorPos;
+            [phoneNumber insertString:string atIndex:i];
+            cursorPos = i;
+        } else {
             cursorPos--;
+        }
     }
     else
     {
         if (![self charIsMask:[PHONE_FORMAT characterAtIndex:range.location]])
             cursorPos--;
-        if (range.location > 1) {
-            [phoneNumber deleteCharactersInRange:NSMakeRange((cursorPos == phone.length) ? cursorPos-1 : cursorPos, 1)];
+        if (range.location > [self getFirstPlaceholerPositionInMask] - 1) {
+            NSUInteger i = (cursorPos >= phone.length) ? phone.length - 1 : cursorPos;
+            [phoneNumber deleteCharactersInRange:NSMakeRange(i, 1)];
+            cursorPos = (cursorPos >= phone.length) ? i - 1 : cursorPos - 1;
         }
-        cursorPos = (cursorPos == phone.length) ? cursorPos-2 : cursorPos-1;
     }
     
     phone = phoneNumber;
     
     NSMutableString* number = [NSMutableString stringWithString:PHONE_FORMAT];
     
-    for (int i = [self getFirstNonMaskDigitPositionInPhone]; i < phone.length; i++)
+    for (int i = [self getStartingDigitsCountInMask]; i < phone.length; i++)
     {
         NSRange nextNumber = [number rangeOfString:PHONE_DIGIT_MASK];
         if (nextNumber.location == NSNotFound)
@@ -212,6 +217,7 @@ int cursorPos;
         if ([self charIsMask:[PHONE_FORMAT characterAtIndex:i]])
             pos++;
     }
+    pos += [self getStartingDigitsCountInMask];
     return NSMakeRange(pos, 1);
 }
 
@@ -219,15 +225,15 @@ int cursorPos;
 {
     if (range.location == 0 || range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location)
         return NSMakeRange([self getFirstPlaceholerPositionInMask],1);
+    
     int pos = 0;
-    int phonePos = range.location;
+    int phonePos = range.location - [self getStartingDigitsCountInMask]+1;
     while (phonePos && pos < PHONE_FORMAT.length) {
         if ([self charIsMask:[PHONE_FORMAT characterAtIndex:pos]])
             phonePos--;
         pos++;
     }
-    
-    return NSMakeRange(pos, 1);
+    return NSMakeRange(pos ? pos : [self getFirstPlaceholerPositionInMask], 1);
 }
 
 - (BOOL)isNumber:(NSString*)string
@@ -244,7 +250,7 @@ int cursorPos;
     return [PHONE_FORMAT rangeOfString:PHONE_DIGIT_MASK].location;
 }
 
-- (NSUInteger) getFirstNonMaskDigitPositionInPhone { //in 8(___)___-____ returns 1; in +38(___)___-____ returns 2;
+- (NSUInteger) getStartingDigitsCountInMask { //in 8(___)___-____ returns 1; in +38(___)___-____ returns 2;
     int pos = 0;
     for (int i = 0; i < PHONE_FORMAT.length; i++)
     {
