@@ -1,7 +1,9 @@
 #import "PhotoOverlayController.h"
+#import "SettingsDao.h"
 
 @interface PhotoOverlayController ()
 @property (nonatomic, assign) BOOL textPlaceholderActive;
+@property (nonatomic, retain) NSString* phonePrefix;
 
 - (BOOL) validatePhone;
 - (void) layoutSubviewsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
@@ -17,9 +19,9 @@
 @implementation PhotoOverlayController
 NSString *const kPrimaryPhoneDidCancel = @"PrimaryPhoneDidCancel";
 NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
-static NSString *const PHONE_FORMAT = @"8(___)___-____";
+static NSString *const PHONE_FORMAT = @"(___)___-____";
 static NSString *const PHONE_DIGIT_MASK = @"_";
-static NSString *const PHONE_VALIDATION_PATTERN = @"^\\+38\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
+//static NSString *const PHONE_VALIDATION_PATTERN = @"^\\+38\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
 int cursorPos;
 
 
@@ -27,11 +29,15 @@ int cursorPos;
 @synthesize buttonsView = _buttonsView;
 @synthesize phone = _phone;
 @synthesize textPlaceholderActive = _textPlaceholderActive;
+@synthesize phonePrefix = _phonePrefix;
 
 #pragma mark - Initialization
 - (id) initWithPhone:(NSString*) phone {
     if (self = [super init]) {
         self.phone = phone;
+        SettingsDao* dao = [[SettingsDao alloc] init];
+        self.phonePrefix = dao.phonePrefix;
+        [dao release];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
     }
     return self;
@@ -45,7 +51,9 @@ int cursorPos;
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     if (self.phone && self.phone.length) {
-        self.textField.text = self.phone;
+        NSMutableString *phone = [NSMutableString stringWithString:self.phone];
+        [phone deleteCharactersInRange:NSMakeRange(0, self.phonePrefix.length)];
+        self.textField.text = phone;
         self.textPlaceholderActive = NO;
     } else {
         self.textField.text = PHONE_FORMAT;
@@ -69,6 +77,7 @@ int cursorPos;
     [self setTextField:nil];
     [self setButtonsView:nil];
     [self setPhone:nil];
+    [self setPhonePrefix:nil];
     [super viewDidUnload];
 }
 
@@ -76,6 +85,7 @@ int cursorPos;
     [_textField release];
     [_buttonsView release];
     [_phone release];
+    [_phonePrefix release];
     [super dealloc];
 }
 
@@ -116,7 +126,6 @@ int cursorPos;
     
     textField.text = number;
     NSRange currentCursorPos = [self convertFromPhoneToTextFieldRange:NSMakeRange(cursorPos, 1)];
-    NSLog(@"currentCP: %d", currentCursorPos.location);
     UITextPosition* newPosition = [textField positionFromPosition:textField.beginningOfDocument offset:currentCursorPos.location];
     textField.selectedTextRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
     
@@ -139,9 +148,10 @@ int cursorPos;
 }
 
 - (BOOL) validatePhone {
-    NSRegularExpression* regExp = [NSRegularExpression regularExpressionWithPattern:PHONE_VALIDATION_PATTERN options:NSRegularExpressionCaseInsensitive error:nil];
-    if (![regExp numberOfMatchesInString:self.textField.text options:0 range:NSMakeRange(0, self.textField.text.length)]){
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Phone should be in format 8(XXX)XXX-XXXX" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+//    NSRegularExpression* regExp = [NSRegularExpression regularExpressionWithPattern:PHONE_VALIDATION_PATTERN options:NSRegularExpressionCaseInsensitive error:nil];
+//    if (![regExp numberOfMatchesInString:self.textField.text options:0 range:NSMakeRange(0, self.textField.text.length)]){
+    if([self.textField.text rangeOfString:PHONE_DIGIT_MASK].location != NSNotFound) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid phone format" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         [alert release];
         return NO;
@@ -150,7 +160,9 @@ int cursorPos;
 }
 
 - (void) savePhone {
-    self.phone = self.textField.text;
+    NSMutableString *phone = [NSMutableString stringWithString:self.phonePrefix];
+    [phone appendString:self.textField.text];
+    self.phone = phone;
     [[NSNotificationCenter defaultCenter] postNotificationName:kPrimaryPhoneDone object:nil];    
 }
 
@@ -222,9 +234,14 @@ int cursorPos;
 }
 
 - (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range
-{
-    if (range.location == 0 || range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location)
+{    
+    if (range.location == 0) {
+        return NSMakeRange(2, 1);
+    }
+    if (range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location) {
         return NSMakeRange([self getFirstPlaceholerPositionInMask],1);
+    }
+    
     
     int pos = 0;
     int phonePos = range.location - [self getStartingDigitsCountInMask]+1;
@@ -233,7 +250,7 @@ int cursorPos;
             phonePos--;
         pos++;
     }
-    return NSMakeRange(pos ? pos : [self getFirstPlaceholerPositionInMask], 1);
+    return NSMakeRange(pos/* ? pos : [self getFirstPlaceholerPositionInMask]*/, 1);
 }
 
 - (BOOL)isNumber:(NSString*)string

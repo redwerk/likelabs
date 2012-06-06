@@ -11,6 +11,7 @@
 @property (nonatomic, retain) NSString* apiKey;
 @property (nonatomic, retain) NSArray* promoReviews;
 @property (nonatomic, readonly) NSArray* textReviews;
+@property (nonatomic, readonly) NSString* phonePrefix;
 
 - (void) setUserDefaults;
 @end

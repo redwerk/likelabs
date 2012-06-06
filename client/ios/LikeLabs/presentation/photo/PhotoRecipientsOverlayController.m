@@ -1,5 +1,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "PhotoRecipientsOverlayController.h"
+#import "SettingsDao.h"
 
 @interface PhotoRecipientsOverlayController ()
 @property (nonatomic, assign) ContactType contactType;
@@ -19,9 +20,9 @@
 NSString *const kRecipientsDidCancel = @"RecipientsDidCancel";
 NSString *const kRecipientsDone = @"RecipientsDone";
 NSUInteger const BTN_TAG_OFFSET = 50;
-static NSString *const PHONE_FORMAT = @"+38(___)___-____";
+static NSString *const PHONE_FORMAT = @"(___)___-____";
 static NSString *const PHONE_DIGIT_MASK = @"_";
-static NSString *const PHONE_VALIDATION_PATTERN = @"^\\+38\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
+//static NSString *const PHONE_VALIDATION_PATTERN = @"^\\+38\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
 int cursorPos;
 
 @synthesize recipientsView;
@@ -169,9 +170,10 @@ int cursorPos;
 }
 
 - (BOOL) validatePhone {
-    NSRegularExpression* regExp = [NSRegularExpression regularExpressionWithPattern:PHONE_VALIDATION_PATTERN options:NSRegularExpressionCaseInsensitive error:nil];
-    if (![regExp numberOfMatchesInString:self.recipientContactField.text options:0 range:NSMakeRange(0, self.recipientContactField.text.length)]){
-        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Phone should be in format 8(XXX)XXX-XXXX" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+//    NSRegularExpression* regExp = [NSRegularExpression regularExpressionWithPattern:PHONE_VALIDATION_PATTERN options:NSRegularExpressionCaseInsensitive error:nil];
+//    if (![regExp numberOfMatchesInString:self.recipientContactField.text options:0 range:NSMakeRange(0, self.recipientContactField.text.length)]){
+    if([self.recipientContactField.text rangeOfString:PHONE_DIGIT_MASK].location != NSNotFound) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid phone format" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         [alert release];
         return NO;
@@ -191,7 +193,15 @@ int cursorPos;
 }
 
 - (void) saveConact {
-    Contact* contact = [[Contact alloc] initWithContactType:self.contactType andContactString:self.recipientContactField.text];
+    NSString* contactString = self.recipientContactField.text;
+    if (self.contactType == ContactTypePhone) {
+        SettingsDao *dao = [[SettingsDao alloc] init];
+        NSMutableString* phone = [NSMutableString stringWithString:dao.phonePrefix];
+        [dao release];
+        [phone appendString:contactString];
+        contactString = phone;
+    }
+    Contact* contact = [[Contact alloc] initWithContactType:self.contactType andContactString:contactString];
     [self.recipients addObject:contact];
     [contact release];
     [[NSNotificationCenter defaultCenter] postNotificationName:kRecipientsDone object:nil];
@@ -266,8 +276,12 @@ int cursorPos;
 
 - (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range
 {
-    if (range.location == 0 || range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location)
+    if (range.location == 0) {
+        return NSMakeRange(2, 1);
+    }
+    if (range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location) {
         return NSMakeRange([self getFirstPlaceholerPositionInMask],1);
+    }
     
     int pos = 0;
     int phonePos = range.location - [self getStartingDigitsCountInMask]+1;

@@ -9,10 +9,12 @@ static NSString *const COMPANY_NAME_KEY = @"companyName";
 static NSString *const TABLET_ID_KEY = @"tabletId";
 static NSString *const API_KEY_KEY = @"apiKey";
 static NSString *const LAST_UPDATE_KEY = @"lastUpdate";
+static NSString *const PHONE_PREFIX_KEY = @"phonePrefix"; 
 
 static NSString *const DEFAULT_LOGO_IMAGE_NAME = @"welcome_company.png";
 static NSString *const DEFAULT_SERVER_URL = @"http://likelabs.redwerk.com";
 static NSString *const DEFAULT_COMPANY_NAME = @"[Vendor Name]";
+static NSString *const DEFAULT_PHONE_PREFIX = @"+7";
 
 @interface SettingsDao()
 
@@ -43,7 +45,7 @@ static NSString *const DEFAULT_COMPANY_NAME = @"[Vendor Name]";
             [[[Review alloc] initWithUser:[[[User alloc] initWtithName:@"User5"] autorelease] andText:@"Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."] autorelease],
             nil];
     
-    NSDictionary* settingsDict = [NSDictionary dictionaryWithObjectsAndKeys:DEFAULT_SERVER_URL, kServerUrlPreference, [NSKeyedArchiver archivedDataWithRootObject:defaultPromoReviews], PROMO_REVIEWS_KEY, UIImagePNGRepresentation([UIImage imageNamed:DEFAULT_LOGO_IMAGE_NAME]), LOGO_KEY, DEFAULT_COMPANY_NAME, COMPANY_NAME_KEY, [NSDate date], LAST_UPDATE_KEY, nil];
+    NSDictionary* settingsDict = [NSDictionary dictionaryWithObjectsAndKeys:DEFAULT_SERVER_URL, kServerUrlPreference, [NSKeyedArchiver archivedDataWithRootObject:defaultPromoReviews], PROMO_REVIEWS_KEY, UIImagePNGRepresentation([UIImage imageNamed:DEFAULT_LOGO_IMAGE_NAME]), LOGO_KEY, DEFAULT_COMPANY_NAME, COMPANY_NAME_KEY, [NSDate date], LAST_UPDATE_KEY, DEFAULT_PHONE_PREFIX, PHONE_PREFIX_KEY, nil];
     
     [defaults registerDefaults:settingsDict];
 }
@@ -112,6 +114,10 @@ static NSString *const DEFAULT_COMPANY_NAME = @"[Vendor Name]";
 
 - (NSDate *)lastUpdate {
     return [self.settings objectForKey:LAST_UPDATE_KEY];
+}
+
+- (NSString *)phonePrefix {
+    return [self.settings objectForKey:PHONE_PREFIX_KEY];
 }
 
 @end

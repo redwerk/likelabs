@@ -28,6 +28,24 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Phone number settings</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Phone prefix</string>
+			<key>Key</key>
+			<string>phone_prefix_preference</string>
+			<key>KeyboardType</key>
+			<string>NumberPad</string>
+			<key>DefaultValue</key>
+			<string>+7</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>
