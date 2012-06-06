@@ -235,6 +235,7 @@ public class UserContentController {
                 map.put("date", review.getCreatedDT());
                 map.put("point", review.getPoint().getAddress().getAddressLine1());
                 map.put("id", review.getId());
+                map.put("containsPhoto", review.getPhoto() != null);
                 map.put("status", review.getStatus().toString().toLowerCase(Locale.ENGLISH));
                 map.put("active", review.isPublishedInCompanySN());
                 data.add(map);

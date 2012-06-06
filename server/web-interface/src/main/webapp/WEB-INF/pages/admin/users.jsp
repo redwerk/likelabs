@@ -21,7 +21,7 @@
         $("#filter_date_to").datepicker();
         initPager();
         
-        $("#add_user_dialog").dialog({ autoOpen: false, title: "Add User", close: function(){document.getElementById("add_user_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
+        $("#add_user_dialog").dialog({ autoOpen: false, title: "Add User", close: function(){document.getElementById("add_user_form").reset();$("#add_user_dialog").dialog({title: "Add User"})}, modal: true, minWidth: 400, minHeight: 200});
     });
 
 
@@ -70,6 +70,7 @@
     }
     
     function editUserDialog(id, phone, email, password){
+        $("#add_user_dialog").dialog({title: "Edit User"})
         $("#add_user_phone").val(phone);
         $("#add_user_email").val(email);
         $("#add_user_password").val(password);

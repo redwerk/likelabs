@@ -859,7 +859,7 @@ input:focus, textarea:focus {
 }
 
 .item-wrapper .item-data{
-    font-size: 16pt;
+    font-size: 18px;
     font-style: italic;
     color: #767676;
     

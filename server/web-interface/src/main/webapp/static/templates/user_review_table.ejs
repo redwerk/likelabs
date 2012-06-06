@@ -3,6 +3,10 @@
         var feed = feeds[key];
         var date = new Date(feed.date);
         var date_str = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        if (feed.message) {
+            feed.messageShort = (feed.message.length > 95)? feed.message.substring(0, 92) + "..." : feed.message;
+            feed.messageLong = (feed.message.length > 340)? feed.message.substring(0, 337) + "..." : feed.message;
+        }
 %>
 <div class="item-wrapper" id="feed_item_<%=feed.id%>">
     <div class="item-cmd">
@@ -15,7 +19,7 @@
                 <td>Point name:</td>
                 <td><%=feed.point%></td>
             </tr>
-            <tr>
+            <tr class="odd">
                 <td>Status:</td>
                 <td><%=feed.status%></td>
             </tr>
@@ -38,8 +42,16 @@
         </table>
     </div>
     <div class="item-data">
-        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=feed.id%>/photo" alt=""/></div>
-        <div class="description"><%= feed.message %></div>
+        <% if (feed.containsPhoto) { %>
+            <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/review/<%=feed.id%>/photo" alt=""/></div>
+            <div class="description"><%= feed.messageShort %></div>
+        <% } else { %>
+            <table style="width: 100%; height: 100%;">
+                <tr>
+                    <td style="text-align: center; vertical-align: middle;"><%= feed.messageLong %></td>
+                </tr>
+            </table>
+        <% } %>
     </div>
 </div>
 <%
