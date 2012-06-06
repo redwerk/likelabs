@@ -2,6 +2,8 @@ package com.redwerk.likelabs.infrastructure.security;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.domain.model.query.Pager;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,8 @@ public class AbstractUserDetailsService {
 
     @Autowired
     private CompanyService companyService;
+
+    protected final Logger log = LogManager.getLogger(getClass());
 
     protected UserDetails createDetails(com.redwerk.likelabs.domain.model.user.User user) throws UsernameNotFoundException {
 
