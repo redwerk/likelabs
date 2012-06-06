@@ -122,10 +122,7 @@
             <div class="right signin_block">
                 <sec:authorize access="isAuthenticated()">
                 <div style=" float: right;">
-                    <sec:authorize access="hasRole('ROLE_USER,ROLE_COMPANY_ADMIN')">
-                        <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
-                    </sec:authorize>
-                    <sec:authorize access="hasRole('ROLE_USER')">
+                    <sec:authorize access="hasAnyRole('ROLE_USER,ROLE_COMPANY_ADMIN,ROLE_SYSTEM_ADMIN')">
                         <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
                     </sec:authorize>
                     &nbsp;
@@ -184,7 +181,7 @@
                         <li class=' <c:if test="${page eq 'contact_us'}">active</c:if>'><a href="/contact"><span class="mark feed"><span></span></span>Contact Us</a></li>
                     </ul>
                 </sec:authorize>
-                <sec:authorize access="hasAnyRole('ROLE_USER,ROLE_COMPANY_ADMIN,ROLE_SYSTEM_ADMIN')">
+                <sec:authorize method="" access="hasAnyRole('ROLE_USER,ROLE_COMPANY_ADMIN,ROLE_SYSTEM_ADMIN')">
                     <c:choose>
                         <c:when test="${cabinet eq 'company_admin'}">
                             <ul class="menu">

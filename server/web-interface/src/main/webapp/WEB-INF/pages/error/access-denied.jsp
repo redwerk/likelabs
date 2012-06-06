@@ -2,7 +2,7 @@
 
 <div id="content">
     
-    <h1><spring:message code="message.auth.invalid.access"/></h1> 
+    <h1><spring:message code="message.auth.invalid.access"/></h1>
     <div class="text-holder">
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sit amet nisi dui. Nullam tristique risus quis arcu iaculis consequat. Praesent aliquam consequat risus, sit amet facilisis quam porta eu. Integer sit amet velit vel lorem pretium feugiat. Ut condimentum est porttitor lectus dignissim facilisis. Cras augue libero, fermentum eu ultrices tristique, volutpat non nisl. Vestibulum rhoncus bibendum tempor. Donec sed velit vitae risus faucibus vulputate id id justo. Pellentesque a nisi turpis, nec egestas tortor. Integer ac augue neque.

@@ -35,7 +35,18 @@
                         </div>
                     </div>
                     <div class="item-wrapper photo" style="float: right; width: 320px; height: 320px; margin-right: 20px">
-                        <div class="item-data"><div class="photo" style="text-align: center"><img src="/public/photo/${review.photo.id}" alt=""/></div></div>
+                        <div class="item-data">
+                            <div class="photo" style="text-align: center">
+                                <c:choose>
+                                    <c:when test="${not empty review.photo.id}">
+                                        <img src="/public/photo/${review.photo.id}" alt=""/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="/static/images/no-img-available.jpg" alt=""/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
                     </div>
                     <div class="clear"></div>
                 </div>

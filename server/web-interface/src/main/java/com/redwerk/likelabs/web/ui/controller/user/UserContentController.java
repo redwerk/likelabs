@@ -53,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+//@PreAuthorize("hasRole('ROLE_USER')")
 @Controller
 @RequestMapping(value = "/user/{userId}")
 public class UserContentController {

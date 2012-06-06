@@ -35,6 +35,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
@@ -193,9 +196,19 @@ public class PublicContentController {
         return response;
     }
 
-    @RequestMapping(value = {"/review/{reviewId}","/review/{reviewId}/"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
     public String getReviewDetails(ModelMap model, @PathVariable Long reviewId) {
 
+        Authentication  auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
+            model.put("cabinet", "user");
+        }
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SYSTEM_ADMIN"))) {
+            model.put("cabinet", "admin");
+        }
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_COMPANY_ADMIN"))) {
+            model.put("cabinet", "company_admin");
+        }
         Review review = reviewService.getReview(reviewId);
         if (review.getStatus() != ReviewStatus.APPROVED) {
             model.put("not_approved", true);

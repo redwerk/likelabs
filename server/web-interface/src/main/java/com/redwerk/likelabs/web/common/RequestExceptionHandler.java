@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +26,12 @@ public class RequestExceptionHandler implements HandlerExceptionResolver {
             mav = new ModelAndView("error/content_not_found");
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             log.error("Bad request error: " + e.getMessage() , e);
+            return mav;
+        }
+        if (e instanceof AccessDeniedException) {
+            mav = new ModelAndView("error/access-denied");
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            log.error("Access level error: " + e.getMessage() , e);
             return mav;
         }
         mav = new ModelAndView("error/server-error");

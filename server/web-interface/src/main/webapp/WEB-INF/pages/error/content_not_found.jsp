@@ -2,7 +2,7 @@
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <div id="content">
     <div>
-        <h1>This content not found or was deleted.</h1>
+        <h1>This content is not found or was deleted.</h1>
     </div>
     <div class="clear"></div>
 </div>

@@ -11,7 +11,7 @@
             <intercept-url pattern="/admin*" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
         -->
         <form-login login-page="/index"
-                            default-target-url="/dashboard"
+                            default-target-url="/"
                             authentication-success-handler-ref="authSuccessHandler"
                             authentication-failure-handler-ref="authFailureHandler"
                             login-processing-url="/login"/>
