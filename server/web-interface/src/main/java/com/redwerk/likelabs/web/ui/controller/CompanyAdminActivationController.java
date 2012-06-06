@@ -133,7 +133,7 @@ public class CompanyAdminActivationController {
         }
         User user = userService.getUser(id);
         if (user.isActive()) {
-            authenticateUser(request, user.getId(), user.getPassword());
+            authenticateUser(request, user.getPhone(), user.getPassword());
             model.put(RESPONSE_KEY_SUCCESS, false);
             List<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
             if (!report.isEmpty()) {
@@ -162,7 +162,7 @@ public class CompanyAdminActivationController {
                 return "redirect:/";
             }
             registrationService.activateCompanyAdmin(user.getId());
-            authenticateUser(request, user.getId(), user.getPassword());
+            authenticateUser(request, user.getPhone(), user.getPassword());
             List<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
             if (!report.isEmpty()) {
                 model.put("companyName", report.get(0).getCompany().getName());
@@ -193,9 +193,9 @@ public class CompanyAdminActivationController {
         return VIEW_SUCCESS_ACTIVATE;
     }
 
-    private void authenticateUser(HttpServletRequest request, Long userId, String password) {
+    private void authenticateUser(HttpServletRequest request, String phone, String password) {
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(String.valueOf(userId), password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);
         authenticationToken.setDetails(details);
         Authentication fullauth = authenticationManager.authenticate(authenticationToken);

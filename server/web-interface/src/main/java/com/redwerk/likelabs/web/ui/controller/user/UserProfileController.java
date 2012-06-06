@@ -2,6 +2,7 @@ package com.redwerk.likelabs.web.ui.controller.user;
 
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.user.UserData;
+import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.web.ui.controller.dto.UserDto;
@@ -59,7 +60,14 @@ public class UserProfileController {
         }
         User userOldData = userService.getUser(userId);
         String password = StringUtils.isBlank(user.getPassword()) ? userOldData.getPassword() : user.getPassword();
-        userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
+        try {
+            userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
+        } catch (EmailMessagingException e) {
+            result.rejectValue("phone", "user.profile.invalid.phone", "Please enter valid phone number.");
+            model.put("page", "profile");
+            model.put("cabinet", "user");
+            return VIEW_USER_PROFILE;
+        }
         status.setComplete();
         model.clear();
         return "redirect:/user/" + userId;
@@ -84,7 +92,7 @@ public class UserProfileController {
             UserDto user = (UserDto)target;
 
             if (!mailValidator.isValid(user.getEmail())) {
-                errors.rejectValue("email", "user.profile.invalid.email", "Please enter valid e-mail address.");
+                errors.rejectValue("email", "user.profile.invalid.email", "Please enter valid email address.");
             }
             if (!phoneValidator.isValid(user.getPhone())) {
                 errors.rejectValue("phone", "user.profile.invalid.phone", "Please enter valid phone number.");

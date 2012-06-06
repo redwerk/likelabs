@@ -82,7 +82,7 @@ public class UserContentController {
     private MessageTemplateService messageTemplateService;
     private final Logger log = LogManager.getLogger(getClass());
 
-    //@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN') or (hasRole('ROLE_USER') and #userId == authentication.name")
+    //@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN') or (hasRole('ROLE_USER') and #userId == authentication.name)")
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public String cabinet(ModelMap model, @PathVariable Long userId) {
 

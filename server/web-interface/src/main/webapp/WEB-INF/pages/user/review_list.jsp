@@ -180,7 +180,7 @@
     }
 
     function removeReview(id) {
-        confirmDialog("Remove review from Social networks", "Are you sure?", function(){
+        confirmDialog("Remove review", "Are you sure?", function(){
             $.ajax({
                 url: "/user/${userId}/feed/"+ id +"/remove",
                 type: "DELETE",
