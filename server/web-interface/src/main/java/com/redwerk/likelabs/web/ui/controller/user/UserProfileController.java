@@ -115,7 +115,7 @@ public class UserProfileController {
                 errors.rejectValue("email", "user.profile.invalid.length.email",new Byte[]{MAX_LENGTH_EMAIL},
                          "Maximum E-mail length allowed is " + MAX_LENGTH_EMAIL + " symbols.");
             }
-            if (user.getEmail() != null && user.getEmail().length() > MAX_LENGTH_PASSWORD) {
+            if (user.getPassword() != null && user.getEmail().length() > MAX_LENGTH_PASSWORD) {
                 errors.rejectValue("password", "user.profile.invalid.length.passwordh",new Byte[]{MAX_LENGTH_PASSWORD},
                          "Maximum password length allowed is " + MAX_LENGTH_PASSWORD + " symbols.");
             }

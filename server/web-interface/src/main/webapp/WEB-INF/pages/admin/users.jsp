@@ -42,7 +42,7 @@
     }
 
     var force_update = true;
-    var test_data = {"data":[{"id":"1","phone":"000000000011","email":"test1@test.com","name":"User1"},{"id":"2","phone":"000000000012","email":"test2@test.com","name":"User2"},{"id":"3","phone":"000000000013","email":"test3@test.com","name":"User3"}],"count":3};
+    var test_data = {"data":[{"id":"1","phone":"000000000011","email":"test1@test.com","name":"User1"},{"id":"1","phone":"000000000012","email":"test2@test.com","name":"User2"},{"id":"1","phone":"000000000013","email":"test3@test.com","name":"User3"}],"count":3};
     function updateData() {
         $.get("/admin/companies/data", options, function(response){
             response = test_data;
