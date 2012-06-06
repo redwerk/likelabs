@@ -13,6 +13,7 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.ContentTypeFilter;
 import com.redwerk.likelabs.domain.model.review.Review;
+import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.review.SortingCriteria;
 import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
@@ -55,6 +56,7 @@ public class PublicContentController {
     private static final String VIEW_COMPANY_LIST = "companies_list";
     private static final String VIEW_POINTS_LIST = "points_list";
     private static final String VIEW_REVIEWS_LIST = "review_list";
+    private static final String VIEW_REVIEW_DETAILS = "review_details";
 
     @Autowired
     private CompanyService companyService;
@@ -189,6 +191,19 @@ public class PublicContentController {
             response.put("error", e.getMessage());
         }
         return response;
+    }
+
+    @RequestMapping(value = {"/review/{reviewId}","/review/{reviewId}/"}, method = RequestMethod.GET)
+    public String getReviewDetails(ModelMap model, @PathVariable Long reviewId) {
+
+        Review review = reviewService.getReview(reviewId);
+        if (review.getStatus() != ReviewStatus.APPROVED) {
+            model.put("not_approved", true);
+            return VIEW_REVIEW_DETAILS;
+        }
+        model.put("not_approved", false);
+        model.put("review",review);
+        return VIEW_REVIEW_DETAILS;
     }
 
     @RequestMapping(value = "/{companyId}/logo", method = RequestMethod.GET)

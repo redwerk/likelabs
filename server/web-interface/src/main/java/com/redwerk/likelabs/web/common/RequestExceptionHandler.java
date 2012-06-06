@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.web.common;
 
+import com.redwerk.likelabs.domain.model.review.exception.ReviewNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,8 +19,15 @@ public class RequestExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest request,
             HttpServletResponse response, Object handler, Exception e) {
-        
-        ModelAndView mav = new ModelAndView("error/server-error");
+
+        ModelAndView mav;
+        if (e instanceof ReviewNotFoundException) {
+            mav = new ModelAndView("error/content_not_found");
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            log.error("Bad request error: " + e.getMessage() , e);
+            return mav;
+        }
+        mav = new ModelAndView("error/server-error");
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         // mav.addObject("error_message", e.getMessage() + " - in" + e.getStackTrace()[0].getClassName() + " line:" + e.getStackTrace()[0].getLineNumber());
         log.error("Internal error: " + e.getMessage() , e);
