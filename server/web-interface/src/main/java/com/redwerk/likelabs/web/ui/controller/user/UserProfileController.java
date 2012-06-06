@@ -107,15 +107,15 @@ public class UserProfileController {
                     errors.rejectValue("confirmPassword", "user.profile.invalid.confirmpassword", "The passwords do not match.");
                 }
             }
-            if (user.getPhone() != null && user.getPhone().length() > MAX_LENGTH_PHONE) {
+            if (StringUtils.isNotBlank(user.getPhone()) && user.getPhone().length() > MAX_LENGTH_PHONE) {
                 errors.rejectValue("phone", "user.profile.invalid.length.phone", new Byte[]{MAX_LENGTH_PHONE} ,
                          "Maximum phone length allowed is " + MAX_LENGTH_PHONE +" symbols.");
             }
-            if (user.getEmail() != null && user.getEmail().length() > MAX_LENGTH_EMAIL) {
+            if (StringUtils.isNotBlank(user.getEmail()) && user.getEmail().length() > MAX_LENGTH_EMAIL) {
                 errors.rejectValue("email", "user.profile.invalid.length.email",new Byte[]{MAX_LENGTH_EMAIL},
                          "Maximum E-mail length allowed is " + MAX_LENGTH_EMAIL + " symbols.");
             }
-            if (user.getPassword() != null && user.getEmail().length() > MAX_LENGTH_PASSWORD) {
+            if (StringUtils.isNotBlank(user.getPassword()) && user.getPassword().length() > MAX_LENGTH_PASSWORD) {
                 errors.rejectValue("password", "user.profile.invalid.length.passwordh",new Byte[]{MAX_LENGTH_PASSWORD},
                          "Maximum password length allowed is " + MAX_LENGTH_PASSWORD + " symbols.");
             }
