@@ -110,9 +110,7 @@ const int thumbnailsTagOffset = 55;
             
             photo = [UIImage imageWithCGImage:photo.CGImage scale:1.0/scale orientation:photo.imageOrientation];
                               imageView = [[UIImageView alloc] initWithImage:[self imageWithBorderFromImage:photo]];
-            if (reviewPhoto.status == PhotoStatusDeleted) {
-                [self dimThumbnail:imageView];
-            }
+            
             [self.thumbnailsView addSubview:imageView];
             
             imageView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -122,9 +120,13 @@ const int thumbnailsTagOffset = 55;
             imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:imageView.bounds].CGPath;
             imageView.tag = i + thumbnailsTagOffset;
             imageView.userInteractionEnabled = YES;
-            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
-            [imageView addGestureRecognizer:tapGesture];
-            [tapGesture release];  
+            if (reviewPhoto.status == PhotoStatusDeleted) {
+                [self dimThumbnail:imageView];
+            } else {
+                UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
+                [imageView addGestureRecognizer:tapGesture];
+                [tapGesture release];  
+            }
         }
         
         if(UIInterfaceOrientationIsPortrait([self interfaceOrientation])){
