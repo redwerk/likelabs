@@ -34,6 +34,7 @@ import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -134,18 +135,20 @@ public class SignUpController {
             return registerRedirect(INCORECT_PASSWORD);
         }
         User user = userService.findUser(phone);
-        authenticatUser(request, user.getId(), password);
-        return VIEW_SINGNUP_END;
+        authenticatUser(request, user.getPhone(), password);
+        return"redirect:/signup/end";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/end", method = RequestMethod.GET)
     public String endGet(ModelMap model) {
         return VIEW_SINGNUP_END;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/sendmail", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap sendForConfirmMail(@RequestParam(value = "email", required = true) String email) {
+    public ModelMap sendForConfirmMail(@RequestParam("email") String email) {
         ModelMap response = new ModelMap();
         if (!emailValidator.isValid(email)) {
             response.put("message",messageTemplateService.getMessage(MSG_BAD_EMAIL));
@@ -164,9 +167,9 @@ public class SignUpController {
         return response;
     }
 
-    private void authenticatUser(HttpServletRequest request, Long userId, String password) {
+    private void authenticatUser(HttpServletRequest request, String phone, String password) {
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(String.valueOf(userId), password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);
         authenticationToken.setDetails(details);
         Authentication fullauth = authenticationManager.authenticate(authenticationToken);
