@@ -6,7 +6,7 @@
         <c:choose>
             <c:when test="${not_approved eq true}">
                 <div style="text-align: justify; text-indent: 50px;">
-                    This review was not approved.
+                    This review was not approved yet. Please try later
                 </div>
             </c:when>
 

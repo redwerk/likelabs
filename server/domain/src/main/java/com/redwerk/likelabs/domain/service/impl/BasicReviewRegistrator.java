@@ -1,14 +1,14 @@
 package com.redwerk.likelabs.domain.service.impl;
 
+import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
-import com.redwerk.likelabs.domain.model.point.Point;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.RecipientFactory;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
-import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
@@ -17,6 +17,7 @@ import com.redwerk.likelabs.domain.service.ReviewRegistrator;
 import com.redwerk.likelabs.domain.service.UserRegistrator;
 import com.redwerk.likelabs.domain.service.dto.PhotoData;
 import com.redwerk.likelabs.domain.service.dto.RecipientData;
+import com.redwerk.likelabs.domain.service.exception.ReviewCreatedByAdminException;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.apache.commons.lang.Validate;
@@ -28,6 +29,8 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
     private final UserRepository userRepository;
 
     private final UserRegistrator userRegistrator;
+
+    private final CompanyRepository companyRepository;
 
     private final ReviewRepository reviewRepository;
 
@@ -42,11 +45,14 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
     private final RecipientNotifier recipientNotifier;
 
 
-    public BasicReviewRegistrator(UserRepository userRepository, UserRegistrator userRegistrator, ReviewRepository reviewRepository,
-                                  PhotoRepository photoRepository, EventRepository eventRepository, GatewayFactory gatewayFactory,
-                                  ImageSourceFactory imageSourceFactory, RecipientNotifier recipientNotifier) {
+    public BasicReviewRegistrator(UserRepository userRepository, UserRegistrator userRegistrator,
+                                  CompanyRepository companyRepository, ReviewRepository reviewRepository,
+                                  PhotoRepository photoRepository, EventRepository eventRepository,
+                                  GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory,
+                                  RecipientNotifier recipientNotifier) {
         this.userRepository = userRepository;
         this.userRegistrator = userRegistrator;
+        this.companyRepository = companyRepository;
         this.reviewRepository = reviewRepository;
         this.photoRepository = photoRepository;
         this.eventRepository = eventRepository;
@@ -77,6 +83,9 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
         User user = userRepository.find(phone);
         if (user == null) {
             user = userRegistrator.registerUser(phone);
+        }
+        else if (!companyRepository.findForAdmin(user, Pager.ALL_RECORDS).isEmpty()) {
+            throw new ReviewCreatedByAdminException(user);
         }
         return user;
     }

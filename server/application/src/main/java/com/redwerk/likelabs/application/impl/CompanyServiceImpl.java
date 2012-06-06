@@ -215,15 +215,16 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     private void createAdminInternal(Company company, CompanyAdminData adminData) {
-        User admin = createUser(adminData.getPhone(), adminData.getEmail());
+        User admin = createAdminUser(adminData.getPhone(), adminData.getEmail());
         company.addAdmin(admin);
         sendSmsWithPassword(admin);
         sendActivationEmail(admin);
     }
 
-    private User createUser(String phone, String email) {
+    private User createAdminUser(String phone, String email) {
         User user = new UserFactory().createUser(phone, passwordGenerator.getPassword(phone));
         user.setEmail(email);
+        user.setPublishInSN(false);
         userRepository.add(user);
         return user;
     }

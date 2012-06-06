@@ -2,6 +2,7 @@ package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.ReviewService;
+import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.ReviewRegistrator;
 import com.redwerk.likelabs.domain.service.dto.PhotoData;
@@ -39,6 +40,9 @@ public class ReviewServiceImpl implements ReviewService {
     private UserRepository userRepository;
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private TabletRepository tabletRepository;
 
     @Autowired
@@ -63,8 +67,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ReviewRegistrator getReviewRegistrator() {
         if (reviewRegistrator == null) {
-            reviewRegistrator = new BasicReviewRegistrator(userRepository, registrationService, reviewRepository,
-                    photoRepository, eventRepository, gatewayFactory, imageSourceFactory, recipientNotifier);
+            reviewRegistrator = new BasicReviewRegistrator(userRepository, registrationService, companyRepository,
+                    reviewRepository, photoRepository, eventRepository, gatewayFactory, imageSourceFactory,
+                    recipientNotifier);
         }
         return reviewRegistrator;
     }
