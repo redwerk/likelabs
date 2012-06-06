@@ -39,7 +39,7 @@
         _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 211, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
         [self.view addSubview:self.imageView];
     } else {
-        self.lbMessageSent.text = @"Message were sent successfully!";
+        self.lbMessageSent.text = @"Message was sent successfully!";
         self.messageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-block-landscape.png"]] autorelease];
         [self.messageView setFrame:CGRectMake(24, 191, 468, 350)];
         UILabel *lbText = [[[UILabel alloc] initWithFrame:CGRectMake(10, 10, self.messageView.frame.size.width-20, self.messageView.frame.size.height-20)] autorelease];

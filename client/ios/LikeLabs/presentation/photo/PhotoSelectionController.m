@@ -7,6 +7,7 @@
 @interface PhotoSelectionController ()
 @property (nonatomic, retain) UIViewController <ContainerController> *rootController;
 @property (nonatomic, assign) Review *review;
+@property (nonatomic, assign) UIButton *btnDeleteThumbnail;
 - (void) populateWithPhotos;
 - (void) setPhoto: (UIImage *)photo;
 - (void) resetThumbnails;
@@ -15,6 +16,8 @@
 - (void) selectThumbnail:(UIView*) thumbnail;
 - (void) dimThumbnail: (UIView*) thumbnail;
 - (BOOL) selectNewPhotoBeforeDeletingPhotoAtIndex:(NSUInteger) deletedPhotoIndex;
+- (UIImageView *) thumbnailAtIndex:(NSInteger) index;
+- (void) moveDeleteBotton;
 @end
 
 @implementation PhotoSelectionController
@@ -27,6 +30,7 @@ static NSString *const NAV_DIVIDER_SN_IMG = @"navigation_divider_sn.png";
 static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 const float selectedScaleFactor = 1.5;
 const float deletedPhotoAlpha = 0.5;
+const int thumbnailsTagOffset = 55;
 
 
 @synthesize imageView = _imageView;
@@ -34,6 +38,7 @@ const float deletedPhotoAlpha = 0.5;
 @synthesize submitButton = _submitButton;
 @synthesize rootController = _rootController;
 @synthesize review = _review;
+@synthesize btnDeleteThumbnail = _btnDeleteThumbnail;
 
 #pragma mark - Initialization
 - (id)initWithRootController:(UIViewController <ContainerController> *)rootController {
@@ -50,13 +55,20 @@ const float deletedPhotoAlpha = 0.5;
     // Do any additional setup after loading the view from its nib.
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0]; 
-    [self didRotateFromInterfaceOrientation:self.interfaceOrientation];
+   // [self didRotateFromInterfaceOrientation:self.interfaceOrientation];
     [self selectThumbnail:[self.thumbnailsView.subviews objectAtIndex:self.review.reviewPhotoIndex]];
     self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowOffset = CGSizeMake(0, 5);
     self.imageView.layer.shadowRadius = 10;
     self.imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.imageView.bounds].CGPath;
+    self.btnDeleteThumbnail = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *btnImg = [UIImage imageNamed:@"delete_btn.png"];
+    [self.btnDeleteThumbnail setImage:btnImg forState:UIControlStateNormal];
+    
+    self.btnDeleteThumbnail.frame = CGRectMake(0, 0, btnImg.size.width, btnImg.size.height);
+    [self.btnDeleteThumbnail addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
+    [self.thumbnailsView addSubview:self.btnDeleteThumbnail];
 }
 
 #pragma mark - Memory management;
@@ -68,6 +80,7 @@ const float deletedPhotoAlpha = 0.5;
     [self setThumbnailsView:nil];
 
     [self setSubmitButton:nil];
+    [self setBtnDeleteThumbnail:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -78,17 +91,18 @@ const float deletedPhotoAlpha = 0.5;
     [_imageView release];
     [_thumbnailsView release];
     [_submitButton release];
+    [_btnDeleteThumbnail release];
     [super dealloc];
 }
 
 #pragma mark - Photo management
 
 - (void)populateWithPhotos {
-    CGPoint photosOffset = CGPointMake(0, 0);
+    CGPoint photosOffset = CGPointMake(0, 35);
     CGSize maxPhotoSize = CGSizeMake(128.0, 114.0);
     int photosPadding = 10;
-    for (int i=0; i<5; i++) {
-        UIImageView *imageView = (UIImageView *) [self.thumbnailsView viewWithTag:(i+1)];
+    for (int i=0; i<self.review.photos.count; i++) {
+        UIImageView *imageView = [self thumbnailAtIndex:(i+thumbnailsTagOffset)];
         if(!imageView) {
             Photo* reviewPhoto = [self.review.photos objectAtIndex:i];
             UIImage *photo = reviewPhoto.image;
@@ -106,7 +120,7 @@ const float deletedPhotoAlpha = 0.5;
             imageView.layer.shadowOpacity = 0.75;
             imageView.layer.shadowRadius = 11;
             imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:imageView.bounds].CGPath;
-            imageView.tag = i + 1;
+            imageView.tag = i + thumbnailsTagOffset;
             imageView.userInteractionEnabled = YES;
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
             [imageView addGestureRecognizer:tapGesture];
@@ -123,8 +137,7 @@ const float deletedPhotoAlpha = 0.5;
 
 - (void) previewTouched: (UITapGestureRecognizer*) gesture { 
     if(self.thumbnailsView.userInteractionEnabled) {
-        if (gesture.view.subviews.count > 0 || gesture.view.alpha == deletedPhotoAlpha || (gesture.view
-            .tag-1)==self.review.reviewPhotoIndex) {
+        if ((gesture.view.tag-thumbnailsTagOffset)==self.review.reviewPhotoIndex) {
             return;
         }
         [self.thumbnailsView setUserInteractionEnabled:NO];
@@ -135,63 +148,71 @@ const float deletedPhotoAlpha = 0.5;
 }
 
 - (void) selectThumbnail:(UIView*) thumbnail {
-    UIView* tappedImage = thumbnail;
-    [self resetThumbnails];
-    [self setPhoto:((Photo*)[self.review.photos objectAtIndex:tappedImage.tag - 1]).image];
-    self.review.reviewPhotoIndex = tappedImage.tag - 1;
-    
-    CGPoint oldCenter = tappedImage.center;
+     [self resetThumbnails];
+    self.review.reviewPhotoIndex = thumbnail.tag - thumbnailsTagOffset;
+    Photo*photo = [self.review.photos objectAtIndex:self.review.reviewPhotoIndex];
+    photo.status = PhotoStatusSelected;
+   
 
-    UIImage *btnImg = [UIImage imageNamed:@"delete_btn.png"];
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.tag = tappedImage.tag;
-    [btn setImage:btnImg forState:UIControlStateNormal];
-    btn.frame = CGRectMake(0, 0, btnImg.size.width, btnImg.size.height);
-
+    [self setPhoto:(photo).image];
+        self.btnDeleteThumbnail.hidden = YES ;    
+    CGPoint oldCenter = thumbnail.center;
     [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
-        tappedImage.frame = CGRectMake(0, 0, tappedImage.frame.size.width * selectedScaleFactor, tappedImage.frame.size.height * selectedScaleFactor);
-        tappedImage.layer.shadowPath = [UIBezierPath bezierPathWithRect:tappedImage.bounds].CGPath;
+        thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width * selectedScaleFactor, thumbnail.frame.size.height * selectedScaleFactor);
+        thumbnail.layer.shadowPath = [UIBezierPath bezierPathWithRect:thumbnail.bounds].CGPath;
     } completion:^(BOOL finished){  
-        if(finished) {
-            self.thumbnailsView.userInteractionEnabled = YES;
-            thumbnail.userInteractionEnabled = YES;
-            btn.userInteractionEnabled = YES;
-        }
-        
+        self.thumbnailsView.userInteractionEnabled = YES;
+        thumbnail.userInteractionEnabled = YES;
+        self.btnDeleteThumbnail.userInteractionEnabled = YES;
+        [self moveDeleteBotton];
+        self.btnDeleteThumbnail.hidden = NO;
     }];
+    thumbnail.center = oldCenter;
+    [self.thumbnailsView bringSubviewToFront:thumbnail];
+    [self.thumbnailsView bringSubviewToFront:self.btnDeleteThumbnail];
     
-    tappedImage.center = oldCenter;
-    [self.thumbnailsView bringSubviewToFront:tappedImage];
-    [tappedImage addSubview:btn];
-    btn.center = CGPointMake(tappedImage.frame.size.width - 10, 10);
-    [btn addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
+}
+
+- (void) moveDeleteBotton {
+    UIImageView* thumbnail  = [self thumbnailAtIndex:self.review.reviewPhotoIndex+thumbnailsTagOffset];
+    self.btnDeleteThumbnail.center = CGPointMake(thumbnail.frame.origin.x + thumbnail.frame.size.width-10, thumbnail.frame.origin.y+10);
+
 }
 
 - (void) resetThumbnails {
-    for (UIImageView* thumbnail in self.thumbnailsView.subviews) {
-        if (thumbnail.subviews.count > 0) {
+    for(int i=0; i<self.review.photos.count; i++) {
+        Photo *photo = [self.review.photos objectAtIndex:i];
+        if(photo.status == PhotoStatusSelected) {
+            UIImageView* thumbnail  = [self thumbnailAtIndex:i+thumbnailsTagOffset];
+            photo.status = PhotoStatusActive;
             CGPoint center = thumbnail.center;
             [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
                 thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
             } completion:^(BOOL finished){ 
                 thumbnail.userInteractionEnabled = YES; 
             }];
-            //thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
             thumbnail.center = center;
-            
             thumbnail.layer.shadowPath = [UIBezierPath bezierPathWithRect:thumbnail.bounds].CGPath;
-            [thumbnail.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        }
+        } 
     }
 }
 
 - (void) deletePhoto: (UIButton *) sender {
-    if ([self selectNewPhotoBeforeDeletingPhotoAtIndex: sender.tag - 1]) {
-        Photo* deletedPhoto = [self.review.photos objectAtIndex:sender.tag - 1];
+    NSInteger photoIndex =  self.review.reviewPhotoIndex;
+    if ([self selectNewPhotoBeforeDeletingPhotoAtIndex: photoIndex]) {
+        Photo* deletedPhoto = [self.review.photos objectAtIndex:photoIndex];
         deletedPhoto.status = PhotoStatusDeleted;
-        [self dimThumbnail:[self.thumbnailsView viewWithTag:sender.tag]];
-        [sender removeFromSuperview];
+        UIImageView *thumbnail = [self thumbnailAtIndex:photoIndex+thumbnailsTagOffset];
+        thumbnail.userInteractionEnabled = NO;
+        for(UIGestureRecognizer *gesture in thumbnail.gestureRecognizers){
+            [thumbnail removeGestureRecognizer:gesture];
+        }
+        [self dimThumbnail: thumbnail];
     }
+}
+
+- (UIImageView *) thumbnailAtIndex:(NSInteger) index {
+    return (UIImageView *) [self.thumbnailsView viewWithTag:index];
 }
 
 - (BOOL) selectNewPhotoBeforeDeletingPhotoAtIndex:(NSUInteger) deletedPhotoIndex {
@@ -201,10 +222,11 @@ const float deletedPhotoAlpha = 0.5;
     {
         Photo* newPhoto = [self.review.photos objectAtIndex:i];
         if (newPhoto.status != PhotoStatusDeleted) {
-            [self selectThumbnail:[self.thumbnailsView viewWithTag:i+1]];
+            [self selectThumbnail:[self.thumbnailsView viewWithTag:i+thumbnailsTagOffset]];
             return YES;
         }
     }
+    
     return NO;
 }
 
@@ -253,15 +275,20 @@ const float deletedPhotoAlpha = 0.5;
     [self populateWithPhotos];
     if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
         self.view.backgroundColor  = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
-        self.thumbnailsView.frame = CGRectMake(50, 865, 700, 190);
+        self.thumbnailsView.frame = CGRectMake(50, 830, 700, 230);
         self.imageView.center = CGPointMake(384, 348);
         self.submitButton.center = CGPointMake(384, 690);
     } else {
         self.view.backgroundColor = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgLandscape]] autorelease];
-        self.thumbnailsView.frame = CGRectMake(50, 130, 190, 670);
+        self.thumbnailsView.frame = CGRectMake(50, 90, 230, 670);
         self.imageView.center = CGPointMake(622, 348);
         self.submitButton.center = CGPointMake(622, 674);
     }
+    
+}
+
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self moveDeleteBotton];
 }
 
 #pragma mark - Actions
