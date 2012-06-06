@@ -162,11 +162,6 @@ static NSString* const IMAGE_URL_KEY = @"imageUrl";
     self.user = nil;
     self.contacts = nil;
     self.imageUrl = nil;
-    [_imageUrl release];
-    [_photos release];
-    [_text release];
-    [_user release];
-    [_contacts release];
     [super dealloc];
 }
 @end

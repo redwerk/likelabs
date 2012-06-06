@@ -9,7 +9,7 @@ static NSString *const COMPANY_NAME_KEY = @"companyName";
 static NSString *const TABLET_ID_KEY = @"tabletId";
 static NSString *const API_KEY_KEY = @"apiKey";
 static NSString *const LAST_UPDATE_KEY = @"lastUpdate";
-static NSString *const PHONE_PREFIX_KEY = @"phonePrefix"; 
+static NSString *const PHONE_PREFIX_KEY = @"phone_prefix_preference"; 
 
 static NSString *const DEFAULT_LOGO_IMAGE_NAME = @"welcome_company.png";
 static NSString *const DEFAULT_SERVER_URL = @"http://likelabs.redwerk.com";

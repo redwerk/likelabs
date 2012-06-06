@@ -223,24 +223,23 @@
     self.customSegmentedControl.selectedSegmentIndex++;
 }
 
-- (Review *) getReview{
+- (Review *) getReview {
     return self.rootController.review;
 }
 
-- (ReviewService *) getReviewService{
-    
+- (ReviewService *) getReviewService {    
     return self.rootController.reviewService;
 }
 
-- (UIViewController *) getCurrentController{
+- (UIViewController *) getCurrentController {
     return self.currentViewController;
 }
 
-- (void) setCurrentController:(UIViewController *)controller{
+- (void) setCurrentController:(UIViewController *)controller {
     self.currentViewController = controller;
 }
 
--(void)bringHeaderViewToFront{
+- (void)bringHeaderViewToFront {
     [self.view bringSubviewToFront:self.headerView];
 }
 

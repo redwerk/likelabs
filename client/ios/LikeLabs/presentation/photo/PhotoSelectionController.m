@@ -109,7 +109,7 @@ const int thumbnailsTagOffset = 55;
             CGFloat scale = MIN(maxPhotoSize.width / photo.size.width, maxPhotoSize.height / photo.size.height);
             
             photo = [UIImage imageWithCGImage:photo.CGImage scale:1.0/scale orientation:photo.imageOrientation];
-                              imageView = [[UIImageView alloc] initWithImage:[self imageWithBorderFromImage:photo]];
+            imageView = [[[UIImageView alloc] initWithImage:[self imageWithBorderFromImage:photo]] autorelease];
             
             [self.thumbnailsView addSubview:imageView];
             
