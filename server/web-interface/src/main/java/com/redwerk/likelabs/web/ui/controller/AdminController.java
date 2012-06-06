@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
@@ -88,7 +90,7 @@ public class AdminController {
 
     @RequestMapping(value="/users")
     public String users(ModelMap model) {
-        model.put("count", companyService.getCompaniesCount());
+        model.put("count", 3);
         model.put("items_per_page", ITEMS_PER_PAGE_COMPANY);
         model.put("cabinet", "admin");
         model.put("page", "users");
@@ -107,10 +109,10 @@ public class AdminController {
             for (CompanyReportItem reportItem : report.getItems()) {
                 Map<String, String> map = new HashMap<String, String>();
                 Company company = reportItem.getCompany();
-                map.put("id", String.valueOf(company.getId()));
-                map.put("name", company.getName());
-                map.put("email", company.getEmail());
-                map.put("phone", company.getPhone());
+                map.put("id", "1");
+                map.put("name", "user");
+                map.put("email", "tets@rest.com");
+                map.put("phone", "+0000000001");
                 data.add(map);
             }
             response.put("data", data);

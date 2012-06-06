@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
+//@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN') or (hasRole('ROLE_USER') and #userId == authentication.name)")
 @Controller
 @RequestMapping(value = "/user/{userId}/profile")
 public class UserProfileController {
@@ -39,9 +41,10 @@ public class UserProfileController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String initForm(ModelMap model, @PathVariable Integer userId) {
+    public String initForm(ModelMap model, @PathVariable String userId) {
 
-        UserDto user = new UserDto(userService.getUser(userId));
+        Long id = Long.parseLong(userId);
+        UserDto user = new UserDto(userService.getUser(id));
         model.put("user", user);
         model.put("page", "profile");
         model.put("cabinet", "user");
@@ -49,21 +52,23 @@ public class UserProfileController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processSubmit(ModelMap model, @PathVariable Integer userId,
+    public String processSubmit(ModelMap model, @PathVariable String userId,
             @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
 
+        Long id = Long.parseLong(userId);
         validator.validate(user, result);
         if (result.hasErrors()) {
             model.put("page", "profile");
             model.put("cabinet", "user");
             return VIEW_USER_PROFILE;
         }
-        User userOldData = userService.getUser(userId);
+        User userOldData = userService.getUser(id);
         String password = StringUtils.isBlank(user.getPassword()) ? userOldData.getPassword() : user.getPassword();
         try {
-            userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
+            userService.updateUser(id, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
         } catch (EmailMessagingException e) {
-            result.rejectValue("phone", "user.profile.invalid.phone", "Please enter valid phone number.");
+            log.error(e,e);
+            result.rejectValue("email", "user.profile.invalid.email", "Please enter valid email address.");
             model.put("page", "profile");
             model.put("cabinet", "user");
             return VIEW_USER_PROFILE;

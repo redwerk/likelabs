@@ -72,8 +72,8 @@
         $("#confirm_dialog").dialog({modal: true, autoOpen: false, title: title }); 
         $("#confirm_dialog #description").html(description);
         $("#confirm_dialog").dialog("open");
-        $("#confirm_dialog_ok").click(function(){callback.call();$("#confirm_dialog").dialog("close")});
-        $("#confirm_dialog_cancel").click(function(){$("#confirm_dialog").dialog("close")});
+        $("#confirm_dialog_ok").unbind().click(function(){callback.call();$("#confirm_dialog").dialog("close")});
+        $("#confirm_dialog_cancel").unbind().click(function(){$("#confirm_dialog").dialog("close")});
     }
     function errorsDialog(title, errors) {
         $("#error_dialog").dialog({modal: true, autoOpen: false, title: title, minHeight: 50 });
