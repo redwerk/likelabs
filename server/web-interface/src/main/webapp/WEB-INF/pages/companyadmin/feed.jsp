@@ -82,11 +82,14 @@
 <script type="text/javascript">
     
     var companiesPoints = [
-<c:forEach items="${compniesPointsMap}" var="companyPointsPair" >        { name : "${companyPointsPair.key}",
-          points : [ 
-<c:forEach items="${companyPointsPair.value}" var="point" >                { id : ${point.id},
-                  name : "${point.address.addressLine1}" },</c:forEach>
-          ] },</c:forEach>
+        <c:forEach items="${compniesPointsMap}" var="companyPointsPair"  varStatus="c">
+                { name : "${companyPointsPair.key}",
+                  points : [
+                          <c:forEach items="${companyPointsPair.value}" var="point" varStatus="p">
+                              { id : ${point.id},name : "${point.address.addressLine1}" },
+                          </c:forEach>
+                ]},
+        </c:forEach>
     ];
     
     
@@ -131,7 +134,7 @@
             dataFilter.sortingOrder = 'ASCENDING';
             ajaxObj= $.ajax({
                 dataType: 'json',
-                url: '/companyadmin/feed/data/' + newPage,
+                url: '/companyadmin/${userId}/feed/data/' + newPage,
                 data: dataFilter,
                 success: function(data){
                     initPager(data.count);

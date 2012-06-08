@@ -32,7 +32,7 @@
                 <input id="confirm_password" name="confirm_password" type="password" autocomplete="off" />
             </div>
             <div class="field-holder">
-                <button class="btn btn-success save" type="submit">Save</button> or &nbsp;<a href="/companyadmin/companies">Cancel</a>
+                <button class="btn btn-success save" type="submit">Save</button> or &nbsp;<a href="/companyadmin/${userId}/companies">Cancel</a>
             </div>
         </fieldset>
     </form:form>

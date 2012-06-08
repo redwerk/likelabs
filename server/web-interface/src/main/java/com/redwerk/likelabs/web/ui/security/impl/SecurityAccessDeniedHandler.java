@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.web.ui.security;
+package com.redwerk.likelabs.web.ui.security.impl;
 
 import java.io.IOException;
 import java.util.Collection;

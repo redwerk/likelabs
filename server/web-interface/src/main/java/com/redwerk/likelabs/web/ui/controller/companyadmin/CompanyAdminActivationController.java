@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.web.ui.controller;
+package com.redwerk.likelabs.web.ui.controller.companyadmin;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.RegistrationService;
@@ -12,6 +12,7 @@ import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
+import com.redwerk.likelabs.web.ui.security.Authenticator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,14 +20,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.RememberMeServices;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,16 +41,11 @@ public class CompanyAdminActivationController {
     private static final String RESPONSE_KEY_SUCCESS = "success";
     private static final String RESPONSE_KEY_MESSAGE = "message";
     private static final String PARAM_ERROR_NOT_ADMIN = "not_admin";
-    private static final String PARAM_ERROR_ALREADY_ACTIVE = "already_active";
 
     private static final String PARAM_SESSION_USERID = "userId";
     private static final String PARAM_SESSION_PASSWORD = "password";
 
     private final Logger log = LogManager.getLogger(getClass());
-
-    @Autowired
-    @Qualifier("authenticationManager")
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private RegistrationService registrationService;
@@ -72,7 +60,7 @@ public class CompanyAdminActivationController {
     private CompanyService companyService;
 
     @Autowired
-    private RememberMeServices rememberMeServices;
+    private Authenticator authenticator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String activateAdminGet(ModelMap model, HttpSession session, 
@@ -106,11 +94,7 @@ public class CompanyAdminActivationController {
         try {
             User user = userService.getUser(userId);
             if (registrationService.validateAdminPassword(user.getId(), password) && registrationService.validateAdminCode(userId, confirmCode)) {
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null){
-                    new SecurityContextLogoutHandler().logout(request, response, auth);
-                    rememberMeServices.loginFail(request, response);
-                }
+                authenticator.logoutUser(request, response);
                 HttpSession session = request.getSession(true);
                 session.setAttribute(PARAM_SESSION_USERID, userId);
                 session.setAttribute(PARAM_SESSION_PASSWORD, password);
@@ -133,7 +117,7 @@ public class CompanyAdminActivationController {
         }
         User user = userService.getUser(id);
         if (user.isActive()) {
-            authenticateUser(request, user.getPhone(), user.getPassword());
+            authenticator.authenticateUser(request, user);
             model.put(RESPONSE_KEY_SUCCESS, false);
             List<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
             if (!report.isEmpty()) {
@@ -162,7 +146,7 @@ public class CompanyAdminActivationController {
                 return "redirect:/";
             }
             registrationService.activateCompanyAdmin(user.getId());
-            authenticateUser(request, user.getPhone(), user.getPassword());
+            authenticator.authenticateUser(request, user);
             List<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
             if (!report.isEmpty()) {
                 model.put("companyName", report.get(0).getCompany().getName());
@@ -191,14 +175,5 @@ public class CompanyAdminActivationController {
             return VIEW_END_ACTIVATE;
         }
         return VIEW_SUCCESS_ACTIVATE;
-    }
-
-    private void authenticateUser(HttpServletRequest request, String phone, String password) {
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
-        WebAuthenticationDetails details = new WebAuthenticationDetails(request);
-        authenticationToken.setDetails(details);
-        Authentication fullauth = authenticationManager.authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(fullauth);
     }
 }

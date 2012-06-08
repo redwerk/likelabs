@@ -16,7 +16,7 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedUserException;
-import com.redwerk.likelabs.web.ui.controller.dto.CompanyDto;
+import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.SocialLinkValidator;
@@ -34,6 +34,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -48,6 +49,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+/*
+ * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ */
+@PreAuthorize("@decisionAccess.permissionCompany(principal, #companyId)")
 @Controller
 @RequestMapping(value = "/company/{companyId}/profile")
 public class CompanyProfileController {

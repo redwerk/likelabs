@@ -3,7 +3,6 @@ package com.redwerk.likelabs.web.ui.controller.company;
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
-import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
@@ -17,7 +16,7 @@ import com.redwerk.likelabs.domain.model.review.SortingCriteria;
 import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
-import com.redwerk.likelabs.web.ui.controller.dto.ReviewFilterDto;
+import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
 import org.apache.commons.lang.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +32,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,6 +45,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/*
+ * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ */
+@PreAuthorize("@decisionAccess.permissionCompany(principal, #companyId)")
 @Controller
 @RequestMapping(value = "/company/{companyId}")
 public class CompanyController {
@@ -74,7 +78,7 @@ public class CompanyController {
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public String dashboard(ModelMap model, @PathVariable Integer companyId) {
+    public String dashboard(ModelMap model, @PathVariable Long companyId) {
 
          Company company = companyService.getCompany(companyId);
          model.put("companyName", company.getName());
@@ -138,7 +142,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/reviews/{reviewId}/data/promo", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap changeSampleStatus(@PathVariable Long reviewId,
+    public ModelMap changeSampleStatus(@PathVariable Long companyId, @PathVariable Long reviewId,
             @RequestParam("promo") Boolean sampleStatus) {
 
         ModelMap response = new ModelMap();
@@ -180,7 +184,7 @@ public class CompanyController {
 
     @RequestMapping(value = "/reviews/{reviewId}/data/publish", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap publishReview(@PathVariable Long reviewId, @RequestParam("publish") Boolean publish) {
+    public ModelMap publishReview(@PathVariable Long companyId, @PathVariable Long reviewId, @RequestParam("publish") Boolean publish) {
 
         ModelMap response = new ModelMap();
         try {    
@@ -197,6 +201,7 @@ public class CompanyController {
         return response;
     }
 
+    @PreAuthorize("permitAll")
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);

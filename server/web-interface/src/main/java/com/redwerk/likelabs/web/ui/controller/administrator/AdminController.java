@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.web.ui.controller;
+package com.redwerk.likelabs.web.ui.controller.administrator;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.PointService;
@@ -10,8 +10,7 @@ import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.web.ui.controller.dto.ProfileData;
-import com.redwerk.likelabs.web.ui.controller.dto.UserDto;
+import com.redwerk.likelabs.web.ui.dto.UserDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +51,13 @@ public class AdminController {
     
     private final Logger log = LogManager.getLogger(getClass());
     
-    @RequestMapping(value={"/", "", "/companies"})
+    @RequestMapping(value={"/", ""})
+    public String cabinet(ModelMap model) {
+
+        return "redirect:/admin/companies";
+    }
+
+    @RequestMapping(value="/companies")
     public String companies(ModelMap model) {
         model.put("count", companyService.getCompaniesCount());
         model.put("items_per_page", ITEMS_PER_PAGE_COMPANY);

@@ -1,6 +1,4 @@
-package com.redwerk.likelabs.web.ui.controller;
-
-import java.util.List;
+package com.redwerk.likelabs.web.ui.controller.user;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -10,12 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +21,8 @@ import com.redwerk.likelabs.application.impl.registration.exception.DuplicatedUs
 import com.redwerk.likelabs.application.impl.registration.exception.IncorrectPasswordException;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.messaging.exception.SmsMessagingException;
-import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import com.redwerk.likelabs.web.ui.security.Authenticator;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
@@ -62,10 +54,6 @@ public class SignUpController {
     private final Logger log = LogManager.getLogger(getClass());
 
     @Autowired
-    @Qualifier("authenticationManager")
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private RegistrationService registrationService;
 
     @Autowired
@@ -73,6 +61,9 @@ public class SignUpController {
 
     @Autowired
     private MessageTemplateService messageTemplateService;
+
+    @Autowired
+    private Authenticator authenticator;
 
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     public String start(ModelMap model, HttpServletRequest request, @RequestParam(value = "error", required = false) String error) {
@@ -135,7 +126,7 @@ public class SignUpController {
             return registerRedirect(INCORECT_PASSWORD);
         }
         User user = userService.findUser(phone);
-        authenticatUser(request, user.getPhone(), password);
+        authenticator.authenticateUser(request, user);
         return"redirect:/signup/end";
     }
 
@@ -165,15 +156,6 @@ public class SignUpController {
             response.put("success",false);
         }
         return response;
-    }
-
-    private void authenticatUser(HttpServletRequest request, String phone, String password) {
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
-        WebAuthenticationDetails details = new WebAuthenticationDetails(request);
-        authenticationToken.setDetails(details);
-        Authentication fullauth = authenticationManager.authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(fullauth);
     }
 
     private String startRedirect(String errorParam) {

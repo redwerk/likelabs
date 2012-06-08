@@ -1,17 +1,26 @@
 package com.redwerk.likelabs.infrastructure.security;
 
 import com.redwerk.likelabs.application.CompanyService;
+import com.redwerk.likelabs.application.UserService;
+import com.redwerk.likelabs.application.dto.Report;
+import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.query.Pager;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class AbstractUserDetailsService {
+public abstract class AbstractUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    protected  UserService userService;
 
     @Autowired
     private CompanyService companyService;
@@ -24,14 +33,19 @@ public class AbstractUserDetailsService {
             throw new UsernameNotFoundException("User not found.");
         }
         if (user.isSystemAdmin()) {
-            return new User(user.getId().toString(), user.getPassword(),
-                                  AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_SYSTEM_ADMIN.toString()));
+            return new CustomUserDetails(user.getId(), user.getPhone(), user.getPassword(),
+                                  AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_SYSTEM_ADMIN.toString()),null);
         }
-        if (!companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems().isEmpty() && user.isActive()) {
-            return new User(user.getId().toString(), user.getPassword(),
-                                  AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_COMPANY_ADMIN.toString()));
+        Report<CompanyReportItem> report = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS);
+        if (report.getItems().isEmpty()) {
+            return new CustomUserDetails(user.getId(), user.getPhone(), user.getPassword(),
+                                  AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_USER.toString()), null);
         }
-        return new User(user.getId().toString(), user.getPassword(),
-                                  AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_USER.toString()));
+        Set<Long> companyIds = new HashSet<Long>();
+        for (CompanyReportItem item: report.getItems()) {
+            companyIds.add(item.getCompany().getId());
+        }
+        return new CustomUserDetails(user.getId(), user.getPhone(), user.getPassword(),
+                                  AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_COMPANY_ADMIN.toString()), companyIds);
     }
 }

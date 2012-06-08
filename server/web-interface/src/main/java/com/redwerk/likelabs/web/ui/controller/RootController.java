@@ -51,7 +51,7 @@ public class RootController {
     private MessageTemplateService messageTemplateService;
 
     @RequestMapping(value = {"/index", "/", ""}, method = RequestMethod.GET)
-    public String index(ModelMap model, @RequestParam(value = "error", required = false) String error) {
+    public String index(ModelMap model) {
 
         Authentication  auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_ANONYMOUS.toString()))) {
@@ -61,7 +61,7 @@ public class RootController {
             return "redirect:/admin";
         }
         if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()))) {
-            return "redirect:/companyadmin";
+            return "redirect:/companyadmin/" + auth.getName();
         }
         return "redirect:/user/" + auth.getName();
     }

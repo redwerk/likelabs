@@ -9,8 +9,8 @@ import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.tablet.Tablet;
-import com.redwerk.likelabs.web.ui.controller.dto.PointDto;
-import com.redwerk.likelabs.web.ui.controller.dto.TabletDto;
+import com.redwerk.likelabs.web.ui.dto.PointDto;
+import com.redwerk.likelabs.web.ui.dto.TabletDto;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+/*
+ * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ */
+@PreAuthorize("@decisionAccess.permissionCompany(principal, #companyId)")
 @Controller
 @RequestMapping(value = "/company/{companyId}/point/{pointId}/profile")
 public class PointProfileController {
@@ -61,8 +66,8 @@ public class PointProfileController {
     private TabletService tabletService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String initForm(ModelMap model, @PathVariable Integer companyId,
-                        @PathVariable Integer pointId) {
+    public String initForm(ModelMap model, @PathVariable Long companyId,
+                        @PathVariable Long pointId) {
 
         PointDto point = null;
         if (pointId > NEW_RECORD_ID) {
@@ -81,8 +86,8 @@ public class PointProfileController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processSubmit(ModelMap model, HttpSession session, @PathVariable Integer companyId,
-                  @PathVariable Integer pointId, @ModelAttribute("point") PointDto point,
+    public String processSubmit(ModelMap model, HttpSession session, @PathVariable Long companyId,
+                  @PathVariable Long pointId, @ModelAttribute("point") PointDto point,
                           BindingResult result, SessionStatus status) {
 
         validator.validate(point, result);
@@ -115,14 +120,14 @@ public class PointProfileController {
     }
 
     @RequestMapping(value = "/cancel",method = RequestMethod.GET)
-    public String processCancel(ModelMap model, HttpSession session, @PathVariable Integer companyId) {
+    public String processCancel(ModelMap model, HttpSession session, @PathVariable Long companyId) {
         model.clear();
         session.removeAttribute(SESSION_ATR_TABLETS);
         return "redirect:/company/" + companyId + "/profile";
     }
 
     @ModelAttribute("tablets")
-    public List<TabletDto> tabletsList(HttpSession session, @PathVariable Integer pointId) {
+    public List<TabletDto> tabletsList(HttpSession session, @PathVariable Long companyId, @PathVariable Long pointId) {
           
          List<TabletDto> tablets = new ArrayList<TabletDto>();
          if (pointId > NEW_RECORD_ID) {
@@ -141,7 +146,7 @@ public class PointProfileController {
     }
 
     @ModelAttribute("companyName")
-    public String companyName(@PathVariable Integer companyId) {
+    public String companyName(@PathVariable Long companyId) {
 
         String name = "New Company";
         if (companyId > NEW_RECORD_ID) {
@@ -152,7 +157,7 @@ public class PointProfileController {
 
     @RequestMapping(value = "/tablet/{tabletId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ModelMap deleteTablet(HttpSession session, @PathVariable Integer companyId, @PathVariable Integer pointId,
+    public ModelMap deleteTablet(HttpSession session, @PathVariable Long companyId, @PathVariable Long pointId,
             @PathVariable Long tabletId) {
 
         ModelMap response = new ModelMap();

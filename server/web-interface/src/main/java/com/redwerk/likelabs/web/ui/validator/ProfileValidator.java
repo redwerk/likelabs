@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.web.ui.validator;
 
-import com.redwerk.likelabs.web.ui.controller.dto.ProfileData;
+import com.redwerk.likelabs.web.ui.dto.ProfileData;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

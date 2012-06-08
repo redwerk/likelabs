@@ -21,10 +21,11 @@ import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.web.ui.controller.dto.CompanyDto;
-import com.redwerk.likelabs.web.ui.controller.dto.PointDto;
-import com.redwerk.likelabs.web.ui.controller.dto.ReviewFilterDto;
-import com.redwerk.likelabs.web.ui.controller.dto.UserDto;
+import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
+import com.redwerk.likelabs.web.ui.dto.CompanyDto;
+import com.redwerk.likelabs.web.ui.dto.PointDto;
+import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
+import com.redwerk.likelabs.web.ui.dto.UserDto;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +41,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.expression.ParseException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -53,7 +57,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
-//@PreAuthorize("hasRole('ROLE_USER')")
+/*
+ * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ */
+@PreAuthorize("@decisionAccess.permissionUser(principal, #userId)")
 @Controller
 @RequestMapping(value = "/user/{userId}")
 public class UserContentController {
@@ -82,7 +89,6 @@ public class UserContentController {
     private MessageTemplateService messageTemplateService;
     private final Logger log = LogManager.getLogger(getClass());
 
-    //@PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN') or (hasRole('ROLE_USER') and #userId == authentication.name)")
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public String cabinet(ModelMap model, @PathVariable Long userId) {
 
@@ -157,6 +163,7 @@ public class UserContentController {
 
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     public String initSettings(ModelMap model, @PathVariable Long userId) {
+
         User user = userService.getUser(userId);
         model.put("user", new UserDto(user));
         model.put("cabinet", "user");
@@ -227,7 +234,7 @@ public class UserContentController {
             } else {
                 companyIds.add(filter.getCompany());
             }
-            Report<Review> report = reviewService.getUserReviews(userId, companyIds, query);
+            Report<Review> report = reviewService.getUserReviews(getRealUserId(userId), companyIds, query);
             List<Map> data = new ArrayList<Map>();
             for (Review review : report.getItems()) {
                 Map<String, Object> map = new HashMap<String, Object>();
@@ -321,6 +328,15 @@ public class UserContentController {
                 contentType, filter.getSampleStatus(), filter.getPublishingStatus(), pager, sort);
     }
 
+    private Long getRealUserId(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()))) {
+            return Long.parseLong(auth.getName());
+        }
+        return id;
+    }
+
+    @PreAuthorize("permitAll")
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
