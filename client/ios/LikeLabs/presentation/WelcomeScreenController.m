@@ -4,8 +4,8 @@
 #import "SettingsDao.h"
 #import <AVFoundation/AVFoundation.h>
 
-static NSString *const bgLandscape = @"welcome_landscape_bg.png";
-static NSString *const bgPortrait = @"welcome_portrait_bg.png";
+static NSString *const bgLandscape = @"welcome_bg_landscape.png";
+static NSString *const bgPortrait = @"welcome_bg_portrait.png";
 static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 
 @interface WelcomeScreenController()
@@ -17,15 +17,14 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 
 @implementation WelcomeScreenController
 @synthesize btnExit = _btnExit;
-@synthesize btnShowText = _btnShowText;
-@synthesize btnShowPhoto = _btnShowPhoto;
-@synthesize btnFacebook = _btnFacebook;
-@synthesize btnVkcom = _btnVkcom;
-@synthesize btnTweeter = _btnTweeter;
-@synthesize btnEmail = _btnEmail;
 @synthesize imageCompany = _imageCompany;
 @synthesize btnHome = _btnHome;
 @synthesize textLabel = _textLabel;
+@synthesize poweredBy = _poweredBy;
+@synthesize textBtnView = _textBtnView;
+@synthesize photoBtnView = _photoBtnView;
+@synthesize logoView = _logoView;
+@synthesize socialsView = _socialsView;
 @synthesize overlayLogout = _overlayLogout;
 
 @synthesize rootController = _rootController;
@@ -56,10 +55,10 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     
     [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     
-    UIColor *background = [[UIColor alloc] initWithPatternImage:
-                           [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
-    self.view.backgroundColor = background;
-    [background release];
+    self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:!UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) ? bgLandscape : bgPortrait]];
+    self.textBtnView.backgroundColor = self.photoBtnView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"welcome_btn_bg.png"]];
+    self.logoView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"welcome_logo_bg.png"]];
+    self.socialsView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"socials_bg.png"]];
         
     SettingsDao* dao = [[SettingsDao alloc] init];
     [self setLogo:dao.logo];
@@ -88,18 +87,15 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 - (void)viewDidUnload
 {
     [self setBtnExit:nil];
-    [self setBtnShowText:nil];
-    [self setBtnShowPhoto:nil];
-    [self setBtnFacebook:nil];
-    [self setBtnVkcom:nil];
-    [self setBtnTweeter:nil];
-    [self setBtnEmail:nil];
     [self setImageCompany:nil];
     [self setBtnHome:nil];
     [self setTextLabel:nil];
+    [self setPoweredBy:nil];
+    [self setTextBtnView:nil];
+    [self setPhotoBtnView:nil];
+    [self setLogoView:nil];
+    [self setSocialsView:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
     self.rootController = nil;
 }
 
@@ -107,15 +103,14 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 {
     [_rootController release];
     [_btnExit release];
-    [_btnShowText release];
-    [_btnShowPhoto release];
-    [_btnFacebook release];
-    [_btnVkcom release];
-    [_btnTweeter release];
-    [_btnEmail release];
     [_imageCompany release];
     [_btnHome release];
     [_textLabel release];
+    [_poweredBy release];
+    [_textBtnView release];
+    [_photoBtnView release];
+    [_logoView release];
+    [_socialsView release];
     [super dealloc];
 }
 
@@ -125,7 +120,7 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 	return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [self layoutSubviewsForInterfaceOrientation:toInterfaceOrientation];
     [self.overlayLogout willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
@@ -138,27 +133,23 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     {
         background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]];
         
-        self.btnExit.frame = CGRectMake(17, 991, 17, 18);
-        self.imageCompany.frame = CGRectMake(268, 49, 232, 90);
-        self.btnShowText.frame = CGRectMake(186, 756, 392, 202);
-        self.btnShowPhoto.frame = CGRectMake(186, 516, 392, 202);
-        self.btnFacebook.frame = CGRectMake(266, 419, 53, 53);
-        self.btnVkcom.frame = CGRectMake(326, 419, 53, 53);
-        self.btnTweeter.frame = CGRectMake(386, 419, 53, 53);
-        self.btnEmail.frame = CGRectMake(446, 419, 53, 53);
+        self.btnExit.frame = CGRectMake(17, 981, 32, 33);
+        self.logoView.frame = CGRectMake(217, 43, 332, 101);
+        self.textBtnView.frame = CGRectMake(182, 751, 400, 211);
+        self.photoBtnView.frame = CGRectMake(182, 511, 400, 211);
+        self.socialsView.frame = CGRectMake(258, 410, 249, 71);
         self.textLabel.frame = CGRectMake(20, 166, 728, 150);
+        self.poweredBy.frame = CGRectMake(555, 989, 203, 30);
     } else {
         background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgLandscape]];
         
-        self.btnExit.frame = CGRectMake(17, 733, 17, 18);
-        self.imageCompany.frame = CGRectMake(397, 45, 232, 90);
-        self.btnShowText.frame = CGRectMake(97, 421, 392, 202);
-        self.btnShowPhoto.frame = CGRectMake(537, 421, 392, 202);
-        self.btnFacebook.frame = CGRectMake(396, 316, 53, 53);
-        self.btnVkcom.frame = CGRectMake(456, 316, 53, 53);
-        self.btnTweeter.frame = CGRectMake(516, 316, 53, 53);
-        self.btnEmail.frame = CGRectMake(576, 316, 53, 53);
+        self.btnExit.frame = CGRectMake(17, 725, 32, 33);
+        self.logoView.frame = CGRectMake(346, 39, 332, 101);
+        self.textBtnView.frame = CGRectMake(93, 416, 400, 211);
+        self.photoBtnView.frame = CGRectMake(533, 416, 400, 211);
+        self.socialsView.frame = CGRectMake(388, 307, 249, 71);
         self.textLabel.frame = CGRectMake(20, 172, 984, 64);
+        self.poweredBy.frame = CGRectMake(811, 733, 203, 30);
     }
     self.view.backgroundColor = background;
     [background release];
@@ -177,18 +168,6 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     _overlayLogout = [[LoginController alloc] initWithRootController:self.rootController];
     [RootController switchBackToViewController:_overlayLogout rootController:self.rootController];
     [_overlayLogout setControllerMode:ControllerModeLogout];
-}
-
-- (IBAction)shareFacebook:(id)sender {
-}
-
-- (IBAction)shareVkontakte:(id)sender {
-}
-
-- (IBAction)shareTweeter:(id)sender {
-}
-
-- (IBAction)shareEmail:(id)sender {
 }
 
 - (IBAction)showHome:(id)sender 
