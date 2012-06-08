@@ -57,7 +57,7 @@ float commentsContentOffset = 0;
         self.rootController = rootController;
         SettingsDao* dao = [[SettingsDao alloc] init];
         self.reviews = dao.textReviews;
-        self.review = [self.rootController getReview];//.rootController.rootController.review;
+        self.review = [self.rootController getReview];
         [dao release];
     }
     return self;
@@ -103,8 +103,6 @@ float commentsContentOffset = 0;
     [self setTextLabel:nil];
     [self setReview:nil];
     [super viewDidUnload];    
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)dealloc {
@@ -159,6 +157,8 @@ float commentsContentOffset = 0;
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TEXT_CELL_IDENTIFIER] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.opaque = NO;
+        cell.clipsToBounds = NO;
+        cell.backgroundView = [[[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"promo_bg_gray.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:5]] autorelease];
         label = [[UILabel alloc] initWithFrame:CGRectZero];
 
         [label setLineBreakMode:UILineBreakModeWordWrap];
@@ -200,10 +200,8 @@ float commentsContentOffset = 0;
         [label setFrame:CGRectMake(CELL_CONTENT_MARGIN_WIDTH, CELL_CONTENT_MARGIN + titleHeight, 190, 200)];
         [titleLabel setFrame:CGRectMake(CELL_CONTENT_MARGIN_WIDTH, CELL_CONTENT_MARGIN, CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN_WIDTH*2), titleHeight)];
         cell.contentView.transform = CGAffineTransformMakeRotation(M_PI_2);
-        cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-block-portrait.png"]] autorelease];
         
     } else {
-        cell.backgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-block-landscape.png"]] autorelease];
         [label setFrame:CGRectMake(CELL_CONTENT_MARGIN_WIDTH, CELL_CONTENT_MARGIN + titleHeight, 300, MAX(textHeight, MIN_TEXT_HEIGHT))];
         [titleLabel setFrame:CGRectMake(CELL_CONTENT_MARGIN_WIDTH, CELL_CONTENT_MARGIN, CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN_WIDTH*2), titleHeight)];
         cell.contentView.transform = CGAffineTransformMakeRotation(0);

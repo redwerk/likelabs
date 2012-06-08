@@ -56,10 +56,15 @@
 
     if(self.review.reviewType == ReviewTypeText){
         self.lbTitle.text = [[[NSString alloc] initWithFormat:titleFormat, @"message"] autorelease];
-        self.messageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-block-landscape.png"] ]autorelease];
+        self.messageView = [[[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"promo_bg_gray.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:5]] autorelease];
         [self.messageView setFrame:CGRectMake(24, 191, 468, 350) ];
         UILabel *lbText = [[[UILabel alloc] initWithFrame:CGRectMake(10, 10, self.messageView.frame.size.width-20, self.messageView.frame.size.height-20)] autorelease];
         self.messageView.opaque = NO;
+        self.messageView.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.messageView.layer.shadowOffset = CGSizeMake(5, 5);
+        self.messageView.layer.shadowOpacity = 0.8;
+        self.messageView.layer.shadowRadius = 10;
+
         lbText.contentMode = UIViewContentModeScaleToFill;
         lbText.font = [UIFont fontWithName:@"BadScript-Regular" size:20];
         [lbText setBackgroundColor:[UIColor clearColor]];
