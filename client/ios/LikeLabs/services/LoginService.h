@@ -8,7 +8,7 @@
 @property (nonatomic, retain) SettingsDao* dao;
 @property (nonatomic,retain) SettingsService* settingsService;
 
-- (BOOL)checkLogin:(NSString*)code andPassword:(NSString*)password;
-- (BOOL)checkLogout:(NSString *)code andPassword:(NSString *)password;
+- (BOOL)checkLogin:(NSString*)login andPassword:(NSString*)password error:(NSError**) error;
+- (BOOL)checkLogout:(NSString*)login andPassword:(NSString*)password error:(NSError**) error;
 
 @end

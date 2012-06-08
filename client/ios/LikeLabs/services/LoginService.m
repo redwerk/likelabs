@@ -25,13 +25,15 @@ static NSUInteger const STATUS_LOGOUT_OK = 204;
     return self;
 }
 
-- (BOOL)checkLogin:(NSString*)login andPassword:(NSString*)password {
+- (BOOL)checkLogin:(NSString*)login andPassword:(NSString*)password error:(NSError**) error {
     ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[URLUtil getLoginUrl]];
     [request addRequestHeader:CONTENT_TYPE_KEY value:CONTENT_TYPE_VALUE];
     [request appendPostData:[[self getXmlCredentialsFromLogin:login andPassword:password] dataUsingEncoding:NSUTF8StringEncoding]];
     [request startSynchronous];
     
     if (request.error) {
+        if (error) 
+            *error = request.error;
         NSLog(@"Login error: %@", request.error);
     } else {
         if(request.responseStatusCode == STATUS_LOGIN_OK) {
@@ -56,13 +58,15 @@ static NSUInteger const STATUS_LOGOUT_OK = 204;
     return false;
 }
 
-- (BOOL)checkLogout:(NSString*)login andPassword:(NSString*)password {
+- (BOOL)checkLogout:(NSString*)login andPassword:(NSString*)password error:(NSError**) error {
     ASIHTTPRequest* request = [ASIHTTPRequest requestWithURL:[URLUtil getLogoutUrlForTablet:self.dao.tabletId]];
     [request addRequestHeader:CONTENT_TYPE_KEY value:CONTENT_TYPE_VALUE];
     [request addRequestHeader:TABLET_API_KEY value:self.dao.apiKey];
     [request appendPostData:[[self getXmlCredentialsFromLogin:login andPassword:password] dataUsingEncoding:NSUTF8StringEncoding]];
     [request startSynchronous];
     if (request.error) {
+        if (error)
+            *error = request.error;
         NSLog(@"Logout error: %@", request.error);
     } else {
         if (request.responseStatusCode == STATUS_LOGOUT_OK) {

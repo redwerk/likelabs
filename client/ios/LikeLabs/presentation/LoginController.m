@@ -99,13 +99,23 @@ NSString *bgPortrait = @"bg_portrait.png";
 }
 
 - (IBAction)formSubmit:(id)sender {    
-    BOOL loginSuccessfull = [self.rootController.loginService checkLogin:self.inputCode.text andPassword:self.inputPassword.text];
-    
+    NSError* error = nil;
+    BOOL loginSuccessfull = [self.rootController.loginService checkLogin:self.inputCode.text andPassword:self.inputPassword.text error:&error];    
     if (loginSuccessfull) {
         [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
     } else {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 
-                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        UIAlertView* alert = 
+                (error.code == ASIAuthenticationErrorType) ? 
+                [[UIAlertView alloc] initWithTitle:nil 
+                                           message:@"Incorrect credentials" 
+                                          delegate:self 
+                                 cancelButtonTitle:@"Ok" 
+                                 otherButtonTitles:nil] :  
+                [[UIAlertView alloc] initWithTitle:nil
+                                           message: error.localizedDescription 
+                                          delegate:self 
+                                 cancelButtonTitle:@"Ok" 
+                                 otherButtonTitles:nil];
         [alert show];
         [alert release];   
     }    
@@ -113,16 +123,26 @@ NSString *bgPortrait = @"bg_portrait.png";
 
 - (IBAction)logout:(id)sender
 {
-    BOOL logoutSuccessfull = [self.rootController.loginService checkLogout:self.inputCode.text andPassword:self.inputPassword.text];
+    NSError* error;
+    BOOL logoutSuccessfull = [self.rootController.loginService checkLogout:self.inputCode.text andPassword:self.inputPassword.text error:&error];
     
     if (logoutSuccessfull) {
         [[UIApplication sharedApplication].delegate applicationWillTerminate:[UIApplication sharedApplication]];
         exit(0);
-    } else {
-        _alertLogout = [[UIAlertView alloc] initWithTitle:@"" message: @"Incorrect credentials." 
-                                                        delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [_alertLogout show];
-        
+    } else {        
+        _alertLogout = 
+                (error.code == ASIAuthenticationErrorType) ?
+                [[UIAlertView alloc] initWithTitle:nil 
+                                           message: @"Incorrect credentials." 
+                                          delegate:self 
+                                 cancelButtonTitle:@"Ok" 
+                                 otherButtonTitles:nil] :
+                [[UIAlertView alloc] initWithTitle:nil
+                                           message: error.localizedDescription 
+                                          delegate:self 
+                                 cancelButtonTitle:@"Ok" 
+                                 otherButtonTitles:nil];
+        [_alertLogout show];        
     }    
 }
 

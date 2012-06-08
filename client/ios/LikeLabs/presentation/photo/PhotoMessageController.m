@@ -64,7 +64,6 @@ static NSString *const GREETING = @"Start typing a message!";
         self.textView.textColor = [UIColor lightGrayColor];
     }
     [self.textView becomeFirstResponder];    
-    self.imageView.layer.borderWidth =2;
     [self setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
     [self willAnimateRotationToInterfaceOrientation:[self interfaceOrientation] duration:0];
 }

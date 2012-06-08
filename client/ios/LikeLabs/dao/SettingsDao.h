@@ -4,6 +4,9 @@
 
 @interface SettingsDao : NSObject
 
+extern NSString* const PHONE_FORMAT;
+extern NSString* const PHONE_DIGIT_MASK;
+
 @property (nonatomic, retain) NSDate* lastUpdate;
 @property (nonatomic, retain) UIImage* logo;
 @property (nonatomic, retain) NSString* companyName;

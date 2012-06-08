@@ -139,7 +139,7 @@
 		FF8748B2155992FF0010D272 /* instruction_banner_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B1155992FF0010D272 /* instruction_banner_bg.png */; };
 		FF8748B4155996B60010D272 /* take_photo_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8748B3155996B60010D272 /* take_photo_btn.png */; };
 		FF881DE0156F9E2C0056E209 /* SettingsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = FF881DDF156F9E2C0056E209 /* SettingsParser.m */; };
-		FF883075157FC0270002E890 /* MaskedTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = FF883074157FC0270002E890 /* MaskedTextField.m */; };
+		FF88307C1580F6FF0002E890 /* MaskedTextFieldDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF88307B1580F6FF0002E890 /* MaskedTextFieldDelegate.m */; };
 		FF890A3A15665DF100481237 /* photo_thankyou_bg_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */; };
 		FF890A3B15665DF100481237 /* photo_thankyou_bg_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */; };
 		FF890A401566606B00481237 /* PhotoFinishedController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF890A3E1566606B00481237 /* PhotoFinishedController.m */; };
@@ -343,8 +343,8 @@
 		FF8748B3155996B60010D272 /* take_photo_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = take_photo_btn.png; path = LikeLabs/resources/take_photo_btn.png; sourceTree = "<group>"; };
 		FF881DDE156F9E2C0056E209 /* SettingsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsParser.h; sourceTree = "<group>"; };
 		FF881DDF156F9E2C0056E209 /* SettingsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsParser.m; sourceTree = "<group>"; };
-		FF883073157FC0270002E890 /* MaskedTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaskedTextField.h; path = LikeLabs/presentation/controls/MaskedTextField.h; sourceTree = "<group>"; };
-		FF883074157FC0270002E890 /* MaskedTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MaskedTextField.m; path = LikeLabs/presentation/controls/MaskedTextField.m; sourceTree = "<group>"; };
+		FF88307A1580F6FF0002E890 /* MaskedTextFieldDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaskedTextFieldDelegate.h; path = LikeLabs/presentation/controls/MaskedTextFieldDelegate.h; sourceTree = "<group>"; };
+		FF88307B1580F6FF0002E890 /* MaskedTextFieldDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MaskedTextFieldDelegate.m; path = LikeLabs/presentation/controls/MaskedTextFieldDelegate.m; sourceTree = "<group>"; };
 		FF890A3815665DF100481237 /* photo_thankyou_bg_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_thankyou_bg_landscape.png; path = LikeLabs/resources/photo_thankyou_bg_landscape.png; sourceTree = "<group>"; };
 		FF890A3915665DF100481237 /* photo_thankyou_bg_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = photo_thankyou_bg_portrait.png; path = LikeLabs/resources/photo_thankyou_bg_portrait.png; sourceTree = "<group>"; };
 		FF890A3D1566606B00481237 /* PhotoFinishedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotoFinishedController.h; path = LikeLabs/presentation/photo/PhotoFinishedController.h; sourceTree = "<group>"; };
@@ -691,8 +691,8 @@
 				FF85473915765E1D00E240BF /* TextSampleReview.m */,
 				FF85473B157671C300E240BF /* PhotoSampleReview.h */,
 				FF85473C157671C300E240BF /* PhotoSampleReview.m */,
-				FF883073157FC0270002E890 /* MaskedTextField.h */,
-				FF883074157FC0270002E890 /* MaskedTextField.m */,
+				FF88307A1580F6FF0002E890 /* MaskedTextFieldDelegate.h */,
+				FF88307B1580F6FF0002E890 /* MaskedTextFieldDelegate.m */,
 			);
 			name = controls;
 			sourceTree = "<group>";
@@ -1032,7 +1032,7 @@
 				9FC3F73E157624D90099E80D /* TextReviewController.m in Sources */,
 				FF85473A15765E1D00E240BF /* TextSampleReview.m in Sources */,
 				FF85473D157671C300E240BF /* PhotoSampleReview.m in Sources */,
-				FF883075157FC0270002E890 /* MaskedTextField.m in Sources */,
+				FF88307C1580F6FF0002E890 /* MaskedTextFieldDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

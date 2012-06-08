@@ -16,6 +16,10 @@ static NSString *const DEFAULT_SERVER_URL = @"http://likelabs.redwerk.com";
 static NSString *const DEFAULT_COMPANY_NAME = @"[Vendor Name]";
 static NSString *const DEFAULT_PHONE_PREFIX = @"+7";
 
+NSString* const PHONE_FORMAT = @"(___)___-____";
+NSString* const PHONE_DIGIT_MASK = @"_";
+
+
 @interface SettingsDao()
 
 @property (nonatomic, assign) NSUserDefaults* settings;

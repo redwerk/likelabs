@@ -1,27 +1,20 @@
 #import "PhotoOverlayController.h"
 #import "SettingsDao.h"
+#import "MaskedTextFieldDelegate.h"
 
 @interface PhotoOverlayController ()
 @property (nonatomic, assign) BOOL textPlaceholderActive;
 @property (nonatomic, retain) NSString* phonePrefix;
+@property (nonatomic, retain) MaskedTextFieldDelegate* maskedTextFieldDelegate;
 
 - (BOOL) validatePhone;
 - (void) layoutSubviewsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
 - (void) savePhone;
-
-- (NSString*) maskPhoneNumber:(NSString*)phone inRange:(NSRange)range insertString:(NSString *)string;
-- (BOOL)isNumber:(NSString*)string;
-- (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range;
-- (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range;
-- (NSUInteger) getFirstPlaceholerPositionInMask;
 @end
 
 @implementation PhotoOverlayController
 NSString *const kPrimaryPhoneDidCancel = @"PrimaryPhoneDidCancel";
 NSString *const kPrimaryPhoneDone = @"PrimaryPhoneDone";
-static NSString *const PHONE_FORMAT = @"(___)___-____";
-static NSString *const PHONE_DIGIT_MASK = @"_";
-//static NSString *const PHONE_VALIDATION_PATTERN = @"^\\+38\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}$";
 int cursorPos;
 
 
@@ -30,6 +23,7 @@ int cursorPos;
 @synthesize phone = _phone;
 @synthesize textPlaceholderActive = _textPlaceholderActive;
 @synthesize phonePrefix = _phonePrefix;
+@synthesize maskedTextFieldDelegate = _maskedTextFieldDelegate;
 
 #pragma mark - Initialization
 - (id) initWithPhone:(NSString*) phone {
@@ -38,7 +32,6 @@ int cursorPos;
         SettingsDao* dao = [[SettingsDao alloc] init];
         self.phonePrefix = dao.phonePrefix;
         [dao release];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
     }
     return self;
 }
@@ -49,7 +42,8 @@ int cursorPos;
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.frame = [UIScreen mainScreen].bounds;
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
-    [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
+    self.textField.delegate =  self.maskedTextFieldDelegate = [[[MaskedTextFieldDelegate alloc] initWithMask:PHONE_FORMAT maskCharacter:PHONE_DIGIT_MASK andOuterDelegate:self] autorelease];
+    [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];    
     if (self.phone && self.phone.length) {
         NSMutableString *phone = [NSMutableString stringWithString:self.phone];
         [phone deleteCharactersInRange:NSMakeRange(0, self.phonePrefix.length)];
@@ -65,7 +59,7 @@ int cursorPos;
 - (void)viewDidAppear:(BOOL)animated
 {
     if (!self.phone || !self.phone.length) {
-        UITextPosition* newPosition = [self.textField positionFromPosition:self.textField.beginningOfDocument offset:[self getFirstPlaceholerPositionInMask]];
+        UITextPosition* newPosition = [self.textField positionFromPosition:self.textField.beginningOfDocument offset:[self.maskedTextFieldDelegate getFirstPlaceholerPositionInMask]];
         self.textField.selectedTextRange = [self.textField textRangeFromPosition:newPosition toPosition:newPosition];
     }
 }
@@ -78,6 +72,7 @@ int cursorPos;
     [self setButtonsView:nil];
     [self setPhone:nil];
     [self setPhonePrefix:nil];
+    [self setMaskedTextFieldDelegate:nil];
     [super viewDidUnload];
 }
 
@@ -86,6 +81,7 @@ int cursorPos;
     [_buttonsView release];
     [_phone release];
     [_phonePrefix release];
+    [_maskedTextFieldDelegate release];
     [super dealloc];
 }
 
@@ -114,31 +110,6 @@ int cursorPos;
 
 #pragma mark - TextField delegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (self.textPlaceholderActive) {
-        if (string.length == 0) return NO;
-        self.textField.text = @"";
-        self.textPlaceholderActive = NO;
-    } 
-    NSString* phone = textField.text;
-    
-    NSString* number = [self maskPhoneNumber:phone inRange:range insertString:string];
-    
-    textField.text = number;
-    NSRange currentCursorPos = [self convertFromPhoneToTextFieldRange:NSMakeRange(cursorPos, 1)];
-    UITextPosition* newPosition = [textField positionFromPosition:textField.beginningOfDocument offset:currentCursorPos.location];
-    textField.selectedTextRange = [textField textRangeFromPosition:newPosition toPosition:newPosition];
-    
-    return NO;
-}
-
-- (void)textFieldDidChange {
-    if (!self.textPlaceholderActive && self.textField.text.length == 0) {
-        self.textField.text = self.textField.placeholder;
-        self.textPlaceholderActive = YES;
-    }
-}
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     BOOL phoneValid = [self validatePhone];
     if (phoneValid){
@@ -148,9 +119,7 @@ int cursorPos;
 }
 
 - (BOOL) validatePhone {
-//    NSRegularExpression* regExp = [NSRegularExpression regularExpressionWithPattern:PHONE_VALIDATION_PATTERN options:NSRegularExpressionCaseInsensitive error:nil];
-//    if (![regExp numberOfMatchesInString:self.textField.text options:0 range:NSMakeRange(0, self.textField.text.length)]){
-    if([self.textField.text rangeOfString:PHONE_DIGIT_MASK].location != NSNotFound) {
+    if([self.maskedTextFieldDelegate getFirstPlaceholerPositionInMask] != NSNotFound) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid phone format" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         [alert release];
@@ -164,129 +133,6 @@ int cursorPos;
     [phone appendString:self.textField.text];
     self.phone = phone;
     [[NSNotificationCenter defaultCenter] postNotificationName:kPrimaryPhoneDone object:nil];    
-}
-
-- (NSString*) maskPhoneNumber:(NSString*)phone inRange:(NSRange)range insertString:(NSString *)string
-{
-    if (phone.length == 0)
-    {
-        phone = [NSString stringWithString:PHONE_FORMAT];
-        range = NSMakeRange([self getFirstPlaceholerPositionInMask], 1);
-    }
-    
-    phone = [self getPhoneDigitsFromString:phone];
-    
-    cursorPos = 0;
-    NSMutableString* phoneNumber = [NSMutableString stringWithString:phone];
-    cursorPos = [self convertFromTextFieldToPhoneRange:range].location;
-    if (cursorPos > phone.length)
-        cursorPos = phone.length;
-    
-    if (string.length == 1)
-    {
-        if ([self isNumber:string]) {
-            NSUInteger i = (cursorPos >= phoneNumber.length) ? phoneNumber.length : cursorPos;
-            [phoneNumber insertString:string atIndex:i];
-            cursorPos = i;
-        } else {
-            cursorPos--;
-        }
-    }
-    else
-    {
-        if (![self charIsMask:[PHONE_FORMAT characterAtIndex:range.location]])
-            cursorPos--;
-        if (range.location > [self getFirstPlaceholerPositionInMask] - 1) {
-            NSUInteger i = (cursorPos >= phone.length) ? phone.length - 1 : cursorPos;
-            [phoneNumber deleteCharactersInRange:NSMakeRange(i, 1)];
-            cursorPos = (cursorPos >= phone.length) ? i - 1 : cursorPos - 1;
-        }
-    }
-    
-    phone = phoneNumber;
-    
-    NSMutableString* number = [NSMutableString stringWithString:PHONE_FORMAT];
-    
-    for (int i = [self getStartingDigitsCountInMask]; i < phone.length; i++)
-    {
-        NSRange nextNumber = [number rangeOfString:PHONE_DIGIT_MASK];
-        if (nextNumber.location == NSNotFound)
-        {
-            break;
-        }
-        
-        [number replaceCharactersInRange:nextNumber withString:[NSString stringWithFormat:@"%c", [phone characterAtIndex:i]]];
-    }
-    
-    return number;
-}
-
-- (NSRange)convertFromTextFieldToPhoneRange:(NSRange) range
-{
-    int pos = 0;
-    for (int i = 0; i < range.location; i++)
-    {
-        if ([self charIsMask:[PHONE_FORMAT characterAtIndex:i]])
-            pos++;
-    }
-    pos += [self getStartingDigitsCountInMask];
-    return NSMakeRange(pos, 1);
-}
-
-- (NSRange)convertFromPhoneToTextFieldRange:(NSRange) range
-{    
-    if (range.location == 0) {
-        return NSMakeRange(2, 1);
-    }
-    if (range.location == NSNotFound || range.location == NSMakeRange(-1, 1).location) {
-        return NSMakeRange([self getFirstPlaceholerPositionInMask],1);
-    }
-    
-    
-    int pos = 0;
-    int phonePos = range.location - [self getStartingDigitsCountInMask]+1;
-    while (phonePos && pos < PHONE_FORMAT.length) {
-        if ([self charIsMask:[PHONE_FORMAT characterAtIndex:pos]])
-            phonePos--;
-        pos++;
-    }
-    return NSMakeRange(pos/* ? pos : [self getFirstPlaceholerPositionInMask]*/, 1);
-}
-
-- (BOOL)isNumber:(NSString*)string
-{
-    for (int i = 0; i < string.length; i++)
-    {
-        if (!isdigit([string characterAtIndex:i]))
-            return NO;
-    }
-    return YES;
-}
-
-- (NSUInteger) getFirstPlaceholerPositionInMask {
-    return [PHONE_FORMAT rangeOfString:PHONE_DIGIT_MASK].location;
-}
-
-- (NSUInteger) getStartingDigitsCountInMask { //in 8(___)___-____ returns 1; in +38(___)___-____ returns 2;
-    int pos = 0;
-    for (int i = 0; i < PHONE_FORMAT.length; i++)
-    {
-        if (isdigit([PHONE_FORMAT characterAtIndex:i])) {
-            pos++;
-        } else if ([self charIsMask:[PHONE_FORMAT characterAtIndex:i]]){
-            break;
-        }
-    }
-    return pos;
-}
-
-- (NSString*) getPhoneDigitsFromString: (NSString*) string {
-    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"\\D" options:NSRegularExpressionCaseInsensitive error:nil];
-    return [regex stringByReplacingMatchesInString:string options:0 range:NSMakeRange(0, string.length) withTemplate:@""];
-}
-
-- (BOOL) charIsMask:(unichar)unichar {
-    return [[NSString stringWithFormat:@"%c", unichar] isEqualToString:PHONE_DIGIT_MASK];
 }
 
 #pragma mark - Actions
