@@ -17,6 +17,8 @@ public interface UserService {
 
     User getUser(long userId);
 
+    User getUser(SocialNetworkType snType, String accountId);
+
     User findUser(String phone);
 
 
@@ -25,6 +27,8 @@ public interface UserService {
     void updateEmail(long userId, String email);
 
     UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode);
+
+    UserSocialAccount attachAccount(long userId, UserSocialAccount account);
 
     void detachAccount(long userId, SocialNetworkType snType);
 

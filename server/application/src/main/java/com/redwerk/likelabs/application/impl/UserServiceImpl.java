@@ -68,6 +68,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUser(SocialNetworkType snType, String accountId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User findUser(String phone) {
         User user = userRepository.find(phone);
@@ -123,6 +128,13 @@ public class UserServiceImpl implements UserService {
         }
         User user = userRepository.get(userId);
         UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccount(accessCode);
+        user.addAccount(account);
+        return account;
+    }
+
+    @Override
+    public UserSocialAccount attachAccount(long userId, UserSocialAccount account) {
+        User user = userRepository.get(userId);
         user.addAccount(account);
         return account;
     }
