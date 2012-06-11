@@ -4,21 +4,15 @@ import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.dto.Report;
-import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.model.review.ContentTypeFilter;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewStatus;
-import com.redwerk.likelabs.domain.model.review.SortingCriteria;
-import com.redwerk.likelabs.domain.model.review.SortingOrder;
-import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
-import org.apache.commons.lang.StringUtils;
-import java.text.ParseException;
+import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,9 +45,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @PreAuthorize("@decisionAccess.permissionCompany(principal, #companyId)")
 @Controller
 @RequestMapping(value = "/company/{companyId}")
-public class CompanyController {
+public class CompanyGeneralController {
 
-    private static final int ITEMS_PER_PAGE_REVIEW = 8;
     private static final String VIEW_COMPANY_REVIEWS_LIST = "company/company_review_list";
     private static final String VIEW_COMPANY_DASHBOARD = "company/dashboard";
 
@@ -95,7 +88,7 @@ public class CompanyController {
         model.addAttribute("points", report.getItems());
         model.addAttribute("company", company);
         model.addAttribute("count", report.getCount());
-        model.addAttribute("items_per_page", ITEMS_PER_PAGE_REVIEW);
+        model.addAttribute("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_REVIEW);
         model.addAttribute("page", "moderation");
         model.put("cabinet", "company");
         return VIEW_COMPANY_REVIEWS_LIST;
@@ -108,7 +101,7 @@ public class CompanyController {
 
         ModelMap response = new ModelMap();
         try {
-            Report<Review> report = reviewService.getCompanyReviews(companyId, filter.getReviewStatus(), queryFilterBuilder(filter));
+            Report<Review> report = reviewService.getCompanyReviews(companyId, filter.getReviewStatus(), QueryFilterBuilder.buildReviewQuery(filter));
             Company company = companyService.getCompany(companyId);
             Set<Review> sampleReviews = company.getSampleReviews();
             List<Map> data = new ArrayList<Map>();
@@ -207,34 +200,5 @@ public class CompanyController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
-    }
-
-    private ReviewQueryData queryFilterBuilder(ReviewFilterDto filter) throws ParseException {
-
-       List<Long> pointIds = null;
-       if (filter.getPoint() != null) {
-           pointIds = new ArrayList<Long>();
-           pointIds.add(filter.getPoint());
-       }
-       ContentTypeFilter contentType = null;
-       if (StringUtils.isNotBlank(filter.getFeedType())) {
-           contentType = ContentTypeFilter.valueOf(filter.getFeedType().toUpperCase(Locale.ENGLISH));
-       }
-       SortingRule sort = null;
-       if (StringUtils.isNotBlank(filter.getSortBy())) {
-           SortingCriteria sortingCriteria = SortingCriteria.valueOf(filter.getSortBy().toUpperCase(Locale.ENGLISH));
-           SortingOrder sortingOrder = null;
-           switch (sortingCriteria){
-               case DATE:  sortingOrder = SortingOrder.DESCENDING;
-                           break;
-               case REVIEW_TYPE: sortingOrder = SortingOrder.DESCENDING;
-                                 break;
-               default: sortingOrder = SortingOrder.ASCENDING;
-           }
-           sort = new SortingRule(sortingCriteria, sortingOrder);
-       }
-       Pager pager = new Pager(filter.getPage() * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
-       return new ReviewQueryData(pointIds, filter.getFromDate(), filter.getToDate(),
-                contentType, filter.getSampleStatus(), filter.getPublishingStatus(), pager, sort);
     }
 }

@@ -7,19 +7,23 @@ import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
-import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.web.ui.dto.ProfileData;
-import com.redwerk.likelabs.web.ui.validator.ProfileValidator;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -27,21 +31,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 
 /*
  * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
  */
-@PreAuthorize("@decisionAccess.permissionCompanyAdmin(principal, #userId)")
+@PreAuthorize("@decisionAccess.permissionCompanyAdmin(principal, #adminId)")
 @Controller
-@RequestMapping(value = "/companyadmin/{userId}")
-public class CompanyAdminController {
+@RequestMapping(value = "/companyadmin/{adminId}")
+public class CompanyAdminGeneralController {
 
-    private static final String VIEW_PROFILE = "companyadmin/profile";
     private static final String VIEW_COMPANY_LIST = "companyadmin/list";
     private static final String VIEW_REVIEW_LIST = "companyadmin/feed";
-    private static final String COMPANIES_REDIRECT_URL = "redirect:/companyadmin/companies";
     private static final int COMPANY_LIST_PAGE_SIZE = 10;
     private static final int REVIEW_LIST_PAGE_SIZE = 8;
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
@@ -60,43 +66,13 @@ public class CompanyAdminController {
     private PointService pointService;
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
-    public String cabinet(ModelMap model, @PathVariable Long userId) {
+    public String cabinet(ModelMap model, @PathVariable Long adminId) {
 
-         return "redirect:/companyadmin/" + userId + "/companies";
-    }
-
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String profileGet(ModelMap model, @PathVariable Long userId) {
-
-        User user = userService.getUser(userId);
-        model.addAttribute("profile", new ProfileData(user.getPhone(), "", user.getEmail()));
-        model.addAttribute("page", "profile");
-        model.put("cabinet", "company_admin");
-        return VIEW_PROFILE;
-    }
-
-    @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public String profileSave(ModelMap model, @PathVariable Long userId, @ModelAttribute("profile") ProfileData profileData,
-            BindingResult result) {
-
-        User user = userService.getUser(userId);
-        new ProfileValidator().validate(profileData, result);
-        if (!result.hasErrors()) {
-            userService.updateUser(user.getId(),
-                    new UserData(profileData.getPhone(),
-                    StringUtils.isBlank(profileData.getPassword()) ? user.getPassword() : profileData.getPassword(),
-                    profileData.getEmail(),
-                    user.isPublishInSN(),
-                    user.getEnabledEvents()));
-            return COMPANIES_REDIRECT_URL;
-        } else {
-            model.put("cabinet", "company_admin");
-            return VIEW_PROFILE;
-        }
+         return "redirect:/companyadmin/" + adminId + "/companies";
     }
 
     @RequestMapping(value = "/companies", method = RequestMethod.GET)
-    public String companyList(ModelMap model, @PathVariable Long userId) {
+    public String companyList(ModelMap model, @PathVariable Long adminId) {
 
         model.addAttribute("items_per_page" ,COMPANY_LIST_PAGE_SIZE);
         model.addAttribute("page", "companies");
@@ -106,14 +82,14 @@ public class CompanyAdminController {
 
     @RequestMapping(value = "/companies/data/{pageId:\\d}", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap companyListPaged(@PathVariable Long userId , @PathVariable int pageId ) {
+    public ModelMap companyListPaged(@PathVariable Long adminId , @PathVariable int pageId ) {
 
         int offset = pageId * COMPANY_LIST_PAGE_SIZE;
         int count = COMPANY_LIST_PAGE_SIZE;
 
         ModelMap modelMap = new ModelMap();
 
-        User user = userService.getUser(userId);
+        User user = userService.getUser(adminId);
         Report<CompanyReportItem> companiesResult = companyService.getCompaniesForAdmin(user.getId(), new Pager(offset, count));
         modelMap.put("companies", buildCompaniesJson(companiesResult.getItems()));
         modelMap.put("count", companiesResult.getCount());
@@ -121,9 +97,9 @@ public class CompanyAdminController {
     }
 
     @RequestMapping(value = "/feed", method = RequestMethod.GET)
-    public String reviewList(ModelMap model, @PathVariable Long userId) {
+    public String reviewList(ModelMap model, @PathVariable Long adminId) {
 
-        User user = userService.getUser(userId);
+        User user = userService.getUser(adminId);
         Map<String, List<Point>> companiesPointsMap = new HashMap<String, List<Point>>();
         List<CompanyReportItem> companies = companyService.getCompaniesForAdmin(user.getId(), Pager.ALL_RECORDS).getItems();
         for (CompanyReportItem company : companies) {
@@ -139,7 +115,7 @@ public class CompanyAdminController {
 
     @RequestMapping(value = "/feed/data/{pageId:\\d}", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap reviewListPaged(@PathVariable Long userId, @PathVariable int pageId,
+    public ModelMap reviewListPaged(@PathVariable Long adminId, @PathVariable int pageId,
             @RequestParam(value = "status", defaultValue = "") String statusFilterParam,
             @RequestParam(value = "point", defaultValue = "") String pointFilterParam,
             @RequestParam(value = "startDate", defaultValue = "") String startDateParam,
@@ -162,7 +138,7 @@ public class CompanyAdminController {
             }
         }
 
-        User user = userService.getUser(userId);
+        User user = userService.getUser(adminId);
         int offset = pageId * REVIEW_LIST_PAGE_SIZE;
         int count = REVIEW_LIST_PAGE_SIZE;
         Pager pager = new Pager(offset, count);
@@ -261,7 +237,6 @@ public class CompanyAdminController {
         for (Review review : reviews) {
             Map<String, Object> reviewJson = new HashMap<String, Object>();
             reviewJson.put("id", review.getId().toString());
-
             reviewJson.put("companyId", review.getPoint().getCompany().getId().toString()); // todo: ???
             reviewJson.put("message", review.getMessage());
             reviewJson.put("name", review.getAuthor().getName());

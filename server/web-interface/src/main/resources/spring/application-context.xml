@@ -29,9 +29,7 @@
         p:defaultEncoding="UTF-8" />
     
     <util:properties id="applicationProperties" location="classpath:/properties/application.properties" />
-<!--     
-    <bean id="exceptionResolver" class="com.redwerk.likelabs.web.common.RequestExceptionHandler" />
-  -->
+
     <bean class="org.springframework.mail.javamail.JavaMailSenderImpl"
         p:host="${app.mail.host}"
         p:port="${app.mail.port}"

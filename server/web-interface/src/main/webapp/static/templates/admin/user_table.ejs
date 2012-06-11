@@ -1,9 +1,9 @@
 <table cellpadding="0" cellspacing="1" style="width: 100%; border: solid 1px #d2d9df;" summary="" class="content_table">
     <thead style="height: 30px;">
         <tr style="background-color: #efefef">
-            <th>Name</th>
-            <th>Email</th>
             <th>Phone</th>
+            <th>Email</th>
+            <th>Name</th>
             <th>Status</th>
             <th>&nbsp;</th>
         </tr>
@@ -11,21 +11,19 @@
 <% 
     for (var key=0; key<users.length;key++) {
         var user = users[key];
-        var statuses = ["active", "inactive", "deleted"];
-        user.status = statuses[key%3];
 %>
     <tr style="background-color: #<%= key % 2 == 0? 'fdfeff' : 'efefef' %>">
-        <td><%= user.name %></td>
-        <td><%= user.email %></td>
         <td><%= user.phone %></td>
+        <td><%= user.email %></td>
+        <td><%= user.name %></td>
         <td><%= user.status %></td>
         <td>
-            <a href="/user/<%=user.id%>/profile" target="_blank"><img src="/static/images/profile_icon.png" width="16" height="16" title="Profile" alt="Profile"/></a>
+            <a href="/user/<%=user.id%>" ><img src="/static/images/profile_icon.png" width="16" height="16" title="User cabinet" alt="User cabinet"/></a>
             <a href="javascript:void(0);" onclick="editUserDialog('<%=user.id%>', '<%=user.phone%>', '<%=user.email%>', '<%=user.password%>');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
             <% if (user.status == 'deleted') { %>
                 <a href="javascript:void(0);"><img src="/static/images/restore_icon.png" title="Restore" alt="Restore"/></a>
             <% } else { %>
-                <a href="javascript:void(0);"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
+                <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'deleted');"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
             <% } %>
         </td>
     </tr>

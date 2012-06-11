@@ -1,6 +1,8 @@
 package com.redwerk.likelabs.web.common;
 
 import com.redwerk.likelabs.domain.model.review.exception.ReviewNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,25 +21,24 @@ public class RequestExceptionHandler implements HandlerExceptionResolver {
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request,
-            HttpServletResponse response, Object handler, Exception e) {
+            HttpServletResponse response, Object handler, Exception exception) {
 
         ModelAndView mav;
-        if (e instanceof ReviewNotFoundException) {
+        if (exception instanceof ReviewNotFoundException) {
             mav = new ModelAndView("error/content_not_found");
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            log.error("Bad request error: " + e.getMessage() , e);
+            log.error("Bad request error: " + exception.getMessage() , exception);
             return mav;
         }
-        if (e instanceof AccessDeniedException) {
-            mav = new ModelAndView("error/access-denied");
+        if (exception instanceof AccessDeniedException) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            log.error("Access level error: " + e.getMessage() , e);
-            return mav;
+            log.error("Access level error: " + exception.getMessage() , exception);
+            //processed further to AccessDeniedHandler
+            return null;
         }
         mav = new ModelAndView("error/server-error");
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        // mav.addObject("error_message", e.getMessage() + " - in" + e.getStackTrace()[0].getClassName() + " line:" + e.getStackTrace()[0].getLineNumber());
-        log.error("Internal error: " + e.getMessage() , e);
+        log.error("Internal error: " + exception.getMessage() , exception);
         return mav;
     }
 }

@@ -112,6 +112,7 @@
 
         var ajaxObj = false;
         function pageChanged(newPage, jq) {
+            pagerOptions.current_page=newPage;
             loadData(newPage);
             return false;
         }
@@ -134,7 +135,7 @@
             dataFilter.sortingOrder = 'ASCENDING';
             ajaxObj= $.ajax({
                 dataType: 'json',
-                url: '/companyadmin/${userId}/feed/data/' + newPage,
+                url: '/companyadmin/${adminId}/feed/data/' + newPage,
                 data: dataFilter,
                 success: function(data){
                     initPager(data.count);
@@ -189,8 +190,8 @@
                        if(data.error){
                            errorDialog("Request error", data.error);
                        } else {
-                            pagerOptions.resetPager = true;
-                            loadData(0);
+                            //pagerOptions.resetPager = true;
+                            loadData(pagerOptions.current_page);
                        }
                     },
                     error:function(jqXHR, textStatus){                        
@@ -225,8 +226,8 @@
                                 $me.addClass('active');
                                 $me.attr('title', 'Remove from favourites');
                             }
-                            pagerOptions.resetPager = true;
-                            loadData(0);
+                            //pagerOptions.resetPager = true;
+                            loadData(pagerOptions.current_page);
                         }
                     },
                     error:function(jqXHR, textStatus){
@@ -252,8 +253,8 @@
                             errorDialog("Error update review", response.error);
                         } else{
                             $me.replaceWith('<span class="btn disabled">Published<'+'/span>');
-                            pagerOptions.resetPager = true;
-                            loadData(0);
+                            //pagerOptions.resetPager = true;
+                            loadData(pagerOptions.current_page);
                         }
                     },
                     error:function(jqXHR, textStatus){

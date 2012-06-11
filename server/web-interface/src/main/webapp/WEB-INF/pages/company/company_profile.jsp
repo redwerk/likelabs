@@ -1,6 +1,5 @@
 <%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript">
-    var companyId = <c:out value="${company.id}" default="0"/>;
     $(document).ready(function(){
         $("#add_administrator_dialog").dialog({ autoOpen: false, title: "Add administrator", close: function(){document.getElementById("add_administrator_form").reset();$("#add_administrator_dialog").dialog({title: "Add administrator"})}, modal: true, minWidth: 400, minHeight: 200});
         $("#edit_administrator_dialog").dialog({ autoOpen: false, title: "Edit administrator", close: function(){document.getElementById("edit_administrator_form").reset();$("#edit_administrator_dialog").dialog({title: "Edit administrator"})}, modal: true, minWidth: 400, minHeight: 200});
@@ -11,7 +10,7 @@
         
     })
     function addAdmin() {
-        $.post("/company/" + companyId + "/profile/admin", $("#add_administrator_form").serialize(), function(response){
+        $.post("/company/${company.id}/profile/admin/add", $("#add_administrator_form").serialize(), function(response){
             if (!response.success) {
                 errorsDialog("Error adding administrator", response.errors);
                 return;
@@ -20,19 +19,9 @@
             window.location.reload();
         });
     }
-    
-    function editAdmin() {
-        $.post("/company/" + companyId + "/profile/admin", $("#edit_administrator_form").serialize(), function(response){
-            if (!response.success) {
-                errorsDialog("Error editing administrator", response.errors);
-                return;
-            }
-            $("#edit_administrator_dialog").dialog("close");
-            window.location.reload();
-        });
-    }
+
     function addPage() {
-        $.post("/company/" + companyId + "/profile/page", $("#add_social_page_form").serialize(), function(response){
+        $.post("/company/${company.id}/profile/page", $("#add_social_page_form").serialize(), function(response){
             if (!response.success) {
                 errorDialog("Error adding social page", response.error);
                 return;
@@ -47,7 +36,7 @@
     function deleteAdmin(id) {
         confirmDialog("Delete administrator company", "Are you sure?",function(){
             $.ajax({
-                url: "/company/" + companyId + "/profile/admin/" + id,
+                url: "/company/${company.id}/profile/admin/" + id,
                 type: "DELETE",
                 success: function(response){
                     if (!response.success) {
@@ -61,7 +50,7 @@
     function deletePoint(id) {
         confirmDialog("Delete point", "Are you sure?",function(){
             $.ajax({
-                url: "/company/" + companyId + "/profile/point/" + id,
+                url: "/company/${company.id}/profile/point/" + id,
                 type: "DELETE",
                 success: function(response){
                     if (!response.success) {
@@ -75,7 +64,7 @@
     function deletePage(id) {
         confirmDialog("Delete social page", "Are you sure?",function(){
             $.ajax({
-                url: "/company/" + companyId + "/profile/page/" + id,
+                url: "/company/${company.id}/profile/page/" + id,
                 type: "DELETE",
                 success: function(response){
                     if (!response.success) {
@@ -86,15 +75,27 @@
                 }
             })});
     }
-    
-    function editUserDialog(id, phone, email, password){
-        $("#edit_administrator_phone").val(phone);
-        $("#edit_administrator_email").val(email);
-//        $("#edit_administrator_password").val(password);
-        $("#edit_administrator_id").val(id);
-        $("#edit_administrator_dialog").dialog('open');
-    }
 
+    <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+        function editAdmin() {
+            $.post("/company/${company.id}/profile/admin/edit", $("#edit_administrator_form").serialize(), function(response){
+                if (!response.success) {
+                    errorsDialog("Error editing administrator", response.errors);
+                    return;
+                }
+                $("#edit_administrator_dialog").dialog("close");
+                window.location.reload();
+            });
+        }
+
+        function editUserDialog(id, phone, email, password){
+            $("#edit_administrator_phone").val(phone);
+            $("#edit_administrator_email").val(email);
+            $("#edit_administrator_password").val(password);
+            $("#edit_administrator_id").val(id);
+            $("#edit_administrator_dialog").dialog('open');
+        }
+    </sec:authorize>
 </script>
 <div id="content">
     <h1>${title}</h1> 
@@ -184,7 +185,7 @@
                                     <td>${admin.email}</td>
                                     <td>
                                         <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                                            <a href="javascript:void(0);" onclick="editUserDialog('1', '+123456789', 'test@test.com', '12345');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
+                                            <a href="javascript:void(0);" onclick="editUserDialog('${admin.id}','${admin.phone}', '${admin.email}', '${admin.password}');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
                                         </sec:authorize>
                                         <a href="javascript:void(0);" onclick="deleteAdmin(${admin.id})"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
                                     </td>
@@ -193,7 +194,6 @@
                         </table>
                         <div id="add_administrator_dialog">
                             <form action="" onsubmit="addAdmin();return false;" id="add_administrator_form">
-                                <input type="hidden" name="id" id="add_administrator_id"/>
                                 <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
                                     <tr>
                                         <td><label for="add_administrator_phone">Phone: </label></td>

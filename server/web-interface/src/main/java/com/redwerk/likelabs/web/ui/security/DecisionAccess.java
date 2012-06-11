@@ -1,6 +1,5 @@
 package com.redwerk.likelabs.web.ui.security;
 
-
 public interface DecisionAccess {
 
     boolean permissionCompany(Object principal, Long companyId);

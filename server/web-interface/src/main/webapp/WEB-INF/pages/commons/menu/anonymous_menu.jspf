@@ -1,0 +1,9 @@
+<%@ page pageEncoding="UTF-8" %>
+<ul class="menu">
+    <li class=' <c:if test="${page eq 'companies'}">active</c:if>'><a href="/public"><span class="mark company"><span></span></span>Companies</a></li>
+    <li class=' <c:if test="${page eq 'how_it_works'}">active</c:if>'><a href="/howitworks"><span class="mark dashboard"><span></span></span>How it works</a></li>
+    <li class=' <c:if test="${page eq 'get_started'}">active</c:if>'><a href="/getsatrted"><span class="mark profile"><span></span></span>Get Started</a></li>
+    <li class=' <c:if test="${page eq 'terms_of_use'}">active</c:if>'><a href="/tou"><span class="mark feed"><span></span></span>Terms of Use</a></li>
+    <li class=' <c:if test="${page eq 'about_us'}">active</c:if>'><a href="/about"><span class="mark feed"><span></span></span>About Us</a></li>
+    <li class=' <c:if test="${page eq 'contact_us'}">active</c:if>'><a href="/contact"><span class="mark feed"><span></span></span>Contact Us</a></li>
+</ul>

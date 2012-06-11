@@ -7,22 +7,19 @@
 
     <http use-expressions="true">
       
-        <!--
-            <intercept-url pattern="/admin*" access="hasRole('ROLE_SYSTEM_ADMIN')"/>
-        -->
-        <form-login login-page="/index"
+        <form-login login-page="/"
                             default-target-url="/"
                             authentication-success-handler-ref="authSuccessHandler"
                             authentication-failure-handler-ref="authFailureHandler"
                             login-processing-url="/login"/>
         <logout invalidate-session="true"
                         logout-url="/logout"
-                        logout-success-url="/index" />
+                        logout-success-url="/" />
         <anonymous key="LikeLabsWebSiteKey" username="0" granted-authority="ROLE_ANONYMOUS" />
 
         <remember-me key="LikeLabsWebSiteKey" user-service-ref="rememberMeUserDetailsService"/>
 
-        <access-denied-handler error-page="/WEB-INF/pages/error/access-denied.jsp"/>
+        <access-denied-handler ref="securityAccessDeniedHandler"/> 
 
     </http>
     

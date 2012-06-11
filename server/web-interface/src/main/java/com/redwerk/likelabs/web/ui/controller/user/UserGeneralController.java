@@ -6,19 +6,13 @@ import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
-import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.point.Point;
-import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.model.review.ContentTypeFilter;
 import com.redwerk.likelabs.domain.model.review.Review;
-import com.redwerk.likelabs.domain.model.review.SortingCriteria;
-import com.redwerk.likelabs.domain.model.review.SortingOrder;
-import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
@@ -26,6 +20,7 @@ import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.PointDto;
 import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
+import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,12 +29,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.expression.ParseException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -63,12 +56,11 @@ import org.springframework.web.bind.support.SessionStatus;
 @PreAuthorize("@decisionAccess.permissionUser(principal, #userId)")
 @Controller
 @RequestMapping(value = "/user/{userId}")
-public class UserContentController {
+public class UserGeneralController {
 
     private static final String VIEW_USER_PHOTOS = "user/photos";
     private static final String VIEW_USER_SETTINGS = "user/settings";
     private static final String VIEW_REVIEWS_LIST = "user/review_list";
-    private static final int ITEMS_PER_PAGE = 8;
 
     @Autowired
     private CompanyService companyService;
@@ -98,7 +90,7 @@ public class UserContentController {
     @RequestMapping(value="/photo", method=RequestMethod.GET)
     public String photos(ModelMap model, @PathVariable Long userId) {
         
-        model.put("items_per_page", ITEMS_PER_PAGE);
+        model.put("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_PHOTO);
         model.put("cabinet", "user");
         model.put("page", "my_photos");
         return VIEW_USER_PHOTOS;
@@ -115,8 +107,7 @@ public class UserContentController {
             if ("deleted".equals(status)) {
                 statusFilter = PhotoStatus.DELETED;
             } 
-            Pager pager = new Pager(page * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
-            Report<Photo> photos = photoService.getPhotos(userId, statusFilter, pager);
+            Report<Photo> photos = photoService.getPhotos(userId, statusFilter, QueryFilterBuilder.buildPagerPhoto(page));
             List<Map> data = new ArrayList<Map>();
             for (Photo photo : photos.getItems()) {
                 if (photo.getStatus().equals(PhotoStatus.ACTIVE) || photo.getStatus().equals(PhotoStatus.DELETED)) {
@@ -212,7 +203,7 @@ public class UserContentController {
         }
         model.put("companies", companiesDto);
         model.put("count", companies.size());
-        model.put("items_per_page", ITEMS_PER_PAGE);
+        model.put("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_REVIEW);
         model.put("page", "my_feed");
         model.put("cabinet", "user");
         return VIEW_REVIEWS_LIST;
@@ -224,7 +215,6 @@ public class UserContentController {
 
         ModelMap response = new ModelMap();
         try {
-            ReviewQueryData query = queryFilterBuilder(filter);
             List<Long> companyIds = new ArrayList<Long>();
             if (filter.getCompany() == null) {
                 List<Company> companies = companyService.getCompaniesForClient(userId);
@@ -234,7 +224,7 @@ public class UserContentController {
             } else {
                 companyIds.add(filter.getCompany());
             }
-            Report<Review> report = reviewService.getUserReviews(getRealUserId(userId), companyIds, query);
+            Report<Review> report = reviewService.getUserReviews(getRealUserId(userId), companyIds, QueryFilterBuilder.buildReviewQuery(filter));
             List<Map> data = new ArrayList<Map>();
             for (Review review : report.getItems()) {
                 Map<String, Object> map = new HashMap<String, Object>();
@@ -294,38 +284,6 @@ public class UserContentController {
             response.put("success", false);
         }
         return response;
-    }
-
-    private ReviewQueryData queryFilterBuilder(ReviewFilterDto filter) throws ParseException {
-
-        List<Long> pointIds = null;
-        if (filter.getPoint() != null) {
-            pointIds = new ArrayList<Long>();
-            pointIds.add(filter.getPoint());
-        }
-        ContentTypeFilter contentType = null;
-        if (StringUtils.isNotBlank(filter.getFeedType())) {
-            contentType = ContentTypeFilter.valueOf(filter.getFeedType().toUpperCase(Locale.ENGLISH));
-        }
-        SortingRule sort = null;
-        if (StringUtils.isNotBlank(filter.getSortBy())) {
-            SortingCriteria sortingCriteria = SortingCriteria.valueOf(filter.getSortBy().toUpperCase(Locale.ENGLISH));
-            SortingOrder sortingOrder = null;
-            switch (sortingCriteria) {
-                case DATE:
-                    sortingOrder = SortingOrder.DESCENDING;
-                    break;
-                case REVIEW_TYPE:
-                    sortingOrder = SortingOrder.DESCENDING;
-                    break;
-                default:
-                    sortingOrder = SortingOrder.ASCENDING;
-            }
-            sort = new SortingRule(sortingCriteria, sortingOrder);
-        }
-        Pager pager = new Pager(filter.getPage() * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
-        return new ReviewQueryData(pointIds, filter.getFromDate(), filter.getToDate(),
-                contentType, filter.getSampleStatus(), filter.getPublishingStatus(), pager, sort);
     }
 
     private Long getRealUserId(Long id) {

@@ -5,21 +5,16 @@ import com.redwerk.likelabs.application.PhotoService;
 import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.dto.Report;
-import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.model.review.ContentTypeFilter;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewStatus;
-import com.redwerk.likelabs.domain.model.review.SortingCriteria;
-import com.redwerk.likelabs.domain.model.review.SortingOrder;
-import com.redwerk.likelabs.domain.model.review.SortingRule;
-import org.apache.commons.lang.StringUtils;
+import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
+import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,19 +30,16 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 
 @Controller
 @RequestMapping(value = "/public")
@@ -165,17 +157,11 @@ public class PublicContentController {
     @RequestMapping(value = "/{companyId}/reviews/data", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap reviewsPublicData(@PathVariable Integer companyId,
-            @RequestParam("point") Long point,
-            @RequestParam("feed_type") String feedType,
-            @RequestParam("date_to") Date toDate,
-            @RequestParam("date_from") Date fromDate,
-            @RequestParam("sort_by") String sortBy,
-            @RequestParam(value="page_number", defaultValue="0") Integer page) {
+                  @ModelAttribute ReviewFilterDto filter) {
 
         ModelMap response = new ModelMap();
         try {
-            ReviewQueryData query = queryFilterBuilder(point, feedType, toDate, fromDate, sortBy, page);
-            Report<Review> report = reviewService.getPublicReviews(companyId, query);
+            Report<Review> report = reviewService.getPublicReviews(companyId, QueryFilterBuilder.buildReviewQuery(filter));
             List<Map> data = new ArrayList<Map>();
             for (Review review : report.getItems()) {
                 Map<String, Object> map = new HashMap<String, Object>();
@@ -199,16 +185,6 @@ public class PublicContentController {
     @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
     public String getReviewDetails(ModelMap model, @PathVariable Long reviewId) {
 
-        Authentication  auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-            model.put("cabinet", "user");
-        }
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SYSTEM_ADMIN"))) {
-            model.put("cabinet", "admin");
-        }
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_COMPANY_ADMIN"))) {
-            model.put("cabinet", "company_admin");
-        }
         Review review = reviewService.getReview(reviewId);
         if (review.getStatus() != ReviewStatus.APPROVED) {
             model.put("not_approved", true);
@@ -278,39 +254,4 @@ public class PublicContentController {
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
-    
-    private ReviewQueryData queryFilterBuilder(Long point, String feedType, Date toDate,
-                                Date fromDate, String sortBy, Integer page) throws ParseException {
-        
-       List<Long> pointIds = null;
-       if (point != null) {
-           pointIds = new ArrayList<Long>();
-           pointIds.add(point);
-       }
-       ContentTypeFilter contentType = null;
-       if (StringUtils.isNotBlank(feedType)) {
-           contentType = ContentTypeFilter.valueOf(feedType.toUpperCase(Locale.ENGLISH));
-       }
-       SortingRule sort = null;
-       if (StringUtils.isNotBlank(sortBy)) {
-           SortingCriteria sortingCriteria = SortingCriteria.valueOf(sortBy.toUpperCase(Locale.ENGLISH));
-           SortingOrder sortingOrder = null;
-           switch (sortingCriteria){
-               case DATE:  sortingOrder = SortingOrder.DESCENDING;
-                           break;
-               case REVIEW_TYPE: sortingOrder = SortingOrder.DESCENDING;
-                                 break;
-               default: sortingOrder = SortingOrder.ASCENDING;
-           }
-           sort = new SortingRule(sortingCriteria, sortingOrder);
-       }
-       Pager pager = new Pager(page * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
-       return new ReviewQueryData(pointIds, fromDate, toDate, contentType, null, null, pager, sort);
-    }
-
-    @RequestMapping(value = {"/review/{reviewId}/"}, method = RequestMethod.GET)
-    public String reviewDetails(ModelMap model) {
-        return "review_details";
-    }
-
 }

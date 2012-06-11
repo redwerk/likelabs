@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.web.ui.controller.user;
+package com.redwerk.likelabs.web.ui.controller.companyadmin;
 
 import org.springframework.stereotype.Controller;
 import com.redwerk.likelabs.application.UserService;
@@ -20,14 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
-/*
- * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
- */
-@PreAuthorize("@decisionAccess.permissionUser(principal, #userId)")
+@PreAuthorize("@decisionAccess.permissionCompanyAdmin(principal, #adminId)")
 @Controller
-@RequestMapping(value = "/user/{userId}/profile")
-public class UserProfileController {
-    
+@RequestMapping(value = "/companyadmin/{adminId}/profile")
+public class CompanyAdminProfileController {
+
     private final UserProfileValidator validator = new UserProfileValidator();
 
     private static final String VIEW_PROFILE = "commons/general_profile";
@@ -38,16 +35,16 @@ public class UserProfileController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String initForm(ModelMap model, @PathVariable Long userId) {
+    public String initForm(ModelMap model, @PathVariable Long adminId) {
 
-        UserDto user = new UserDto(userService.getUser(userId));
+        UserDto user = new UserDto(userService.getUser(adminId));
         model.put("user", user);
         model.put("page", "profile");
         return VIEW_PROFILE;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String processSubmit(ModelMap model, @PathVariable Long userId,
+    public String processSubmit(ModelMap model, @PathVariable Long adminId,
             @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
 
         validator.validate(user, result);
@@ -55,10 +52,10 @@ public class UserProfileController {
             model.put("page", "profile");
             return VIEW_PROFILE;
         }
-        User userOldData = userService.getUser(userId);
+        User userOldData = userService.getUser(adminId);
         String password = StringUtils.isBlank(user.getPassword()) ? userOldData.getPassword() : user.getPassword();
         try {
-            userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
+            userService.updateUser(adminId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
         } catch (EmailMessagingException e) {
             log.error(e,e);
             result.rejectValue("email", "user.profile.invalid.email", "Please enter valid email address.");
@@ -67,6 +64,6 @@ public class UserProfileController {
         }
         status.setComplete();
         model.clear();
-        return "redirect:/user/" + userId;
+        return "redirect:/companyadmin/" + adminId;
     }
 }

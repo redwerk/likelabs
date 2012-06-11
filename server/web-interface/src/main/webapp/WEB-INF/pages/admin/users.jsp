@@ -2,7 +2,7 @@
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript" >
     var pager_options = {
-        items_count: <c:out value="${count}"/>,
+        items_count: 5<c:out value="${count}"/>,
         config: {
             items_per_page : <c:out value="${items_per_page}"/>,
             next_text : "&gt;",
@@ -31,28 +31,26 @@
     }
 
     var options = {
-        page_number: 0
+        page: 0
     };
     
     function pageSelectCallback(page_index, jq) {
-        options.page_number = page_index;
+        options.page = page_index;
         if (force_update)
             updateData();
         return false;
     }
 
     var force_update = true;
-    var test_data = {"data":[{"id":"1","phone":"000000000011","email":"test1@test.com","name":"User1"},{"id":"1","phone":"000000000012","email":"test2@test.com","name":"User2"},{"id":"1","phone":"000000000013","email":"test3@test.com","name":"User3"}],"count":3};
     function updateData() {
-        $.get("/admin/companies/data", options, function(response){
-            response = test_data;
-            if (response.error) {
-                console.warn(response.error);
+        $.get("/administrator/users/data", options, function(response){
+            if (!response.success) {
+                errorDialog("Server error", response.message);
                 return;
             }
             pager_options.items_count = response.count;
             force_update = false;
-            initPager(options.page_number);
+            initPager(options.page);
             force_update = true;
             fillTable(response.data);
         });
@@ -64,11 +62,16 @@
     }
     
     function addUser(){
-        $.get("/admin/users", $("#add_user_form").serialize(),function(){
+        $.post("/administrator/users", $("#add_user_form").serialize(),function(response) {
+            if (!response.success) {
+                errorsDialog("Error adding user", response.errors);
+                return;
+            }
             $("#add_user_dialog").dialog("close");
+            updateData();
         })
     }
-    
+
     function editUserDialog(id, phone, email, password){
         $("#add_user_dialog").dialog({title: "Edit User"})
         $("#add_user_phone").val(phone);
@@ -77,11 +80,22 @@
         $("#add_user_id").val(id);
         $("#add_user_dialog").dialog('open');
     }
-    
+
+    function changeStatusUser(id, status) {
+        confirmDialog("Delete user", "Are you sure?",function() {
+            $.post("/administrator/users/status", {"id": id, "status": status },function(response) {
+                if (!response.success) {
+                    errorDialog("Error deleting company", response.message);
+                    return;
+                }
+                updateData();
+            })
+        })
+    }
 </script>
 <div id="content">
     <h1>Users</h1>
-    <div style="height: 20px;"><div class="right" style="height: 20px;"><a href="javascript:void(0)" onclick="$('#add_user_dialog').dialog('open')">add</a></div><div class="clear"></div></div>
+    <div style="height: 20px;"><div class="right" style="height: 20px;"><a href="javascript:void(0)" onclick="editUserDialog(0, '', '', '')">add</a></div><div class="clear"></div></div>
     <div id="point_list_table"></div>
     <div id="pager" class="pager" style="position: relative; float: right; padding-top: 20px"></div>
     <div class="clear"></div>

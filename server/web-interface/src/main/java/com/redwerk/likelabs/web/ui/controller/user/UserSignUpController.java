@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/signup")
-public class SignUpController {
+public class UserSignUpController {
 
     private static final String VIEW_SINGNUP_START = "signup/start";
     private static final String VIEW_SINGNUP_REGISTER = "signup/register";

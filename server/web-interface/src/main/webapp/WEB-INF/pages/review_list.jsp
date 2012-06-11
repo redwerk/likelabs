@@ -47,17 +47,17 @@
     }
 
     var options = {
-        feed_type: null,
+        feedType: null,
         point: null,
-        date_to: null,
-        date_from: null,
-        sort_by: null,
-        page_number: 0,
+        toDate: null,
+        fromDate: null,
+        sortBy: null,
+        page: 0,
         status: null
     };
     
     function pageSelectCallback(page_index, jq) {
-        options.page_number = page_index;
+        options.page = page_index;
         if (force_update)
             updateData();
         return false;
@@ -71,7 +71,7 @@
             }
             pager_options.items_count = response.count;
             force_update = false;
-            initPager(options.page_number);
+            initPager(options.page);
             force_update = true;
             fillTable(response.data);
         });
@@ -83,26 +83,26 @@
     }
     
     function changeFilter() {
-        options.date_from = $("#filter_date_from").val();
-        options.date_to = $("#filter_date_to").val();
-        options.feed_type = $("#feed_type").val();
+        options.fromDate = $("#filter_date_from").val();
+        options.toDate = $("#filter_date_to").val();
+        options.feedType = $("#feed_type").val();
         options.point = $("#point").val();
-        options.page_number = 0;
+        options.page = 0;
         initPager();
     }
     
     function changeSort() {
-        options.sort_by = $("#sort_by").val();
+        options.sortBy = $("#sort_by").val();
         updateData();
     }
     
     function updateOptions() {
-        options.date_from = $("#filter_date_from").val();
-        options.date_to = $("#filter_date_to").val();
-        options.feed_type = $("#feed_type").val();
+        options.fromDate = $("#filter_date_from").val();
+        options.toDate = $("#filter_date_to").val();
+        options.feedType = $("#feed_type").val();
         options.point = $("#point").val();
-        options.page_number = 0;
-        options.sort_by = $("#sort_by").val();
+        options.page = 0;
+        options.sortBy = $("#sort_by").val();
         options.status = $("input[name=status_filter]:checked").val();
     }
 </script>

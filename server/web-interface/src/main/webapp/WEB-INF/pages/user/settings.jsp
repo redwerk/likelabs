@@ -33,7 +33,7 @@ $(document).ready(function(){
             </table>
         </div>
         <div class="field-holder" style="padding-top: 20px;">
-            <button class="btn btn-success save" type="submit">Save</button> or &nbsp;<a href="/user/${userId}">Cancel</a>
+            <form:button class="btn btn-success save" type="submit">Save</form:button> or &nbsp;<a href="/user/${userId}">Cancel</a>
         </div>
         <div class="clear"></div>
     </div>

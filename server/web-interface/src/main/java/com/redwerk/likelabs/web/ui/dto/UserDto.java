@@ -12,6 +12,7 @@ public class UserDto {
     String email;
     String password;
     String confirmPassword;
+    String status;
 
     Boolean publishInSN = false;
     Boolean eventReviewCreated = false;
@@ -58,6 +59,14 @@ public class UserDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getConfirmPassword() {

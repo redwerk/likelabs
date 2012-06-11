@@ -31,11 +31,11 @@
     }
 
     var options = {
-        page_number: 0
+        page: 0
     };
     
     function pageSelectCallback(page_index, jq) {
-        options.page_number = page_index;
+        options.page = page_index;
         if (force_update)
             updateData();
         return false;
@@ -43,14 +43,14 @@
 
     var force_update = true;
     function updateData() {
-        $.get("/admin/companies/data", options, function(response){
-            if (response.error) {
-                console.warn(response.error);
+        $.get("/administrator/companies/data", options, function(response){
+            if (!response.success) {
+                errorDialog("Server error", response.message);
                 return;
             }
             pager_options.items_count = response.count;
             force_update = false;
-            initPager(options.page_number);
+            initPager(options.page);
             force_update = true;
             fillTable(response.data);
         });
@@ -62,10 +62,29 @@
     }
     
     function addCompany(){
-        $.get("/admin/companies", $("#add_company_form").serialize(),function(){
+        $.post("/administrator/companies/add", $("#add_company_form").serialize(),function(response){
+            if (!response.success) {
+                errorsDialog("Error adding company", response.errors);
+                return;
+            }
             $("#add_company_dialog").dialog("close");
+            updateData();
         })
         
+    }
+    function deleteCompany(id) {
+        confirmDialog("Delete company", "Are you sure?",function() {
+            $.ajax({
+                url: "/administrator/companies/" + id,
+                type: "DELETE",
+                success: function(response){
+                    if (!response.success) {
+                        errorDialog("Error deleting company", response.message);
+                        return;
+                    }
+                    updateData();
+                }
+            })});
     }
     
 </script>

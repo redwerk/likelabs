@@ -18,8 +18,8 @@
         <td><%= company.email %></td>
         <td><%= company.phone %></td>
         <td>
-            <a href="/company/<%=company.id%>/profile" target="_blank"><img src="/static/images/profile_icon.png" width="16" height="16" title="Profile" alt="Profile"/></a>
-            <a href="javascript:void(0);"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
+            <a href="/company/<%=company.id%>"><img src="/static/images/profile_icon.png" width="16" height="16" title="Company cabinet" alt="Company cabinet"/></a>
+            <a href="javascript:void(0);" onclick="deleteCompany(<%= company.id %>);"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
         </td>
     </tr>
 <% 

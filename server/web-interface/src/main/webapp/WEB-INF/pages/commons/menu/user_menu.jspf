@@ -1,0 +1,7 @@
+<%@ page pageEncoding="UTF-8" %>
+<ul class="menu">
+    <li class=' <c:if test="${page eq 'my_feed'}">active</c:if>'><a href="/user/${userId}/feed"><span class="mark feed"><span></span></span>My Feed</a></li>
+    <li class=' <c:if test="${page eq 'my_photos'}">active</c:if>'><a href="/user/${userId}/photo"><span class="mark dashboard"><span></span></span>My Photos</a></li>
+    <li class=' <c:if test="${page eq 'settings'}">active</c:if>'><a href="/user/${userId}/settings"><span class="mark company"><span></span></span>Settings</a></li>
+    <li class=' <c:if test="${page eq 'profile'}">active</c:if>'><a href="/user/${userId}/profile"><span class="mark profile"><span></span></span>Profile</a></li>
+</ul>

@@ -2,9 +2,11 @@ package com.redwerk.likelabs.web.ui.controller.company;
 
 import com.redwerk.likelabs.application.CompanyService;
 import com.redwerk.likelabs.application.PointService;
+import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
 import com.redwerk.likelabs.application.dto.company.CompanyPageData;
+import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
@@ -17,9 +19,11 @@ import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedUserException;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
+import com.redwerk.likelabs.web.ui.dto.UserDto;
 import com.redwerk.likelabs.web.ui.validator.EmailValidator;
 import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
 import com.redwerk.likelabs.web.ui.validator.SocialLinkValidator;
+import com.redwerk.likelabs.web.ui.validator.UserProfileValidator;
 import com.redwerk.likelabs.web.ui.validator.Validator;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ import java.util.Set;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +67,10 @@ public class CompanyProfileController {
     private final static Byte MAX_LENGTH_EMAIL = 40;
     private final static Byte MAX_LENGTH_SOCIAL_URL = 100;
 
-    private CompanyProfileValidator validator = new CompanyProfileValidator();
+    private final static byte NEW_USER_ID = 0;
+
+    private CompanyProfileValidator companyValidator = new CompanyProfileValidator();
+    private UserProfileValidator userValidator = new UserProfileValidator();
     private final Logger log = LogManager.getLogger(getClass());
 
     @Autowired
@@ -71,6 +79,8 @@ public class CompanyProfileController {
     private CompanyService companyService;
     @Autowired
     private PointService pointService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String initForm(ModelMap model, @PathVariable Integer companyId) {
@@ -90,7 +100,7 @@ public class CompanyProfileController {
                @ModelAttribute("company") CompanyDto companyDto,
                             BindingResult result, SessionStatus status) {
 
-        validator.validate(companyDto, result);
+        companyValidator.validate(companyDto, result);
         if (result.hasErrors()) {
             model.addAttribute("page", "profile");
             model.put("cabinet", "company");
@@ -203,33 +213,53 @@ public class CompanyProfileController {
         return response;
     }
 
-    @RequestMapping(value = "/admin", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
+    @RequestMapping(value = "/admin/edit", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap addCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @RequestParam("phone") String phone,
-                                                              @RequestParam("email") String email) {
+    public ModelMap editCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @ModelAttribute("user") UserDto user) {
         ModelMap response = new ModelMap();
 
-        List<String> errors = new ArrayList<String>();
-        if (!new EmailValidator().isValid(email)) {
-            errors.add(messageTemplateService.getMessage("company.profile.invalid.email"));
-        }
-        if (!new PhoneValidator().isValid(phone)) {
-            errors.add(messageTemplateService.getMessage("company.profile.invalid.phone"));
-        }
-        if (email.length() > MAX_LENGTH_EMAIL) {
-            errors.add(messageTemplateService.getMessage("company.profile.invalid.email.length", MAX_LENGTH_EMAIL.toString()));
-        }
-        if (phone.length() > MAX_LENGTH_PHONE) {
-            errors.add(messageTemplateService.getMessage("company.profile.invalid.phone.length", MAX_LENGTH_PHONE.toString()));
-        }
+        List<String> errors = userValidator.validate(user, messageTemplateService);
         if (!errors.isEmpty()) {
             response.put("errors",errors);
             response.put("success", false);
             return response;
         }
-        response.put("success", true);
         try {
-            companyService.createAdmin(companyId, new CompanyAdminData(phone, email));
+            User u = userService.getUser(user.getId());
+            userService.updateUser(user.getId(), new UserData(user.getPhone(), user.getPassword(), user.getEmail(), u.isPublishInSN(), u.getEnabledEvents()));
+            response.put("success", true);
+        } catch (DuplicatedUserException e) {
+            log.error(e, e);
+            response.put("success", false);
+            errors.add(messageTemplateService.getMessage("message.registration.user.duplicated"));
+        } catch (EmailMessagingException e) {
+            log.error(e, e);
+            response.put("success", false);
+            errors.add(messageTemplateService.getMessage("message.registration.failed.send.email"));
+        } catch (Exception e) {
+            log.error(e, e);
+            response.put("success", false);
+            errors.add("Company administrator not added  Server error.");
+        }
+        response.put("errors",errors);
+        return response;
+    }
+
+    @RequestMapping(value = "/admin/add", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelMap addCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @ModelAttribute("user") UserDto user) {
+        ModelMap response = new ModelMap();
+
+        List<String> errors = validateUser(user);
+        if (!errors.isEmpty()) {
+            response.put("errors",errors);
+            response.put("success", false);
+            return response;
+        }
+        try {
+            companyService.createAdmin(companyId, new CompanyAdminData(user.getPhone(), user.getEmail()));
+            response.put("success", true);
         } catch (DuplicatedUserException e) {
             log.error(e, e);
             response.put("success", false);
@@ -315,6 +345,34 @@ public class CompanyProfileController {
         } catch (IOException e) {
             log.error(e, e);
         }
+    }
+
+    private List<String> validateUser(UserDto user) {
+
+        final Byte MAX_LENGTH_PHONE = 20;
+        final Byte MAX_LENGTH_EMAIL = 40;
+        final Byte MAX_LENGTH_PASSWORD = 40;
+
+        List<String> errors = new ArrayList<String>();
+        if (!new EmailValidator().isValid(user.getEmail())) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.email"));
+        }
+        if (!new PhoneValidator().isValid(user.getPhone())) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.phone"));
+        }
+        if (user.getEmail().length() > MAX_LENGTH_EMAIL) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.email", MAX_LENGTH_EMAIL.toString()));
+        }
+        if (user.getPhone().length() > MAX_LENGTH_PHONE) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.phone", MAX_LENGTH_PHONE.toString()));
+        }
+        if (user.getId() == NEW_USER_ID && StringUtils.isBlank(user.getPassword())) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.password"));
+        }
+        if (user.getPassword().length() > MAX_LENGTH_PASSWORD) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.password", MAX_LENGTH_PASSWORD.toString()));
+        }
+        return errors;
     }
 
     private class CompanyProfileValidator implements org.springframework.validation.Validator {

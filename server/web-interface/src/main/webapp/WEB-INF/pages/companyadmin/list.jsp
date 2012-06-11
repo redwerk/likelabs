@@ -37,7 +37,7 @@
             
             ajaxObj= $.ajax({
                 dataType: 'json',
-                url: '/companyadmin/${userId}/companies/data/' + newPage,
+                url: '/companyadmin/${adminId}/companies/data/' + newPage,
                 success: function(data){
                     initPager(data.count);
                     renderData(data);
