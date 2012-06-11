@@ -148,7 +148,7 @@ int cursorPos;
 }
 
 - (BOOL) validatePhone {
-    if ([self.maskedTextFieldDelegate getFirstPlaceholerPositionInMask] != NSNotFound) {
+    if ([self.recipientContactField.text rangeOfString:PHONE_DIGIT_MASK].location != NSNotFound) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Invalid phone format." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
         [alert release];

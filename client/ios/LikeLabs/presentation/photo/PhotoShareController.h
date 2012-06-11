@@ -11,6 +11,10 @@
 @property (retain, nonatomic) IBOutlet UIButton *mailButton;
 @property (retain, nonatomic) IBOutlet UIButton *phoneButton;
 @property (retain, nonatomic) IBOutlet UILabel *lbTitle;
+@property (retain, nonatomic) IBOutlet UIView *instructionsBackground;
+@property (retain, nonatomic) IBOutlet UILabel *thirdStepLabel;
+@property (retain, nonatomic) IBOutlet UIImageView *requiredLabel;
+@property (retain, nonatomic) IBOutlet UILabel *recipientsCountLabel;
 - (IBAction)fieldTouched:(id)sender;
 - (IBAction)addMail:(id)sender;
 - (IBAction)addPhone:(id)sender;

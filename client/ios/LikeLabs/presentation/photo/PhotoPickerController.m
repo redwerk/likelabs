@@ -26,7 +26,9 @@
 
 static const float PADDING = 20;
 static const int COUNTER_LENGTH = 3;
-static const float TIMER_INTERVAL = 1;
+static const float COUNTER_INTERVAL = 1;
+static const float PHOTO_INTERVAL = 2;
+static const float WHITE_SCREEN_DURATION = 0.2;
 NSString *const FIRST_MSG = @"When you are ready click the photo icon to start the camera. 5 photos will be taken with a 2 second interval.";
 NSString *const GET_READY_MSG = @"Get Ready!";
 
@@ -106,8 +108,8 @@ NSString *const GET_READY_MSG = @"Get Ready!";
     self.messageLabel.text = GET_READY_MSG;
     
     [self.view bringSubviewToFront:self.label];
-    self.seconds = 3;
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDown) userInfo:nil repeats:YES];
+    self.seconds = COUNTER_LENGTH;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:COUNTER_INTERVAL target:self selector:@selector(countDown) userInfo:nil repeats:YES];
 }
 
 - (void) countDown {
@@ -131,17 +133,17 @@ NSString *const GET_READY_MSG = @"Get Ready!";
         [RootController switchToController:@"RootPhotoController" rootController:self.rootController];
     } else {
         [self captureImage];
-        [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+        [UIView animateWithDuration:WHITE_SCREEN_DURATION/2 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.view.alpha = 0;
         } completion:^(BOOL finished){
-            [UIView animateWithDuration:.1 delay:0.1 options:UIViewAnimationOptionCurveLinear animations:^{
+            [UIView animateWithDuration:WHITE_SCREEN_DURATION/2 delay:WHITE_SCREEN_DURATION/2 options:UIViewAnimationOptionCurveLinear animations:^{
                 self.view.alpha = 1;
             } completion:^(BOOL finished){
                 
             }];
         }];
         self.seconds--;
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(onTimer) userInfo:nil repeats:NO];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:PHOTO_INTERVAL target:self selector:@selector(onTimer) userInfo:nil repeats:NO];
     }
 
 }

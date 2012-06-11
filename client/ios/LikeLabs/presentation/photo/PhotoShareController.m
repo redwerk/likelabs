@@ -25,6 +25,10 @@
 @synthesize mailButton = _mailButton;
 @synthesize phoneButton = _phoneButton;
 @synthesize lbTitle = _lbTitle;
+@synthesize instructionsBackground = _instructionsBackground;
+@synthesize thirdStepLabel = _thirdStepLabel;
+@synthesize requiredLabel = _requiredLabel;
+@synthesize recipientsCountLabel = _recipientsCountLabel;
 @synthesize rootController = _rootController;
 @synthesize review = _review;
 @synthesize overlay = _overlay;
@@ -100,6 +104,10 @@
     [self setMailButton:nil];
     [self setPhoneButton:nil];
     [self setLbTitle:nil];
+    [self setInstructionsBackground:nil];
+    [self setThirdStepLabel:nil];
+    [self setRequiredLabel:nil];
+    [self setRecipientsCountLabel:nil];
     [super viewDidUnload];
     self.rootController = nil;
 }
@@ -114,6 +122,10 @@
     [_mailButton release];
     [_phoneButton release];
     [_lbTitle release];
+    [_instructionsBackground release];
+    [_thirdStepLabel release];
+    [_requiredLabel release];
+    [_recipientsCountLabel release];
     [super dealloc];
 }
 
@@ -124,22 +136,21 @@
 	return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self layoutSubviewsForInterfaceOrientation:toInterfaceOrientation];
     [self.overlay willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     [self.recipientsOverlay willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 - (void) setBackgroundForInterfaceOrientation:(UIInterfaceOrientation) orientation {
-    UIColor *background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"share_bg_landscape.png" : @"photo_share_bg_portrait.png"]];
+    UIColor *background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"welcome_bg_landscape.png" : @"welcome_bg_portrait.png"]];
     self.view.backgroundColor = background;
     [background release];
 }
 
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation {
     [self setBackgroundForInterfaceOrientation:orientation];
-    if(self.review.reviewType==ReviewTypeText){
-        
+    if(self.review.reviewType==ReviewTypeText){        
         if (UIInterfaceOrientationIsLandscape(orientation)) {            
             //self.messageView.image = [UIImage imageNamed:@"text-block-portrait.png"];
             self.messageView.frame = CGRectMake(24, 191, 468, 350);
@@ -160,16 +171,24 @@
     
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         [self.lbTitle setCenter:CGPointMake(1024/2, 120)];
-        self.phoneField.frame = CGRectMake(581, 402, 389, 51);
-        self.addRecipientsView.frame = CGRectMake(832, 498, 138, 53);
-        self.submitBtn.frame = CGRectMake(548, 568, 422, 86);
-        [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg_landscape.png"] forState:UIControlStateNormal]; 
+        self.phoneField.frame = CGRectMake(64, 226, 375, 51);
+        self.addRecipientsView.frame = CGRectMake(300, 312, 138, 53);
+        self.thirdStepLabel.frame = CGRectMake(69, 118, 361, 74);
+        [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg_landscape.png"] forState:UIControlStateNormal];
+        self.instructionsBackground.frame = CGRectMake(531, 195, 455, 482);
+        self.instructionsBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"share_instructions_bg_landscape.png"]];
+        self.requiredLabel.frame = CGRectMake(95, 280, 340, 21);
+        self.recipientsCountLabel.frame = CGRectMake(69, 327, 230, 21);
     } else {
         [self.lbTitle setCenter:CGPointMake(768/2, 120)];
-        self.phoneField.frame = CGRectMake(108, 789, 442, 51);
-        self.addRecipientsView.frame = CGRectMake(561, 789, 142, 53);
-        self.submitBtn.frame = CGRectMake(47, 894, 665, 86);
+        self.phoneField.frame = CGRectMake(64, 226, 442, 51);
+        self.addRecipientsView.frame = CGRectMake(525, 226, 142, 53);
+        self.thirdStepLabel.frame = CGRectMake(69, 118, 600, 54);
         [self.submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_bg.png"] forState:UIControlStateNormal];  
+        self.instructionsBackground.frame = CGRectMake(32, 555, 697, 438);        
+        self.instructionsBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"share_instructions_bg_portrait.png"]];
+        self.requiredLabel.frame = CGRectMake(67, 280, 340, 21);
+        self.recipientsCountLabel.frame = CGRectMake(440, 200, 230, 21);
     }
 }
 
