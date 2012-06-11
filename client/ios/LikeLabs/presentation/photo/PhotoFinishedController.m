@@ -15,6 +15,8 @@
 @implementation PhotoFinishedController
 @synthesize button = _button;
 @synthesize lbMessageSent = _lbMessageSent;
+@synthesize thankYouImg = _thankYouImg;
+@synthesize instructionsBackground = _instructionsBackground;
 @synthesize rootController = _rootController;
 @synthesize imageView = _imageView;
 @synthesize review = _review;
@@ -32,16 +34,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;    
+    self.lbMessageSent.text = (self.review.contacts.count) ? [NSString stringWithFormat:@"%d messages were sent successfully!", self.review.contacts.count + 1] : @"Message was sent successfully";
     if(self.review.reviewType==ReviewTypePhoto){
-        self.lbMessageSent.text = @"5 messages were sent successfully!";
         _imageView = [[UIImageWithReview alloc] initWithFrame:CGRectMake(24, 211, 468, 350) image:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image andText:self.review.text];    
         [self.view addSubview:self.imageView];
     } else {
-        self.lbMessageSent.text = @"Message was sent successfully!";
         self.messageView = [[[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"promo_bg_gray.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:5]] autorelease];
-        [self.messageView setFrame:CGRectMake(24, 191, 468, 350)];
+        [self.messageView setFrame:CGRectMake(24, 211, 468, 350)];
         UILabel *lbText = [[[UILabel alloc] initWithFrame:CGRectMake(10, 10, self.messageView.frame.size.width-20, self.messageView.frame.size.height-20)] autorelease];
         self.messageView.opaque = NO;
         self.messageView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -70,6 +70,8 @@
 {
     [self setButton:nil];
     [self setLbMessageSent:nil];
+    [self setThankYouImg:nil];
+    [self setInstructionsBackground:nil];
     [super viewDidUnload];
     [self setMessageView:nil];
     self.rootController = nil;
@@ -82,6 +84,8 @@
     [_button release];
     [_messageView release];
     [_lbMessageSent release];
+    [_thankYouImg release];
+    [_instructionsBackground release];
     [super dealloc];
 }
 
@@ -92,44 +96,37 @@
 	return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self layoutSubviewsForInterfaceOrientation:toInterfaceOrientation];
 }
 
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation)orientation {
     [self setBackgroundForInterfaceOrientation:orientation];
-    if (UIInterfaceOrientationIsLandscape(orientation)) {
-        //LANDSCAPE
-        self.button.frame = CGRectMake(552, 387, 422,86);
-        self.lbMessageSent.center = CGPointMake(760, 255);
-    } else {
-        //PORTRAIT
-        self.button.frame = CGRectMake(47, 895, 667,86);
-        self.lbMessageSent.center = CGPointMake(768/2, 760);
+    CGRect contentFrame;
+    if (UIInterfaceOrientationIsLandscape(orientation)) {   //LANDSCAPE
+        [self.button setBackgroundImage:[UIImage imageNamed:@"return_to_home_screen_btn_landscape.png"] forState:UIControlStateNormal];
+        self.thankYouImg.center = CGPointMake(512, self.thankYouImg.center.y);
+        self.instructionsBackground.frame = CGRectMake(530, 211, 455, 282);
+        self.instructionsBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"thankyou_instructions_bg_landscape.png"]];
+        contentFrame = CGRectMake(24, 211, 468, 350);
+    } else {                                                //PORTRAIT
+        [self.button setBackgroundImage:[UIImage imageNamed:@"return_to_home_screen_btn_portrait.png"] forState:UIControlStateNormal];
+        self.thankYouImg.center = CGPointMake(384, self.thankYouImg.center.y);
+        self.instructionsBackground.frame = CGRectMake(37, 600, 697, 287);
+        self.instructionsBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"thankyou_instructions_bg_portrait.png"]];
+        contentFrame = CGRectMake(142, 210, 468, 350);
     }
-    if(self.review.reviewType==ReviewTypePhoto){
-        if (UIInterfaceOrientationIsLandscape(orientation)) {
-            //LANDSCAPE
-            self.imageView.frame = CGRectMake(24, 211, 468, 350);
-        } else {
-        //PORTRAIT
-            self.imageView.frame = CGRectMake(142, 275, 468, 350);
-        }
+    self.lbMessageSent.center = CGPointMake(self.instructionsBackground.frame.size.width / 2, self.lbMessageSent.center.y);
+    if (self.review.reviewType == ReviewTypePhoto) {
+        self.imageView.frame = contentFrame;
         [self.imageView setPhoto:((Photo*)[self.review.photos objectAtIndex:self.review.reviewPhotoIndex]).image];
     } else {
-        if (UIInterfaceOrientationIsLandscape(orientation)) {            
-            self.messageView.frame = CGRectMake(24, 191, 468, 350);
-        } else {
-            self.messageView.frame = CGRectMake(142, 230, 468, 350);   
-        }
-    }
-
+        self.messageView.frame = contentFrame;
+    }    
 }
 
 - (void) setBackgroundForInterfaceOrientation:(UIInterfaceOrientation) orientation {
-    UIColor *background = [[UIColor alloc] initWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"thankyou_bg_landscape.png" : @"thankyou_bg_portrait.png"]];
-    self.view.backgroundColor = background;
-    [background release];
+    self.view.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:UIInterfaceOrientationIsLandscape(orientation) ? @"welcome_bg_landscape.png" : @"welcome_bg_portrait.png"]];
 }
 
 #pragma mark - Actions
