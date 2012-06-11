@@ -3,6 +3,7 @@
     var companyId = <c:out value="${company.id}" default="0"/>;
     $(document).ready(function(){
         $("#add_administrator_dialog").dialog({ autoOpen: false, title: "Add administrator", close: function(){document.getElementById("add_administrator_form").reset();$("#add_administrator_dialog").dialog({title: "Add administrator"})}, modal: true, minWidth: 400, minHeight: 200});
+        $("#edit_administrator_dialog").dialog({ autoOpen: false, title: "Edit administrator", close: function(){document.getElementById("edit_administrator_form").reset();$("#edit_administrator_dialog").dialog({title: "Edit administrator"})}, modal: true, minWidth: 400, minHeight: 200});
         $("#add_social_page_dialog").dialog({ autoOpen: false, title: "Add social page", close: function(){document.getElementById("add_social_page_form").reset();}, modal: true, minWidth: 400, minHeight: 200});
         <c:if test="${error eq true}">
             errorDialog("Error", '<c:out value="${message}"/>');
@@ -16,6 +17,17 @@
                 return;
             }
             $("#add_administrator_dialog").dialog("close");
+            window.location.reload();
+        });
+    }
+    
+    function editAdmin() {
+        $.post("/company/" + companyId + "/profile/admin", $("#edit_administrator_form").serialize(), function(response){
+            if (!response.success) {
+                errorsDialog("Error editing administrator", response.errors);
+                return;
+            }
+            $("#edit_administrator_dialog").dialog("close");
             window.location.reload();
         });
     }
@@ -76,12 +88,11 @@
     }
     
     function editUserDialog(id, phone, email, password){
-        $("#add_administrator_dialog").dialog({title: "Edit administrator"});
-        $("#add_administrator_phone").val(phone);
-        $("#add_administrator_email").val(email);
-        $("#add_administrator_password").val(password);
-        $("#add_administrator_id").val(id);
-        $("#add_administrator_dialog").dialog('open');
+        $("#edit_administrator_phone").val(phone);
+        $("#edit_administrator_email").val(email);
+//        $("#edit_administrator_password").val(password);
+        $("#edit_administrator_id").val(id);
+        $("#edit_administrator_dialog").dialog('open');
     }
 
 </script>
@@ -149,7 +160,10 @@
                         <table cellpadding="0" cellspacing="1" style="width: 100%; border: solid 1px #d2d9df" summary="" class="content_table field">
                             <thead style="height: 30px;">
                                 <tr style="background-color: #efefef">
+                                    <th>Active</th>
                                     <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
                                     <th width="40">&nbsp;</th>
                                 </tr>
                             </thead>
@@ -157,7 +171,17 @@
 
                             <c:forEach items="${admins}" var="admin">
                                 <tr style="background-color: #fdfeff">
-                                    <td>${admin.name}</td>
+                                    <td>
+                                        <input type="checkbox" disabled="disabled" <c:if test="${admin.active eq true}">checked="checked"</c:if> />
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${admin.active eq true}">${admin.name}</c:when>
+                                            <c:when test="${admin.active eq false}">-</c:when>
+                                        </c:choose>
+                                    </td>
+                                    <td>${admin.phone}</td>
+                                    <td>${admin.email}</td>
                                     <td>
                                         <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
                                             <a href="javascript:void(0);" onclick="editUserDialog('1', '+123456789', 'test@test.com', '12345');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
@@ -179,12 +203,6 @@
                                         <td><label for="add_administrator_email">Email: </label></td>
                                         <td><input type="text" name="email" id="add_administrator_email"/></td>
                                     </tr>
-                                    <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                                        <tr>
-                                            <td><label for="add_administrator_password">Password: </label></td>
-                                            <td><input type="text" name="password" id="add_administrator_password"/></td>
-                                        </tr>
-                                    </sec:authorize>
                                     <tr>
                                         <td colspan="2" style="text-align: center; padding-top: 30px;">
                                             <button class="btn btn-success save" type="submit">Submit</button>
@@ -194,6 +212,34 @@
                                 </table>
                             </form>
                         </div>
+                        <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
+                            <div id="edit_administrator_dialog">
+                                <form action="" onsubmit="editAdmin();return false;" id="edit_administrator_form">
+                                    <input type="hidden" name="id" id="edit_administrator_id"/>
+                                    <table cellpadding="0" cellspacing="0" summary="" class="dialog_form">
+                                        <tr>
+                                            <td><label for="edit_administrator_phone">Phone: </label></td>
+                                            <td><input type="text" name="phone" id="edit_administrator_phone"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="edit_administrator_email">Email: </label></td>
+                                            <td><input type="text" name="email" id="edit_administrator_email"/></td>
+                                        </tr>
+
+                                            <tr>
+                                                <td><label for="edit_administrator_password">Password: </label></td>
+                                                <td><input type="text" name="password" id="edit_administrator_password"/></td>
+                                            </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: center; padding-top: 30px;">
+                                                <button class="btn btn-success save" type="submit">Submit</button>
+                                                <button class="btn btn-info save" type="button" onclick="$('#edit_administrator_dialog').dialog('close')">Cancel</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </sec:authorize>
                     </td>
                     <td style="text-align: center; vertical-align: top; padding-left: 40px; width: 260px;">
 
