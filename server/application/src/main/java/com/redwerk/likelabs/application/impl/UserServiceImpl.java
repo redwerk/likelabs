@@ -18,6 +18,7 @@ import java.text.MessageFormat;
 
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +70,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(SocialNetworkType snType, String accountId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Validate.notNull(snType, "snType cannot be null");
+        return userRepository.get(snType, accountId);
     }
 
     @Override
@@ -87,9 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(long userId, UserData userData) {
-        if (userData == null) {
-            throw new IllegalArgumentException("userData cannot be null");
-        }
+        Validate.notNull(userData, "userData cannot be null");
         User user = userRepository.get(userId);
         user.setPhone(userData.getPhone());
         user.setPassword(userData.getPassword());
@@ -123,9 +123,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode) {
-        if (snType == null) {
-            throw new IllegalArgumentException("snType cannot be null");
-        }
+        Validate.notNull(snType, "snType cannot be null");
+        Validate.notNull(accessCode, "accessCode cannot be null");
         User user = userRepository.get(userId);
         UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccount(accessCode);
         user.addAccount(account);
@@ -134,6 +133,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserSocialAccount attachAccount(long userId, UserSocialAccount account) {
+        Validate.notNull("account cannot be null");
         User user = userRepository.get(userId);
         user.addAccount(account);
         return account;
@@ -142,9 +142,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void detachAccount(long userId, SocialNetworkType snType) {
-        if (snType == null) {
-            throw new IllegalArgumentException("snType cannot be null");
-        }
+        Validate.notNull(snType, "snType cannot be null");
         User user = userRepository.get(userId);
         user.removeAccount(snType);
     }
