@@ -1,4 +1,83 @@
-root { 
-    display: block;
+body {
+  font-size: 14px;
+  background-color: #FFFFFF;
+  background-image: none !important;
 }
 
+#sitewrapper {
+    width: auto !important;
+    margin: 5px;
+}
+
+#sidebar {
+  width: 230px;
+  padding-top: 0px;
+}
+
+#main-holder {
+  padding-right: 10px;
+}
+
+#content {
+  margin-left: 230px;
+  padding: 10px;
+}
+
+#header .signin_block {
+  width: auto;
+}
+
+.filter-holder select {
+  margin-right: 200px;
+}
+
+.filter-holder label {
+  width: 90px;
+}
+
+.field input[type="text"] {
+  width: 195px;
+}
+
+.item-wrapper {
+  height: 280px;
+  width: 250px;
+  margin-right: 5px;
+}
+
+.item-wrapper .item-cmd {
+  height: 260px;
+  width: 220px;
+}
+
+.item-wrapper .item-cmd table {
+  width: auto;
+}
+
+.item-wrapper .item-data {
+  height: 280px;
+}
+
+.item-data .photo img {
+  width: 230px;
+}
+
+.item-data .photo {
+  height: auto;
+  width: 230px;
+}
+
+#feeds_table {
+  height: 595px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.items-holder .items-inner {
+  min-height: auto;
+  width: auto;
+}
+
+.profileLogoContainer{
+    padding-left:10px !important;
+}

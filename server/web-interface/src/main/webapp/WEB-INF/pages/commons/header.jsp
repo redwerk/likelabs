@@ -24,7 +24,9 @@
 
         <link href="/static/css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css" />
         <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/flick/jquery-ui.css" rel="stylesheet" type="text/css" />
-
+        <script>
+            var attachPath = "";
+        </script>
         <script type="text/javascript" src="/static/scripts/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="/static/scripts/jquery-ui-1.8.20.custom.min.js"></script>
         <script type="text/javascript" src="/static/scripts/ejs_production.js" ></script>
@@ -32,6 +34,33 @@
         <script type="text/javascript" src="/static/scripts/jquery.pagination.js" ></script>
         <script type="text/javascript" src="/static/scripts/jquery.validate.min.js"></script>
         <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
+        <c:if test="${not empty socialType}">
+                <script type="text/javascript">
+                    if(window.parent != window) {
+                        var fileref=document.createElement("link");
+                        fileref.setAttribute("rel", "stylesheet");
+                        fileref.setAttribute("type", "text/css");
+                        fileref.setAttribute("href", "/static/css/${socialType}.css");
+
+                        document.getElementsByTagName("head")[0].appendChild(fileref);
+                        $("body").ready(function(){
+                            $("#btnLogout").hide();
+                        });
+                    <c:choose>
+                        <c:when test="${socialType=='vk'}">                                
+                            fileref=document.createElement('script');
+                            fileref.setAttribute("type","text/javascript");
+                            fileref.setAttribute("src", "http://vk.com/js/api/xd_connection.js?2");
+                            document.getElementsByTagName("head")[0].appendChild(fileref);
+                            attachPath = "vk/attach";
+                        </c:when>
+                        <c:when test="${socialType=='fb'}">               
+                            attachPath = "fb/attach";                                    
+                        </c:when>
+                    </c:choose>
+                  }
+                </script>
+            </c:if>
         <sec:authorize access="not isAuthenticated()">
             <script type="text/javascript">
                 function signIn() {
@@ -51,7 +80,7 @@
                         data: data,
                         success: function(data){
                             if (data == "true") {
-                                window.location.href = "/";
+                                window.location.href = "/"+attachPath;
                             } else {
                                 $('#password').val("");
                                 $('#authfailed').html('<spring:message code="message.auth.failed"/>');
@@ -125,7 +154,7 @@
                             <button style="width: 100px;" class="btn btn-success" onclick="document.location.href='/'">My Cabinet</button>
                             &nbsp;
                             &nbsp;
-                            <button class="btn btn-success" style="width: 100px; " onclick="document.location.href='/logout'">Logout</button>
+                            <button id="btnLogout" class="btn btn-success" style="width: 100px; " onclick="document.location.href='/logout'">Logout</button>
                         </div>
                     </sec:authorize>
                     <sec:authorize access="isAnonymous()" >
