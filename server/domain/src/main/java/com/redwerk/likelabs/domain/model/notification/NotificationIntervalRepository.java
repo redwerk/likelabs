@@ -1,4 +1,4 @@
-package com.redwerk.likelabs.domain.model.notifications;
+package com.redwerk.likelabs.domain.model.notification;
 
 import com.redwerk.likelabs.domain.model.event.EventType;
 
@@ -20,6 +20,9 @@ public abstract class NotificationIntervalRepository {
         NotificationInterval interval = find(warningType);
         if (interval == null) {
             interval = new NotificationInterval(warningType);
+            if (warningType == WarningType.EMAIL_IS_ABSENT) {
+                interval.setEmailInterval(Period.UNSUPPORTED);
+            }
             add(interval);
         }
         return interval;
@@ -27,11 +30,11 @@ public abstract class NotificationIntervalRepository {
 
     public List<NotificationInterval> findAll() {
         List<NotificationInterval> intervals = new ArrayList<NotificationInterval>();
-        for (EventType et: EventType.values()) {
-            intervals.add(get(et));
-        }
         for (WarningType wt: WarningType.values()) {
             intervals.add(get(wt));
+        }
+        for (EventType et: EventType.values()) {
+            intervals.add(get(et));
         }
         return intervals;
     }

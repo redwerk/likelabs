@@ -1,16 +1,15 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
 import com.redwerk.likelabs.domain.model.event.EventType;
-import com.redwerk.likelabs.domain.model.notifications.NotificationInterval;
-import com.redwerk.likelabs.domain.model.notifications.NotificationIntervalRepository;
-import com.redwerk.likelabs.domain.model.notifications.WarningType;
+import com.redwerk.likelabs.domain.model.notification.NotificationInterval;
+import com.redwerk.likelabs.domain.model.notification.NotificationIntervalRepository;
+import com.redwerk.likelabs.domain.model.notification.WarningType;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Repository

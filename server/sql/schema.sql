@@ -185,8 +185,8 @@ CREATE TABLE `notification_interval` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `event_type` TINYINT NOT NULL,
      `warning_type` TINYINT NOT NULL,
-     `email_interval` INT NOT NULL,
-     `sms_interval` INT NOT NULL,
+     `email_interval` TINYINT NOT NULL,
+     `sms_interval` TINYINT NOT NULL,
      CONSTRAINT `PK_notification_interval` PRIMARY KEY (`id`)
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 

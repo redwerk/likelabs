@@ -1,6 +1,7 @@
-package com.redwerk.likelabs.domain.model.notifications;
+package com.redwerk.likelabs.domain.model.notification;
 
 import com.redwerk.likelabs.domain.model.event.EventType;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -11,8 +12,6 @@ import javax.persistence.*;
 @Table(name = "notification_interval")
 public class NotificationInterval {
     
-    private static final int UNDEFINED_PERIOD = 0;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,10 +23,10 @@ public class NotificationInterval {
     private WarningType warningType;
     
     @Column(name = "email_interval")
-    private int emailInterval = UNDEFINED_PERIOD;
+    private Period emailInterval = Period.DAILY;
 
     @Column(name = "sms_interval")
-    private int smsInterval = UNDEFINED_PERIOD;
+    private Period smsInterval = Period.DAILY;
 
 
     public NotificationInterval(EventType eventType) {
@@ -46,25 +45,25 @@ public class NotificationInterval {
         return warningType;
     }
 
-    public int getEmailInterval() {
+    public Period getEmailInterval() {
         return emailInterval;
     }
 
-    public int getSmsInterval() {
+    public Period getSmsInterval() {
         return smsInterval;
     }
 
-    public void setEmailInterval(int emailInterval) {
-        if (emailInterval <= 0 && emailInterval != UNDEFINED_PERIOD) {
-            throw new IllegalArgumentException("Incorrect emailInterval");
-        }
+    public void setEmailInterval(Period emailInterval) {
+        Validate.notNull(emailInterval, "emailInterval cannot be null");
+        Validate.isTrue((this.emailInterval != Period.UNSUPPORTED) || (emailInterval == Period.UNSUPPORTED),
+                "email interval is not supported");
         this.emailInterval = emailInterval;
     }
 
-    public void setSmsInterval(int smsInterval) {
-        if (smsInterval <= 0 && smsInterval != UNDEFINED_PERIOD) {
-            throw new IllegalArgumentException("Incorrect smsInterval");
-        }
+    public void setSmsInterval(Period smsInterval) {
+        Validate.notNull(smsInterval, "smsInterval cannot be null");
+        Validate.isTrue((this.smsInterval != Period.UNSUPPORTED) || (smsInterval == Period.UNSUPPORTED),
+                "smsInterval interval is not supported");
         this.smsInterval = smsInterval;
     }
 

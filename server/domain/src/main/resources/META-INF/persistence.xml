@@ -11,7 +11,7 @@
         <class>com.redwerk.likelabs.domain.model.point.Point</class>
         <class>com.redwerk.likelabs.domain.model.point.Address</class>
         <class>com.redwerk.likelabs.domain.model.tablet.Tablet</class>
-        <class>com.redwerk.likelabs.domain.model.notifications.NotificationInterval</class>
+        <class>com.redwerk.likelabs.domain.model.notification.NotificationInterval</class>
         <class>com.redwerk.likelabs.domain.model.event.Event</class>
         <class>com.redwerk.likelabs.domain.model.review.Review</class>
         <class>com.redwerk.likelabs.domain.model.review.Recipient</class>
