@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
         Validate.notNull(snType, "snType cannot be null");
         Validate.notNull(accessCode, "accessCode cannot be null");
         User user = userRepository.get(userId);
-        UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccount(accessCode);
+        UserSocialAccount account = gatewayFactory.getGateway(snType).getUserAccountByCode(accessCode);
         user.addAccount(account);
         return account;
     }

@@ -10,7 +10,14 @@ public interface SocialNetworkGateway {
      * @param code for access token retrieving
      * @return UserSocialAccount object representing user account in social network
      */
-    public UserSocialAccount getUserAccount(String code);
+    public UserSocialAccount getUserAccountByCode(String code);
+
+    /**
+     * Creates UserSocialAccount object by access token
+     * @param accessToken for access to User Social Page
+     * @return UserSocialAccount object representing user account in social network
+     */
+    public UserSocialAccount getUserAccountByAccessToken(String accessToken);
 
     /**
      * Validates that passed URL is company page URL in social network and creates CompanySocialPage object

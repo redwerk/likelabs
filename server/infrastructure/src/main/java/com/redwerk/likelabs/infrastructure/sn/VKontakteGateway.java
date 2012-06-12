@@ -7,24 +7,16 @@ import com.redwerk.likelabs.domain.service.sn.exception.*;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONTokener;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
@@ -32,7 +24,6 @@ import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartSource;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,13 +58,15 @@ public class VKontakteGateway implements SocialNetworkGateway {
     
     private static final String API_WALL_SAVE_PHOTO = API_URL + "photos.saveWallPhoto?server={0}&photo={1}&hash={2}&access_token={3}";
     
+    private static final String API_GET_USER_ID_TEMPLATE = API_URL + "getUserInfo?access_token={0}";
+    
     private static final String VK_COMPANY_URL_PATTERN = "http://vk.com/{0}";
 
     @Autowired
     MessageTemplateService messageTemplateService;
 
     @Override
-    public UserSocialAccount getUserAccount(String code) {
+    public UserSocialAccount getUserAccountByCode(String code) {
         String url = MessageFormat.format(GET_ACCESS_TOKEN_URL_TEMPLATE, messageTemplateService.getMessage(clientId), messageTemplateService.getMessage(clientSecret), code);
         String data = requestApiData(url);
 
@@ -81,12 +74,20 @@ public class VKontakteGateway implements SocialNetworkGateway {
         if (!json.containsKey("access_token") || !json.containsKey("user_id")) {
             throw new WrongAccessCodeException(code);
         }
-        String userId = json.getString("user_id");
+        return getUserSocialAccount(json.getString("access_token"), json.getString("user_id"));
+    }
 
+    @Override
+    public UserSocialAccount getUserAccountByAccessToken(String accessToken) {
+        String url = MessageFormat.format(API_GET_USER_ID_TEMPLATE, accessToken);
+        JSONObject json = requestApiDataJson(url);
+        return getUserSocialAccount(accessToken, json.getString("user_id"));
+    }
+    
+    private UserSocialAccount getUserSocialAccount(String accessToken, String userId) {
         JSONObject accountData = requestApiDataJson(MessageFormat.format(API_USER_INFO_TEMPLATE, userId));
-
         String name = accountData.getString("first_name") + " " + accountData.getString("last_name");
-        return new UserSocialAccount(SocialNetworkType.VKONTAKTE, json.getString("user_id"), json.getString("access_token"), name);
+        return new UserSocialAccount(SocialNetworkType.VKONTAKTE, userId, accessToken, name);
     }
 
     @Override

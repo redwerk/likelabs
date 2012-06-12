@@ -14,6 +14,7 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import com.redwerk.likelabs.domain.service.sn.ImageSource;
+import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessTokenException;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -72,7 +73,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     MessageTemplateService messageTemplateService;
 
     @Override
-    public UserSocialAccount getUserAccount(String code) {
+    public UserSocialAccount getUserAccountByCode(String code) {
         String url = MessageFormat.format(GET_ACCESS_TOKEN_URL_TEMPLATE, messageTemplateService.getMessage(clientId), 
                                          messageTemplateService.getMessage(MSG_APP_DOMAIN).concat(redirectUri),
                                                           messageTemplateService.getMessage(clientSecret), code);
@@ -83,12 +84,17 @@ public class FacebookGateway implements SocialNetworkGateway {
 
         Map<String,String> responseParams = parseResponse(data);
         String accessToken = responseParams.get("access_token");
-        data = requestApiData(MessageFormat.format(API_USER_INFO_TEMPLATE, accessToken));
+        return getUserAccountByAccessToken(accessToken);
+    }
+
+    @Override
+    public UserSocialAccount getUserAccountByAccessToken(String accessToken) {
+        String data = requestApiData(MessageFormat.format(API_USER_INFO_TEMPLATE, accessToken));
         
         JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
         
         if (json.containsKey("error")) {
-            throw new WrongAccessCodeException(code);
+            throw new WrongAccessTokenException(accessToken);
         }
         return new UserSocialAccount(SocialNetworkType.FACEBOOK, json.getString("id"), accessToken, json.getString("name"));
     }
