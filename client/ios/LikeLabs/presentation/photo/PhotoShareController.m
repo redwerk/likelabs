@@ -7,6 +7,8 @@
 #import "PhotoRecipientsOverlayController.h"
 #import "ReviewService.h"
 
+static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional recipients (%d of %d)";
+
 @interface PhotoShareController ()
 @property (nonatomic, retain) UIViewController <ContainerController>* rootController;
 @property (nonatomic, assign) Review* review;
@@ -178,7 +180,7 @@
         self.instructionsBackground.frame = CGRectMake(531, 195, 455, 482);
         self.instructionsBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"share_instructions_bg_landscape.png"]];
         self.requiredLabel.frame = CGRectMake(95, 280, 340, 21);
-        self.recipientsCountLabel.frame = CGRectMake(69, 327, 230, 21);
+        self.recipientsCountLabel.frame = CGRectMake(16, 327, 280, 21);
     } else {
         [self.lbTitle setCenter:CGPointMake(768/2, 120)];
         self.phoneField.frame = CGRectMake(64, 226, 442, 51);
@@ -188,7 +190,7 @@
         self.instructionsBackground.frame = CGRectMake(32, 555, 697, 438);        
         self.instructionsBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"share_instructions_bg_portrait.png"]];
         self.requiredLabel.frame = CGRectMake(67, 280, 340, 21);
-        self.recipientsCountLabel.frame = CGRectMake(440, 200, 230, 21);
+        self.recipientsCountLabel.frame = CGRectMake(387, 200, 280, 21);
     }
 }
 
@@ -231,7 +233,8 @@
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
 }
 
-- (void)dismissRecipientsOverlay {
+- (void)dismissRecipientsOverlay {    
+    self.recipientsCountLabel.text = (self.review.contacts.count) ? [NSString stringWithFormat:RECIPITENTS_COUNT_LABEL_TEMPLATE, self.review.contacts.count, MAX_CONTACTS] : @"Send to additional recipients (5 max)";
     [self.recipientsOverlay.view removeFromSuperview];
     self.recipientsOverlay = nil;
     [_recipientsOverlay release];
