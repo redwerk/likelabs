@@ -10,6 +10,7 @@ import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountExcepti
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -33,9 +34,9 @@ public class User {
 
     private String password;
 
-    @Column(name = "is_active")
-    private boolean active;
-    
+    @Column(name = "status")
+    private UserStatus status;
+
     private String email;
 
     @Column(name = "system_admin")
@@ -64,10 +65,10 @@ public class User {
 
     // constructors
 
-    protected User(String phone, String password, boolean active) {
+    protected User(String phone, String password, boolean isActive) {
         this.phone = phone;
         this.password = password;
-        this.active = active;
+        this.status = isActive ? UserStatus.ACTIVE : UserStatus.NOT_ACTIVATED;
         this.enabledEvents =  new HashSet<EventType>();
         for (EventType et: EventType.values()) {
             enabledEvents.add(et);
@@ -77,9 +78,17 @@ public class User {
     // accessors
     
     public boolean isActive() {
-        return active;
+        return (status == UserStatus.ACTIVE);
     }
-    
+
+    public boolean isDeleted() {
+        return (status == UserStatus.DELETED);
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
     public boolean isAnonymous() {
          return accounts.size() == 0;
     }
@@ -127,10 +136,26 @@ public class User {
     // modifiers
 
     public void activate() {
-        if (active) {
+        if (isActive()) {
             throw new IllegalStateException("user is already active");
         }
-        active = true;
+        status = UserStatus.ACTIVE;
+    }
+
+    public void delete(User executor) {
+        Validate.isTrue(executor.isSystemAdmin());
+        if (status == UserStatus.ACTIVE) {
+            throw new IllegalStateException("user " + phone + " is not active");
+        }
+        status = UserStatus.DELETED;
+    }
+
+    public void restore(User executor) {
+        Validate.isTrue(executor.isSystemAdmin());
+        if (status != UserStatus.DELETED) {
+            throw new IllegalStateException("user " + phone + " is not deleted");
+        }
+        status = UserStatus.ACTIVE;
     }
 
     public void markAsNotified() {
@@ -251,7 +276,7 @@ public class User {
                 .append("id", id)
                 .append("phone", phone)
                 .append("password", password)
-                .append("active", active)
+                .append("status", status)
                 .append("email", email)
                 .append("systemAdmin", systemAdmin)
                 .append("publishInSN", publishInSN)

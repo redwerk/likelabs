@@ -5,7 +5,7 @@ CREATE TABLE `user` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
      `phone` VARCHAR(20) NOT NULL,
      `password` VARCHAR(20) NOT NULL,
-     `is_active` TINYINT(1) NOT NULL,
+     `status` TINYINT NOT NULL,
      `email` VARCHAR(40),
      `system_admin` TINYINT(1) NOT NULL,
      `publish_in_sn` TINYINT(1) NOT NULL,

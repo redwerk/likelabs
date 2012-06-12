@@ -87,7 +87,7 @@ public class UserJpaRepository extends UserRepository {
     }
 
     @Override
-    public void remove(User user) {
+    protected void removeInternal(User user) {
         getEntityRepository().remove(user);
     }
 
