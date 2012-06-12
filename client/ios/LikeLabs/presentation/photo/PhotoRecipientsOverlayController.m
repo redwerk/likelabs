@@ -42,10 +42,14 @@ int cursorPos;
     self.recipientContactField.frame = CGRectMake(0, 0, 377, 75);  
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
     if (self.contactType == ContactTypePhone) {
-        self.recipientContactField.placeholder = self.recipientContactField.text =  PHONE_FORMAT;
+        SettingsDao *dao = [[SettingsDao alloc] init];
+        NSMutableString *fullMask = [NSMutableString stringWithString:dao.phonePrefix];
+        [dao release];
+        [fullMask appendString:PHONE_FORMAT];
+        self.recipientContactField.placeholder = self.recipientContactField.text = fullMask;
         self.recipientContactField.keyboardType = UIKeyboardTypePhonePad;
         self.recipientContactField.textColor = [UIColor blackColor];
-        self.recipientContactField.delegate = self.maskedTextFieldDelegate = [[[MaskedTextFieldDelegate alloc] initWithMask:PHONE_FORMAT maskCharacter:PHONE_DIGIT_MASK andOuterDelegate:self] autorelease];
+        self.recipientContactField.delegate = self.maskedTextFieldDelegate = [[[MaskedTextFieldDelegate alloc] initWithMask:fullMask maskCharacter:PHONE_DIGIT_MASK andOuterDelegate:self] autorelease];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange) name:UITextFieldTextDidChangeNotification object:nil];
         self.recipientContactField.placeholder = self.recipientContactField.text = @"my@email.com";    
@@ -169,15 +173,7 @@ int cursorPos;
 }
 
 - (void) saveConact {
-    NSString* contactString = self.recipientContactField.text;
-    if (self.contactType == ContactTypePhone) {
-        SettingsDao *dao = [[SettingsDao alloc] init];
-        NSMutableString* phone = [NSMutableString stringWithString:dao.phonePrefix];
-        [dao release];
-        [phone appendString:contactString];
-        contactString = phone;
-    }
-    Contact* contact = [[Contact alloc] initWithContactType:self.contactType andContactString:contactString];
+    Contact* contact = [[Contact alloc] initWithContactType:self.contactType andContactString:self.recipientContactField.text];
     [self.recipients addObject:contact];
     [contact release];
     [[NSNotificationCenter defaultCenter] postNotificationName:kRecipientsDone object:nil];

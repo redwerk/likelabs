@@ -16,6 +16,7 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 @property (nonatomic, retain) PhotoOverlayController* overlay;
 @property (nonatomic, retain) PhotoRecipientsOverlayController* recipientsOverlay;
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
+- (void) setRecipientsLabelText;
 @end
 
 @implementation PhotoShareController
@@ -77,6 +78,8 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
         [lbText setNumberOfLines:0];
         [lbText setText:self.review.text];
         [lbText setTextAlignment:UITextAlignmentCenter];
+        
+        [self setRecipientsLabelText];
          
         [self.messageView addSubview:lbText];
         [self.view addSubview:self.messageView];
@@ -233,11 +236,15 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
 }
 
-- (void)dismissRecipientsOverlay {    
-    self.recipientsCountLabel.text = (self.review.contacts.count) ? [NSString stringWithFormat:RECIPITENTS_COUNT_LABEL_TEMPLATE, self.review.contacts.count, MAX_CONTACTS] : @"Send to additional recipients (5 max)";
+- (void)dismissRecipientsOverlay {
+    [self setRecipientsLabelText];
     [self.recipientsOverlay.view removeFromSuperview];
     self.recipientsOverlay = nil;
     [_recipientsOverlay release];
+}
+
+- (void) setRecipientsLabelText {
+    self.recipientsCountLabel.text = (self.review.contacts.count) ? [NSString stringWithFormat:RECIPITENTS_COUNT_LABEL_TEMPLATE, self.review.contacts.count, MAX_CONTACTS] : @"Send to additional recipients (5 max)";    
 }
 
 - (void)saveRecipient {

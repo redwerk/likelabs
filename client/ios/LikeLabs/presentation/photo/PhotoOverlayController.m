@@ -42,15 +42,17 @@ int cursorPos;
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.view.frame = [UIScreen mainScreen].bounds;
     self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.7];
-    self.textField.delegate =  self.maskedTextFieldDelegate = [[[MaskedTextFieldDelegate alloc] initWithMask:PHONE_FORMAT maskCharacter:PHONE_DIGIT_MASK andOuterDelegate:self] autorelease];
+    
+    NSMutableString* fullMask = [NSMutableString stringWithString:self.phonePrefix];
+    [fullMask appendString:PHONE_FORMAT];
+    
+    self.textField.delegate =  self.maskedTextFieldDelegate = [[[MaskedTextFieldDelegate alloc] initWithMask:fullMask maskCharacter:PHONE_DIGIT_MASK andOuterDelegate:self] autorelease];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];    
     if (self.phone && self.phone.length) {
-        NSMutableString *phone = [NSMutableString stringWithString:self.phone];
-        [phone deleteCharactersInRange:NSMakeRange(0, self.phonePrefix.length)];
-        self.textField.text = phone;
+        self.textField.text = self.phone;
         self.textPlaceholderActive = NO;
     } else {
-        self.textField.text = PHONE_FORMAT;
+        self.textField.text = fullMask;
         self.textPlaceholderActive = YES;
     }
     [self.textField becomeFirstResponder];    
@@ -129,9 +131,7 @@ int cursorPos;
 }
 
 - (void) savePhone {
-    NSMutableString *phone = [NSMutableString stringWithString:self.phonePrefix];
-    [phone appendString:self.textField.text];
-    self.phone = phone;
+    self.phone = self.textField.text;
     [[NSNotificationCenter defaultCenter] postNotificationName:kPrimaryPhoneDone object:nil];    
 }
 
