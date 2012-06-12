@@ -4,6 +4,7 @@ import com.redwerk.likelabs.domain.model.event.EventType;
 
 import java.util.Set;
 
+@Deprecated
 public class UserData {
 
     private final String phone;

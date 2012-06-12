@@ -3,9 +3,12 @@ package com.redwerk.likelabs.application.impl;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.user.UserData;
+import com.redwerk.likelabs.application.dto.user.UserProfileData;
+import com.redwerk.likelabs.application.dto.user.UserSettingsData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
@@ -69,6 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUser(SocialNetworkType snType, String accountId) {
         Validate.notNull(snType, "snType cannot be null");
         return userRepository.get(snType, accountId);
@@ -86,6 +90,20 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+
+    @Override
+    @Transactional
+    public User createUser(long creatorId, UserProfileData userProfile) {
+        User creator = userRepository.get(creatorId);
+        Validate.isTrue(creator.isSystemAdmin(), "Only system administrators can create activated users");
+
+        User user = new UserFactory().createActivatedUser(userProfile.getPhone(), userProfile.getPassword());
+        user.setEmail(userProfile.getEmail());
+
+        userRepository.add(user);
+        return user;
+    }
+
     @Override
     @Transactional
     public void updateUser(long userId, UserData userData) {
@@ -99,6 +117,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void updateProfile(long userId, UserProfileData userProfile) {
+        Validate.notNull(userProfile, "userProfile cannot be null");
+        User user = userRepository.get(userId);
+        user.setPhone(userProfile.getPhone());
+        user.setPassword(userProfile.getPassword());
+        doEmailUpdate(user, userProfile.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public void updateSettings(long userId, UserSettingsData userSettings) {
+        Validate.notNull(userSettings, "userSettings cannot be null");
+        User user = userRepository.get(userId);
+        user.setEnabledEvents(userSettings.getEnabledEvents());
+        user.setPublishInSN(userSettings.isPublishInSN());
+    }
+
+    @Override
+    @Transactional
     public void updateEmail(long userId, String email) {
         doEmailUpdate(userRepository.get(userId), email);
     }
@@ -132,6 +170,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserSocialAccount attachAccount(long userId, UserSocialAccount account) {
         Validate.notNull("account cannot be null");
         User user = userRepository.get(userId);

@@ -17,6 +17,10 @@ public class CompanyData {
         this.moderateReviews = moderateReviews;
     }
 
+    public CompanyData(String name, String phone, String email) {
+        this(name, phone, email, true);
+    }
+
     public String getName() {
         return name;
     }

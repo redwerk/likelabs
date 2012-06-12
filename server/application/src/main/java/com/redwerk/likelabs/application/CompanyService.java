@@ -29,17 +29,22 @@ public interface CompanyService {
     Company getCompanyForTablet(long tabletId);
 
 
-    Company createCompany(CompanyData companyData, byte[] logo, List<CompanyPageData> pages,
+    Company createCompany(long creatorId, CompanyData companyData, byte[] logo, List<CompanyPageData> pages,
                           List<CompanyAdminData> admins, List<PointData> points);
+
+    Company createCompany(long creatorId, CompanyData companyData, CompanyAdminData admin);
+
     
     void updateCompany(long companyId, CompanyData companyData, byte[] logo);
 
     void updateCompany(long companyId, CompanyData companyData);
     
+
     CompanySocialPage attachPage(long companyId, CompanyPageData pageData);
 
     void detachPage(long companyId, String pageId);
     
+
     void createAdmin(long companyId, CompanyAdminData adminData);
     
     void removeAdmin(long companyId, long adminId);

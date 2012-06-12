@@ -26,6 +26,7 @@ import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserFactory;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
+import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -141,9 +142,15 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public Company createCompany(CompanyData companyData, byte[] logo, List<CompanyPageData> pages,
+    public Company createCompany(long creatorId, CompanyData companyData, byte[] logo, List<CompanyPageData> pages,
                                  List<CompanyAdminData> admins, List<PointData> points) {
-        Company company = new Company(companyData.getName(), companyData.getPhone(), companyData.getEmail(), logo);
+        User creator = userRepository.get(creatorId);
+        Validate.isTrue(creator.isSystemAdmin(), "Only system administrators can create new company");
+
+        Company company = new Company(companyData.getName(), companyData.getPhone(), companyData.getEmail());
+        company.setLogo(logo);
+        company.setModerateReviews(companyData.isModerateReviews());
+
         for (CompanyPageData pageData: pages) {
             attachPageInternal(company, pageData);
         }
@@ -154,6 +161,22 @@ public class CompanyServiceImpl implements CompanyService {
         for (PointData pointData: points) {
             pointFactory.createPoint(company, pointData);
         }
+
+        companyRepository.add(company);
+        return company;
+    }
+
+    @Override
+    @Transactional
+    public Company createCompany(long creatorId, CompanyData companyData, CompanyAdminData admin) {
+        User creator = userRepository.get(creatorId);
+        Validate.isTrue(creator.isSystemAdmin(), "Only system administrators can create new company");
+
+        Company company = new Company(companyData.getName(), companyData.getPhone(), companyData.getEmail());
+        company.setModerateReviews(companyData.isModerateReviews());
+
+        createAdminInternal(company, admin);
+
         companyRepository.add(company);
         return company;
     }

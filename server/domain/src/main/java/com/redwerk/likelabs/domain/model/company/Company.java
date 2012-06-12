@@ -63,15 +63,10 @@ public class Company {
 
     // constructors
 
-    public Company(String name, String phone, String email, byte[] logo) {
+    public Company(String name, String phone, String email) {
         this.name = name;
         this.phone = phone;
         this.email = email;
-        setLogoInternal(logo);
-    }
-
-    public Company(String name, String phone, String email) {
-        this(name, phone, email, null);
     }
 
     // accessors
@@ -119,17 +114,12 @@ public class Company {
     }
 
     public void setLogo(byte[] logo) {
-        setLogoInternal(logo);
-    }
-
-    private void setLogoInternal(byte[] logo) {
         if (logo.length > MAX_LOGO_ALLOWED_SIZE) {
             throw new CompanyLogoTooBigException(logo.length, MAX_LOGO_ALLOWED_SIZE);
         }
         this.logo = logo;
     }
 
-    
     // social accounts
 
     public Set<CompanySocialPage> getSocialPages() {
