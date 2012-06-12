@@ -254,7 +254,7 @@ public class CompanyServiceImpl implements CompanyService {
     
     private void sendSmsWithPassword(User receiver) {
         String msg = messageService.getMessage(
-                ADMIN_REGISTRATION_SMS_MSG, messageService.getMessage(APP_DOMAIN_MSG), receiver.getPassword());
+                ADMIN_REGISTRATION_SMS_MSG, messageService.getMessage(APP_DOMAIN_MSG), receiver.getPhone(), receiver.getPassword());
         smsService.sendMessage(receiver.getPhone(), msg);
     }
     

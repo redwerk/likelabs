@@ -78,7 +78,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void sendRegistrationMessage(String phone) {
         String msg = messageTemplateService.getMessage(
-                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN), passwordGenerator.getPassword(phone));
+                MSG_SMS_REG, messageTemplateService.getMessage(MSG_APP_DOMAIN), phone, passwordGenerator.getPassword(phone));
         smsService.sendMessage(phone, msg);
     }
 
