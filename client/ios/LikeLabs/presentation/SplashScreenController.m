@@ -32,6 +32,9 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
 @synthesize shareYourSmileImg = _shareYourSmileImg;
 @synthesize companyLogo = _companyLogo;
 @synthesize reviewBox = _reviewBox;
+@synthesize poweredByImg = _poweredByImg;
+@synthesize buttonBgView = _buttonBgView;
+@synthesize logoBgView = _logoBgView;
 @synthesize dao = _dao;
 @synthesize reviews = _reviews;
 @synthesize timer = _timer;
@@ -58,8 +61,8 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
     [super viewDidLoad];
     self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self setLogo:self.dao.logo];
-//    self.reviewBox.layer.borderColor = [UIColor whiteColor].CGColor;
-//    self.reviewBox.layer.borderWidth = 1;
+    self.socialButtonsView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"socials_bg.png"]];
+    self.logoBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"welcome_logo_bg.png"]];
     [self layoutSubviewsForInterfaceOrientation:self.interfaceOrientation];
 }
 
@@ -81,6 +84,9 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
     [self setDao:nil];
     [self setReviews:nil];
     [self setReviewBox:nil];
+    [self setPoweredByImg:nil];
+    [self setButtonBgView:nil];
+    [self setLogoBgView:nil];
     [super viewDidUnload];
     self.rootController = nil;
 }
@@ -94,6 +100,9 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
     [_dao release];
     [_reviews release];
     [_reviewBox release];
+    [_poweredByImg release];
+    [_buttonBgView release];
+    [_logoBgView release];
     [super dealloc];
 }
 
@@ -183,7 +192,7 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
 	return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     self.pauseTimer = YES;
     for (UIView* view in self.reviewBox.subviews) {
         [view removeFromSuperview];
@@ -196,26 +205,29 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
 }
 
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation {
-    UIColor* background;    
     if (UIInterfaceOrientationIsPortrait(orientation)) { //PORTRAIT
-        background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splash_bg_portrait.png"]];        
-        self.startBtn.frame = CGRectMake(305, 295, 158, 158);
+        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"splash_bg_portrait.png"]];
+        self.buttonBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"startbtn_bg_portrait.png"]];
+        self.buttonBgView.frame = CGRectMake(298, 287, 172, 173);
+        self.startBtn.frame = CGRectMake(7, 7.5, 158, 158);
         self.socialButtonsView.center = CGPointMake(384, 230.5);
         self.shareYourSmileImg.frame = CGRectMake(128, 125, 507, 51);
         self.shareYourSmileImg.image = [UIImage imageNamed:@"share_your_smile_portrait.png"];
-        self.companyLogo.frame = CGRectMake(268, 17, 232, 85);
+        self.logoBgView.center = CGPointMake(384, 61);
         self.reviewBox.frame = CGRectMake(15, 500, 740, 500);
+        self.poweredByImg.frame = CGRectMake(555, 448, 203, 30);
     } else { //LANDSCAPE
-        background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"splash_bg_landscape.png"]];
-        self.startBtn.frame = CGRectMake(701, 444, 272, 272);
+        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"splash_bg_landscape.png"]];
+        self.buttonBgView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"startbtn_bg_landscape.png"]];
+        self.startBtn.frame = CGRectMake(4, 5, 272, 272);
+        self.buttonBgView.frame = CGRectMake(697, 439, 280, 281);
         self.socialButtonsView.center = CGPointMake(837, 342);
         self.shareYourSmileImg.frame = CGRectMake(682, 180, 310, 98);
         self.shareYourSmileImg.image = [UIImage imageNamed:@"share_your_smile_landscape.png"];
-        self.companyLogo.frame = CGRectMake(721, 47, 232, 85);
+        self.logoBgView.center = CGPointMake(837, 90);
         self.reviewBox.frame = CGRectMake(15, 20, 620, 720);
+        self.poweredByImg.frame = CGRectMake(811, 728, 203, 30);
     }
-    self.view.backgroundColor = background;
-    [background release];
 }
 
 #pragma mark - Actions
