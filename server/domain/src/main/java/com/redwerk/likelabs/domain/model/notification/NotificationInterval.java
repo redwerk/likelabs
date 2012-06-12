@@ -26,14 +26,14 @@ public class NotificationInterval {
     private Period emailInterval = Period.DAILY;
 
     @Column(name = "sms_interval")
-    private Period smsInterval = Period.DAILY;
+    private Period smsInterval = Period.WEEKLY;
 
 
-    public NotificationInterval(EventType eventType) {
+    protected NotificationInterval(EventType eventType) {
         this.eventType = eventType;
     }
 
-    public NotificationInterval(WarningType warningType) {
+    protected NotificationInterval(WarningType warningType) {
         this.warningType = warningType;
     }
 

@@ -183,8 +183,8 @@ CREATE TABLE `event` (
 DROP TABLE IF EXISTS `notification_interval`;
 CREATE TABLE `notification_interval` (
      `id` BIGINT AUTO_INCREMENT NOT NULL,
-     `event_type` TINYINT NOT NULL,
-     `warning_type` TINYINT NOT NULL,
+     `event_type` TINYINT,
+     `warning_type` TINYINT,
      `email_interval` TINYINT NOT NULL,
      `sms_interval` TINYINT NOT NULL,
      CONSTRAINT `PK_notification_interval` PRIMARY KEY (`id`)
