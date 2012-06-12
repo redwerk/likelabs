@@ -146,7 +146,7 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     @Override
     public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
-        String imageUrl = (imageSource != null)? imageSource.getImageUrl() : "";
+        String imageUrl = (imageSource != null) ? imageSource.getImageUrl() : "";
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, page.getPageId()));
         postMethod.addParameter("message", message);
