@@ -19,7 +19,7 @@ public class NotificationIntervalJpaRepository extends NotificationIntervalRepos
             "select n from NotificationInterval n where n.eventType = :eventType";
 
     private static final String GET_PARAMETER_BY_WARNING_TYPE =
-            "select n from NotificationInterval n where n.eventType = :eventType";
+            "select n from NotificationInterval n where n.warningType = :warningType";
 
     @PersistenceContext
     private EntityManager em;

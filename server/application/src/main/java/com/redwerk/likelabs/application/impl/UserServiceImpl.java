@@ -122,7 +122,10 @@ public class UserServiceImpl implements UserService {
         Validate.notNull(userProfile, "userProfile cannot be null");
         User user = userRepository.get(userId);
         user.setPhone(userProfile.getPhone());
-        user.setPassword(userProfile.getPassword());
+        String newPassword = userProfile.getPassword();
+        if (newPassword != null) {
+            user.setPassword(newPassword);
+        }
         doEmailUpdate(user, userProfile.getEmail());
     }
 
