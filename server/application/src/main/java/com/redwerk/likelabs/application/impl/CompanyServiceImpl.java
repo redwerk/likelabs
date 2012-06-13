@@ -273,7 +273,7 @@ public class CompanyServiceImpl implements CompanyService {
     public void removeAdmin(long companyId, long adminId) {
         Company company = companyRepository.get(companyId);
         User admin = userRepository.get(adminId);
-        company.removeAdmin(admin, companyRepository, userRepository);
+        company.removeAdmin(admin, companyRepository, userRepository, reviewRepository);
     }
 
     @Override

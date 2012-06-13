@@ -8,18 +8,17 @@ import com.redwerk.likelabs.application.dto.user.UserSettingsData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
-import com.redwerk.likelabs.domain.model.user.UserFactory;
+import com.redwerk.likelabs.domain.model.review.ReviewRepository;
+import com.redwerk.likelabs.domain.model.user.*;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.query.Pager;
-import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.domain.model.user.UserRepository;
+
 import java.text.MessageFormat;
 
-import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +40,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Autowired
     private EmailService emailService;
@@ -163,6 +165,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public void updateStatus(long userId, long updaterId, UserStatus status) {
+        Validate.notNull(status);
+        Validate.isTrue(status == UserStatus.ACTIVE || status == UserStatus.DELETED);
+
+        User user = userRepository.get(userId);
+        if (user.getStatus() == status) {
+            return;
+        }
+
+        User updater = userRepository.get(updaterId);
+
+        if (status == UserStatus.ACTIVE) {
+            Validate.isTrue(updater.isSystemAdmin());
+            user.restore();
+        }
+        else if (status == UserStatus.DELETED) {
+            Validate.isTrue(user.equals(updater) || updater.isSystemAdmin());
+            userRepository.remove(user, reviewRepository);
+        }
+    }
+    
+    @Override
+    @Transactional
     public UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode) {
         Validate.notNull(snType, "snType cannot be null");
         Validate.notNull(accessCode, "accessCode cannot be null");
@@ -193,7 +218,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(long userId) {
         User user = userRepository.get(userId);
-        userRepository.remove(user);
+        userRepository.remove(user, reviewRepository);
     }
 
 }

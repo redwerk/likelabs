@@ -1,7 +1,9 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.query.Pager;
+import com.redwerk.likelabs.domain.model.review.ReviewRepository;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotFoundException;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedUserException;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
@@ -57,10 +59,20 @@ public abstract class UserRepository {
 
     protected abstract void addInternal(User user);
 
-    public void remove(User user) {
+    public void remove(User user, ReviewRepository reviewRepository) {
         Validate.notNull(user);
-        Validate.isTrue(user.getStatus() == UserStatus.NOT_ACTIVATED);
-        removeInternal(user);
+        Validate.notNull(reviewRepository);
+        if (canBeRemoved(user, reviewRepository)) {
+            removeInternal(user);
+        }
+        else {
+            user.markAsDeleted();
+        }
+    }
+
+    private boolean canBeRemoved(User user, ReviewRepository reviewRepository) {
+        return (user.getStatus() == UserStatus.NOT_ACTIVATED) ||
+                (reviewRepository.getQuery().setAuthorId(user.getId()).getCount() == 0);
     }
 
     protected abstract void removeInternal(User user);

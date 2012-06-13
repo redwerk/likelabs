@@ -10,6 +10,7 @@ import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import com.redwerk.likelabs.domain.model.user.UserStatus;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public interface UserService {
 
     void updateEmail(long userId, String email);
 
+    void updateStatus(long userId, long updaterId, UserStatus status);
+
 
     UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode);
 
@@ -44,8 +47,7 @@ public interface UserService {
 
     void detachAccount(long userId, SocialNetworkType snType);
 
-
+    @Deprecated
     void deleteUser(long userId);
-
 
 }

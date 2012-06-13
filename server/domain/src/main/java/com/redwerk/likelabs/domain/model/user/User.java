@@ -142,16 +142,14 @@ public class User {
         status = UserStatus.ACTIVE;
     }
 
-    public void delete(User executor) {
-        Validate.isTrue(executor.isSystemAdmin());
-        if (status == UserStatus.ACTIVE) {
+    protected void markAsDeleted() {
+        if (status != UserStatus.ACTIVE) {
             throw new IllegalStateException("user " + phone + " is not active");
         }
         status = UserStatus.DELETED;
     }
 
-    public void restore(User executor) {
-        Validate.isTrue(executor.isSystemAdmin());
+    public void restore() {
         if (status != UserStatus.DELETED) {
             throw new IllegalStateException("user " + phone + " is not deleted");
         }

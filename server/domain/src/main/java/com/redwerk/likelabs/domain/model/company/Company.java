@@ -4,6 +4,7 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.exception.CompanyLogoTooBigException;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewRegistrationAgent;
+import com.redwerk.likelabs.domain.model.review.ReviewRepository;
 import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
@@ -158,11 +159,12 @@ public class Company {
         return admins.add(admin);
     }
 
-    public boolean removeAdmin(User admin, CompanyRepository companyRepository, UserRepository userRepository) {
+    public boolean removeAdmin(User admin, CompanyRepository companyRepository, UserRepository userRepository,
+                               ReviewRepository reviewRepository) {
         boolean isRemoved = admins.remove(admin);
         if (isRemoved) {
             if (companyRepository.getCountForAdmin(admin) == 0) {
-                userRepository.remove(admin);
+                userRepository.remove(admin, reviewRepository);
             }
         }
         return isRemoved;
