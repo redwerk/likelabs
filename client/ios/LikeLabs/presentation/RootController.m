@@ -137,7 +137,6 @@ CGFloat const SLIDE_SPEED = 0.5;
     vc.view.center = CGPointMake(vc.view.frame.size.width*-.5, vc.view.frame.size.height/2);
 
     [UIView animateWithDuration:SLIDE_SPEED animations: ^{
-
         [root getCurrentController].view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
         vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
     } completion:^(BOOL finished){

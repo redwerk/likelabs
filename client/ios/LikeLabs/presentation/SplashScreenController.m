@@ -73,6 +73,7 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [self.timer invalidate];
+    self.timer = nil;
 }
 
 - (void)viewDidUnload

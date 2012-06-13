@@ -77,6 +77,7 @@ int cursorPos;
     [self setRecipientsView:nil];
     [self setRecipientContactField:nil];
     [self setRecipients:nil];
+    [self setMaskedTextFieldDelegate:nil];
     [super viewDidUnload];
 }
 
@@ -84,6 +85,7 @@ int cursorPos;
     [recipientsView release];
     [recipientContactField release];
     [_recipients release];
+    [_maskedTextFieldDelegate release];
     [super dealloc];
 }
 

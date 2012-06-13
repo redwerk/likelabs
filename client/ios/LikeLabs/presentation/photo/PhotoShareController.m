@@ -78,9 +78,7 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
         [lbText setNumberOfLines:0];
         [lbText setText:self.review.text];
         [lbText setTextAlignment:UITextAlignmentCenter];
-        
-        [self setRecipientsLabelText];
-         
+                 
         [self.messageView addSubview:lbText];
         [self.view addSubview:self.messageView];
     } else {
@@ -89,7 +87,9 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
         [self.view addSubview:self.imageView];
     }
     
+    [self setRecipientsLabelText];
     self.mailButton.enabled = self.phoneButton.enabled = (self.review.contacts.count < MAX_CONTACTS);
+    
     if (self.review.user.phone && self.review.user.phone.length) {
         self.phoneField.text = self.review.user.phone;
     }
@@ -113,8 +113,11 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     [self setThirdStepLabel:nil];
     [self setRequiredLabel:nil];
     [self setRecipientsCountLabel:nil];
+    [self setRootController:nil];
+    [self setOverlay:nil];
+    [self setRecipientsOverlay:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
-    self.rootController = nil;
 }
 
 - (void)dealloc {
@@ -131,7 +134,16 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     [_thirdStepLabel release];
     [_requiredLabel release];
     [_recipientsCountLabel release];
+    [_rootController release];
+    [_overlay release];
+    [_recipientsOverlay release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super viewDidDisappear:animated];
 }
 
 #pragma mark - Rotation
@@ -210,12 +222,12 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 }
 
 - (IBAction)addMail:(id)sender {
-    _recipientsOverlay = [[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypeEmail andRecipients:self.review.contacts];
+    self.recipientsOverlay = [[[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypeEmail andRecipients:self.review.contacts] autorelease];
     [self.rootController.view addSubview:self.recipientsOverlay.view];
 }
 
 - (IBAction)addPhone:(id)sender {
-    _recipientsOverlay = [[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypePhone andRecipients:self.review.contacts];
+    self.recipientsOverlay = [[[PhotoRecipientsOverlayController alloc] initWithContactType:ContactTypePhone andRecipients:self.review.contacts] autorelease];
     [self.rootController.view addSubview:self.recipientsOverlay.view];
 }
 
@@ -227,7 +239,6 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 - (void)dismissOverlay {
     [self.overlay.view removeFromSuperview];
     self.overlay = nil;
-    [_overlay release];
 }
 
 - (void)savePhone {
@@ -240,7 +251,6 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     [self setRecipientsLabelText];
     [self.recipientsOverlay.view removeFromSuperview];
     self.recipientsOverlay = nil;
-    [_recipientsOverlay release];
 }
 
 - (void) setRecipientsLabelText {

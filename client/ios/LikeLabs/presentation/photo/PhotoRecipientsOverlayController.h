@@ -5,7 +5,7 @@
 extern NSString *const kRecipientsDidCancel;
 extern NSString *const kRecipientsDone;
 
-@property (nonatomic, retain) NSMutableArray* recipients;
+@property (retain, nonatomic) NSMutableArray* recipients;
 @property (retain, nonatomic) IBOutlet UIView *recipientsView;
 @property (retain, nonatomic) IBOutlet UITextField *recipientContactField;
 - (IBAction)cancel:(id)sender;

@@ -118,6 +118,7 @@ NSString *const GET_READY_MSG = @"Get Ready!";
     self.label.text = [NSString stringWithFormat:@"%d", self.seconds];
     if (self.seconds == 0) {
         [self.timer invalidate];
+        self.timer = nil;
         self.label.hidden = YES;
         self.seconds = 5;
         [self onTimer];
@@ -130,6 +131,7 @@ NSString *const GET_READY_MSG = @"Get Ready!";
 - (void) onTimer {
     if (self.seconds == 0) {
         [self.timer invalidate];
+        self.timer = nil;
         [RootController switchToController:@"RootPhotoController" rootController:self.rootController];
     } else {
         [self captureImage];

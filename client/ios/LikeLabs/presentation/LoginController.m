@@ -104,18 +104,12 @@ NSString *bgPortrait = @"bg_portrait.png";
     if (loginSuccessfull) {
         [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
     } else {
-        UIAlertView* alert = 
-                (error.code == ASIAuthenticationErrorType) ? 
-                [[UIAlertView alloc] initWithTitle:nil 
-                                           message:@"Incorrect credentials" 
-                                          delegate:self 
-                                 cancelButtonTitle:@"Ok" 
-                                 otherButtonTitles:nil] :  
-                [[UIAlertView alloc] initWithTitle:nil
-                                           message: error.localizedDescription 
-                                          delegate:self 
-                                 cancelButtonTitle:@"Ok" 
-                                 otherButtonTitles:nil];
+        NSString* message = error.code ? ((error.code == ASIAuthenticationErrorType) ? @"Incorrect credentials" : error.localizedDescription) : @"Unexpected connection error";
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil 
+                                                        message:message
+                                                       delegate:self 
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
         [alert show];
         [alert release];   
     }    
@@ -129,19 +123,13 @@ NSString *bgPortrait = @"bg_portrait.png";
     if (logoutSuccessfull) {
         [[UIApplication sharedApplication].delegate applicationWillTerminate:[UIApplication sharedApplication]];
         exit(0);
-    } else {        
-        _alertLogout = 
-                (error.code == ASIAuthenticationErrorType) ?
-                [[UIAlertView alloc] initWithTitle:nil 
-                                           message: @"Incorrect credentials." 
-                                          delegate:self 
-                                 cancelButtonTitle:@"Ok" 
-                                 otherButtonTitles:nil] :
-                [[UIAlertView alloc] initWithTitle:nil
-                                           message: error.localizedDescription 
-                                          delegate:self 
-                                 cancelButtonTitle:@"Ok" 
-                                 otherButtonTitles:nil];
+    } else {
+        NSString* message = error.code ? ((error.code == ASIAuthenticationErrorType) ? @"Incorrect credentials" : error.localizedDescription) : @"Unexpected connection error";
+        _alertLogout = [[UIAlertView alloc] initWithTitle:nil 
+                                                  message:message
+                                                 delegate:self 
+                                        cancelButtonTitle:@"Ok" 
+                                        otherButtonTitles:nil];
         [_alertLogout show];        
     }    
 }
