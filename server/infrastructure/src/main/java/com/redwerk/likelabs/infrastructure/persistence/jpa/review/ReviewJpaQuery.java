@@ -6,6 +6,7 @@ import com.redwerk.likelabs.domain.model.review.SortingOrder;
 import com.redwerk.likelabs.domain.model.review.SortingRule;
 import com.redwerk.likelabs.domain.model.review.*;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserStatus;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 
 import java.text.MessageFormat;
@@ -36,7 +37,9 @@ public class ReviewJpaQuery implements ReviewQuery {
     }};
 
     private static final String REVIEWS_FILTER =
-            "from Review r where ((:authorId is null or r.author.id = :authorId) and " +
+            "from Review r where (" +
+                    "(:authorId is not null or r.author.status <> " + UserStatus.NOT_ACTIVATED.ordinal() + ") and " +
+                    "(:authorId is null or r.author.id = :authorId) and " +
                     "(:admin is null or :admin in elements(r.point.company.admins)) and " +
                     "(:filterByCompanies = false or r.point.company.id in (:companyIds)) and " +
                     "(:filterByPoints = false or r.point.id in (:pointIds)) and " +
