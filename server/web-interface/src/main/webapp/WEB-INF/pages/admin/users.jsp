@@ -2,7 +2,7 @@
 <script type="text/javascript" src="/static/scripts/jquery.pagination.js"></script>
 <script type="text/javascript" >
     var pager_options = {
-        items_count: 5<c:out value="${count}"/>,
+        items_count: null,
         config: {
             items_per_page : <c:out value="${items_per_page}"/>,
             next_text : "&gt;",
@@ -82,7 +82,7 @@
     }
 
     function changeStatusUser(id, status) {
-        confirmDialog("Delete user", "Are you sure?",function() {
+        confirmDialog("Change status for user", "Are you sure?",function() {
             $.post("/administrator/users/status", {"id": id, "status": status },function(response) {
                 if (!response.success) {
                     errorDialog("Error deleting company", response.message);

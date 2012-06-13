@@ -2,6 +2,7 @@ package com.redwerk.likelabs.web.ui.dto;
 
 import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserStatus;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ public class UserDto {
     String email;
     String password;
     String confirmPassword;
-    String status;
+    UserStatus status;
 
     Boolean publishInSN = false;
     Boolean eventReviewCreated = false;
@@ -61,11 +62,11 @@ public class UserDto {
         this.id = id;
     }
 
-    public String getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 

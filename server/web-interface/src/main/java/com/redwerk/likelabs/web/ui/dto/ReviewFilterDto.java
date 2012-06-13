@@ -25,22 +25,22 @@ public class ReviewFilterDto {
         if (StringUtils.isBlank(status)) {
             return;
         }
-        if (status.equals("published")) {
+        if ("published".equals(status)) {
             this.publishingStatus = true;
         }
-        if (status.equals("promo")) {
+        if ("promo".equals(status)) {
             this.sampleStatus = true;
         }
-        if (status.equals("pending")) {
+        if ("pending".equals(status)) {
             this.reviewStatus = ReviewStatus.PENDING;
         }
-        if (status.equals("approved")) {
+        if ("approved".equals(status)) {
             this.reviewStatus = ReviewStatus.APPROVED;
         }
-        if (status.equals("archived")) {
+        if ("archived".equals(status)) {
             this.reviewStatus = ReviewStatus.ARCHIVED;
         }
-        if (status.equals("flagged")) {
+        if ("flagged".equals(status)) {
             this.reviewStatus = ReviewStatus.FLAGGED;
         }
         this.status = status;

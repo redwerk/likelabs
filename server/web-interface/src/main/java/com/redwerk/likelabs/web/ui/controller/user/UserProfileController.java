@@ -2,9 +2,8 @@ package com.redwerk.likelabs.web.ui.controller.user;
 
 import org.springframework.stereotype.Controller;
 import com.redwerk.likelabs.application.UserService;
-import com.redwerk.likelabs.application.dto.user.UserData;
+import com.redwerk.likelabs.application.dto.user.UserProfileData;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
-import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
 import com.redwerk.likelabs.web.ui.validator.UserProfileValidator;
 import org.apache.commons.lang.StringUtils;
@@ -55,10 +54,9 @@ public class UserProfileController {
             model.put("page", "profile");
             return VIEW_PROFILE;
         }
-        User userOldData = userService.getUser(userId);
-        String password = StringUtils.isBlank(user.getPassword()) ? userOldData.getPassword() : user.getPassword();
+        String password = StringUtils.isBlank(user.getPassword()) ? null : user.getPassword();
         try {
-            userService.updateUser(userId, new UserData(user.getPhone(), password, user.getEmail(), userOldData.isPublishInSN(), userOldData.getEnabledEvents()));
+            userService.updateProfile(userId, new UserProfileData(user.getPhone(), password, user.getEmail()));
         } catch (EmailMessagingException e) {
             log.error(e,e);
             result.rejectValue("email", "user.profile.invalid.email", "Please enter valid email address.");

@@ -12,4 +12,5 @@ public interface Authenticator {
 
     void authenticateAnonymous(HttpServletRequest request);
 
+    Long getCurrentUserId();
 }

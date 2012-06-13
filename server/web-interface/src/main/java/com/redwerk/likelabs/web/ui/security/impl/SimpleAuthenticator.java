@@ -2,6 +2,7 @@ package com.redwerk.likelabs.web.ui.security.impl;
 
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
+import com.redwerk.likelabs.infrastructure.security.CustomUserDetails;
 import com.redwerk.likelabs.web.ui.security.Authenticator;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Component;
 
 @Component(value="authenticator")
 public class SimpleAuthenticator implements Authenticator{
+
+    public static final Byte ANONYMOUS_USER_ID = 0;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -59,5 +62,15 @@ public class SimpleAuthenticator implements Authenticator{
         authenticationToken.setDetails(details);
         Authentication fullauth = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(fullauth);
+    }
+
+    @Override
+    public Long getCurrentUserId() {
+
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getPrincipal() instanceof CustomUserDetails) {
+            return ((CustomUserDetails)auth.getPrincipal()).getId();
+        }
+        return ANONYMOUS_USER_ID.longValue();
     }
 }

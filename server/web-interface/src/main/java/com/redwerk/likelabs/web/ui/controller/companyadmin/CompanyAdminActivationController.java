@@ -174,6 +174,7 @@ public class CompanyAdminActivationController {
             log.error(e,e);
             return VIEW_END_ACTIVATE;
         }
+        model.put("adminId", authenticator.getCurrentUserId());
         return VIEW_SUCCESS_ACTIVATE;
     }
 }

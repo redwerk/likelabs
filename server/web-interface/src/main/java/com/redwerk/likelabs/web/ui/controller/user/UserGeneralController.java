@@ -6,7 +6,7 @@ import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
-import com.redwerk.likelabs.application.dto.user.UserData;
+import com.redwerk.likelabs.application.dto.user.UserSettingsData;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.photo.Photo;
@@ -157,7 +157,6 @@ public class UserGeneralController {
 
         User user = userService.getUser(userId);
         model.put("user", new UserDto(user));
-        model.put("cabinet", "user");
         model.put("page", "settings");
         return VIEW_USER_SETTINGS;
     }
@@ -166,14 +165,11 @@ public class UserGeneralController {
     public String submitSettings(ModelMap model, @PathVariable Long userId,
                      @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
         try {
-            User userOldData = userService.getUser(userId);
-            userService.updateUser(userId, new UserData(userOldData.getPhone(), userOldData.getPassword(),
-                    userOldData.getEmail(), user.getPublishInSN(), user.getEnabledEvents()));
+            userService.updateSettings(userId, new UserSettingsData(user.getPublishInSN(), user.getEnabledEvents()));
             status.setComplete();
             model.clear();
         } catch (Exception e) {
             log.error(e,e);
-            model.put("cabinet", "user");
             model.put("page", "settings");
             model.put("user", user);
             model.put("success", false);
@@ -205,7 +201,6 @@ public class UserGeneralController {
         model.put("count", companies.size());
         model.put("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_REVIEW);
         model.put("page", "my_feed");
-        model.put("cabinet", "user");
         return VIEW_REVIEWS_LIST;
     }
 
@@ -224,7 +219,7 @@ public class UserGeneralController {
             } else {
                 companyIds.add(filter.getCompany());
             }
-            Report<Review> report = reviewService.getUserReviews(getRealUserId(userId), companyIds, QueryFilterBuilder.buildReviewQuery(filter));
+            Report<Review> report = reviewService.getUserReviews(userId, companyIds, QueryFilterBuilder.buildReviewQuery(filter));
             List<Map> data = new ArrayList<Map>();
             for (Review review : report.getItems()) {
                 Map<String, Object> map = new HashMap<String, Object>();
@@ -284,14 +279,6 @@ public class UserGeneralController {
             response.put("success", false);
         }
         return response;
-    }
-
-    private Long getRealUserId(Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth.getAuthorities().contains(new SimpleGrantedAuthority(AuthorityRole.ROLE_COMPANY_ADMIN.toString()))) {
-            return Long.parseLong(auth.getName());
-        }
-        return id;
     }
 
     @PreAuthorize("permitAll")

@@ -6,7 +6,7 @@ import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
 import com.redwerk.likelabs.application.dto.company.CompanyData;
 import com.redwerk.likelabs.application.dto.company.CompanyPageData;
-import com.redwerk.likelabs.application.dto.user.UserData;
+import com.redwerk.likelabs.application.dto.user.UserProfileData;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
@@ -20,13 +20,10 @@ import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedUserException;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
-import com.redwerk.likelabs.web.ui.validator.EmailValidator;
-import com.redwerk.likelabs.web.ui.validator.PhoneValidator;
+import com.redwerk.likelabs.web.ui.validator.CompanyProfileValidator;
 import com.redwerk.likelabs.web.ui.validator.SocialLinkValidator;
 import com.redwerk.likelabs.web.ui.validator.UserProfileValidator;
-import com.redwerk.likelabs.web.ui.validator.Validator;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +32,6 @@ import java.util.Set;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +39,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -226,8 +220,7 @@ public class CompanyProfileController {
             return response;
         }
         try {
-            User u = userService.getUser(user.getId());
-            userService.updateUser(user.getId(), new UserData(user.getPhone(), user.getPassword(), user.getEmail(), u.isPublishInSN(), u.getEnabledEvents()));
+            userService.updateProfile(user.getId(), new UserProfileData(user.getPhone(), user.getPassword(), user.getEmail()));
             response.put("success", true);
         } catch (DuplicatedUserException e) {
             log.error(e, e);
@@ -251,7 +244,7 @@ public class CompanyProfileController {
     public ModelMap addCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @ModelAttribute("user") UserDto user) {
         ModelMap response = new ModelMap();
 
-        List<String> errors = validateUser(user);
+        List<String> errors = userValidator.validate(user, messageTemplateService);
         if (!errors.isEmpty()) {
             response.put("errors",errors);
             response.put("success", false);
@@ -344,73 +337,6 @@ public class CompanyProfileController {
             out.close();
         } catch (IOException e) {
             log.error(e, e);
-        }
-    }
-
-    private List<String> validateUser(UserDto user) {
-
-        final Byte MAX_LENGTH_PHONE = 20;
-        final Byte MAX_LENGTH_EMAIL = 40;
-        final Byte MAX_LENGTH_PASSWORD = 40;
-
-        List<String> errors = new ArrayList<String>();
-        if (!new EmailValidator().isValid(user.getEmail())) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.email"));
-        }
-        if (!new PhoneValidator().isValid(user.getPhone())) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.phone"));
-        }
-        if (user.getEmail().length() > MAX_LENGTH_EMAIL) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.email", MAX_LENGTH_EMAIL.toString()));
-        }
-        if (user.getPhone().length() > MAX_LENGTH_PHONE) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.phone", MAX_LENGTH_PHONE.toString()));
-        }
-        if (user.getId() == NEW_USER_ID && StringUtils.isBlank(user.getPassword())) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.password"));
-        }
-        if (user.getPassword().length() > MAX_LENGTH_PASSWORD) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.password", MAX_LENGTH_PASSWORD.toString()));
-        }
-        return errors;
-    }
-
-    private class CompanyProfileValidator implements org.springframework.validation.Validator {
-
-        private static final int MAX_LENGTH_NAME = 80;
-        private static final int MAX_LENGTH_PHONE = 20;
-        private static final int MAX_LENGTH_EMAIL = 40;
-        private final Validator mailValidator = new EmailValidator();
-        private final Validator phoneValidator = new PhoneValidator();
-
-        @Override
-        public boolean supports(Class<?> clazz) {
-            return CompanyDto.class.isAssignableFrom(clazz);
-        }
-
-        @Override
-        public void validate(Object target, Errors errors) {
-
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name",
-                    "company.profile.invalid.name.required", "Please fill in the required field.");
-
-            CompanyDto company = (CompanyDto) target;
-
-            if (!mailValidator.isValid(company.getEmail())) {
-                errors.rejectValue("email", "company.profile.invalid.email", "Please enter valid field.");
-            }
-            if (!phoneValidator.isValid(company.getPhone())) {
-                errors.rejectValue("phone", "company.profile.invalid.phone", "Please enter valid field.");
-            }
-            if (company.getPhone() != null && company.getPhone().length() > MAX_LENGTH_PHONE) {
-                errors.rejectValue("phone", "company.profile.invalid.phone.length", new Byte[]{MAX_LENGTH_PHONE} ,"Maximum length allowed is "+MAX_LENGTH_PHONE+" symbols.");
-            }
-            if (company.getName() != null && company.getName().length() > MAX_LENGTH_NAME) {
-                errors.rejectValue("name", "company.profile.invalid.name.length", new Byte[]{MAX_LENGTH_NAME} ,"Maximum length allowed is "+MAX_LENGTH_NAME+" symbols.");
-            }
-            if (company.getEmail() != null && company.getEmail().length() > MAX_LENGTH_EMAIL) {
-                errors.rejectValue("email", "company.profile.invalid.email.length", new Byte[]{MAX_LENGTH_EMAIL} ,"Maximum length allowed is "+MAX_LENGTH_EMAIL+" symbols.");
-            }
         }
     }
 }

@@ -1,41 +1,43 @@
 package com.redwerk.likelabs.web.ui.dto;
 
+import com.redwerk.likelabs.domain.model.notification.Period;
+
 public class IntervalsSettingsDto {
 
-    private String userCreatedReview;
-    private String pointCreatedReview;
-    private String userApprovedReview;
+    private Period userCreatedReview;
+    private Period pointCreatedReview;
+    private Period userApprovedReview;
 
     public IntervalsSettingsDto() {
     }
 
-    public IntervalsSettingsDto(String userCreatedReview, String pointCreatedReview, String userApprovedReview) {
+    public IntervalsSettingsDto(Period userCreatedReview, Period pointCreatedReview, Period userApprovedReview) {
         this.userCreatedReview = userCreatedReview;
         this.pointCreatedReview = pointCreatedReview;
         this.userApprovedReview = userApprovedReview;
     }
 
-    public String getPointCreatedReview() {
+    public Period getPointCreatedReview() {
         return pointCreatedReview;
     }
 
-    public void setPointCreatedReview(String pointCreatedReview) {
+    public void setPointCreatedReview(Period pointCreatedReview) {
         this.pointCreatedReview = pointCreatedReview;
     }
 
-    public String getUserApprovedReview() {
+    public Period getUserApprovedReview() {
         return userApprovedReview;
     }
 
-    public void setUserApprovedReview(String userApprovedReview) {
+    public void setUserApprovedReview(Period userApprovedReview) {
         this.userApprovedReview = userApprovedReview;
     }
 
-    public String getUserCreatedReview() {
+    public Period getUserCreatedReview() {
         return userCreatedReview;
     }
 
-    public void setUserCreatedReview(String userCreatedReview) {
+    public void setUserCreatedReview(Period userCreatedReview) {
         this.userCreatedReview = userCreatedReview;
     }
 }
