@@ -20,11 +20,22 @@
         <td>
             <a href="/user/<%=user.id%>" ><img src="/static/images/profile_icon.png" width="16" height="16" title="User cabinet" alt="User cabinet"/></a>
             <a href="javascript:void(0);" onclick="editUserDialog('<%=user.id%>', '<%=user.phone%>', '<%=user.email%>', '<%=user.password%>');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
-            <% if (user.statusValue == 'DELETED' || user.statusValue == 'NOT_ACTIVATED') { %>
-                <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'ACTIVE');"><img src="/static/images/restore_icon.png" title="Restore" alt="Restore"/></a>
-            <% } else { %>
-                <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'DELETED');"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
-            <% } %>
+            <% switch (user.statusValue) {
+                    case 'DELETED': 
+                %>
+                     <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'ACTIVE');"><img src="/static/images/restore_icon.png" title="Restore" alt="Restore"/></a>
+                <%    break;
+                case 'ACTIVE':
+                %>
+                    <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'DELETED');"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
+                <%    break;
+                case 'NOT_ACTIVATED':
+                %>
+                    <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'ACTIVE');"><img src="/static/images/activate_icon.png" title="Activate" alt="Activate"/></a>
+                    <a href="javascript:void(0);" onclick="changeStatusUser(<%= user.id %>, 'DELETED');"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
+                <%   break;
+                }
+            %>
         </td>
     </tr>
 <% 
