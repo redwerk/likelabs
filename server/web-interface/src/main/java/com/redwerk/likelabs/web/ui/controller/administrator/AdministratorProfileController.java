@@ -4,15 +4,14 @@ import org.springframework.stereotype.Controller;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.user.UserProfileData;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
-import com.redwerk.likelabs.infrastructure.security.CustomUserDetails;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
+import com.redwerk.likelabs.web.ui.security.Authenticator;
 import com.redwerk.likelabs.web.ui.validator.UserProfileValidator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
 @Controller
 @RequestMapping(value = "/administrator/profile")
-public class AdministartorProfileController {
+public class AdministratorProfileController {
 
     private final UserProfileValidator validator = new UserProfileValidator();
 
@@ -34,10 +33,13 @@ public class AdministartorProfileController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Authenticator authenticator;
+
     @RequestMapping(method = RequestMethod.GET)
     public String initForm(ModelMap model) {
 
-        UserDto user = new UserDto(userService.getUser(getUserId()));
+        UserDto user = new UserDto(userService.getUser(authenticator.getCurrentUserId()));
         model.put("user", user);
         model.put("page", "profile");
         return VIEW_PROFILE;
@@ -47,7 +49,7 @@ public class AdministartorProfileController {
     public String processSubmit(ModelMap model,
             @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
 
-        Long userId = getUserId();
+        Long userId = authenticator.getCurrentUserId();
         validator.validate(user, result);
         if (result.hasErrors()) {
             model.put("page", "profile");
@@ -65,13 +67,5 @@ public class AdministartorProfileController {
         status.setComplete();
         model.clear();
         return "redirect:/administrator";
-    }
-
-    private Long getUserId() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof CustomUserDetails) {
-            return ((CustomUserDetails)principal).getId();
-        }
-        return null;
     }
 }

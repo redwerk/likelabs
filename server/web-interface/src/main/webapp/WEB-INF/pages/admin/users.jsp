@@ -45,7 +45,7 @@
     function updateData() {
         $.get("/administrator/users/data", options, function(response){
             if (!response.success) {
-                errorDialog("Server error", response.message);
+                errorDialog("Server error", response.error);
                 return;
             }
             pager_options.items_count = response.count;
@@ -64,7 +64,11 @@
     function addUser(){
         $.post("/administrator/users", $("#add_user_form").serialize(),function(response) {
             if (!response.success) {
-                errorsDialog("Error adding user", response.errors);
+                errorDialog("Error adding/edit user", response.error);
+                return;
+            }
+            if (!response.valid) {
+                errorsDialog("Validation user", response.messages);
                 return;
             }
             $("#add_user_dialog").dialog("close");
@@ -85,7 +89,7 @@
         confirmDialog("Change status for user", "Are you sure?",function() {
             $.post("/administrator/users/status", {"id": id, "status": status },function(response) {
                 if (!response.success) {
-                    errorDialog("Error deleting company", response.message);
+                    errorDialog("Error deleting company", response.error);
                     return;
                 }
                 updateData();

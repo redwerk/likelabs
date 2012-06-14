@@ -12,6 +12,7 @@ import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
+import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
 import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,8 +40,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-/*
- * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+/**
+ *
+ * Secure on Controller uses {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ * All methods for mapping must have parameter companyId
  */
 @PreAuthorize("@decisionAccess.permissionCompany(principal, #companyId)")
 @Controller
@@ -76,7 +79,6 @@ public class CompanyGeneralController {
          Company company = companyService.getCompany(companyId);
          model.put("companyName", company.getName());
          model.put("page", "dashboard");
-         model.put("cabinet", "company");
          return VIEW_COMPANY_DASHBOARD;
     }
 
@@ -90,7 +92,6 @@ public class CompanyGeneralController {
         model.addAttribute("count", report.getCount());
         model.addAttribute("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_REVIEW);
         model.addAttribute("page", "moderation");
-        model.put("cabinet", "company");
         return VIEW_COMPANY_REVIEWS_LIST;
     }
 
@@ -99,7 +100,7 @@ public class CompanyGeneralController {
     public ModelMap reviewsCompanyData(@PathVariable Long companyId,
             @ModelAttribute ReviewFilterDto filter) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             Report<Review> report = reviewService.getCompanyReviews(companyId, filter.getReviewStatus(), QueryFilterBuilder.buildReviewQuery(filter));
             Company company = companyService.getCompany(companyId);
@@ -124,13 +125,13 @@ public class CompanyGeneralController {
                 map.put("status", review.getStatus().toString().toLowerCase(Locale.ENGLISH));
                 data.add(map);
             }
-            response.put("data", data);
-            response.put("count", report.getCount());
+            resBuilder.setData(data);
+            resBuilder.addCustomFieldData("count", report.getCount());
         } catch (Exception e) {
             log.error(e, e);
-            response.put("error", e.getMessage());
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/reviews/{reviewId}/data/promo", method = RequestMethod.POST)
@@ -138,19 +139,19 @@ public class CompanyGeneralController {
     public ModelMap changeSampleStatus(@PathVariable Long companyId, @PathVariable Long reviewId,
             @RequestParam("promo") Boolean sampleStatus) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             Review review = reviewService.getReview(reviewId);
             reviewService.updateStatus(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()),
                          reviewId, review.getStatus(), sampleStatus, false);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.promo.authority.invalid"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.promo.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.promo.change.failed"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.promo.change.failed"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/reviews/{reviewId}/data/status", method = RequestMethod.POST)
@@ -158,7 +159,7 @@ public class CompanyGeneralController {
     public ModelMap changeReviewStatus(@PathVariable Long companyId, @PathVariable Long reviewId,
             @RequestParam("status") String status) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {    
             Review review = reviewService.getReview(reviewId);
             Company company = companyService.getCompany(companyId);
@@ -167,31 +168,31 @@ public class CompanyGeneralController {
                          reviewId, ReviewStatus.valueOf(status.toUpperCase(Locale.ENGLISH)), sampleReviews.contains(review), false);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.status.authority.invalid"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.status.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.status.change.failed"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.status.change.failed"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/reviews/{reviewId}/data/publish", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap publishReview(@PathVariable Long companyId, @PathVariable Long reviewId, @RequestParam("publish") Boolean publish) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {    
             Review review = reviewService.getReview(reviewId);
             reviewService.updateStatus(Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName()),
                          reviewId, review.getStatus(), false, true);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.public.authority.invalid"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.public.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
-            response.put("error", messageTemplateService.getMessage("review.public.failed"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.public.failed"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @PreAuthorize("permitAll")

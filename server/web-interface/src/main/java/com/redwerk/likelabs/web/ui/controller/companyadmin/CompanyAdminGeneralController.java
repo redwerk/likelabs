@@ -38,8 +38,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-/*
- * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+/**
+ *
+ * Secure on Controller uses {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ * All methods for mapping must have parameter adminId
  */
 @PreAuthorize("@decisionAccess.permissionCompanyAdmin(principal, #adminId)")
 @Controller

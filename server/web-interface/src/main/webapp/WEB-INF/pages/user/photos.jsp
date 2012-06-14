@@ -66,7 +66,7 @@
     function updateData() {
         $.get("/user/${userId}/photo/data", options, function(response){
             if (!response.success) {
-                errorDialog("Error load photo", response.message);
+                errorDialog("Error load photo", response.error);
                 return;
             }
             pager_options.items_count = response.count;
@@ -109,7 +109,7 @@
     function  changeStatusPhoto(id,status) {
         $.post("/user/${userId}/photo/"+ id +"/status", {"status": status}, function(response) {
             if (!response.success) {
-                errorDialog("Error change status photo", response.message);
+                errorDialog("Error change status photo", response.error);
                 return;
             }
             updateData();
@@ -124,8 +124,8 @@
 
         <div class="filter-holder">
             <div style="margin-top: 0px; margin-left: 10px;" class="status-filter">
-                <input id="status_active" type="radio" name="status_filter" value="active" checked="checked"/>
-                <input id="status_deleted" type="radio" name="status_filter" value="deleted"/>
+                <input id="status_active" type="radio" name="status_filter" value="ACTIVE" checked="checked"/>
+                <input id="status_deleted" type="radio" name="status_filter" value="DELETED"/>
 
                 <label class="button_filter" for="status_active">Active</label>
                 <label class="button_filter" for="status_deleted">Deleted</label>

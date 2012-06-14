@@ -1,6 +1,5 @@
 package com.redwerk.likelabs.web.ui.dto;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 

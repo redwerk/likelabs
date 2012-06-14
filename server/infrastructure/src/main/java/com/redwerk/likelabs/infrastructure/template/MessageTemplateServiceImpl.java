@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class MessageTemplateServiceImpl implements MessageTemplateService {
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Override
     public String getMessage(String messageName, String... parameters) {

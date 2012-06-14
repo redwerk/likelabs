@@ -2,9 +2,9 @@
 <script type="text/javascript">
 $(document).ready(function(){
         <c:if test="${success eq false}">
-            errorDialog("Error", '<c:out value="${message}"/>');
+            errorDialog("Error", '<c:out value="${error}"/>');
         </c:if>
-    });
+});
 </script>
 <div id="content">
     <h1>

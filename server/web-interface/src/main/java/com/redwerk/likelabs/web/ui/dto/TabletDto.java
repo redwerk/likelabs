@@ -5,11 +5,8 @@ package com.redwerk.likelabs.web.ui.dto;
 public class TabletDto {
 
     private Long id;
-
     private String login;
-
     private String loginPassword;
-
     private String logoutPassword;
 
     public TabletDto(Long id, String login, String loginPassword, String logoutPassword) {

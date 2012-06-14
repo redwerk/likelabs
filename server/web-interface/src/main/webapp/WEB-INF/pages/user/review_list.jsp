@@ -69,7 +69,7 @@
         if (!options.company) options.point = "";
         $.get("/user/${userId}/feed/data", options, function(response){
             if (!response.success) {
-                errorDialog("Server error", response.message);
+                errorDialog("Server error", response.error);
                 return;
             }
             pager_options.items_count = response.count;
@@ -171,7 +171,7 @@
     function submitEditDialog(id){
         $.post("/user/${userId}/feed/"+ id +"/edit", $("#edit_feed_form").serialize(), function(response) {
             if (!response.success) {
-                errorDialog("Error edit review", response.message);
+                errorDialog("Error edit review", response.error);
                 return;
             }
             updateData(); 
@@ -186,7 +186,7 @@
                 type: "DELETE",
                 success: function(response){
                     if (!response.success) {
-                        errorDialog("Error removing review", response.message);
+                        errorDialog("Error removing review", response.error);
                         return;
                     }
                     updateData();

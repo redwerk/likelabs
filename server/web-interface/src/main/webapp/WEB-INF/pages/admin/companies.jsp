@@ -45,7 +45,7 @@
     function updateData() {
         $.get("/administrator/companies/data", options, function(response){
             if (!response.success) {
-                errorDialog("Server error", response.message);
+                errorDialog("Server error", response.error);
                 return;
             }
             pager_options.items_count = response.count;
@@ -64,7 +64,11 @@
     function addCompany(){
         $.post("/administrator/companies/add", $("#add_company_form").serialize(),function(response){
             if (!response.success) {
-                errorsDialog("Error adding company", response.errors);
+                errorDialog("Error adding company", response.error);
+                return;
+            }
+            if (!response.valid) {
+                errorsDialog("Validation company", response.messages);
                 return;
             }
             $("#add_company_dialog").dialog("close");
@@ -79,7 +83,7 @@
                 type: "DELETE",
                 success: function(response){
                     if (!response.success) {
-                        errorDialog("Error deleting company", response.message);
+                        errorDialog("Error deleting company", response.error);
                         return;
                     }
                     updateData();

@@ -45,6 +45,9 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
         for (CompanyReportItem item: report.getItems()) {
             companyIds.add(item.getCompany().getId());
         }
+        if (!user.isActive()) {
+            throw new UsernameNotFoundException("Company administrator not activated.");
+        }
         return new CustomUserDetails(user.getId(), user.getPhone(), user.getPassword(),
                                   AuthorityUtils.createAuthorityList(AuthorityRole.ROLE_COMPANY_ADMIN.toString()), companyIds);
     }

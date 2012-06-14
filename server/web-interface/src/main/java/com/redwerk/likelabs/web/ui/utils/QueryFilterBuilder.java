@@ -13,14 +13,35 @@ import java.util.List;
 import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ *
+ */
 public class QueryFilterBuilder {
 
+    /**
+     *
+     */
     public static final int ITEMS_PER_PAGE_REVIEW = 8;
+    /**
+     *
+     */
     public static final int ITEMS_PER_PAGE_PHOTO = 8;
+    /**
+     *
+     */
     public static final int ITEMS_PER_PAGE_COMPANY = 10;
+    /**
+     *
+     */
     public static final int ITEMS_PER_PAGE_USER = 10;
 
     
+    /**
+     *
+     * @param filter
+     * @return
+     * @throws ParseException
+     */
     public static ReviewQueryData buildReviewQuery(ReviewFilterDto filter) throws ParseException {
 
         List<Long> pointIds = null;
@@ -52,21 +73,41 @@ public class QueryFilterBuilder {
                 contentType, filter.getSampleStatus(), filter.getPublishingStatus(), buildPagerFeed(filter.getPage()), sort);
     }
 
+    /**
+     *
+     * @param page
+     * @return
+     */
     public static Pager buildPagerPhoto(Integer page) {
 
         return new Pager(page * ITEMS_PER_PAGE_PHOTO, ITEMS_PER_PAGE_PHOTO);
     }
 
+    /**
+     *
+     * @param page
+     * @return
+     */
     public static Pager buildPagerFeed(Integer page) {
 
         return new Pager(page * ITEMS_PER_PAGE_REVIEW, ITEMS_PER_PAGE_REVIEW);
     }
 
+    /**
+     *
+     * @param page
+     * @return
+     */
     public static Pager buildPagerUsers(Integer page) {
 
         return new Pager(page * ITEMS_PER_PAGE_USER, ITEMS_PER_PAGE_USER);
     }
 
+    /**
+     *
+     * @param page
+     * @return
+     */
     public static Pager buildPagerCompanies(Integer page) {
 
         return new Pager(page * ITEMS_PER_PAGE_COMPANY, ITEMS_PER_PAGE_COMPANY);

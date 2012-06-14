@@ -15,7 +15,11 @@
     function addTablet() {
         $.post("/company/" + companyId + "/point/" + pointId + "/profile/tablet", $("#add_tablet_form").serialize(),function(response){
             if (!response.success) {
-                errorsDialog("Error adding tablet", response.errors);
+                errorDialog("Error adding tablet", response.error);
+                return;
+            }
+            if (!response.valide) {
+                errorsDialog("Validation tablet", response.messages);
                 return;
             }
             $("#add_tablet_dialog").dialog("close");

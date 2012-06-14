@@ -14,12 +14,12 @@ import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
-import com.redwerk.likelabs.domain.model.user.User;
-import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.PointDto;
 import com.redwerk.likelabs.web.ui.dto.ReviewFilterDto;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
+import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
+import com.redwerk.likelabs.web.ui.utils.EnumEditor;
 import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,9 +34,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -50,8 +47,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
-/*
- * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+/**
+ * 
+ * Secure on Controller uses {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ * All methods for mapping must have parameter userId
  */
 @PreAuthorize("@decisionAccess.permissionUser(principal, #userId)")
 @Controller
@@ -91,7 +90,6 @@ public class UserGeneralController {
     public String photos(ModelMap model, @PathVariable Long userId) {
         
         model.put("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_PHOTO);
-        model.put("cabinet", "user");
         model.put("page", "my_photos");
         return VIEW_USER_PHOTOS;
     }
@@ -99,71 +97,54 @@ public class UserGeneralController {
     @RequestMapping(value="/photo/data", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap photoData(@PathVariable Long userId,
-                                 @RequestParam("page") Integer page, @RequestParam("status") String status) {
+                                 @RequestParam("page") Integer page, @RequestParam("status") PhotoStatus status) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {    
-            PhotoStatus statusFilter = PhotoStatus.ACTIVE;
-            if ("deleted".equals(status)) {
-                statusFilter = PhotoStatus.DELETED;
-            } 
-            Report<Photo> photos = photoService.getPhotos(userId, statusFilter, QueryFilterBuilder.buildPagerPhoto(page));
+            Report<Photo> photos = photoService.getPhotos(userId, status, QueryFilterBuilder.buildPagerPhoto(page));
             List<Map> data = new ArrayList<Map>();
             for (Photo photo : photos.getItems()) {
-                if (photo.getStatus().equals(PhotoStatus.ACTIVE) || photo.getStatus().equals(PhotoStatus.DELETED)) {
+                if (!photo.getStatus().equals(PhotoStatus.SELECTED)) {
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("id", photo.getId());
-                    map.put("status", photo.getStatus().toString().toLowerCase(Locale.ENGLISH));
+                    map.put("status", photo.getStatus().toString());
                     data.add(map);
                 }
             }
-            response.put("data", data);
-            response.put("count", photos.getCount());
-            response.put("success", true);
+            resBuilder.setData(data);
+            resBuilder.addCustomFieldData("count", photos.getCount());
         } catch (Exception e) {
             log.error(e,e);
-            response.put("success", false);
-            response.put("message", e.getMessage());
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value="/photo/{photoId}/status", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap changePhotoStatus(@PathVariable Long userId, @PathVariable Long photoId, @RequestParam("status") String status) {
+    public ModelMap changePhotoStatus(@PathVariable Long userId, @PathVariable Long photoId, @RequestParam PhotoStatus status) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
-            if (status.equals("active")) {
-                photoService.updatePhoto(photoId, PhotoStatus.ACTIVE);
-            }
-            if (status.equals("deleted")) {
-                photoService.updatePhoto(photoId, PhotoStatus.DELETED);
-            }
-            if (status.equals("selected")) {
-                photoService.updatePhoto(photoId, PhotoStatus.SELECTED);
-            }
-            response.put("success", true);
+            photoService.updatePhoto(photoId, status);
         } catch (Exception e) {
             log.error(e,e);
-            response.put("message", e.getMessage());
-            response.put("success", false);
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     public String initSettings(ModelMap model, @PathVariable Long userId) {
 
-        User user = userService.getUser(userId);
-        model.put("user", new UserDto(user));
+        model.put("user", new UserDto(userService.getUser(userId)));
         model.put("page", "settings");
         return VIEW_USER_SETTINGS;
     }
 
     @RequestMapping(value = "/settings", method = RequestMethod.POST)
     public String submitSettings(ModelMap model, @PathVariable Long userId,
-                     @ModelAttribute("user") UserDto user, BindingResult result, SessionStatus status) {
+                     @ModelAttribute UserDto user, BindingResult result, SessionStatus status) {
         try {
             userService.updateSettings(userId, new UserSettingsData(user.getPublishInSN(), user.getEnabledEvents()));
             status.setComplete();
@@ -173,7 +154,7 @@ public class UserGeneralController {
             model.put("page", "settings");
             model.put("user", user);
             model.put("success", false);
-            model.put("message", e.getMessage());
+            model.put("error", e.getMessage());
             return VIEW_USER_SETTINGS;
         }
         return "redirect:/user/" + userId;
@@ -184,21 +165,18 @@ public class UserGeneralController {
 
         List<Company> companies = companyService.getCompaniesForClient(userId);
         List<CompanyDto> companiesDto = new ArrayList<CompanyDto>();
-        if (companies == null) {
-            model.put("page", "my_feed");
-            model.put("cabinet", "user");
-            return VIEW_REVIEWS_LIST;
-        }
-        for (Company company : companies) {
-            CompanyDto companyDto = new CompanyDto(company.getId(), company.getName());
-            List<Point> points = pointService.getPointsForClient(company.getId(), userId);
-            for (Point point : points) {
-                companyDto.addPoint(new PointDto(point.getId(), point.getAddress().getAddressLine1()));
+        if (companies != null) {
+            for (Company company : companies) {
+                CompanyDto companyDto = new CompanyDto(company.getId(), company.getName());
+                List<Point> points = pointService.getPointsForClient(company.getId(), userId);
+                for (Point point : points) {
+                    companyDto.addPoint(new PointDto(point.getId(), point.getAddress().getAddressLine1()));
+                }
+                companiesDto.add(companyDto);
             }
-            companiesDto.add(companyDto);
+            model.put("companies", companiesDto);
+            model.put("count", companies.size());
         }
-        model.put("companies", companiesDto);
-        model.put("count", companies.size());
         model.put("items_per_page", QueryFilterBuilder.ITEMS_PER_PAGE_REVIEW);
         model.put("page", "my_feed");
         return VIEW_REVIEWS_LIST;
@@ -208,7 +186,7 @@ public class UserGeneralController {
     @ResponseBody
     public ModelMap getFeedData(@PathVariable Long userId, @ModelAttribute ReviewFilterDto filter) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             List<Long> companyIds = new ArrayList<Long>();
             if (filter.getCompany() == null) {
@@ -233,15 +211,13 @@ public class UserGeneralController {
                 map.put("active", review.isPublishedInCompanySN());
                 data.add(map);
             }
-            response.put("data", data);
-            response.put("count", report.getCount());
-            response.put("success", true);
+            resBuilder.setData(data);
+            resBuilder.addCustomFieldData("count", report.getCount());
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            response.put("message", e.getMessage());
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/feed/{reviewId}/edit", method = RequestMethod.POST)
@@ -249,36 +225,31 @@ public class UserGeneralController {
     public ModelMap editReview(@PathVariable Long userId, @PathVariable Long reviewId,
                   @RequestParam("message") String message) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             reviewService.updateReview(userId, reviewId, message);
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e,e);
-            response.put("success", false);
-            response.put("message", e.getMessage());
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
     
     @RequestMapping(value = "/feed/{reviewId}/remove", method = RequestMethod.DELETE)
     @ResponseBody
     public ModelMap removeReview(@PathVariable Long userId, @PathVariable Long reviewId) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             reviewService.deleteReview(reviewId);
-            response.put("success", true);
         } catch (NotAuthorizedReviewUpdateException e) {
             log.error(e,e);
-            response.put("message", messageTemplateService.getMessage("review.status.authority.invalid"));
-            response.put("success", false);
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("review.status.authority.invalid"));
         } catch (Exception e) {
             log.error(e,e);
-            response.put("message", messageTemplateService.getMessage("review.status.change.failed"));
-            response.put("success", false);
+            resBuilder.setNotSuccess( messageTemplateService.getMessage("review.status.change.failed"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @PreAuthorize("permitAll")
@@ -287,5 +258,6 @@ public class UserGeneralController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+        binder.registerCustomEditor(PhotoStatus.class, new EnumEditor(PhotoStatus.class));
     }
 }

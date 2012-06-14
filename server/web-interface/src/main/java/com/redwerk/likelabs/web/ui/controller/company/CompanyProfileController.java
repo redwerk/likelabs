@@ -20,6 +20,7 @@ import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedUserException;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
+import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
 import com.redwerk.likelabs.web.ui.validator.CompanyProfileValidator;
 import com.redwerk.likelabs.web.ui.validator.SocialLinkValidator;
 import com.redwerk.likelabs.web.ui.validator.UserProfileValidator;
@@ -60,6 +61,7 @@ public class CompanyProfileController {
 
     private final static String VIEW_COMPANY_PROFILE = "company/company_profile";
     private final static Byte MAX_LENGTH_SOCIAL_URL = 100;
+    private final static String SESSION_ATTRIBUTE_LOGO = "logo";
 
     private CompanyProfileValidator companyValidator = new CompanyProfileValidator();
     private UserProfileValidator userValidator = new UserProfileValidator();
@@ -82,7 +84,6 @@ public class CompanyProfileController {
         model.addAttribute("title", "Edit Company Profile");
         model.addAttribute("company", company);
         model.addAttribute("page", "profile");
-        model.put("cabinet", "company");
         return VIEW_COMPANY_PROFILE;
 
     }
@@ -95,12 +96,11 @@ public class CompanyProfileController {
         companyValidator.validate(companyDto, result);
         if (result.hasErrors()) {
             model.addAttribute("page", "profile");
-            model.put("cabinet", "company");
             return VIEW_COMPANY_PROFILE;
         }
         try {
-            if (session.getAttribute("logo") != null && (Long)((Map<String,Object>)session.getAttribute("logo")).get("companyId") == companyId) {
-                byte[] image = (byte[])((Map<String,Object>)session.getAttribute("logo")).get("image");
+            if (session.getAttribute(SESSION_ATTRIBUTE_LOGO) != null && (Long)((Map<String,Object>)session.getAttribute(SESSION_ATTRIBUTE_LOGO)).get("companyId") == companyId) {
+                byte[] image = (byte[])((Map<String,Object>)session.getAttribute(SESSION_ATTRIBUTE_LOGO)).get("image");
                 companyService.updateCompany(companyId,
                                  new CompanyData(companyDto.getName(), companyDto.getPhone(), companyDto.getEmail(), companyDto.isModerate()), image);
             } else {
@@ -112,7 +112,6 @@ public class CompanyProfileController {
             model.addAttribute("error",true);
             model.addAttribute("message","The image size should not exceed 1Mb.");
             model.addAttribute("page", "profile");
-            model.put("cabinet", "company");
             session.removeAttribute("logo");
             return VIEW_COMPANY_PROFILE;
         } catch (Exception e) {
@@ -120,11 +119,10 @@ public class CompanyProfileController {
             model.addAttribute("error",true);
             model.addAttribute("message","Server error. Try again later.");
             model.addAttribute("page", "profile");
-            model.put("cabinet", "company");
             return VIEW_COMPANY_PROFILE;
         }
         model.clear();
-        session.removeAttribute("logo");
+        session.removeAttribute(SESSION_ATTRIBUTE_LOGO);
         status.setComplete();
         return "redirect:/company/" + companyId;
     }
@@ -132,7 +130,7 @@ public class CompanyProfileController {
     @RequestMapping(value = "/cancel",method = RequestMethod.GET)
     public String processCancel(ModelMap model, HttpSession session, @PathVariable Long companyId) {
         model.clear();
-        session.removeAttribute("logo");
+        session.removeAttribute(SESSION_ATTRIBUTE_LOGO);
         return "redirect:/company/" + companyId;
     }
 
@@ -161,111 +159,97 @@ public class CompanyProfileController {
     @ResponseBody
     public ModelMap deletePoint(HttpSession session, @PathVariable Integer companyId, @PathVariable("pointId") Long pointId) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             pointService.deletePoint(pointId);
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            response.put("error", "Point  not deleted");
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("company.point.not.deleted"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/admin/{adminId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ModelMap deleteCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @PathVariable("adminId") Long adminId) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             companyService.removeAdmin(companyId, adminId);
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            response.put("error", "Company Admin not deleted");
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("company.admin.not.deleted"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/page/{pageId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ModelMap deleteSocialPage(HttpSession session, @PathVariable Integer companyId, @PathVariable("pageId") String pageId) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             companyService.detachPage(companyId, pageId);
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            response.put("error", "Social page not deleted.");
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("company.page.not.deleted"));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @PreAuthorize("hasRole('ROLE_SYSTEM_ADMIN')")
     @RequestMapping(value = "/admin/edit", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap editCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @ModelAttribute("user") UserDto user) {
-        ModelMap response = new ModelMap();
 
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         List<String> errors = userValidator.validate(user, messageTemplateService);
         if (!errors.isEmpty()) {
-            response.put("errors",errors);
-            response.put("success", false);
-            return response;
+            resBuilder.addMessages(errors);
+            resBuilder.addCustomFieldData("valid", false);
+            return resBuilder.getModelResponse();
         }
+        resBuilder.addCustomFieldData("valid", true);
         try {
             userService.updateProfile(user.getId(), new UserProfileData(user.getPhone(), user.getPassword(), user.getEmail()));
-            response.put("success", true);
         } catch (DuplicatedUserException e) {
             log.error(e, e);
-            response.put("success", false);
-            errors.add(messageTemplateService.getMessage("message.registration.user.duplicated"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("message.registration.user.duplicated"));
         } catch (EmailMessagingException e) {
             log.error(e, e);
-            response.put("success", false);
-            errors.add(messageTemplateService.getMessage("message.registration.failed.send.email"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("message.registration.failed.send.email"));
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            errors.add("Company administrator not added  Server error.");
+            resBuilder.setNotSuccess("Company administrator not added  Server error.");
         }
-        response.put("errors",errors);
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/admin/add", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap addCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @ModelAttribute("user") UserDto user) {
-        ModelMap response = new ModelMap();
 
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         List<String> errors = userValidator.validateWithoutPassword(user, messageTemplateService);
         if (!errors.isEmpty()) {
-            response.put("errors",errors);
-            response.put("success", false);
-            return response;
+            resBuilder.addMessages(errors);
+            resBuilder.addCustomFieldData("valid", false);
+            return resBuilder.getModelResponse();
         }
+        resBuilder.addCustomFieldData("valid", true);
         try {
             companyService.createAdmin(companyId, new CompanyAdminData(user.getPhone(), user.getEmail()));
-            response.put("success", true);
         } catch (DuplicatedUserException e) {
             log.error(e, e);
-            response.put("success", false);
-            errors.add(messageTemplateService.getMessage("message.registration.user.duplicated"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("message.registration.user.duplicated"));
         } catch (EmailMessagingException e) {
             log.error(e, e);
-            response.put("success", false);
-            errors.add(messageTemplateService.getMessage("message.registration.failed.send.email"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("message.registration.failed.send.email"));
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            errors.add("Company administrator not added  Server error.");
+            resBuilder.setNotSuccess("Company administrator not added  Server error.");
         }
-        response.put("errors",errors);
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/page", method = RequestMethod.POST)
@@ -273,31 +257,29 @@ public class CompanyProfileController {
     public ModelMap addSocialPage(HttpSession session, @PathVariable Integer companyId, @RequestParam("type") String type,
                                                               @RequestParam("url") String url) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         if (!new SocialLinkValidator().isValid(url)) {
-            response.put("error", messageTemplateService.getMessage("company.profile.invalid.url"));
-            response.put("success", false);
-            return response;
+            resBuilder.addMessage(messageTemplateService.getMessage("company.profile.invalid.url"));
+            resBuilder.addCustomFieldData("valid", false);
+            return resBuilder.getModelResponse();
         }
         if (url.length() > MAX_LENGTH_SOCIAL_URL) {
-            response.put("success", false);
-            response.put("error", messageTemplateService.getMessage("company.profile.invalid.url.length", MAX_LENGTH_SOCIAL_URL.toString()));
-            return response;
+            resBuilder.addMessage(messageTemplateService.getMessage("company.profile.invalid.url.length", MAX_LENGTH_SOCIAL_URL.toString()));
+            resBuilder.addCustomFieldData("valid", false);
+            return resBuilder.getModelResponse();
         }
+        resBuilder.addCustomFieldData("valid", true);
         try {
             SocialNetworkType socialNetworkType = SocialNetworkType.valueOf(type.toUpperCase(Locale.ENGLISH));
             companyService.attachPage(companyId, new CompanyPageData(socialNetworkType, url));
-            response.put("success", true);
         } catch (SNGeneralException e) {
             log.error(e, e);
-            response.put("success", false);
-            response.put("error", "Social page not added. Page not found");
+            resBuilder.setNotSuccess("Social page not added. Page not found");
         } catch (Exception e) {
             log.error(e, e);
-            response.put("success", false);
-            response.put("error", "Social page not added. Server error.");
+            resBuilder.setNotSuccess( "Social page not added. Server error.");
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/logo", method = RequestMethod.POST)
@@ -306,7 +288,7 @@ public class CompanyProfileController {
             Map<String,Object> logo = new HashMap<String, Object>();
             logo.put("companyId", companyId);
             logo.put("image", image.getBytes());
-            session.setAttribute("logo", logo);
+            session.setAttribute(SESSION_ATTRIBUTE_LOGO, logo);
         } catch (IOException e) {
             log.error(e,e);
         }
@@ -320,8 +302,8 @@ public class CompanyProfileController {
         ServletOutputStream out = null;
         try {
             byte[] image;
-            if (session.getAttribute("logo") != null && (Long)((Map<String,Object>)session.getAttribute("logo")).get("companyId") == companyId) {
-                Map<String,Object> logo = (Map<String,Object>)session.getAttribute("logo");
+            if (session.getAttribute(SESSION_ATTRIBUTE_LOGO) != null && (Long)((Map<String,Object>)session.getAttribute(SESSION_ATTRIBUTE_LOGO)).get("companyId") == companyId) {
+                Map<String,Object> logo = (Map<String,Object>)session.getAttribute(SESSION_ATTRIBUTE_LOGO);
                 if (logo.get("companyId") != companyId) return;
                 image = (byte[])logo.get("image");
             } else {

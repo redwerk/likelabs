@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
+/**
+ * 
+ * Secure on Controller uses {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ * All methods for mapping must have parameter adminId
+ */
 @PreAuthorize("@decisionAccess.permissionCompanyAdmin(principal, #adminId)")
 @Controller
 @RequestMapping(value = "/companyadmin/{adminId}/profile")

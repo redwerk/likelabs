@@ -1,12 +1,15 @@
 package com.redwerk.likelabs.web.ui.dto;
 
 import com.redwerk.likelabs.application.dto.NotificationIntervalData;
+import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.notification.NotificationInterval;
 import com.redwerk.likelabs.domain.model.notification.Period;
 import com.redwerk.likelabs.domain.model.notification.WarningType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Deprecated
 public class NotificationIntervalDto {
@@ -46,6 +49,18 @@ public class NotificationIntervalDto {
     public static List<NotificationIntervalData> convertIntervalsToData(List<NotificationIntervalDto> intervals) {
 
         return null;
+    }
+
+    public static Map<String, String> getAllItemsForOptions(MessageTemplateService messageTemplateService) {
+        return getItemsForOptions(messageTemplateService, Period.NEVER, Period.IMMEDIATELY, Period.DAILY, Period.WEEKLY, Period.MONTHLY);
+    }
+
+    public static Map<String, String> getItemsForOptions(MessageTemplateService messageTemplateService, Period ... periods) {
+        Map<String, String> result = new HashMap<String, String>();
+        for (Period p :periods) {
+            result.put(p.toString(), messageTemplateService.getMessage("administrator.notification.period." + p.toString()));
+        }
+        return result;
     }
 
     public String getDescription() {

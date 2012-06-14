@@ -23,6 +23,7 @@ import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.NotificationIntervalDto;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
 import com.redwerk.likelabs.web.ui.security.Authenticator;
+import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
 import com.redwerk.likelabs.web.ui.utils.EnumEditor;
 import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import com.redwerk.likelabs.web.ui.validator.CompanyProfileValidator;
@@ -92,7 +93,7 @@ public class AdministratorGeneralController {
     @ResponseBody
     public ModelMap listCompanyData(@RequestParam(value = "page", defaultValue = "0") Integer page) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             Report<CompanyReportItem> report = companyService.getCompanies(QueryFilterBuilder.buildPagerCompanies(page));
             List<Map> data = new ArrayList<Map>();
@@ -105,31 +106,27 @@ public class AdministratorGeneralController {
                 map.put("phone", company.getPhone());
                 data.add(map);
             }
-            response.put("data", data);
-            response.put("count", report.getCount());
-            response.put("success", true);
+            resBuilder.setData(data);
+            resBuilder.addCustomFieldData("count", report.getCount());
         } catch (Exception e) {
             log.error(e, e);
-            response.put("message", e.getMessage());
-            response.put("success", false);
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/companies/{companyId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ModelMap deleteCompany(@PathVariable Long companyId) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             companyService.deleteCompany(companyId);
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
-            response.put("message", e.getMessage());
-            response.put("success", false);
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/companies/add", method = RequestMethod.POST)
@@ -138,30 +135,26 @@ public class AdministratorGeneralController {
             @RequestParam("admin_phone") String adminPhone,
             @RequestParam("admin_email") String adminEmail) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         List<String> errors = companyValidator.validateOnCreate(company, new CompanyAdminData(adminPhone, adminEmail), messageTemplateService);
+        if (!errors.isEmpty()) {
+            resBuilder.addMessages(errors);
+            resBuilder.addCustomFieldData("valid", false);
+            return resBuilder.getModelResponse();
+        }
+        resBuilder.addCustomFieldData("valid", true);
         try {
-            if (!errors.isEmpty()) {
-                response.put("errors", errors);
-                response.put("success", false);
-                return response;
-            }
             companyService.createCompany(authenticator.getCurrentUserId(),
                     new CompanyData(company.getName(), company.getPhone(), company.getEmail()),
                     new CompanyAdminData(adminPhone, adminEmail));
-            response.put("success", true);
         } catch (DuplicatedUserException e) {
             log.error(e, e);
-            errors.add(messageTemplateService.getMessage("message.registration.user.duplicated"));
-            response.put("errors", errors);
-            response.put("success", false);
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("message.registration.user.duplicated"));
         } catch (Exception e) {
             log.error(e, e);
-            errors.add("Cannot added company");
-            response.put("errors", errors);
-            response.put("success", false);
+            resBuilder.setNotSuccess("Cannot added company");
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -178,7 +171,7 @@ public class AdministratorGeneralController {
     @ResponseBody
     public ModelMap listUsersData(@RequestParam(value = "page", defaultValue = "0") Integer page) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             Report<User> report = userService.getRegularUsers(QueryFilterBuilder.buildPagerUsers(page));
             List<Map> data = new ArrayList<Map>();
@@ -193,59 +186,52 @@ public class AdministratorGeneralController {
                 map.put("status", messageTemplateService.getMessage("user.status." + user.getStatus()));
                 data.add(map);
             }
-            response.put("data", data);
-            response.put("count", report.getCount());
-            response.put("success", true);
+            resBuilder.setData(data);
+            resBuilder.addCustomFieldData("count", report.getCount());
         } catch (Exception e) {
             log.error(e, e);
-            response.put("message", e.getMessage());
-            response.put("success", false);
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        response.put("success", true);
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/users/status", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap changeStatusUser(@ModelAttribute("user") UserDto user) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             userService.updateStatus(user.getId(), authenticator.getCurrentUserId(), user.getStatus());
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
-            response.put("message", e.getMessage());
-            response.put("success", false);
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     @ResponseBody
     public ModelMap addEditUser(@ModelAttribute("user") UserDto user) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         List<String> errors = userValidator.validate(user, messageTemplateService);
         if (!errors.isEmpty()) {
-            response.put("errors", errors);
-            response.put("success", false);
-            return response;
+            resBuilder.addMessages(errors);
+            resBuilder.addCustomFieldData("valid", false);
+            return resBuilder.getModelResponse();
         }
+        resBuilder.addCustomFieldData("valid", true);
         try {
             if (user.getId() > NEW_USER_ID) {
                 userService.updateProfile(user.getId(), new UserProfileData(user.getPhone(), user.getPassword(), user.getEmail()));
             } else {
                 userService.createUser(authenticator.getCurrentUserId(), new UserProfileData(user.getPhone(), user.getPassword(), user.getEmail()));
             }
-            response.put("success", true);
         } catch (Exception e) {
             log.error(e, e);
-            errors.add(e.getMessage());
-            response.put("errors", errors);
-            response.put("success", false);
+            resBuilder.setNotSuccess(e.getMessage());
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
@@ -265,29 +251,6 @@ public class AdministratorGeneralController {
             @ModelAttribute("settings") NotificationSettingsDto settings, BindingResult result, SessionStatus status) {
 
         notificationService.updateIntervals(settings.getIntervals());
-        status.setComplete();
-        model.clear();
-        return "redirect:/administrator";
-    }
-
-
-    @RequestMapping(value = "/settings2", method = RequestMethod.GET)
-    public String initTestSettings(ModelMap model) {
-
-        List<NotificationInterval> intervals = notificationService.getIntervals();
-
-        model.put("settings", NotificationIntervalDto.convertIntervalsToDto(intervals));
-        model.put("itemsAll", NotificationIntervalDto.getAllItemsForOptions(messageTemplateService));
-        model.put("itemsEmailAbsent", NotificationIntervalDto.getItemsForOptions(messageTemplateService,Period.NEVER, Period.DAILY, Period.MONTHLY, Period.WEEKLY));
-        model.put("page", "settings");
-        return "admin/settings2";
-    }
-
-
-    @RequestMapping(value = "/settings2", method = RequestMethod.POST)
-    public String submitTestSettings(ModelMap model,
-            @ModelAttribute("settings") List<NotificationIntervalDto> settings, BindingResult result, SessionStatus status) {
-
         status.setComplete();
         model.clear();
         return "redirect:/administrator";

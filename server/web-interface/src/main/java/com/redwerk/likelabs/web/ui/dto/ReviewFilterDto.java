@@ -16,7 +16,7 @@ public class ReviewFilterDto {
     private Integer page = 0;
     private String status = null;
 
-    //fields for filter quey bilder
+    //fields for filter query bilder
     private ReviewStatus reviewStatus = null;
     private Boolean publishingStatus = null;
     private Boolean sampleStatus = null;

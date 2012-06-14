@@ -12,7 +12,11 @@
     function addAdmin() {
         $.post("/company/${company.id}/profile/admin/add", $("#add_administrator_form").serialize(), function(response){
             if (!response.success) {
-                errorsDialog("Error adding administrator", response.errors);
+                errorDialog("Error adding administrator", response.error);
+                return;
+            }
+            if (!response.valid) {
+                errorsDialog("Validation administrator", response.messages);
                 return;
             }
             $("#add_administrator_dialog").dialog("close");
@@ -24,6 +28,10 @@
         $.post("/company/${company.id}/profile/page", $("#add_social_page_form").serialize(), function(response){
             if (!response.success) {
                 errorDialog("Error adding social page", response.error);
+                return;
+            }
+            if (!response.valid) {
+                errorsDialog("Vlidation social page", response.messages);
                 return;
             }
             $("#add_social_page_dialog").dialog("close");
@@ -80,7 +88,11 @@
         function editAdmin() {
             $.post("/company/${company.id}/profile/admin/edit", $("#edit_administrator_form").serialize(), function(response){
                 if (!response.success) {
-                    errorsDialog("Error editing administrator", response.errors);
+                    errorDialog("Error editing administrator", response.error);
+                    return;
+                }
+                if (!response.valid) {
+                    errorsDialog("Validation administrator", response.messages);
                     return;
                 }
                 $("#edit_administrator_dialog").dialog("close");

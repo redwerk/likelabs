@@ -9,21 +9,13 @@ import org.apache.commons.lang.StringUtils;
 public class PointDto {
 
     private Long id = 0L;
-
     private String city = null;
-
     private String state = null;
-
     private String country = null;
-
     private String postalCode = null;
-
     private String addressLine1 = null;
-
     private String addressLine2 = null;
-
     private String phone = null;
-
     private String email = null;
 
     public PointDto() {
