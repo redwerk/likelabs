@@ -18,7 +18,6 @@ import com.redwerk.likelabs.domain.model.notification.WarningType;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserStatus;
-import com.redwerk.likelabs.infrastructure.security.CustomUserDetails;
 import com.redwerk.likelabs.web.ui.dto.NotificationSettingsDto;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.NotificationIntervalDto;
@@ -28,28 +27,16 @@ import com.redwerk.likelabs.web.ui.utils.EnumEditor;
 import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import com.redwerk.likelabs.web.ui.validator.CompanyProfileValidator;
 import com.redwerk.likelabs.web.ui.validator.UserProfileValidator;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorSupport;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -283,20 +270,20 @@ public class AdministratorGeneralController {
         return "redirect:/administrator";
     }
 
-    @Deprecated
+
     @RequestMapping(value = "/settings2", method = RequestMethod.GET)
     public String initTestSettings(ModelMap model) {
 
         List<NotificationInterval> intervals = notificationService.getIntervals();
 
-       // model.put("settings", settings);
-       // model.put("itemsAll", settings.getAllItemsForOptions(messageTemplateService));
-      //  model.put("itemsEmailAbsent", settings.getItemsForOptions(messageTemplateService,Period.NEVER, Period.DAILY, Period.MONTHLY, Period.WEEKLY));
+        model.put("settings", NotificationIntervalDto.convertIntervalsToDto(intervals));
+        model.put("itemsAll", NotificationIntervalDto.getAllItemsForOptions(messageTemplateService));
+        model.put("itemsEmailAbsent", NotificationIntervalDto.getItemsForOptions(messageTemplateService,Period.NEVER, Period.DAILY, Period.MONTHLY, Period.WEEKLY));
         model.put("page", "settings");
-        return VIEW_ADMIN_SETTINGS;
+        return "admin/settings2";
     }
 
-    @Deprecated
+
     @RequestMapping(value = "/settings2", method = RequestMethod.POST)
     public String submitTestSettings(ModelMap model,
             @ModelAttribute("settings") List<NotificationIntervalDto> settings, BindingResult result, SessionStatus status) {

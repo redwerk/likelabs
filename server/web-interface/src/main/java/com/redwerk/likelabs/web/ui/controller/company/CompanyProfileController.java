@@ -48,8 +48,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-/*
- * security use {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+/**
+ *
+ * Secure on Controller uses {@link com.redwerk.likelabs.web.ui.security.DecisionAccess}
+ * All methods for mapping must have parameter companyId
  */
 @PreAuthorize("@decisionAccess.permissionCompany(principal, #companyId)")
 @Controller
@@ -57,11 +59,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CompanyProfileController {
 
     private final static String VIEW_COMPANY_PROFILE = "company/company_profile";
-    private final static Byte MAX_LENGTH_PHONE = 20;
-    private final static Byte MAX_LENGTH_EMAIL = 40;
     private final static Byte MAX_LENGTH_SOCIAL_URL = 100;
-
-    private final static byte NEW_USER_ID = 0;
 
     private CompanyProfileValidator companyValidator = new CompanyProfileValidator();
     private UserProfileValidator userValidator = new UserProfileValidator();
@@ -244,7 +242,7 @@ public class CompanyProfileController {
     public ModelMap addCompanyAdmin(HttpSession session, @PathVariable Integer companyId, @ModelAttribute("user") UserDto user) {
         ModelMap response = new ModelMap();
 
-        List<String> errors = userValidator.validate(user, messageTemplateService);
+        List<String> errors = userValidator.validateWithoutPassword(user, messageTemplateService);
         if (!errors.isEmpty()) {
             response.put("errors",errors);
             response.put("success", false);

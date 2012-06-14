@@ -54,6 +54,19 @@ public class UserProfileValidator implements org.springframework.validation.Vali
 
     public List<String> validate(UserDto user, MessageTemplateService messageTemplateService) {
 
+        List<String> errors = validateWithoutPassword(user, messageTemplateService);
+        if (StringUtils.isBlank(user.getPassword())) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.password"));
+            return errors;
+        }
+        if (user.getPassword().length() > MAX_LENGTH_PASSWORD) {
+            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.password", MAX_LENGTH_PASSWORD.toString()));
+        }
+        return errors;
+    }
+
+    public List<String> validateWithoutPassword(UserDto user, MessageTemplateService messageTemplateService) {
+
         List<String> errors = new ArrayList<String>();
         if (!mailValidator.isValid(user.getEmail())) {
             errors.add(messageTemplateService.getMessage("user.profile.invalid.email"));
@@ -61,17 +74,11 @@ public class UserProfileValidator implements org.springframework.validation.Vali
         if (!phoneValidator.isValid(user.getPhone())) {
             errors.add(messageTemplateService.getMessage("user.profile.invalid.phone"));
         }
-        if (user.getEmail().length() > MAX_LENGTH_EMAIL) {
+        if (StringUtils.isNotBlank(user.getEmail()) && user.getEmail().length() > MAX_LENGTH_EMAIL) {
             errors.add(messageTemplateService.getMessage("user.profile.invalid.length.email", MAX_LENGTH_EMAIL.toString()));
         }
-        if (user.getPhone().length() > MAX_LENGTH_PHONE) {
+        if (StringUtils.isNotBlank(user.getPhone()) && user.getPhone().length() > MAX_LENGTH_PHONE) {
             errors.add(messageTemplateService.getMessage("user.profile.invalid.length.phone", MAX_LENGTH_PHONE.toString()));
-        }
-        if (user.getId() == NEW_USER_ID && StringUtils.isBlank(user.getPassword())) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.password"));
-        }
-        if (user.getPassword().length() > MAX_LENGTH_PASSWORD) {
-            errors.add(messageTemplateService.getMessage("user.profile.invalid.length.password", MAX_LENGTH_PASSWORD.toString()));
         }
         return errors;
     }
