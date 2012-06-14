@@ -1,8 +1,4 @@
 <%@include  file="/WEB-INF/pages/commons/header.jsp"%>
-<style type="text/css">
-    @import "/static/css/fb.css";
-    @import "/static/css/vk.css";
-</style>
 <script type="text/javascript">
     var id_VKontakte = <spring:message code="app.vkontakte.clientid"/>;
     var id_Facebook = <spring:message code="app.facebook.clientid"/>;
@@ -21,7 +17,6 @@
             Now you can go to <a href="/" >Dashboard</a>
         </div>
     </div>
-    <h4>Connect Social Accounts: </h4>
     <div>Link your account to share your comments, videos and photos with your friends</div>
     <div style="width: 250px;">
         <%@include file="/WEB-INF/pages/commons/socialButtons.jspf" %>
