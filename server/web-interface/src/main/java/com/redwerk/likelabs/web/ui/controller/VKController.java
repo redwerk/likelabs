@@ -27,6 +27,8 @@ public class VKController {
     private final Logger log = LogManager.getLogger(getClass());
     
     private static final String ACCESS_TOKEN = "access_token";
+    
+    private static final String SOCIAL_TYPE = "socialType";
 
     @Autowired
     private UserService userService;
@@ -42,7 +44,7 @@ public class VKController {
     public String requestGET(@RequestParam(value = "user_id", required = true) String socialAccountId,
             @RequestParam(value = "access_token", required = true) String accessToken, HttpSession session, HttpServletRequest request) {
         session.setAttribute(ACCESS_TOKEN, accessToken);
-        session.setAttribute("socialType","vk");
+        session.setAttribute(SOCIAL_TYPE,SocialNetworkType.VKONTAKTE.toString());
         User user = null;
         try {
             user = userService.getUser(SocialNetworkType.VKONTAKTE, socialAccountId);

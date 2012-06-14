@@ -1,3 +1,4 @@
+<%@page import="com.redwerk.likelabs.domain.model.SocialNetworkType"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -6,6 +7,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<% pageContext.setAttribute("fb", SocialNetworkType.FACEBOOK.toString()); %>
+<% pageContext.setAttribute("vk", SocialNetworkType.VKONTAKTE.toString()); %>
+<% pageContext.setAttribute("fbCss", "/static/css/fb.css"); %>
+<% pageContext.setAttribute("vkCss", "/static/css/vk.css"); %>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -36,25 +43,30 @@
         <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
         <c:if test="${not empty socialType}">
                 <script type="text/javascript">
-                    if(window.parent != window) {
-                        var fileref=document.createElement("link");
-                        fileref.setAttribute("rel", "stylesheet");
-                        fileref.setAttribute("type", "text/css");
-                        fileref.setAttribute("href", "/static/css/${socialType}.css");
-
-                        document.getElementsByTagName("head")[0].appendChild(fileref);
+                    if(window.parent != window) {                        
                         $("body").ready(function(){
                             $("#btnLogout").hide();
                         });
-                    <c:choose>
-                        <c:when test="${socialType=='vk'}">                                
+                    var fileref;
+                    <c:choose>                        
+                        <c:when test="${socialType==vk}">                                
                             fileref=document.createElement('script');
                             fileref.setAttribute("type","text/javascript");
                             fileref.setAttribute("src", "http://vk.com/js/api/xd_connection.js?2");
                             document.getElementsByTagName("head")[0].appendChild(fileref);
+                            fileref=document.createElement("link");
+                            fileref.setAttribute("rel", "stylesheet");
+                            fileref.setAttribute("type", "text/css");
+                            fileref.setAttribute("href", "${vkCss}");
+                            document.getElementsByTagName("head")[0].appendChild(fileref);
                             attachPath = "vk/attach";
                         </c:when>
-                        <c:when test="${socialType=='fb'}">               
+                        <c:when test="${socialType==fb}">
+                            fileref=document.createElement("link");
+                            fileref.setAttribute("rel", "stylesheet");
+                            fileref.setAttribute("type", "text/css");
+                            fileref.setAttribute("href", "${fbCss}");
+                            document.getElementsByTagName("head")[0].appendChild(fileref);
                             attachPath = "fb/attach";                                    
                         </c:when>
                     </c:choose>
