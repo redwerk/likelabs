@@ -10,7 +10,6 @@ import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountExcepti
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -136,13 +135,13 @@ public class User {
     // modifiers
 
     public void activate() {
-        if (isActive()) {
-            throw new IllegalStateException("user is already active");
+        if (status != UserStatus.NOT_ACTIVATED) {
+            throw new IllegalStateException("user is already activated");
         }
         status = UserStatus.ACTIVE;
     }
 
-    protected void markAsDeleted() {
+    protected void archive() {
         if (status != UserStatus.ACTIVE) {
             throw new IllegalStateException("user " + phone + " is not active");
         }
@@ -151,7 +150,7 @@ public class User {
 
     public void restore() {
         if (status != UserStatus.DELETED) {
-            throw new IllegalStateException("user " + phone + " is not deleted");
+            throw new IllegalStateException("user " + phone + " is not archived");
         }
         status = UserStatus.ACTIVE;
     }

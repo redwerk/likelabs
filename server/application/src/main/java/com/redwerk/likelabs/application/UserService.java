@@ -1,7 +1,6 @@
 package com.redwerk.likelabs.application;
 
 import com.redwerk.likelabs.application.dto.Report;
-import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.dto.user.UserProfileData;
 import com.redwerk.likelabs.application.dto.user.UserSettingsData;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
@@ -29,9 +28,6 @@ public interface UserService {
     User createUser(long creatorId, UserProfileData userProfile);
 
 
-    @Deprecated
-    void updateUser(long userId, UserData userData);
-
     void updateProfile(long userId, UserProfileData userProfile);
 
     void updateSettings(long userId, UserSettingsData userSettings);
@@ -46,8 +42,5 @@ public interface UserService {
     UserSocialAccount attachAccount(long userId, UserSocialAccount account);
 
     void detachAccount(long userId, SocialNetworkType snType);
-
-    @Deprecated
-    void deleteUser(long userId);
 
 }

@@ -2,7 +2,6 @@ package com.redwerk.likelabs.application.impl;
 
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
-import com.redwerk.likelabs.application.dto.user.UserData;
 import com.redwerk.likelabs.application.dto.user.UserProfileData;
 import com.redwerk.likelabs.application.dto.user.UserSettingsData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
@@ -12,9 +11,6 @@ import com.redwerk.likelabs.domain.model.review.ReviewRepository;
 import com.redwerk.likelabs.domain.model.user.*;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
-import com.redwerk.likelabs.domain.model.photo.Photo;
-import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
-import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.query.Pager;
 
 import java.text.MessageFormat;
@@ -24,8 +20,6 @@ import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -108,18 +102,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(long userId, UserData userData) {
-        Validate.notNull(userData, "userData cannot be null");
-        User user = userRepository.get(userId);
-        user.setPhone(userData.getPhone());
-        user.setPassword(userData.getPassword());
-        user.setEnabledEvents(userData.getEnabledEvents());
-        user.setPublishInSN(userData.isPublishInSN());
-        doEmailUpdate(user, userData.getEmail());
-    }
-
-    @Override
-    @Transactional
     public void updateProfile(long userId, UserProfileData userProfile) {
         Validate.notNull(userProfile, "userProfile cannot be null");
         User user = userRepository.get(userId);
@@ -178,7 +160,12 @@ public class UserServiceImpl implements UserService {
 
         if (status == UserStatus.ACTIVE) {
             Validate.isTrue(updater.isSystemAdmin());
-            user.restore();
+            if (user.getStatus() == UserStatus.NOT_ACTIVATED) {
+                user.activate();
+            }
+            else {
+                user.restore();
+            }
         }
         else if (status == UserStatus.DELETED) {
             Validate.isTrue(user.equals(updater) || updater.isSystemAdmin());
@@ -212,13 +199,6 @@ public class UserServiceImpl implements UserService {
         Validate.notNull(snType, "snType cannot be null");
         User user = userRepository.get(userId);
         user.removeAccount(snType);
-    }
-
-    @Override
-    @Transactional
-    public void deleteUser(long userId) {
-        User user = userRepository.get(userId);
-        userRepository.remove(user, reviewRepository);
     }
 
 }

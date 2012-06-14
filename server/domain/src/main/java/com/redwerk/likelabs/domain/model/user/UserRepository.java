@@ -1,7 +1,6 @@
 package com.redwerk.likelabs.domain.model.user;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
-import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotFoundException;
@@ -66,7 +65,7 @@ public abstract class UserRepository {
             removeInternal(user);
         }
         else {
-            user.markAsDeleted();
+            user.archive();
         }
     }
 
