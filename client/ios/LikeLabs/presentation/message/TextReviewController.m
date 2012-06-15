@@ -88,9 +88,15 @@ float commentsContentOffset = 0;
     self.textView.layer.borderColor = [[UIColor colorWithWhite:BORDER_COLOR alpha:1.0] CGColor];
     self.textView.layer.borderWidth = BORDER_WIDTH;
     self.textView.layer.cornerRadius = BORDER_CORNER_RADIUS;
-    self.textPlaceholderActive = true;
-    self.textLabel.font = [UIFont fontWithName:@"Lobster 1.4" size:23];
-    [self.textView becomeFirstResponder];    
+    if (self.review.text && self.review.text.length) {
+        self.textView.text = self.review.text;
+        self.textPlaceholderActive = false;
+        self.textView.textColor = [UIColor blackColor];
+    } else {
+        self.textPlaceholderActive = true;
+    }
+    self.textLabel.font = [UIFont fontWithName:@"Lobster 1.4" size:23];    
+    [self.textView becomeFirstResponder];
     self.currentOrientation = self.interfaceOrientation;
 }
 
