@@ -52,20 +52,11 @@ CGFloat const SLIDE_SPEED = 0.5;
 
 #pragma mark - Memory management
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    self.currentViewController = nil;
+- (void)dealloc {
     self.reviewService = nil;
     self.loginService = nil;
     self.review = nil;
-}
-
-- (void)dealloc {
-    [_currentViewController release];    
-    [_reviewService release];
-    [_loginService release];
-    [_review release];
+    self.currentViewController = nil;
     [super dealloc];
 }
 
@@ -99,7 +90,7 @@ CGFloat const SLIDE_SPEED = 0.5;
         [(RootController*)root checkForSettings];
     }
     root.view.userInteractionEnabled = NO;
-    UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
+    UIViewController *vc = [RootController viewControllerByName:controllerName rootController:root];
     vc.view.frame = root.view.bounds;
     [root addChildViewController:vc];
     [root.view addSubview:vc.view];
@@ -107,7 +98,6 @@ CGFloat const SLIDE_SPEED = 0.5;
     [vc.view setNeedsLayout];
     vc.view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
     [UIView animateWithDuration:SLIDE_SPEED animations: ^{
-
         [root getCurrentController].view.center = CGPointMake(-0.5*vc.view.frame.size.width, vc.view.frame.size.height/2);
         vc.view.center = CGPointMake((vc.view.frame.size.width/2), vc.view.frame.size.height/2);
     } completion:^(BOOL finished){
@@ -130,11 +120,11 @@ CGFloat const SLIDE_SPEED = 0.5;
         [(RootController*)root checkForSettings];
     }
     root.view.userInteractionEnabled = NO;
-    UIViewController *vc = [[(UIViewController<ChildController> *)[NSClassFromString(controllerName) alloc] initWithRootController:root] autorelease];
+    UIViewController *vc = [RootController viewControllerByName:controllerName rootController:root];
     [root.view addSubview:vc.view];
     [root addChildViewController:vc];
     vc.view.frame = root.view.bounds; 
-    vc.view.center = CGPointMake(vc.view.frame.size.width*-.5, vc.view.frame.size.height/2);
+    vc.view.center = CGPointMake(vc.view.frame.size.width*-0.5, vc.view.frame.size.height/2);
 
     [UIView animateWithDuration:SLIDE_SPEED animations: ^{
         [root getCurrentController].view.center = CGPointMake(vc.view.frame.size.width*1.5, vc.view.frame.size.height/2);
@@ -157,7 +147,7 @@ CGFloat const SLIDE_SPEED = 0.5;
     [root.view addSubview:vc.view];
     [root addChildViewController:vc];
     vc.view.frame = root.view.bounds; 
-    vc.view.center = CGPointMake(vc.view.frame.size.width*-.5, vc.view.frame.size.height/2);
+    vc.view.center = CGPointMake(vc.view.frame.size.width*-0.5, vc.view.frame.size.height/2);
     
     [UIView animateWithDuration:SLIDE_SPEED animations: ^{
         

@@ -82,24 +82,21 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
     [self setSocialButtonsView:nil];
     [self setShareYourSmileImg:nil];
     [self setCompanyLogo:nil];
-    [self setDao:nil];
-    [self setReviews:nil];
     [self setReviewBox:nil];
     [self setPoweredByImg:nil];
     [self setButtonBgView:nil];
     [self setLogoBgView:nil];
     [super viewDidUnload];
-    self.rootController = nil;
 }
 
 - (void)dealloc {
-    [_rootController release];
+    self.rootController = nil;
+    self.dao = nil;
+    self.reviews = nil;
     [_startBtn release];
     [_socialButtonsView release];
     [_shareYourSmileImg release];
     [_companyLogo release];
-    [_dao release];
-    [_reviews release];
     [_reviewBox release];
     [_poweredByImg release];
     [_buttonBgView release];

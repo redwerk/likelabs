@@ -13,10 +13,10 @@ static NSString *const bgPortrait = @"textmessage_portrait.png";
 @interface TextReviewController()
 @property (retain, nonatomic) UIViewController <ContainerController>* rootController;
 @property (retain, nonatomic) NSArray* reviews;
-@property (nonatomic, assign) Review* review;
+@property (assign, nonatomic) Review* review;
 @property (retain, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) BOOL textPlaceholderActive;
-@property (nonatomic, assign) UIInterfaceOrientation currentOrientation;
+@property (assign, nonatomic) UIInterfaceOrientation currentOrientation;
 
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 - (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
@@ -65,13 +65,14 @@ float commentsContentOffset = 0;
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
     commentsContentOffset = self.socialComments.contentSize.height/2;
     [self scrollComments];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [self.timer invalidate];
+    self.timer = nil;
 }
 
 - (void)viewDidLoad
@@ -97,8 +98,6 @@ float commentsContentOffset = 0;
 {
     [self setSocialComments:nil];
     [self setTextView:nil];
-    [self setRootController:nil];
-    [self setReviews:nil];
     [self setBtnNext:nil];
     [self setTextLabel:nil];
     [self setReview:nil];
@@ -106,10 +105,10 @@ float commentsContentOffset = 0;
 }
 
 - (void)dealloc {
+    self.rootController = nil;
+    self.reviews = nil;
     [_socialComments release];
     [_textView release];
-    [_rootController release];
-    [_reviews release];
     [_btnNext release];
     [_textLabel release];
     [super dealloc];

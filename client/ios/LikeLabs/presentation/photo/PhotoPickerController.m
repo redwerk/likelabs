@@ -12,7 +12,7 @@
 @property (nonatomic, retain) AVCaptureVideoPreviewLayer *previewLayer;
 @property (nonatomic, retain) NSTimer *timer;
 @property (nonatomic, retain) AVCaptureStillImageOutput *imageOutput;
-@property (assign) NSInteger seconds;
+@property (nonatomic, assign) NSInteger seconds;
 
 - (void) initCapture;
 - (void) captureImage;
@@ -77,12 +77,8 @@ NSString *const GET_READY_MSG = @"Get Ready!";
 
 - (void)viewDidUnload
 {
-    [self setRootController:nil];
-    [self setCaptureSession:nil];
-    [self setPreviewLayer:nil];
     [self setLabel:nil];
     [self setTimer:nil];
-    [self setImageOutput:nil];
     [self setMessageView:nil];
     [self setMessageLabel:nil];
     [self setStartButton:nil];
@@ -92,11 +88,11 @@ NSString *const GET_READY_MSG = @"Get Ready!";
 }
 
 - (void)dealloc {
-    [_rootController release];
-    [_captureSession release];
-    [_previewLayer release];
+    self.rootController = nil;
+    self.captureSession = nil;
+    self.previewLayer = nil;
+    self.imageOutput = nil;
     [_label release];
-    [_imageOutput release];
     [_messageView release];
     [_messageLabel release];
     [_startButton release];

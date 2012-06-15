@@ -94,11 +94,10 @@ static NSString *const GREETING = @"Start typing a message!";
     [self setImageView:nil];
     [self setMessageView:nil];
     [super viewDidUnload];
-    [self setRootController:nil];
 }
 
 - (void)dealloc {
-    [_rootController release];
+    self.rootController = nil;
     [_textView release];
     [_imageView release];
     [_messageView release];

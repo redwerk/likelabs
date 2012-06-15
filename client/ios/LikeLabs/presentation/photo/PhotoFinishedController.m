@@ -74,12 +74,11 @@
     [self setInstructionsBackground:nil];
     [super viewDidUnload];
     [self setMessageView:nil];
-    self.rootController = nil;
     self.imageView = nil;
 }
 
 - (void)dealloc {
-    [_rootController release];
+    self.rootController = nil;
     [_imageView release];
     [_button release];
     [_messageView release];
@@ -132,6 +131,6 @@
 #pragma mark - Actions
 
 - (IBAction)goHome:(id)sender {
-    [(RootPhotoController*)self.rootController goHome:sender];
+    [self.rootController goHome:sender];
 }
 @end

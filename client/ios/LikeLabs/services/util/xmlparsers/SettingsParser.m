@@ -46,6 +46,7 @@
         self.promoReviews = self.promoReviewsCollector;
     } else if ([elementName isEqualToString:@"sampleReview"]) {
         self.currentReview.reviewType = (self.currentReview.imageUrl) ? ReviewTypePhoto : ReviewTypeText;
+        self.currentReview.photos = [NSArray arrayWithObject:[NSNull null]];
         [self.promoReviewsCollector addObject:self.currentReview];
         self.currentReview = nil;
     } else if ([elementName isEqualToString:@"author"]) {
@@ -69,12 +70,6 @@
     self.promoReviewsCollector = nil;
     self.promoReviews = nil;
     self.currentReview = nil;
-    [_currentReview release];
-    [_promoReviews release];
-    [_promoReviewsCollector release];
-    [_companyLogoUrl release];
-    [_currentText release];
-    [_companyName release];
     [super dealloc];
 }
 

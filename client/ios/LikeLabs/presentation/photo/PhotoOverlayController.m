@@ -72,18 +72,15 @@ int cursorPos;
 {
     [self setTextField:nil];
     [self setButtonsView:nil];
-    [self setPhone:nil];
-    [self setPhonePrefix:nil];
-    [self setMaskedTextFieldDelegate:nil];
     [super viewDidUnload];
 }
 
 - (void)dealloc {
+    self.phone = nil;
+    self.phonePrefix = nil;
+    self.maskedTextFieldDelegate = nil;
     [_textField release];
     [_buttonsView release];
-    [_phone release];
-    [_phonePrefix release];
-    [_maskedTextFieldDelegate release];
     [super dealloc];
 }
 

@@ -113,15 +113,14 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     [self setThirdStepLabel:nil];
     [self setRequiredLabel:nil];
     [self setRecipientsCountLabel:nil];
-    [self setRootController:nil];
-    [self setOverlay:nil];
-    [self setRecipientsOverlay:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidUnload];
 }
 
 - (void)dealloc {
-    [_rootController release];
+    self.rootController = nil;
+    self.overlay = nil;
+    self.recipientsOverlay = nil;
     [_imageView release];
     [_messageView release];
     [_phoneField release];
@@ -135,8 +134,6 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     [_requiredLabel release];
     [_recipientsCountLabel release];
     [_rootController release];
-    [_overlay release];
-    [_recipientsOverlay release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }

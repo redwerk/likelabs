@@ -54,16 +54,14 @@ NSString *bgPortrait = @"bg_portrait.png";
     self.inputCode = nil;
     self.inputPassword = nil;
     self.submitButton = nil;
-    self.rootController = nil;
-    self.alertLogout = nil;
 }
 
 - (void)dealloc {
+    self.rootController = nil;
+    self.alertLogout = nil;
     [_inputCode release];
     [_inputPassword release];
     [_submitButton release];
-    [_rootController release];
-    [_alertLogout release];
     [super dealloc];
 }
 

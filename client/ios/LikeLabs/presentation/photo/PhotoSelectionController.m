@@ -75,19 +75,15 @@ const int thumbnailsTagOffset = 55;
 
 - (void)viewDidUnload
 {
-    [self setRootController:nil];
     [self setImageView:nil];
     [self setThumbnailsView:nil];
-
     [self setSubmitButton:nil];
     [self setBtnDeleteThumbnail:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)dealloc {
-    [_rootController release];
+    self.rootController = nil;
     [_imageView release];
     [_thumbnailsView release];
     [_submitButton release];

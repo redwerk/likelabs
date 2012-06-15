@@ -4,7 +4,6 @@
 @interface RootPhotoController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
-@property (nonatomic, retain) Review *review;
 
 - (NSMutableArray*) getButtons;
 - (NSMutableDictionary*) getDividers;
@@ -17,7 +16,6 @@
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
 @synthesize currentViewController = _currentViewController;
-@synthesize review = _review;
 
 #pragma mark - Initialization
 
@@ -68,6 +66,8 @@
 }
 
 - (void)dealloc {
+    self.rootController = nil;
+    self.currentViewController = nil;
     [_customSegmentedControl release];
     [_headerView release];
     [_navigationBackground release];

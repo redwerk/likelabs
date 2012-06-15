@@ -9,7 +9,7 @@ static NSString *const bgPortrait = @"welcome_bg_portrait.png";
 static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
 
 @interface WelcomeScreenController()
-@property (retain,nonatomic) RootController* rootController;
+@property (nonatomic, retain) RootController* rootController;
 @property (nonatomic, retain) LoginController* overlayLogout;
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 - (void) setLogo: (UIImage *)logo;
@@ -96,12 +96,12 @@ static NSString *const WELCOME_VENDOR_MSG = @"Welcome to the %@ Social Hub!";
     [self setLogoView:nil];
     [self setSocialsView:nil];
     [super viewDidUnload];
-    self.rootController = nil;
 }
 
 - (void)dealloc 
 {
-    [_rootController release];
+    self.rootController = nil;
+    self.overlayLogout = nil;
     [_btnExit release];
     [_imageCompany release];
     [_btnHome release];

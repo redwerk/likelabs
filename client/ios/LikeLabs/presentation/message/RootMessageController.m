@@ -4,7 +4,6 @@
 @interface RootMessageController ()
 @property (nonatomic, retain) CustomizableSegmentedControl* customSegmentedControl;
 @property (nonatomic, retain) UIViewController* currentViewController;
-@property (nonatomic, retain) Review *review;
 - (void)setLabelsForInterfaceOrientation:(UIInterfaceOrientation)orientation;
 
 @end
@@ -15,7 +14,6 @@
 @synthesize rootController = _rootController;
 @synthesize customSegmentedControl = _customSegmentedControl;
 @synthesize currentViewController = _currentViewController;
-@synthesize review = _review;
 
 - (id)initWithRootController:(RootController *)rootController {
     if (self = [super init]) {
@@ -23,14 +21,6 @@
         self.rootController.review = [[[Review alloc] initWithReviewType:ReviewTypeText] autorelease];
     }
     return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
@@ -64,14 +54,23 @@
 
 - (void)viewDidUnload
 {
+    [self setHeaderView:nil];
+    [self setNavigationBackground:nil];
+    [self setCustomSegmentedControl:nil];    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+    self.rootController = nil;
+    self.currentViewController = nil;
+    [_headerView release];
+    [_navigationBackground release];
+    [_customSegmentedControl release];    
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
 	return YES;
 }
 

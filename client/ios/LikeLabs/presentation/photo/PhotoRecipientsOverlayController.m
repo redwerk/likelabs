@@ -76,16 +76,14 @@ int cursorPos;
 {
     [self setRecipientsView:nil];
     [self setRecipientContactField:nil];
-    [self setRecipients:nil];
-    [self setMaskedTextFieldDelegate:nil];
     [super viewDidUnload];
 }
 
 - (void)dealloc {
+    self.recipients = nil;
+    self.maskedTextFieldDelegate = nil;
     [recipientsView release];
     [recipientContactField release];
-    [_recipients release];
-    [_maskedTextFieldDelegate release];
     [super dealloc];
 }
 
