@@ -68,10 +68,7 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.status = isActive ? UserStatus.ACTIVE : UserStatus.NOT_ACTIVATED;
-        this.enabledEvents =  new HashSet<EventType>();
-        for (EventType et: EventType.values()) {
-            enabledEvents.add(et);
-        }
+        this.enabledEvents =  new HashSet<EventType>(Arrays.asList(EventType.values()));
     }
 
     // accessors
@@ -207,9 +204,11 @@ public class User {
         return null;
     }
 
+    /*
     public UserSocialAccount getPrimaryAccount() {
         return isAnonymous() ? null : accounts.first();
     }
+    */
 
     public void addAccount(UserSocialAccount newAccount) {
         if (findAccount(newAccount.getType()) != null) {
@@ -228,14 +227,22 @@ public class User {
     
     // reviews
     
-    public void registerReview(Review review, EventRepository eventRepository, GatewayFactory gatewayFactory,
-                               ImageSourceFactory imageSourceFactory) {
-        generateEvents(review, eventRepository);
+    public void registerOwnReview(Review review, EventRepository eventRepository, GatewayFactory gatewayFactory,
+                                  ImageSourceFactory imageSourceFactory) {
+        generateEvent(EventType.USER_REVIEW_CREATED, eventRepository, review);
         publishInSN(review, gatewayFactory, imageSourceFactory);
     }
 
-    private void generateEvents(Review review, EventRepository eventRepository) {
-        for (EventType eventType: enabledEvents) {
+    public void registerClientReview(Review review, EventRepository eventRepository) {
+        generateEvent(EventType.CLIENT_REVIEW_CREATED, eventRepository, review);
+    }
+
+    public void registerReviewApproval(Review review, EventRepository eventRepository) {
+        generateEvent(EventType.USER_REVIEW_APPROVED, eventRepository, review);
+    }
+
+    private void generateEvent(EventType eventType, EventRepository eventRepository, Review review) {
+        if (enabledEvents.contains(eventType)) {
             eventRepository.add(new Event(eventType, this, review));
         }
     }

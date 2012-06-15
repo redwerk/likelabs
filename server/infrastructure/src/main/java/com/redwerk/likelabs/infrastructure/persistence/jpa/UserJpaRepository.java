@@ -1,11 +1,10 @@
 package com.redwerk.likelabs.infrastructure.persistence.jpa;
 
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
+import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
-import com.redwerk.likelabs.domain.model.user.exception.AccountNotFoundException;
-import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +33,9 @@ public class UserJpaRepository extends UserRepository {
 
     private static final String GET_USER_BY_SOCIAL_ACCOUNT =
             "select distinct u from User u join u.accounts a where a.type = :snType and a.accountId = :accountId";
+
+    private static final String GET_CLIENTS_FOR_POINT =
+            "select u from User u where exists (select r.id from Review r where r.point.id = :pointId and r.author.id = u.id)";
 
 
     @PersistenceContext
@@ -69,6 +71,14 @@ public class UserJpaRepository extends UserRepository {
     @Override
     public List<User> findRegular(Pager pager) {
         return getEntityRepository().findEntityList(GET_REGULAR_USERS, pager);
+    }
+
+    @Override
+    public List<User> findClients(Point point) {
+        return getEntityRepository().findEntityList(
+                GET_CLIENTS_FOR_POINT,
+                Collections.<String, Object>singletonMap("pointId", point.getId()),
+                Pager.ALL_RECORDS);
     }
 
     @Override

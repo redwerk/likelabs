@@ -15,7 +15,7 @@ public interface PointRepository {
     List<Point> findAll(Company company, Pager pager);
 
     List<Point> findAll(Company company, User client, Pager pager);
-
+    
     int getCount(Company company);
 
     void add(Point point);

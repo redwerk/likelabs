@@ -46,8 +46,7 @@ public abstract class Recipient {
         if (notified) {
             throw new IllegalStateException("recipient is already notified");
         }
-        notified = sendNotification(notifier);
-        return notified;
+        return sendNotification(notifier);
     }
 
     protected abstract boolean sendNotification(RecipientNotifier notifier);

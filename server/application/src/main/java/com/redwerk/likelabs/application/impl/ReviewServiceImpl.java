@@ -10,12 +10,8 @@ import com.redwerk.likelabs.domain.service.dto.RecipientData;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.ReviewQueryData;
 import com.redwerk.likelabs.domain.model.event.EventRepository;
-import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
-import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
-import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.*;
-import com.redwerk.likelabs.domain.model.tablet.Tablet;
 import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
@@ -155,7 +151,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
-        return getReviewRegistrator().createAndRegisterReview(tabletRepository.get(tabletId), phone, text, photos, recipients);
+        return getReviewRegistrator().registerReview(tabletRepository.get(tabletId), phone, text, photos, recipients);
     }
     
     @Override

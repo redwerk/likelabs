@@ -15,6 +15,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 
 import javax.persistence.*;
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.*;
 @Entity
 @Table(name = "review")
 public class Review {
-    
+
     private static final int MAX_RECIPIENTS_NUMBER = 5;
 
     @Id
@@ -173,7 +174,7 @@ public class Review {
         this.status = status;
         markAsModerated(moderator);
         if (status == ReviewStatus.APPROVED) {
-            eventRepository.add(new Event(EventType.USER_REVIEW_APPROVED, author, this));
+            author.registerReviewApproval(this, eventRepository);
         }
         return true;
     }

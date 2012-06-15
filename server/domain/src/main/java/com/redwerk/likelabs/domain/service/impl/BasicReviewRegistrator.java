@@ -5,6 +5,7 @@ import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoRepository;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
+import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.RecipientFactory;
 import com.redwerk.likelabs.domain.model.review.Review;
@@ -62,24 +63,26 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
     }
 
     @Override
-    public Review createAndRegisterReview(Tablet tablet, String authorPhone, String text, List<PhotoData> photos,
-                                          List<RecipientData> recipients) {
+    public Review registerReview(Tablet tablet, String authorPhone, String text, List<PhotoData> photos,
+                                 List<RecipientData> recipients) {
         Validate.notNull(tablet, "tablet is required for review creation");
         Validate.notEmpty(authorPhone, "authorPhone is required for review creation");
         Validate.notNull(photos, "photos cannot be null");
         Validate.notNull(recipients, "recipients cannot be null");
 
-        User author = getOrCreateUser(authorPhone);
-        Photo reviewPhoto = photos.isEmpty() ? null : processPhotosAndGetSelected(author, photos);
-        Review review = Review.createReview(author, tablet.getPoint(), text, reviewPhoto);
-        processRecipients(review, recipients);
-        reviewRepository.add(review);
-        review.notifyRecipients(recipientNotifier);
-        author.registerReview(review, eventRepository, gatewayFactory, imageSourceFactory);
+        User author = getUser(authorPhone);
+        Photo reviewPhoto = processPhotos(author, photos);
+
+        Review review = createReview(author, tablet.getPoint(), text, reviewPhoto);
+
+        notifyAuthor(author, review);
+        notifyClients(tablet.getPoint(), review);
+        notifyRecipients(review, recipients);
+
         return review;
     }
 
-    private User getOrCreateUser(String phone) {
+    private User getUser(String phone) {
         User user = userRepository.find(phone);
         if (user == null) {
             user = userRegistrator.registerUser(phone);
@@ -90,7 +93,7 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
         return user;
     }
 
-    private Photo processPhotosAndGetSelected(User author, List<PhotoData> photos) {
+    private Photo processPhotos(User author, List<PhotoData> photos) {
         Photo selectedPhoto = null;
         for (PhotoData photoData: photos) {
             Photo photo = new Photo(author, photoData.getStatus(), photoData.getImage());
@@ -102,18 +105,38 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
             }
             photoRepository.add(photo);
         }
-        if (selectedPhoto == null) {
+        if (!photos.isEmpty() && selectedPhoto == null) {
             throw new IllegalArgumentException("review photo is not selected");
         }
         return selectedPhoto;
     }
 
-    private void processRecipients(Review review, List<RecipientData> recipients) {
+    private Review createReview(User author, Point point, String text, Photo photo) {
+        Review review = Review.createReview(author, point, text, photo);
+        reviewRepository.add(review);
+        return review;
+    }
+    
+    private void notifyAuthor(User author, Review review) {
+        author.registerOwnReview(review, eventRepository, gatewayFactory, imageSourceFactory);
+    }
+
+    private void notifyClients(Point point, Review review) {
+        User author = review.getAuthor();
+        for (User client: userRepository.findClients(point)) {
+            if (!client.equals(author)) {
+                client.registerClientReview(review, eventRepository);
+            }
+        }
+    }
+
+    private void notifyRecipients(Review review, List<RecipientData> recipients) {
         RecipientFactory recipientFactory = new RecipientFactory();
         for (RecipientData recipientData: recipients) {
             review.addRecipient(
                     recipientFactory.createReviewRecipient(review, recipientData.getType(), recipientData.getAddress()));
         }
+        review.notifyRecipients(recipientNotifier);
     }
 
 }

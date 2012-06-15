@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ReviewRegistrator {
     
-    Review createAndRegisterReview(Tablet tablet, String authorPhone, String text, List<PhotoData> photos,
-                                   List<RecipientData> recipients);
+    Review registerReview(Tablet tablet, String authorPhone, String text, List<PhotoData> photos,
+                          List<RecipientData> recipients);
 
 }
