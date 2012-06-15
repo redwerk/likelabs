@@ -18,6 +18,7 @@
 - (BOOL) selectNewPhotoBeforeDeletingPhotoAtIndex:(NSUInteger) deletedPhotoIndex;
 - (UIImageView *) thumbnailAtIndex:(NSInteger) index;
 - (void) moveDeleteBotton;
+- (void) enlargeThumbnail:(UIView*) thumbnail;
 @end
 
 @implementation PhotoSelectionController
@@ -116,12 +117,19 @@ const int thumbnailsTagOffset = 55;
             imageView.layer.shadowPath = [UIBezierPath bezierPathWithRect:imageView.bounds].CGPath;
             imageView.tag = i + thumbnailsTagOffset;
             imageView.userInteractionEnabled = YES;
-            if (reviewPhoto.status == PhotoStatusDeleted) {
-                [self dimThumbnail:imageView];
-            } else {
-                UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
-                [imageView addGestureRecognizer:tapGesture];
-                [tapGesture release];  
+            switch (reviewPhoto.status) {
+                case PhotoStatusDeleted:
+                    [self dimThumbnail:imageView];
+                    break;
+                case PhotoStatusSelected:
+                    [self enlargeThumbnail:imageView];
+                    break;
+                default: {
+                    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
+                    [imageView addGestureRecognizer:tapGesture];
+                    [tapGesture release];
+                    break;
+                }
             }
         }
         
@@ -146,14 +154,17 @@ const int thumbnailsTagOffset = 55;
 }
 
 - (void) selectThumbnail:(UIView*) thumbnail {
-     [self resetThumbnails];
+    [self resetThumbnails];
+    [self enlargeThumbnail:thumbnail];
+}
+
+- (void) enlargeThumbnail:(UIView*) thumbnail {
     self.review.reviewPhotoIndex = thumbnail.tag - thumbnailsTagOffset;
     Photo*photo = [self.review.photos objectAtIndex:self.review.reviewPhotoIndex];
     photo.status = PhotoStatusSelected;
-   
-
+    
     [self setPhoto:(photo).image];
-        self.btnDeleteThumbnail.hidden = YES ;    
+    self.btnDeleteThumbnail.hidden = YES ;    
     CGPoint oldCenter = thumbnail.center;
     [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
         thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width * selectedScaleFactor, thumbnail.frame.size.height * selectedScaleFactor);
@@ -168,7 +179,6 @@ const int thumbnailsTagOffset = 55;
     thumbnail.center = oldCenter;
     [self.thumbnailsView bringSubviewToFront:thumbnail];
     [self.thumbnailsView bringSubviewToFront:self.btnDeleteThumbnail];
-    
 }
 
 - (void) moveDeleteBotton {
