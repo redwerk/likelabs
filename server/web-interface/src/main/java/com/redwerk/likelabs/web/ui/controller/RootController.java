@@ -5,7 +5,9 @@ import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.impl.registration.exception.NotConfirmMailException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import com.redwerk.likelabs.infrastructure.security.AuthorityRole;
+import com.redwerk.likelabs.web.ui.security.Authenticator;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.LogManager;
@@ -34,18 +36,18 @@ public class RootController {
     private static final String VIEW_ABOUT = "commons/about";
     private static final String VIEW_GET_STARTED = "commons/get_started";
     private static final String VIEW_HOW_IT_WORKS = "commons/how_it_works";
+    private static final String MODEL_ATTR_ERROR = "error";
 
     private final Logger log = LogManager.getLogger(getClass());
-
-    @Autowired
-    @Qualifier("authenticationManager")
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private RegistrationService registrationService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private Authenticator authenticator;
 
     @Autowired
     private MessageTemplateService messageTemplateService;
@@ -75,14 +77,16 @@ public class RootController {
         try {
             long id = Long.parseLong(userId);
             registrationService.confirmEmail(id, email, confirmCode);
-            User user = userService.getUser(id);
-            authenticateUser(request, user.getPhone(), user.getPassword());
+            authenticator.authenticateUser(request, userService.getUser(id));
         } catch (NotConfirmMailException e) {
             log.error(e,e);
-            model.addAttribute("error", true);
+            model.addAttribute(MODEL_ATTR_ERROR, true);
         } catch (IllegalStateException e) {
             log.error(e,e);
-            model.addAttribute("error", true);
+            model.addAttribute(MODEL_ATTR_ERROR, true);
+        } catch (UserNotFoundException e) {
+            log.error(e,e);
+            model.addAttribute(MODEL_ATTR_ERROR, true);
         }
         return VIEW_ACTIVATE_EMAIL;
     }
@@ -109,13 +113,5 @@ public class RootController {
     public String tos(ModelMap model) {
         model.addAttribute("page", "terms_of_use");
         return VIEW_TOU;
-    }
-
-    private void authenticateUser(HttpServletRequest request, String phone, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phone, password);
-        WebAuthenticationDetails details = new WebAuthenticationDetails(request);
-        authenticationToken.setDetails(details);
-        Authentication fullauth = authenticationManager.authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(fullauth);
     }
 }

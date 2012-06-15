@@ -197,7 +197,9 @@
                                     <td>${admin.email}</td>
                                     <td>
                                         <sec:authorize access="hasRole('ROLE_SYSTEM_ADMIN')">
-                                            <a href="javascript:void(0);" onclick="editUserDialog('${admin.id}','${admin.phone}', '${admin.email}', '${admin.password}');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
+                                            <c:if test="${admin.active eq true}">
+                                                <a href="javascript:void(0);" onclick="editUserDialog('${admin.id}','${admin.phone}', '${admin.email}', '${admin.password}');"><img src="/static/images/edit-icon.png" title="Edit" alt="Edit"/></a>
+                                            </c:if>
                                         </sec:authorize>
                                         <a href="javascript:void(0);" onclick="deleteAdmin(${admin.id})"><img src="/static/images/delete.png" title="Delete" alt="Delete"/></a>
                                     </td>

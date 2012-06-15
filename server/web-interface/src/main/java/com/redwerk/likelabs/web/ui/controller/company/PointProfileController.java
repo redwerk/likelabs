@@ -13,9 +13,7 @@ import com.redwerk.likelabs.web.ui.dto.TabletDto;
 import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
 import com.redwerk.likelabs.web.ui.validator.PointProfileValidator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -161,7 +159,7 @@ public class PointProfileController {
             }
         } catch (Exception e) {
             log.error(e, e);
-            resBuilder.setNotSuccess(messageTemplateService.getMessage("company.tablet.not.deleted"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("point.tablet.not.deleted"));
         }
         return resBuilder.getModelResponse();
     }
@@ -189,7 +187,7 @@ public class PointProfileController {
             resBuilder.addCustomFieldData("valide", true);
         } catch (Exception e) {
             log.error(e, e);
-            resBuilder.setNotSuccess(messageTemplateService.getMessage("company.tablet.not.added"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("point.tablet.not.added"));
         }
         return resBuilder.getModelResponse();
     }

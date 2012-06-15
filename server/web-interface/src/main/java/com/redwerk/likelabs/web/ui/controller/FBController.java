@@ -6,10 +6,8 @@ import javax.servlet.http.HttpSession;
 
 import com.redwerk.likelabs.infrastructure.sn.FacebookGateway;
 import com.redwerk.likelabs.application.UserService;
-import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
-import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
 import com.redwerk.likelabs.web.ui.security.Authenticator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -22,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
-import sun.misc.BASE64Decoder;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,16 +96,13 @@ public class FBController {
     }
 
     private UserSocialAccountData getUserData(String encodedData) {
-        try {
-            String encodedJSON = encodedData.split("\\.", 2)[1];
-            byte[] decodedArray = new BASE64Decoder().decodeBuffer(encodedJSON);
-            String decodedString = new String(decodedArray);
-            Matcher matcher = USER_DATA_PATTERN.matcher(decodedString);
-            if (matcher.find()) {
-                return new UserSocialAccountData(matcher.group(2), matcher.group(1)); 
-            }  
-        } catch (IOException e) {            
-            throw new SNGeneralException(e);
+
+        String encodedJSON = encodedData.split("\\.", 2)[1];
+        byte[] decodedArray = Base64.decodeBase64(encodedJSON);
+        String decodedString = new String(decodedArray);
+        Matcher matcher = USER_DATA_PATTERN.matcher(decodedString);
+        if (matcher.find()) {
+            return new UserSocialAccountData(matcher.group(2), matcher.group(1));
         }
         return null;
     }    

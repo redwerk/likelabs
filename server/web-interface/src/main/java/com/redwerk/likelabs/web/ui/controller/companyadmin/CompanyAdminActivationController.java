@@ -37,12 +37,13 @@ public class CompanyAdminActivationController {
     private static final String MSG_INCORECT_PASSWORD = "message.auth.invalid.password";
     private static final String MSG_NOT_ADMIN = "message.registration.invalid.admin.activate";
     private static final String MSG_NOT_ATTACHED_ACCOUNT = "message.registration.invalid.admin.not.account";
+    private static final String MSG_TOKEN_EXPIRED_ACCOUNT = "message.registration.invalid.admin.token.expired";
     
     private static final String RESPONSE_KEY_SUCCESS = "success";
     private static final String RESPONSE_KEY_MESSAGE = "message";
     private static final String PARAM_ERROR_NOT_ADMIN = "not_admin";
 
-    private static final String PARAM_SESSION_USERID = "userId";
+    private static final String PARAM_SESSION_USERID = "beActivatedAdminId";
     private static final String PARAM_SESSION_PASSWORD = "password";
 
     private final Logger log = LogManager.getLogger(getClass());
@@ -170,10 +171,12 @@ public class CompanyAdminActivationController {
             return "redirect:/";
         } catch (AccessTokenExpiredException e) {
             model.put(RESPONSE_KEY_SUCCESS, false);
-            model.put(RESPONSE_KEY_MESSAGE, "Old attached account. Reattach accounts.");
+            model.put(RESPONSE_KEY_MESSAGE, messageTemplateService.getMessage(MSG_TOKEN_EXPIRED_ACCOUNT));
             log.error(e,e);
             return VIEW_END_ACTIVATE;
         }
+        session.removeAttribute(PARAM_SESSION_USERID);
+        session.removeAttribute(PARAM_SESSION_PASSWORD);
         model.put("adminId", authenticator.getCurrentUserId());
         return VIEW_SUCCESS_ACTIVATE;
     }
