@@ -24,8 +24,6 @@ import org.springframework.stereotype.Component;
 @Component(value="authenticator")
 public class SimpleAuthenticator implements Authenticator{
 
-    public static final Byte ANONYMOUS_USER_ID = 0;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 

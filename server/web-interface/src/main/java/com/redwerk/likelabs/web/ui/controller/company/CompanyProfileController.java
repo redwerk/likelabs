@@ -155,6 +155,13 @@ public class CompanyProfileController {
         return points;
     }
 
+    @RequestMapping(value = "/point/add", method = RequestMethod.GET)
+    public String addPoint(HttpSession session, @PathVariable Integer companyId) {
+
+        session.removeAttribute(PointProfileController.SESSION_ATR_TABLETS);
+        return "redirect:/company/" + companyId + "/point/0/profile";
+    }
+
     @RequestMapping(value = "/point/{pointId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ModelMap deletePoint(HttpSession session, @PathVariable Integer companyId, @PathVariable("pointId") Long pointId) {

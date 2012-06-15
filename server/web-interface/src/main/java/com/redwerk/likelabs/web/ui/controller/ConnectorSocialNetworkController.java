@@ -9,16 +9,23 @@ import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsExceptio
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountException;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessCodeException;
+import com.redwerk.likelabs.web.ui.security.Authenticator;
+import com.redwerk.likelabs.web.ui.utils.EnumEditor;
+import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,8 +44,8 @@ public class ConnectorSocialNetworkController {
 
     private static final String RESPONSE_KEY_SUCCESS = "success";
     private static final String RESPONSE_KEY_MESSAGE = "message";
-
-    private static final String PARAM_SESSION_USERID = "userId";
+    
+    public static final String PARAM_SESSION_USERID = "beActivatedUserid";
 
     private final Logger log = LogManager.getLogger(getClass());
 
@@ -47,6 +54,9 @@ public class ConnectorSocialNetworkController {
 
     @Autowired
     private MessageTemplateService messageTemplateService;
+
+    @Autowired
+    private Authenticator authenticator;
 
 
     @RequestMapping(value = "/facebook", method = RequestMethod.GET)
@@ -109,62 +119,55 @@ public class ConnectorSocialNetworkController {
 
     @RequestMapping(value = "/unlink", method = RequestMethod.POST)
     @ResponseBody
-    public ModelMap unlinkSocialAccount(HttpSession session, @RequestParam(value = "account", required = true) String account) {
+    public ModelMap unlinkSocialAccount(HttpSession session, @RequestParam(value = "account") SocialNetworkType account) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
-            SocialNetworkType snType = null ;
-            if (account.equals("facebook")) {
-                snType = SocialNetworkType.FACEBOOK;
-            } else if (account.equals("vkontakte")) {
-                snType = SocialNetworkType.VKONTAKTE;
-            } else {
-                return response;
-            }
-            Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-            if (userId  == 0) {
+            Long userId = authenticator.getCurrentUserId();
+            if (userId  == authenticator.ANONYMOUS_USER_ID.longValue()) {
                 userId = (Long)session.getAttribute(PARAM_SESSION_USERID);
-                if (userId == null) return response;
+                if (userId == null) {
+                    resBuilder.setNotSuccess(messageTemplateService.getMessage(MSG_SN_DISCONNECT_ERROR));
+                    return resBuilder.getModelResponse();
+                }
             }
-            userService.detachAccount(userId, snType);
-            response.put(RESPONSE_KEY_SUCCESS, true);
+            userService.detachAccount(userId, account);
         } catch (AccountNotExistsException e) {
             log.error(e,e);
         } catch (Exception e) {
-            response.put(RESPONSE_KEY_SUCCESS, false);
-            response.put(RESPONSE_KEY_MESSAGE, messageTemplateService.getMessage(MSG_SN_DISCONNECT_ERROR));
             log.error(e,e);
+            resBuilder.setNotSuccess(messageTemplateService.getMessage(MSG_SN_DISCONNECT_ERROR));
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
     @RequestMapping(value = "/linked", method = RequestMethod.GET)
     @ResponseBody
     public ModelMap getLinkedAccount(HttpSession session) {
 
-        ModelMap response = new ModelMap();
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             Map<String, Boolean> data = new HashMap<String, Boolean>();
-            Long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-            if (userId == 0) {
+            Long userId = authenticator.getCurrentUserId();
+            if (userId == authenticator.ANONYMOUS_USER_ID.longValue()) {
                 userId = (Long)session.getAttribute(PARAM_SESSION_USERID);
             }
             User user = userService.getUser(userId);
-            if (user == null) {
-                response.put(RESPONSE_KEY_SUCCESS, true);
-                return response;
-            }
             for (UserSocialAccount a : user.getAccounts()) {
                 data.put(a.getType().toString(), true);
             }
-            response.put("data",data);
-            response.put(RESPONSE_KEY_SUCCESS, true);
+            resBuilder.setData(data);
         } catch (UserNotFoundException e) {
-            response.put(RESPONSE_KEY_SUCCESS, false);
-            response.put(RESPONSE_KEY_MESSAGE, "User not found.");
             log.error(e,e);
+            resBuilder.setNotSuccess();
         }
-        return response;
+        return resBuilder.getModelResponse();
     }
 
+    @PreAuthorize("permitAll")
+    @InitBinder
+    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+
+        binder.registerCustomEditor(SocialNetworkType.class, new EnumEditor(SocialNetworkType.class));
+    }
 }

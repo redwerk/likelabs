@@ -65,6 +65,11 @@ public class TabletServiceImpl implements TabletService {
         Tablet tablet = tabletRepository.find(login);
         return (tablet != null && tablet.getLoginPassword().equals(loginPassword)) ? tablet : null;
     }
+    
+    @Override
+    public Tablet getTablet(String login) {
+        return tabletRepository.find(login);
+    }
 
     @Override
     public long getTabletId(String apiKey) {

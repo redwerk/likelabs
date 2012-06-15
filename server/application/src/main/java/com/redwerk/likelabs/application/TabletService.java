@@ -20,6 +20,8 @@ public interface TabletService {
 
     Tablet getTablet(String login, String loginPassword);
 
+    Tablet getTablet(String login);
+
     long getTabletId(String apiKey);
 
     boolean canLogout(long tabletId, String logoutPassword);

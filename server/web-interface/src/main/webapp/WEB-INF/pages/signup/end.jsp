@@ -2,6 +2,18 @@
 <script type="text/javascript">
     var id_VKontakte = <spring:message code="app.vkontakte.clientid"/>;
     var id_Facebook = <spring:message code="app.facebook.clientid"/>;
+    function linkEmail() {
+    $.post( "/signup/sendmail", {
+        "email": $("#email").val()
+    }, function(response){
+        if (!response.success) {
+            errorDialog("Activate E-mail", response.message);
+            return;
+        }
+        errorDialog("Activate E-mail", response.message);
+
+    })
+}
 </script>
 <script type="text/javascript" src="/static/scripts/ConnectorSocialNetwork.js"></script>
 <div id="content">

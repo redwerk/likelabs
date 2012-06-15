@@ -60,16 +60,7 @@ public class TabletDto {
             return false;
         }
         final TabletDto other = (TabletDto) obj;
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
         if ((this.login == null) ? (other.login != null) : !this.login.equals(other.login)) {
-            return false;
-        }
-        if ((this.loginPassword == null) ? (other.loginPassword != null) : !this.loginPassword.equals(other.loginPassword)) {
-            return false;
-        }
-        if ((this.logoutPassword == null) ? (other.logoutPassword != null) : !this.logoutPassword.equals(other.logoutPassword)) {
             return false;
         }
         return true;
@@ -77,12 +68,8 @@ public class TabletDto {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 59 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 59 * hash + (this.login != null ? this.login.hashCode() : 0);
-        hash = 59 * hash + (this.loginPassword != null ? this.loginPassword.hashCode() : 0);
-        hash = 59 * hash + (this.logoutPassword != null ? this.logoutPassword.hashCode() : 0);
+        int hash = 7;
+        hash = 37 * hash + (this.login != null ? this.login.hashCode() : 0);
         return hash;
     }
-
 }

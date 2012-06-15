@@ -34,7 +34,6 @@ public class VKController {
     private UserService userService;
  
     @Autowired
-    @Qualifier("authenticator")
     private Authenticator authentificator;
     
     @Autowired

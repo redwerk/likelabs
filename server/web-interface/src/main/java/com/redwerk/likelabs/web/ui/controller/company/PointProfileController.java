@@ -40,8 +40,8 @@ import org.springframework.web.bind.support.SessionStatus;
 public class PointProfileController {
 
 
+    public final static String SESSION_ATR_TABLETS = "tablets";
     private final static int NEW_POINT_ID = 0;
-    private final static String SESSION_ATR_TABLETS = "tablets";
     private final static String VIEW_POINT_PROFILE = "company/point_profile";
     private final PointProfileValidator validator = new PointProfileValidator();
 
@@ -181,13 +181,17 @@ public class PointProfileController {
                 tabletService.createTablet(pointId, new TabletData(tablet.getLogin(), tablet.getLoginPassword(), tablet.getLogoutPassword()));
             } else {
                 List<TabletDto> tablets = (session.getAttribute(SESSION_ATR_TABLETS) != null) ? (List<TabletDto>)session.getAttribute(SESSION_ATR_TABLETS) : new ArrayList<TabletDto>();
+                if (tablets.contains(tablet) || tabletService.getTablet(tablet.getLogin()) != null) {
+                    resBuilder.setNotSuccess(messageTemplateService.getMessage("point.tablet.duplicated.login"));
+                    return resBuilder.getModelResponse();
+                }
                 tablets.add(tablet);
                 session.setAttribute(SESSION_ATR_TABLETS, tablets);
             }
             resBuilder.addCustomFieldData("valide", true);
         } catch (Exception e) {
             log.error(e, e);
-            resBuilder.setNotSuccess(messageTemplateService.getMessage("point.tablet.not.added"));
+            resBuilder.setNotSuccess(messageTemplateService.getMessage("point.tablet.duplicated.login"));
         }
         return resBuilder.getModelResponse();
     }

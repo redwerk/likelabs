@@ -142,7 +142,7 @@
 
                         <div class="field">
                             <div class="left label">Points</div>
-                            <div class="right"><a href="/company/${company.id}/point/0/profile">add</a></div>
+                            <div class="right"><a href="/company/${company.id}/profile/point/add">add</a></div>
                         </div>
                         <table cellpadding="0" cellspacing="1" style="width: 100%; border: solid 1px #d2d9df" summary="" class="content_table field">
                             <thead style="height: 30px;">

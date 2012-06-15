@@ -23,32 +23,17 @@ function verifyResponseConnect(success, message) {
     updateLinkedAccount();
 }
 function unlink(network) {
-    $.post(unlink_url, {
-        "account":network
-    }, function(response) {
+    $.post(unlink_url, {"account":network}, function(response) {
         if (!response.success) {
-            errorDialog("Error unlink", response.message);
+            errorDialog("Error unlink", response.error);
         }
         updateLinkedAccount();
     });
 }
-function linkEmail() {
-    var email =
-    $.post( "/signup/sendmail", {
-        "email": $("#email").val()
-    }, function(response){
-        if (!response.success) {
-            errorDialog("Activate E-mail", response.message);
-            return;
-        }
-        errorDialog("Activate E-mail", response.message);
-
-    })
-}
 function updateLinkedAccount() {
     $.get("/connector/linked", function(response) {
         if (!response.success) {
-            errorsDialog("Error unlink", response.message);
+            errorDialog("Error unlink", response.error);
             return;
         }
         if (response.data.FACEBOOK) {

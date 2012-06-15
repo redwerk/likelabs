@@ -70,14 +70,15 @@ public class RootController {
 
     @RequestMapping(value = "/activatemail", method = RequestMethod.GET)
     public String activateMail(ModelMap model, HttpServletRequest request,
-            @RequestParam(value = "id", required = true) String userId,
+            @RequestParam(value = "id", required = true) Long userId,
             @RequestParam(value = "email", required = true) String email,
             @RequestParam(value = "activatecode", required = true) String confirmCode) {
 
         try {
-            long id = Long.parseLong(userId);
-            registrationService.confirmEmail(id, email, confirmCode);
-            authenticator.authenticateUser(request, userService.getUser(id));
+            registrationService.confirmEmail(userId, email, confirmCode);
+            authenticator.authenticateUser(request, userService.getUser(userId));
+            model.put("userId", userId);
+            model.put("adminId", userId);
         } catch (NotConfirmMailException e) {
             log.error(e,e);
             model.addAttribute(MODEL_ATTR_ERROR, true);

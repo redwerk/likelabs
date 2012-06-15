@@ -43,11 +43,10 @@ public class FBController {
     
     private static final Pattern USER_DATA_PATTERN = Pattern.compile("oauth_token\":\"(\\w+).*user_id\":\"(\\d+)");
     
-    
-    
+   
     private final Logger log = LogManager.getLogger(getClass());
+
     @Autowired
-    @Qualifier("authenticator")
     private Authenticator authentificator;
     
     @Autowired

@@ -12,6 +12,7 @@ import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.exception.UserNotFoundException;
 import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
+import com.redwerk.likelabs.web.ui.controller.ConnectorSocialNetworkController;
 import com.redwerk.likelabs.web.ui.security.Authenticator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,6 @@ public class CompanyAdminActivationController {
     private static final String RESPONSE_KEY_MESSAGE = "message";
     private static final String PARAM_ERROR_NOT_ADMIN = "not_admin";
 
-    private static final String PARAM_SESSION_USERID = "beActivatedAdminId";
     private static final String PARAM_SESSION_PASSWORD = "password";
 
     private final Logger log = LogManager.getLogger(getClass());
@@ -97,7 +97,7 @@ public class CompanyAdminActivationController {
             if (registrationService.validateAdminPassword(user.getId(), password) && registrationService.validateAdminCode(userId, confirmCode)) {
                 authenticator.logoutUser(request, response);
                 HttpSession session = request.getSession(true);
-                session.setAttribute(PARAM_SESSION_USERID, userId);
+                session.setAttribute(ConnectorSocialNetworkController.PARAM_SESSION_USERID, userId);
                 session.setAttribute(PARAM_SESSION_PASSWORD, password);
                 return "redirect:/companyadmin/activate/end";
             }
@@ -112,7 +112,7 @@ public class CompanyAdminActivationController {
 
     @RequestMapping(value = "/end", method = RequestMethod.GET)
     public String end(ModelMap model, HttpSession session, HttpServletRequest request, @RequestParam(value = "error", required = false) String error) {
-        Long id = (Long)session.getAttribute(PARAM_SESSION_USERID);
+        Long id = (Long)session.getAttribute(ConnectorSocialNetworkController.PARAM_SESSION_USERID);
         if (id == null) {
             return "redirect:/";
         }
@@ -138,7 +138,7 @@ public class CompanyAdminActivationController {
     public String finish(ModelMap model, HttpSession session, HttpServletRequest request) {
 
         try {
-            Long userId = (Long)session.getAttribute(PARAM_SESSION_USERID);
+            Long userId = (Long)session.getAttribute(ConnectorSocialNetworkController.PARAM_SESSION_USERID);
             if (userId == null) {
                 return "redirect:/";
             }
@@ -175,7 +175,7 @@ public class CompanyAdminActivationController {
             log.error(e,e);
             return VIEW_END_ACTIVATE;
         }
-        session.removeAttribute(PARAM_SESSION_USERID);
+        session.removeAttribute(ConnectorSocialNetworkController.PARAM_SESSION_USERID);
         session.removeAttribute(PARAM_SESSION_PASSWORD);
         model.put("adminId", authenticator.getCurrentUserId());
         return VIEW_SUCCESS_ACTIVATE;
