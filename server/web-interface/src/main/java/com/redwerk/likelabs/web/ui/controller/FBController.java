@@ -28,21 +28,19 @@ import java.util.regex.Pattern;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 
 
-
 @Controller
 @RequestMapping(value = "/fb")
 public class FBController {
+    
+    private static final String VIEW_FB_LOGIN = "fb/fb_login";
 
     private static final String PARAM_ACCESS_TOKEN = "oauth_token";
-    private static final String REDIRECT_CANCEL = "redirect: http://facebook.com";
-    private static final String REDIRECT_INDEX = "redirect: /index";
+    private static final String REDIRECT_CANCEL = "http://facebook.com";
+    private static final String REDIRECT_INDEX = "redirect:/index";    
     
-    
-    private static final String PARAM_SOCIAL_TYPE = "socialType";   
-    private static final String APP_URL = "app.canvas.url";
+    private static final String PARAM_SOCIAL_TYPE = "socialType";
     private static final String CLIENT_ID = "app.facebook.clientid";    
-    private static final String FB_AUTH_DIALOG_URL = "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s";
-    private static final String REDIRECT_SCRIPT = "<script> top.location.href='%s'</script>";
+    
     private static final Pattern USER_DATA_PATTERN = Pattern.compile("oauth_token\":\"(\\w+).*user_id\":\"(\\d+)");
     
     
@@ -59,30 +57,30 @@ public class FBController {
     private MessageTemplateService messageTemplateService;
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
-    public void requestPost(ModelMap model, @RequestParam(value = "signed_request", required = false) String encodedData, HttpSession session, HttpServletResponse response, HttpServletRequest request) {
+    public String requestPost(ModelMap model, @RequestParam(value = "signed_request", required = false) String encodedData, HttpSession session, HttpServletResponse response, HttpServletRequest request) {
         UserSocialAccountData fbUserData = getUserData(encodedData);
-        try {
-            if (fbUserData == null) {
-                String authUrl = String.format(FB_AUTH_DIALOG_URL, messageTemplateService.getMessage(CLIENT_ID), messageTemplateService.getMessage(APP_URL));
-                response.getOutputStream().print(String.format(REDIRECT_SCRIPT, authUrl));
-                return;
-            }
-            session.setAttribute(PARAM_SOCIAL_TYPE, SocialNetworkType.FACEBOOK.toString());
-            session.setAttribute(PARAM_ACCESS_TOKEN, fbUserData.getAccessToken());
-            authentificateUser(SocialNetworkType.FACEBOOK, fbUserData.getUserId(), request);
-            response.sendRedirect("/index");        
-        } catch (IOException e) {            
-            throw new RuntimeException(e);
+        if (fbUserData == null) {            
+            return VIEW_FB_LOGIN;
         }
+        session.setAttribute(PARAM_SOCIAL_TYPE, SocialNetworkType.FACEBOOK.toString());
+        session.setAttribute(PARAM_ACCESS_TOKEN, fbUserData.getAccessToken());
+        authentificateUser(SocialNetworkType.FACEBOOK, fbUserData.getUserId(), request);
+        return REDIRECT_INDEX;
     }
 
     @RequestMapping(value = {"/", ""}, method = RequestMethod.GET)
-    public String requestGet(ModelMap model, HttpSession session, @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "error", required = false) String error) {
+    public void requestGet(ModelMap model, HttpSession session, @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "error", required = false) String error, HttpServletResponse response) {
+        
+        try {
         if (StringUtils.isNotBlank(error) || StringUtils.isBlank(code)) {
-            return REDIRECT_CANCEL;
+            response.sendRedirect(REDIRECT_CANCEL);
+            return;
         }
-        return REDIRECT_INDEX;
+        response.sendRedirect("http://apps.facebook.com/" + messageTemplateService.getMessage(CLIENT_ID));
+        } catch (IOException e) {            
+            throw new RuntimeException(e);
+        }
     }
 
     @RequestMapping(value = {"/attach"}, method = RequestMethod.GET)
