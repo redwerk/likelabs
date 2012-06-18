@@ -228,8 +228,8 @@ public class AdministratorGeneralController {
             }
         } catch (Exception e) {
             log.error(e, e);
-            resBuilder.setNotSuccess(e.getMessage());
-        }
+            resBuilder.setNotSuccess("User with this phone number already exist");
+        } 
         return resBuilder.getModelResponse();
     }
 

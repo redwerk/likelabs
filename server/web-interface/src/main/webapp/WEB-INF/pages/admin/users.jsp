@@ -84,6 +84,12 @@
         $("#add_user_id").val(id);
         $("#add_user_dialog").dialog('open');
     }
+    
+    function newUserDialog(){
+        $("#add_user_dialog").dialog({title: "Add User"})
+        $("#add_user_id").val(0);
+        $("#add_user_dialog").dialog('open');
+    }
 
     function changeStatusUser(id, status) {
         confirmDialog("Change status for user", "Are you sure?",function() {
@@ -99,7 +105,7 @@
 </script>
 <div id="content">
     <h1>Users</h1>
-    <div style="height: 20px;"><div class="right" style="height: 20px;"><a href="javascript:void(0)" onclick="editUserDialog(0, '', '', '')">add</a></div><div class="clear"></div></div>
+    <div style="height: 20px;"><div class="right" style="height: 20px;"><a href="javascript:void(0)" onclick="newUserDialog()">add</a></div><div class="clear"></div></div>
     <div id="point_list_table"></div>
     <div id="pager" class="pager" style="position: relative; float: right; padding-top: 20px"></div>
     <div class="clear"></div>

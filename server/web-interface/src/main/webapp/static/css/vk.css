@@ -141,3 +141,9 @@ body {
 .logo {
   margin-left: 0px !important;
 }
+
+#point_list_table {
+  height: 595px;
+  overflow: auto;
+  overflow-x: hidden;
+} 
