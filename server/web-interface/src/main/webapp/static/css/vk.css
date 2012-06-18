@@ -67,8 +67,14 @@ body {
   width: 230px;
 }
 
+#feedContainer {
+  height: 440px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
 #feeds_table {
-  height: 485px;
+  height: 445px;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -118,4 +124,20 @@ body {
   height: 650px;
   overflow: auto;
   overflow-x: hidden;
+}
+
+.field {
+  width:250px !important;
+}
+
+.form td {
+  padding-left: 2px !important;
+}
+
+.content_table td {
+  padding: 1px !important;
+}
+
+.logo {
+  margin-left: 0px !important;
 }
