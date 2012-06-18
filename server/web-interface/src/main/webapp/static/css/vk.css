@@ -28,7 +28,7 @@ body {
 }
 
 .filter-holder select {
-  margin-right: 200px;
+  width: 120px !important;
 }
 
 .filter-holder label {
@@ -68,7 +68,7 @@ body {
 }
 
 #feeds_table {
-  height: 595px;
+  height: 485px;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -80,4 +80,42 @@ body {
 
 .profileLogoContainer{
     padding-left:10px !important;
+}
+
+#header .signin_block {
+  width: 450px;
+}
+
+#header .site-logo {
+  width: auto;
+}
+
+.item-wrapper .item-cmd table tr {
+  height: 40px;
+}
+
+.btn-holder .publish {
+  width: 85px !important;
+}
+
+.item-data .description {
+  width: 220px;
+  height: 65px;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+#content form.profile {
+  width: 200px;
+}
+
+.field-holder input {
+  width: 200px;
+}
+
+.text-holder {
+  height: 650px;
+  overflow: auto;
+  overflow-x: hidden;
 }
