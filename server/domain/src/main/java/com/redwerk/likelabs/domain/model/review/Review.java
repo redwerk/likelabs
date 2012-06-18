@@ -10,6 +10,7 @@ import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpd
 import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
+import com.redwerk.likelabs.domain.service.notification.NotificationProcessor;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -164,7 +165,8 @@ public class Review {
         return true;
     }
 
-    public boolean setStatus(ReviewStatus status, User moderator, EventRepository eventRepository) {
+    public boolean setStatus(ReviewStatus status, User moderator, EventRepository eventRepository,
+                             NotificationProcessor notificationProcessor) {
         if (!canModerate(moderator)) {
             throw new NotAuthorizedReviewUpdateException(moderator, this, UpdateType.UPDATE_STATUS);
         }
@@ -174,7 +176,7 @@ public class Review {
         this.status = status;
         markAsModerated(moderator);
         if (status == ReviewStatus.APPROVED) {
-            author.registerReviewApproval(this, eventRepository);
+            author.registerReviewApproval(this, eventRepository, notificationProcessor);
         }
         return true;
     }

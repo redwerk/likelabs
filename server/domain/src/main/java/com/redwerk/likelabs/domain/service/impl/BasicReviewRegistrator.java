@@ -19,6 +19,7 @@ import com.redwerk.likelabs.domain.service.UserRegistrator;
 import com.redwerk.likelabs.domain.service.dto.PhotoData;
 import com.redwerk.likelabs.domain.service.dto.RecipientData;
 import com.redwerk.likelabs.domain.service.exception.ReviewCreatedByAdminException;
+import com.redwerk.likelabs.domain.service.notification.NotificationProcessor;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.apache.commons.lang.Validate;
@@ -45,12 +46,14 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
 
     private final RecipientNotifier recipientNotifier;
 
+    private final NotificationProcessor notificationProcessor;
+
 
     public BasicReviewRegistrator(UserRepository userRepository, UserRegistrator userRegistrator,
                                   CompanyRepository companyRepository, ReviewRepository reviewRepository,
                                   PhotoRepository photoRepository, EventRepository eventRepository,
                                   GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory,
-                                  RecipientNotifier recipientNotifier) {
+                                  RecipientNotifier recipientNotifier, NotificationProcessor notificationProcessor) {
         this.userRepository = userRepository;
         this.userRegistrator = userRegistrator;
         this.companyRepository = companyRepository;
@@ -60,6 +63,7 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
         this.gatewayFactory = gatewayFactory;
         this.imageSourceFactory = imageSourceFactory;
         this.recipientNotifier = recipientNotifier;
+        this.notificationProcessor = notificationProcessor;
     }
 
     @Override
@@ -118,14 +122,14 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
     }
     
     private void notifyAuthor(User author, Review review) {
-        author.registerOwnReview(review, eventRepository, gatewayFactory, imageSourceFactory);
+        author.registerOwnReview(review, eventRepository, notificationProcessor, gatewayFactory, imageSourceFactory);
     }
 
     private void notifyClients(Point point, Review review) {
         User author = review.getAuthor();
         for (User client: userRepository.findClients(point)) {
             if (!client.equals(author)) {
-                client.registerClientReview(review, eventRepository);
+                client.registerClientReview(review, eventRepository, notificationProcessor);
             }
         }
     }

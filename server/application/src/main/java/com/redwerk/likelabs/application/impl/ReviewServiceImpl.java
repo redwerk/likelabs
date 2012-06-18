@@ -3,6 +3,8 @@ package com.redwerk.likelabs.application.impl;
 import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
+import com.redwerk.likelabs.domain.model.notification.NotificationIntervalRepository;
+import com.redwerk.likelabs.domain.service.UserNotifier;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.ReviewRegistrator;
 import com.redwerk.likelabs.domain.service.dto.PhotoData;
@@ -16,6 +18,7 @@ import com.redwerk.likelabs.domain.model.tablet.TabletRepository;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserRepository;
 import com.redwerk.likelabs.domain.service.impl.BasicReviewRegistrator;
+import com.redwerk.likelabs.domain.service.notification.NotificationProcessor;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,16 +62,34 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private RegistrationService registrationService;
 
+    @Autowired
+    private NotificationIntervalRepository intervalRepository;
+
+    @Autowired
+    private UserNotifier userNotifier;
+
+    private NotificationProcessor notificationProcessor;
+
     private ReviewRegistrator reviewRegistrator;
+
+
+    private NotificationProcessor getNotificationProcessor() {
+        if (notificationProcessor == null) {
+            notificationProcessor = new NotificationProcessor(userRepository, eventRepository, intervalRepository,
+                    userNotifier);
+        }
+        return notificationProcessor;
+    }
 
     private ReviewRegistrator getReviewRegistrator() {
         if (reviewRegistrator == null) {
             reviewRegistrator = new BasicReviewRegistrator(userRepository, registrationService, companyRepository,
                     reviewRepository, photoRepository, eventRepository, gatewayFactory, imageSourceFactory,
-                    recipientNotifier);
+                    recipientNotifier, getNotificationProcessor());
         }
         return reviewRegistrator;
     }
+
 
     // implementation of ReviewService
 
@@ -167,7 +188,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void updateStatus(long userId, long reviewId, ReviewStatus status, boolean useAsSample, boolean publishOnCompanyPage) {
         User user = userRepository.get(userId);
         Review review = reviewRepository.get(reviewId);
-        review.setStatus(status, user, eventRepository);
+        review.setStatus(status, user, eventRepository, getNotificationProcessor());
         if (publishOnCompanyPage) {
             review.publishInCompanySN(user);
         }

@@ -7,6 +7,7 @@ import com.redwerk.likelabs.domain.model.event.EventType;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountException;
+import com.redwerk.likelabs.domain.service.notification.NotificationProcessor;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import org.apache.commons.lang.StringUtils;
@@ -227,23 +228,28 @@ public class User {
     
     // reviews
     
-    public void registerOwnReview(Review review, EventRepository eventRepository, GatewayFactory gatewayFactory,
-                                  ImageSourceFactory imageSourceFactory) {
-        generateEvent(EventType.USER_REVIEW_CREATED, eventRepository, review);
+    public void registerOwnReview(Review review, EventRepository eventRepository, NotificationProcessor notificationProcessor,
+                                  GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+        generateEvent(EventType.USER_REVIEW_CREATED, eventRepository, review, notificationProcessor);
         publishInSN(review, gatewayFactory, imageSourceFactory);
     }
 
-    public void registerClientReview(Review review, EventRepository eventRepository) {
-        generateEvent(EventType.CLIENT_REVIEW_CREATED, eventRepository, review);
+    public void registerClientReview(Review review, EventRepository eventRepository,
+                                     NotificationProcessor notificationProcessor) {
+        generateEvent(EventType.CLIENT_REVIEW_CREATED, eventRepository, review, notificationProcessor);
     }
 
-    public void registerReviewApproval(Review review, EventRepository eventRepository) {
-        generateEvent(EventType.USER_REVIEW_APPROVED, eventRepository, review);
+    public void registerReviewApproval(Review review, EventRepository eventRepository,
+                                       NotificationProcessor notificationProcessor) {
+        generateEvent(EventType.USER_REVIEW_APPROVED, eventRepository, review, notificationProcessor);
     }
 
-    private void generateEvent(EventType eventType, EventRepository eventRepository, Review review) {
+    private void generateEvent(EventType eventType, EventRepository eventRepository, Review review,
+                               NotificationProcessor notificationProcessor) {
         if (enabledEvents.contains(eventType)) {
-            eventRepository.add(new Event(eventType, this, review));
+            Event event = new Event(eventType, this, review);
+            eventRepository.add(event);
+            notificationProcessor.processEvent(event);
         }
     }
 

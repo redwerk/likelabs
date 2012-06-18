@@ -5,7 +5,7 @@ import com.redwerk.likelabs.domain.model.notification.NotificationInterval;
 
 import java.util.List;
 
-public interface NotificationService {
+public interface NotificationIntervalsService {
 
     List<NotificationInterval> getIntervals();
 

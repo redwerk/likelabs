@@ -55,6 +55,14 @@ public class Event {
         return type;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
     public Date getCreatedDT() {
         return createdDT;
     }
@@ -69,8 +77,7 @@ public class Event {
 
     // modifiers
 
-    public void notifyUser() {
-        // TODO: add logic
+    public void markAsNotified() {
         notifiedDT = new Date();
     }
 

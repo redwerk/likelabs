@@ -45,6 +45,8 @@ public abstract class UserRepository {
 
     public abstract List<User> findClients(Point point);
 
+    public abstract List<User> findUsersWithoutEmail();
+
 
     public abstract int getCount();
 

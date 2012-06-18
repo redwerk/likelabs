@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface EventRepository {
 
-    List<Event> findAll(User user, EventStatus status);
+    List<Event> findAll(EventStatus status);
+    
+    List<Event> findPending(User user, EventType type);
 
     void add(Event event);
 

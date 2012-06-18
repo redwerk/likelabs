@@ -1,7 +1,7 @@
 package com.redwerk.likelabs.web.ui.controller.administrator;
 
 import com.redwerk.likelabs.application.CompanyService;
-import com.redwerk.likelabs.application.NotificationService;
+import com.redwerk.likelabs.application.NotificationIntervalsService;
 import com.redwerk.likelabs.application.UserService;
 import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyAdminData;
@@ -20,7 +20,6 @@ import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserStatus;
 import com.redwerk.likelabs.web.ui.dto.NotificationSettingsDto;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
-import com.redwerk.likelabs.web.ui.dto.NotificationIntervalDto;
 import com.redwerk.likelabs.web.ui.dto.UserDto;
 import com.redwerk.likelabs.web.ui.security.Authenticator;
 import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
@@ -61,7 +60,7 @@ public class AdministratorGeneralController {
     @Autowired
     private UserService userService;
     @Autowired
-    private NotificationService notificationService;
+    private NotificationIntervalsService notificationIntervalsService;
     @Autowired
     private Authenticator authenticator;
     @Autowired
@@ -237,7 +236,7 @@ public class AdministratorGeneralController {
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     public String initSettings(ModelMap model) {
 
-        List<NotificationInterval> intervals = notificationService.getIntervals();
+        List<NotificationInterval> intervals = notificationIntervalsService.getIntervals();
         NotificationSettingsDto settings = new NotificationSettingsDto(intervals);
         model.put("settings", settings);
         model.put("itemsAll", settings.getAllItemsForOptions(messageTemplateService));
@@ -250,7 +249,7 @@ public class AdministratorGeneralController {
     public String submitSettings(ModelMap model,
             @ModelAttribute("settings") NotificationSettingsDto settings, BindingResult result, SessionStatus status) {
 
-        notificationService.updateIntervals(settings.getIntervals());
+        notificationIntervalsService.updateIntervals(settings.getIntervals());
         status.setComplete();
         model.clear();
         return "redirect:/administrator";

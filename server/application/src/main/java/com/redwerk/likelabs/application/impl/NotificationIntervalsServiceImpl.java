@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.application.impl;
 
-import com.redwerk.likelabs.application.NotificationService;
+import com.redwerk.likelabs.application.NotificationIntervalsService;
 import com.redwerk.likelabs.application.dto.NotificationIntervalData;
 import com.redwerk.likelabs.domain.model.notification.NotificationInterval;
 import com.redwerk.likelabs.domain.model.notification.NotificationIntervalRepository;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationIntervalsServiceImpl implements NotificationIntervalsService {
 
     @Autowired
     private NotificationIntervalRepository repository;

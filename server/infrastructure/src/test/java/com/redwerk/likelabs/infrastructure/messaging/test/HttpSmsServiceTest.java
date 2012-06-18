@@ -11,7 +11,7 @@ import com.redwerk.likelabs.testutils.ReflectFieldExpose;
 
 public class HttpSmsServiceTest {
 	
-	private static final String PHONE_NUMBER = "+380000000";
+	private static final String PHONE_NUMBER = "+38000000000";
 	private static final String MSG_TEXT = "###### TEST MESSAGE #######";
 	private static final String USERNAME = "smppclient1";
 	private static final String PASSWORD = "password";
@@ -23,7 +23,7 @@ public class HttpSmsServiceTest {
 		SmsService smsService = new HttpSmsServiceImpl();
 		try {
 			new ReflectFieldExpose(smsService)
-				.set("SMS_URL_SENDER_TEMPLATE", "http://sms2.cdyne.com/sms.svc/SimpleSMSsend?PhoneNumber=011{2}&Message={3}")
+				.set("urlTemplate", "http://sms2.cdyne.com/sms.svc/SimpleSMSsend?PhoneNumber=011{2}&Message={3}")
 				.set("username", USERNAME)
 				.set("password", PASSWORD);
 			

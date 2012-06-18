@@ -10,6 +10,9 @@ public interface TabletService {
     List<Tablet> getTablets(long pointId, Pager pager);
     
     Tablet getTablet(long tabletId);
+
+    @Deprecated
+    Tablet getTablet(String login);
     
     Tablet createTablet(long pointId, TabletData tabletData);
     
@@ -19,8 +22,6 @@ public interface TabletService {
 
 
     Tablet getTablet(String login, String loginPassword);
-
-    Tablet getTablet(String login);
 
     long getTabletId(String apiKey);
 

@@ -37,6 +37,7 @@ public class UserJpaRepository extends UserRepository {
     private static final String GET_CLIENTS_FOR_POINT =
             "select u from User u where exists (select r.id from Review r where r.point.id = :pointId and r.author.id = u.id)";
 
+    private static final String GET_USERS_WITHOUT_EMAIL = "select u from User u where u.email is null";
 
     @PersistenceContext
     private EntityManager em;
@@ -79,6 +80,11 @@ public class UserJpaRepository extends UserRepository {
                 GET_CLIENTS_FOR_POINT,
                 Collections.<String, Object>singletonMap("pointId", point.getId()),
                 Pager.ALL_RECORDS);
+    }
+
+    @Override
+    public List<User> findUsersWithoutEmail() {
+        return getEntityRepository().findEntityList(GET_USERS_WITHOUT_EMAIL, Pager.ALL_RECORDS);
     }
 
     @Override
