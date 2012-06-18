@@ -13,6 +13,7 @@
 
 static NSUInteger const STATUS_LOGIN_OK = 200;
 static NSUInteger const STATUS_LOGOUT_OK = 204;
+static NSUInteger const STATUS_INTERNAL_SERVER_ERROR = 503;
 
 @synthesize settingsService = _settingsService;
 @synthesize dao = _dao;
@@ -35,6 +36,13 @@ static NSUInteger const STATUS_LOGOUT_OK = 204;
         if (error) 
             *error = request.error;
         NSLog(@"Login error: %@", request.error);
+    } else if(request.responseStatusCode == STATUS_INTERNAL_SERVER_ERROR) {
+        if (error) {
+            *error = [NSError errorWithDomain:NetworkRequestErrorDomain 
+                                         code:ASIInternalServerError
+                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Internal server error",NSLocalizedDescriptionKey,nil]];  
+            NSLog(@"Internal server error error: %d, %@", request.responseStatusCode, request.responseString);
+        }
     } else {
         if(request.responseStatusCode == STATUS_LOGIN_OK) {
             NSLog(@"Response string: %@", request.responseString);            

@@ -51,7 +51,6 @@ static NSString *const GREETING = @"Start typing a message!";
     self.imageView.layer.shadowOpacity = 0.8;
     self.imageView.layer.shadowRadius = 10;
     
-    self.textPlaseholderActive = YES;
     self.textView.layer.borderColor = [UIColor blackColor].CGColor;
     self.textView.layer.borderWidth = 1;
     self.textView.layer.cornerRadius = 10;
@@ -60,6 +59,7 @@ static NSString *const GREETING = @"Start typing a message!";
         self.textView.text = self.review.text;
         self.textView.textColor = [UIColor blackColor];
     } else {
+        self.textPlaseholderActive = YES;
         self.textView.text = GREETING;
         self.textView.textColor = [UIColor lightGrayColor];
     }

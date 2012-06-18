@@ -17,7 +17,7 @@
 - (void) dimThumbnail: (UIView*) thumbnail;
 - (BOOL) selectNewPhotoBeforeDeletingPhotoAtIndex:(NSUInteger) deletedPhotoIndex;
 - (UIImageView *) thumbnailAtIndex:(NSInteger) index;
-- (void) moveDeleteBotton;
+- (void) moveDeleteButton;
 - (void) enlargeThumbnail:(UIView*) thumbnail;
 @end
 
@@ -66,7 +66,6 @@ const int thumbnailsTagOffset = 55;
     self.btnDeleteThumbnail = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *btnImg = [UIImage imageNamed:@"delete_btn.png"];
     [self.btnDeleteThumbnail setImage:btnImg forState:UIControlStateNormal];
-    
     self.btnDeleteThumbnail.frame = CGRectMake(0, 0, btnImg.size.width, btnImg.size.height);
     [self.btnDeleteThumbnail addTarget:self action:@selector(deletePhoto:) forControlEvents:UIControlEventTouchDown];
     [self.thumbnailsView addSubview:self.btnDeleteThumbnail];
@@ -122,8 +121,8 @@ const int thumbnailsTagOffset = 55;
                     [self dimThumbnail:imageView];
                     break;
                 case PhotoStatusSelected:
-                    [self enlargeThumbnail:imageView];
-                    break;
+                    [self enlargeThumbnail:imageView]; 
+                    //no break. should fall to the default case to add a gesture recognizer to the selected thumbnail
                 default: {
                     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(previewTouched:)];
                     [imageView addGestureRecognizer:tapGesture];
@@ -146,10 +145,9 @@ const int thumbnailsTagOffset = 55;
         if ((gesture.view.tag-thumbnailsTagOffset)==self.review.reviewPhotoIndex) {
             return;
         }
-        [self.thumbnailsView setUserInteractionEnabled:NO];
-        [gesture.view setUserInteractionEnabled:NO];
-        [self selectThumbnail:gesture.view];
-        
+        self.thumbnailsView.userInteractionEnabled = NO;
+        gesture.view.userInteractionEnabled = NO;
+        [self selectThumbnail:gesture.view];        
     }
 }
 
@@ -173,7 +171,7 @@ const int thumbnailsTagOffset = 55;
         self.thumbnailsView.userInteractionEnabled = YES;
         thumbnail.userInteractionEnabled = YES;
         self.btnDeleteThumbnail.userInteractionEnabled = YES;
-        [self moveDeleteBotton];
+        [self moveDeleteButton];
         self.btnDeleteThumbnail.hidden = NO;
     }];
     thumbnail.center = oldCenter;
@@ -181,27 +179,26 @@ const int thumbnailsTagOffset = 55;
     [self.thumbnailsView bringSubviewToFront:self.btnDeleteThumbnail];
 }
 
-- (void) moveDeleteBotton {
+- (void) moveDeleteButton {
     UIImageView* thumbnail  = [self thumbnailAtIndex:self.review.reviewPhotoIndex+thumbnailsTagOffset];
     self.btnDeleteThumbnail.center = CGPointMake(thumbnail.frame.origin.x + thumbnail.frame.size.width-10, thumbnail.frame.origin.y+10);
-
 }
 
 - (void) resetThumbnails {
     for(int i=0; i<self.review.photos.count; i++) {
         Photo *photo = [self.review.photos objectAtIndex:i];
+        UIImageView* thumbnail  = [self thumbnailAtIndex:i+thumbnailsTagOffset];
         if(photo.status == PhotoStatusSelected) {
-            UIImageView* thumbnail  = [self thumbnailAtIndex:i+thumbnailsTagOffset];
             photo.status = PhotoStatusActive;
             CGPoint center = thumbnail.center;
             [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationCurveLinear animations:^{
                 thumbnail.frame = CGRectMake(0, 0, thumbnail.frame.size.width / selectedScaleFactor, thumbnail.frame.size.height / selectedScaleFactor);
             } completion:^(BOOL finished){ 
-                thumbnail.userInteractionEnabled = YES; 
             }];
             thumbnail.center = center;
             thumbnail.layer.shadowPath = [UIBezierPath bezierPathWithRect:thumbnail.bounds].CGPath;
-        } 
+        }
+        thumbnail.userInteractionEnabled = YES;
     }
 }
 
@@ -281,6 +278,7 @@ const int thumbnailsTagOffset = 55;
 
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval) duration {
     [self populateWithPhotos];
+    self.btnDeleteThumbnail.hidden = YES;
     if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation)){
         self.view.backgroundColor  = [[[UIColor alloc] initWithPatternImage:[UIImage imageNamed:bgPortrait]] autorelease];
         self.thumbnailsView.frame = CGRectMake(50, 830, 700, 230);
@@ -296,7 +294,8 @@ const int thumbnailsTagOffset = 55;
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [self moveDeleteBotton];
+    [self moveDeleteButton];
+    self.btnDeleteThumbnail.hidden = NO;
 }
 
 #pragma mark - Actions

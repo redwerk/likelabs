@@ -102,9 +102,8 @@ NSString *bgPortrait = @"bg_portrait.png";
     if (loginSuccessfull) {
         [RootController switchToController:@"SplashScreenController" rootController:self.rootController];
     } else {
-        NSString* message = error.code ? ((error.code == ASIAuthenticationErrorType) ? @"Incorrect credentials" : error.localizedDescription) : @"Unexpected connection error";
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil 
-                                                        message:message
+                                                        message:error ? error.localizedDescription : @"Unexpected error"
                                                        delegate:self 
                                               cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil];
@@ -122,9 +121,8 @@ NSString *bgPortrait = @"bg_portrait.png";
         [[UIApplication sharedApplication].delegate applicationWillTerminate:[UIApplication sharedApplication]];
         exit(0);
     } else {
-        NSString* message = error.code ? ((error.code == ASIAuthenticationErrorType) ? @"Incorrect credentials" : error.localizedDescription) : @"Unexpected connection error";
         _alertLogout = [[UIAlertView alloc] initWithTitle:nil 
-                                                  message:message
+                                                  message:error ? error.localizedDescription : @"Unexpected error"
                                                  delegate:self 
                                         cancelButtonTitle:@"Ok" 
                                         otherButtonTitles:nil];

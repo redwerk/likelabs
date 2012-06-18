@@ -128,7 +128,8 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
             layout = [[TextSampleReview alloc] initWithBackgroundColor:(textReviewIndex % 2) ? ReviewBackgroundColorYellow : ReviewBackgroundColorBlue andText:review.text];            
             textReviewIndex++;
         } else {
-            layout = [[PhotoSampleReview alloc] initWithText:review.text andPhoto:((Photo*)[review.photos objectAtIndex:0]).image];
+            id photo = (Photo*)[review.photos objectAtIndex:0];
+            layout = [[PhotoSampleReview alloc] initWithText:review.text andPhoto: (photo && photo!=[NSNull null]) ? [photo image] : nil];
         }
         
         [reviewLayouts addObject:layout];
