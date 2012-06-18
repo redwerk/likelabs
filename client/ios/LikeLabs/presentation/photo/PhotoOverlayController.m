@@ -4,7 +4,6 @@
 
 @interface PhotoOverlayController ()
 @property (nonatomic, assign) BOOL textPlaceholderActive;
-@property (nonatomic, retain) NSString* phonePrefix;
 @property (nonatomic, retain) MaskedTextFieldDelegate* maskedTextFieldDelegate;
 
 - (BOOL) validatePhone;
@@ -26,12 +25,10 @@ int cursorPos;
 @synthesize maskedTextFieldDelegate = _maskedTextFieldDelegate;
 
 #pragma mark - Initialization
-- (id) initWithPhone:(NSString*) phone {
+- (id) initWithPhone:(NSString*) phone andPhonePrefix: (NSString*) phonePrefix {
     if (self = [super init]) {
         self.phone = phone;
-        SettingsDao* dao = [[SettingsDao alloc] init];
-        self.phonePrefix = dao.phonePrefix;
-        [dao release];
+        self.phonePrefix = phonePrefix;
     }
     return self;
 }
@@ -49,7 +46,9 @@ int cursorPos;
     self.textField.delegate =  self.maskedTextFieldDelegate = [[[MaskedTextFieldDelegate alloc] initWithMask:fullMask maskCharacter:PHONE_DIGIT_MASK andOuterDelegate:self] autorelease];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];    
     if (self.phone && self.phone.length) {
-        self.textField.text = self.phone;
+        NSMutableString *phoneWithPrefix = [NSMutableString stringWithString:self.phonePrefix];
+        [phoneWithPrefix appendString:self.phone];
+        self.textField.text = phoneWithPrefix;
         self.textPlaceholderActive = NO;
     } else {
         self.textField.text = fullMask;

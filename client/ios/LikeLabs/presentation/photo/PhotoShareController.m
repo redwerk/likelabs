@@ -6,6 +6,7 @@
 #import "User.h"
 #import "PhotoRecipientsOverlayController.h"
 #import "ReviewService.h"
+#import "SettingsDao.h"
 
 static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional recipients (%d of %d)";
 
@@ -15,8 +16,12 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 @property (nonatomic, assign) ReviewService* reviewService;
 @property (nonatomic, retain) PhotoOverlayController* overlay;
 @property (nonatomic, retain) PhotoRecipientsOverlayController* recipientsOverlay;
+@property (nonatomic, retain) NSString* phonePrefix;
+@property (nonatomic, retain) SettingsDao *dao;
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 - (void) setRecipientsLabelText;
+- (void) userSettingsDidChange;
+- (NSString*) getPhoneWithPrefix;
 @end
 
 @implementation PhotoShareController
@@ -37,6 +42,8 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 @synthesize overlay = _overlay;
 @synthesize recipientsOverlay = _recipientsOverlay;
 @synthesize reviewService = _reviewService;
+@synthesize phonePrefix = _phonePrefix;
+@synthesize dao = _dao;
 
 #pragma mark - Initialization
 
@@ -45,10 +52,13 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
         self.rootController = rootController;
         self.review = [self.rootController getReview];
         self.reviewService = [rootController getReviewService];
+        _dao = [[SettingsDao alloc] init];
+        self.phonePrefix = self.dao.phonePrefix;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissOverlay) name:kPrimaryPhoneDidCancel object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePhone) name:kPrimaryPhoneDone object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissRecipientsOverlay) name:kRecipientsDidCancel object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveRecipient) name:kRecipientsDone object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSettingsDidChange) name:NSUserDefaultsDidChangeNotification object:nil];
     }
     return self;
 }
@@ -91,7 +101,7 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     self.mailButton.enabled = self.phoneButton.enabled = (self.review.contacts.count < MAX_CONTACTS);
     
     if (self.review.user.phone && self.review.user.phone.length) {
-        self.phoneField.text = self.review.user.phone;
+        self.phoneField.text = [self getPhoneWithPrefix];
     }
     
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
@@ -121,6 +131,8 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     self.rootController = nil;
     self.overlay = nil;
     self.recipientsOverlay = nil;
+    self.phonePrefix = nil;
+    self.dao = nil;
     [_imageView release];
     [_messageView release];
     [_phoneField release];
@@ -214,7 +226,7 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 
 #pragma mark - Actions
 - (IBAction)fieldTouched:(id)sender {
-    _overlay = [[PhotoOverlayController alloc] initWithPhone:self.review.user.phone];
+    _overlay = [[PhotoOverlayController alloc] initWithPhone:self.review.user.phone andPhonePrefix:self.phonePrefix];
     [self.rootController.view addSubview:self.overlay.view];
 }
 
@@ -229,6 +241,7 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 }
 
 - (IBAction)submit:(id)sender {
+    self.review.user.phone = [self getPhoneWithPrefix];
     [self.reviewService postReview:self.review];
     [self.rootController step];
 }
@@ -239,7 +252,8 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 }
 
 - (void)savePhone {
-    self.phoneField.text = self.review.user.phone = self.overlay.phone;
+    self.review.user.phone = [self.overlay.phone substringFromIndex:self.overlay.phonePrefix.length];
+    self.phoneField.text = [self getPhoneWithPrefix];
     [self dismissOverlay];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
 }
@@ -261,6 +275,19 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
     }
     [self dismissRecipientsOverlay];
     [self layoutSubviewsForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
+}
+
+- (void)userSettingsDidChange {
+    if ([self.phonePrefix isEqualToString:self.dao.phonePrefix]) 
+        return;
+    self.phoneField.text = [self getPhoneWithPrefix];
+    self.phonePrefix = self.dao.phonePrefix;
+}
+
+- (NSString*) getPhoneWithPrefix {
+    NSMutableString* phoneFieldText = [NSMutableString stringWithString:self.dao.phonePrefix];
+    [phoneFieldText appendString:self.review.user.phone];
+    return phoneFieldText;
 }
 
 @end
