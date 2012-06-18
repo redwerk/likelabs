@@ -124,11 +124,11 @@
 
         <div class="filter-holder">
             <div style="margin-top: 0px; margin-left: 10px;" class="status-filter">
-                <input id="status_active" type="radio" name="status_filter" value="ACTIVE" checked="checked"/>
-                <input id="status_deleted" type="radio" name="status_filter" value="DELETED"/>
+                <input id="status_ACTIVE" type="radio" name="status_filter" value="ACTIVE" checked="checked"/>
+                <input id="status_DELETED" type="radio" name="status_filter" value="DELETED"/>
 
-                <label class="button_filter" for="status_active">Active</label>
-                <label class="button_filter" for="status_deleted">Deleted</label>
+                <label class="button_filter" for="status_ACTIVE">Active</label>
+                <label class="button_filter" for="status_DELETED">Deleted</label>
             </div>
         </div>
         <div id="feeds_table" class="items-inner"></div>
