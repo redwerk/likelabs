@@ -30,7 +30,7 @@ public class EventJpaRepository implements EventRepository {
             GET_ALL_EVENTS + " where e.notifiedDT is not null order by notifiedDT desc, createdDT desc";
 
     private static final String GET_USER_PENDING_EVENTS =
-            GET_ALL_EVENTS + " where e.user.id = :userId and e.type = :type and e.notifiedDT is null order by createdDT desc";
+            GET_ALL_EVENTS + " where e.user.id = :userId and e.type = :eventType and e.notifiedDT is null order by createdDT desc";
 
     private static Map<EventStatus, String> queries = new HashMap<EventStatus, String>() {{
         put(PENDING, GET_PENDING_EVENTS);
@@ -53,7 +53,7 @@ public class EventJpaRepository implements EventRepository {
     public List<Event> findPending(User user, EventType type) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("userId", user.getId());
-        parameters.put("type", type.ordinal());
+        parameters.put("eventType", type);
         return getEntityRepository().findEntityList(GET_USER_PENDING_EVENTS, parameters, Pager.ALL_RECORDS);
     }
 

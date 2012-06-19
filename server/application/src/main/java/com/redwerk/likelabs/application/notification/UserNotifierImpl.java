@@ -64,6 +64,7 @@ public class UserNotifierImpl implements UserNotifier {
             LOGGER.error("cannot notify user by email " + user.getEmail(), e);
             return false;
         }
+        LOGGER.info("user was notified successfully " + user.getEmail());
         return true;
     }
 
@@ -76,6 +77,7 @@ public class UserNotifierImpl implements UserNotifier {
             LOGGER.error("cannot notify user by SMS " + user.getPhone(), e);
             return false;
         }
+        LOGGER.info("user was notified successfully " + user.getPhone());
         return true;
     }
 
@@ -89,6 +91,7 @@ public class UserNotifierImpl implements UserNotifier {
             LOGGER.error("cannot send SMS with warning to " + user.getPhone(), e);
             return false;
         }
+        LOGGER.info("user was notified successfully " + user.getPhone());
         return true;
     }
     
