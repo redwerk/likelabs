@@ -40,7 +40,7 @@ body {
 }
 
 .item-wrapper {
-  height: 280px;
+  height: 280px !important;
   width: 250px;
   margin-right: 5px;
 }
@@ -69,11 +69,16 @@ body {
 
 .item-data .photo img {
   width: 230px;
+  max-height: 180px;
 }
 
 .item-data .photo {
-  height: auto;
+  height: 180px !important;
   width: 230px;
+}
+
+.photo_table {
+   margin-bottom: 35px;
 }
 
 #feedContainer {
@@ -91,6 +96,12 @@ body {
 .items-holder .items-inner {
   min-height: auto;
   width: auto;
+}
+
+.social-icon {
+  
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .profileLogoContainer{
@@ -151,16 +162,19 @@ body {
   overflow-x: hidden;
 }
 
-.form td {
-  padding-left: 2px !important;
-}
-
 .content_table td {
   padding: 1px !important;
 }
 
+.profile_right{
+  padding-left: 2px !important;  
+}
+
+
 .logo {
   margin-left: 0px !important;
+  max-width: 213px;
+  max-height: 213px;
 }
 
 #point_list_table {
@@ -169,6 +183,17 @@ body {
   overflow-x: hidden;
 } 
 
-.social-buttons {
-    display: none;
+.field {
+    margin: 5px 0 10px;
+    padding-top: 0 !important;
+}
+
+.field td {
+    margin: 0!important;
+    padding: 0 !important;
+}
+
+.point_profile_table {
+    width: 530px; 
+ 
 }

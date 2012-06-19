@@ -102,7 +102,7 @@
                 <div class="left label">Attached Tablets</div>
                 <div class="right"><a href="javascript:void(0);" onclick="$('#add_tablet_dialog').dialog('open');">add</a></div>
             </div>
-            <table cellpadding="0" cellspacing="1" style="width: 600px; border: solid 1px #d2d9df" summary="" class="content_table field">
+            <table cellpadding="0" cellspacing="1" summary="" class="content_table field point_profile_table">
                 <thead style="height: 30px;">
                     <tr style="background-color: #efefef">
                         <th>Login</th>

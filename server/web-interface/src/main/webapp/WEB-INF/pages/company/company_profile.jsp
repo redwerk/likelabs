@@ -113,7 +113,7 @@
     <h1>${title}</h1> 
             <table cellpadding="0" cellspacing="0" summary="" class="form" style="width: 100%;">
                 <tr>
-                    <td>
+                    <td class="profile_left">
                         <form:form method="POST" commandName="company" >
                             <div class="label"><label for="name">Name <form:errors path="name" cssClass="errorblock" cssStyle="font-weight: normal;"/></label></div>
                             <div class="field">
@@ -255,7 +255,7 @@
                             </div>
                         </sec:authorize>
                     </td>
-                    <td style="text-align: center; vertical-align: top; padding-left: 40px; width: 260px;">
+                    <td class="profile_right">
 
                         <div class="logo" style="margin-left: 7px;"><img src="/company/${company.id}/profile/logo " alt="logo" width="217"/></div>
                         <div class="clear"></div>

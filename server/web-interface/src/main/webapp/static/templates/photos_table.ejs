@@ -4,7 +4,7 @@
 %>
 <div class="item-wrapper photo" id="photo_item_<%=photo.id%>" style="height: 330px;">
     <div class="item-data">
-        <div class="photo" style="text-align: center" id="photo_<%= key %>"><img src="/public/photo/<%=photo.id%>" alt=""/></div>
+        <div class="photo photo_table" style="text-align: center" id="photo_<%= key %>"><img src="/public/photo/<%=photo.id%>" alt=""/></div>
         <div class="description btn-holder" style="text-align: center;">
             <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.status == 'ACTIVE'? 'disabled' : 'btn-success'%> publish" onclick="changeStatusPhoto(<%=photo.id %>,'ACTIVE')">Activate</button>
             <button style="width: 120px; height: 32px;" type="button" class="btn <%= photo.status == 'DELETED'? 'disabled' : 'btn-success'%> publish" onclick="changeStatusPhoto(<%=photo.id %>,'DELETED')">Delete</button>

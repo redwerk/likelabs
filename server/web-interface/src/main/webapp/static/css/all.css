@@ -1165,3 +1165,15 @@ a.ui-selectmenu:hover{text-decoration: none;}
 .item-wrapper.photo:hover{
     border: 1px solid #D1D1D1;
 }
+
+.profile_right {
+    text-align: center; 
+    vertical-align: top;
+    padding-left: 40px; 
+    width: 260px;
+}
+
+.point_profile_table {
+    width: 600px; 
+    border: solid 1px #d2d9df;
+}
