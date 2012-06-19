@@ -280,9 +280,11 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 }
 
 - (void)userSettingsDidChange {
-    if ([self.phonePrefix isEqualToString:self.dao.phonePrefix]) 
+    if ([self.phonePrefix isEqualToString:self.dao.phonePrefix])
         return;
-    self.phoneField.text = [self getPhoneWithPrefix];
+    if (self.phoneField.text && self.phoneField.text.length) {
+        self.phoneField.text = [self getPhoneWithPrefix];
+    }
     self.phonePrefix = self.dao.phonePrefix;
 }
 
