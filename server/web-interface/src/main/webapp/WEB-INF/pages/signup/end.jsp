@@ -29,10 +29,13 @@
             Now you can go to <a href="/" >Dashboard</a>
         </div>
     </div>
-    <div>Link your account to share your comments, videos and photos with your friends</div>
-    <div style="width: 250px;">
-        <%@include file="/WEB-INF/pages/commons/socialButtons.jspf" %>
-    </div>
+    <c:if test="${empty socialType}">
+        <div>Link your account to share your comments, videos and photos with your friends</div>
+        <div style="width: 250px;">
+            <%@include file="/WEB-INF/pages/commons/socialButtons.jspf" %>
+        </div>
+    </c:if>
+    
     <h4>Link Email:</h4>
     <div>Link email for receiving notifications</div>
     <div>In the message you receive, please link provided there</div>
