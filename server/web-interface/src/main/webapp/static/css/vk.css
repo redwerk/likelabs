@@ -50,12 +50,21 @@ body {
   width: 220px;
 }
 
+.item-wrapper .item-cmd td select {
+    width: 100px !important;
+}
+
+.pager {
+    margin: 25px;
+}
+
 .item-wrapper .item-cmd table {
   width: auto;
 }
 
 .item-wrapper .item-data {
   height: 280px;
+  font-size: 12px;
 }
 
 .item-data .photo img {
@@ -120,14 +129,26 @@ body {
   width: 200px;
 }
 
+.field-holder textarea {
+  width: 200px;
+}
+
+.contact-form button {
+    margin-right: 30px;
+}
+
+.contact-form input {
+    width: 300px;
+}
+
+.contact-form textarea {
+    width: 300px;
+}
+
 .text-holder {
   height: 650px;
   overflow: auto;
   overflow-x: hidden;
-}
-
-.field {
-  width:250px !important;
 }
 
 .form td {
@@ -147,3 +168,7 @@ body {
   overflow: auto;
   overflow-x: hidden;
 } 
+
+.social-buttons {
+    display: none;
+}

@@ -8,7 +8,7 @@
         </c:if>
     });
 </script>
-<script type="text/javascript" src="/static/scripts/ConnectorSocialNetwork.js"></script>
+
 <div id="content">
     <h1>Edit Your Profile</h1>
     <form:form modelAttribute="user" class="cmxform profile" method="POST">

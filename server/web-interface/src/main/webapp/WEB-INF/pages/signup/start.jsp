@@ -12,7 +12,7 @@
                         <div class="field">
                             Enter your phone:
                         </div>
-                        <div class="field">
+                        <div style="margin: 5px 0 15px;">
                             <select id="countryCodeSelect" style="width: 140px" onchange="document.getElementById('phone').focus();" name="countryCode"></select>
                             <input type="text" style="width: 165px;font-family: Arial" id="phone" name="phone"/><div class="field errorblock">${errorphone}</div>
                             <script type="text/javascript" src="/static/scripts/phones.js"></script>

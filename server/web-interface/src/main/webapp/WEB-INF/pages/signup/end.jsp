@@ -15,7 +15,7 @@
     })
 }
 </script>
-<script type="text/javascript" src="/static/scripts/ConnectorSocialNetwork.js"></script>
+
 <div id="content">
 
     <h1>Sign Up for Like Labs</h1> 

@@ -41,6 +41,7 @@
         <script type="text/javascript" src="/static/scripts/jquery.pagination.js" ></script>
         <script type="text/javascript" src="/static/scripts/jquery.validate.min.js"></script>
         <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
+        <script type="text/javascript" src="/static/scripts/ConnectorSocialNetwork.js"></script>
         <c:if test="${not empty socialType}">
                 <script type="text/javascript">
                     if(window.parent != window) {                        
@@ -75,6 +76,7 @@
             </c:if>
         <sec:authorize access="not isAuthenticated()">
             <script type="text/javascript">
+                
                 function signIn() {
                     var data = {
                         "j_username":$('#username').val(),
@@ -92,7 +94,12 @@
                         data: data,
                         success: function(data){
                             if (data == "true") {
+                                <c:if test="${socialType==vk}">
+                                    id_VKontakte = "<spring:message code="app.vkontakte.clientid"/>";
+                                    linkVKontacte();
+                                </c:if>
                                 window.location.href = "/"+attachPath;
+                                
                             } else {
                                 $('#password').val("");
                                 $('#authfailed').html('<spring:message code="message.auth.failed"/>');
