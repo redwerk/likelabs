@@ -44,6 +44,7 @@ static NSUInteger const STATUS_INTERNAL_SERVER_ERROR = 503;
             NSLog(@"Internal server error error: %d, %@", request.responseStatusCode, request.responseString);
         }
     } else {
+        NSLog(@"Response status code: %d", request.responseStatusCode);
         if(request.responseStatusCode == STATUS_LOGIN_OK) {
             NSLog(@"Response string: %@", request.responseString);            
             

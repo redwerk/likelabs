@@ -140,6 +140,7 @@ float commentsContentOffset = 0;
         self.textView.text = GREETING;
         self.textPlaceholderActive = true;
     }
+    self.review.text = (self.textPlaceholderActive) ? @"" : self.textView.text;
 }
 
 #pragma mark - TableViewDelegate implementation

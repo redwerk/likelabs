@@ -6,7 +6,7 @@
 
 @interface PhotoMessageController ()
 @property (nonatomic,retain) UIViewController <ContainerController> *rootController;
-@property (nonatomic, assign) BOOL textPlaseholderActive;
+@property (nonatomic, assign) BOOL textPlaceholderActive;
 @property (nonatomic, assign) Review* review;
 
 - (void) setPhoto: (UIImage *)photo ;
@@ -28,7 +28,7 @@ static NSString *const NAV_DIVIDER_NS_IMG = @"navigation_divider_ns.png";
 static NSString *const GREETING = @"Start typing a message!";
 
 @synthesize rootController = _rootController;
-@synthesize textPlaseholderActive = _textPlaseholderActive;
+@synthesize textPlaceholderActive = _textPlaceholderActive;
 
 
 #pragma mark - Initialization
@@ -59,7 +59,7 @@ static NSString *const GREETING = @"Start typing a message!";
         self.textView.text = self.review.text;
         self.textView.textColor = [UIColor blackColor];
     } else {
-        self.textPlaseholderActive = YES;
+        self.textPlaceholderActive = YES;
         self.textView.text = GREETING;
         self.textView.textColor = [UIColor lightGrayColor];
     }
@@ -107,10 +107,10 @@ static NSString *const GREETING = @"Start typing a message!";
 #pragma mark - TextViewDelegate implementation
 
 - (BOOL)textView:(UITextView *)view shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if (self.textPlaseholderActive) {
+    if (self.textPlaceholderActive) {
         self.textView.text = @"";
         self.textView.textColor = [UIColor blackColor];
-        self.textPlaseholderActive = false;
+        self.textPlaceholderActive = false;
     } 
     return YES;
 }
@@ -119,9 +119,9 @@ static NSString *const GREETING = @"Start typing a message!";
     if (self.textView.text.length == 0) {
         self.textView.textColor = [UIColor lightGrayColor];
         self.textView.text = GREETING;
-        self.textPlaseholderActive = true;
+        self.textPlaceholderActive = true;
     }
-    self.review.text = (self.textPlaseholderActive) ? @"" : self.textView.text;
+    self.review.text = (self.textPlaceholderActive) ? @"" : self.textView.text;
 }
 
 #pragma mark - Rotation
