@@ -241,7 +241,9 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 }
 
 - (IBAction)submit:(id)sender {
-    self.review.user.phone = [self getPhoneWithPrefix];
+    if (self.review.user.phone) {
+        self.review.user.phone = [self getPhoneWithPrefix];
+    }
     [self.reviewService postReview:self.review];
     [self.rootController step];
 }
@@ -265,7 +267,7 @@ static NSString *const RECIPITENTS_COUNT_LABEL_TEMPLATE = @"Send to additional r
 }
 
 - (void) setRecipientsLabelText {
-    self.recipientsCountLabel.text = (self.review.contacts.count) ? [NSString stringWithFormat:RECIPITENTS_COUNT_LABEL_TEMPLATE, self.review.contacts.count, MAX_CONTACTS] : @"Send to additional recipients (5 max)";    
+    self.recipientsCountLabel.text = (self.review.contacts.count) ? [NSString stringWithFormat:RECIPITENTS_COUNT_LABEL_TEMPLATE, self.review.contacts.count, MAX_CONTACTS] : @"Send to additional recipients (5 max)";
 }
 
 - (void)saveRecipient {
