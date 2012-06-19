@@ -110,6 +110,10 @@ public class User {
         return email;
     }
 
+    public boolean hasEmail() {
+        return StringUtils.isNotBlank(email);
+    }
+
     public boolean isSystemAdmin() {
         return systemAdmin;
     }

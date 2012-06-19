@@ -43,13 +43,14 @@ public class NotificationProcessor {
     public void processEvent(Event event) {
         Validate.notNull(event);
         NotificationInterval interval = intervalRepository.get(event.getType());
-        if (interval.getEmailInterval() == Period.IMMEDIATELY) {
-            if (userNotifier.sendEmail(event.getUser(), Collections.singletonList(event))) {
+        User u = event.getUser();
+        if (interval.getEmailInterval() == Period.IMMEDIATELY && u.hasEmail()) {
+            if (userNotifier.sendEmail(u, event.getType(), Collections.singletonList(event))) {
                 event.markAsNotified();
             }
         }
         if (interval.getSmsInterval() == Period.IMMEDIATELY) {
-            if (userNotifier.sendSms(event.getUser(), Collections.singletonList(event))) {
+            if (userNotifier.sendSms(event.getUser(), event.getType(), Collections.singletonList(event))) {
                 event.markAsNotified();
             }
         }
@@ -70,14 +71,14 @@ public class NotificationProcessor {
                             LOG.error("Unknown warning type: " + interval.getWarningType());
                         }
                         else if (StringUtils.isEmpty(u.getEmail())) {
-                            userNotifier.sendWarning(u);
+                            userNotifier.sendWarning(u, interval.getWarningType());
                         }
                         continue;
                     }
                     List<Event> events = eventRepository.findPending(u, interval.getEventType());
                     if (!events.isEmpty()) {
-                        if (emailQualified) {
-                            if (userNotifier.sendEmail(u, events)) {
+                        if (emailQualified && u.hasEmail()) {
+                            if (userNotifier.sendEmail(u, interval.getEventType(), events)) {
                                 markAsNotified(events);
                                 LOG.error("Email notification was sent to user: " + u);
                             }
@@ -86,7 +87,7 @@ public class NotificationProcessor {
                             }
                         }
                         if (smsQualified) {
-                            if (userNotifier.sendSms(u, events)) {
+                            if (userNotifier.sendSms(u, interval.getEventType(), events)) {
                                 markAsNotified(events);
                                 LOG.error("Sms notification was sent to user: " + u);
                             }

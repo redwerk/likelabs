@@ -13,6 +13,7 @@ import com.redwerk.likelabs.domain.model.photo.Photo;
 import com.redwerk.likelabs.domain.model.photo.PhotoStatus;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.Review;
+import com.redwerk.likelabs.domain.model.review.ReviewStatus;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.web.ui.dto.CompanyDto;
 import com.redwerk.likelabs.web.ui.dto.PointDto;
@@ -60,6 +61,7 @@ public class UserGeneralController {
     private static final String VIEW_USER_PHOTOS = "user/photos";
     private static final String VIEW_USER_SETTINGS = "user/settings";
     private static final String VIEW_REVIEWS_LIST = "user/review_list";
+    private static final String VIEW_REVIEW_DETAILS = "review_details";
 
     @Autowired
     private CompanyService companyService;
@@ -84,6 +86,14 @@ public class UserGeneralController {
     public String cabinet(ModelMap model, @PathVariable Long userId) {
 
         return "redirect:/user/" + userId + "/feed";
+    }
+
+    @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
+    public String getReviewDetails(ModelMap model, @PathVariable Long userId, @PathVariable Long reviewId) {
+        Review review = reviewService.getReview(reviewId);
+        model.put("not_approved", false);
+        model.put("review",review);
+        return VIEW_REVIEW_DETAILS;
     }
 
     @RequestMapping(value="/photo", method=RequestMethod.GET)
