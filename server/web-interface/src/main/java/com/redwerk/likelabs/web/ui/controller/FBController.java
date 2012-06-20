@@ -82,16 +82,6 @@ public class FBController {
         }
     }
 
-    @RequestMapping(value = {"/attach"}, method = RequestMethod.GET)
-    public String attachFBUser(ModelMap model, HttpSession session, HttpServletRequest request) {
-        if (session.getAttribute(PARAM_ACCESS_TOKEN) != null) {
-            String acessToken = session.getAttribute(PARAM_ACCESS_TOKEN).toString();
-            long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());            
-            userService.attachAccount(userId, new FacebookGateway().getUserAccountByAccessToken(acessToken));
-        }
-        return REDIRECT_INDEX;
-    }
-
     private UserSocialAccountData getUserData(String encodedData) {
 
         String encodedJSON = encodedData.split("\\.", 2)[1];

@@ -28,12 +28,8 @@
         <link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css"/>
         <link href="/static/css/styles.css" rel="stylesheet" type="text/css"/>
         <link href="/static/css/all.css" rel="stylesheet" type="text/css"/>
-
         <link href="/static/css/smoothness/jquery-ui-1.8.20.custom.css" rel="stylesheet" type="text/css" />
         <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/flick/jquery-ui.css" rel="stylesheet" type="text/css" />
-        <script>
-            var attachPath = "";
-        </script>
         <script type="text/javascript" src="/static/scripts/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="/static/scripts/jquery-ui-1.8.20.custom.min.js"></script>
         <script type="text/javascript" src="/static/scripts/ejs_production.js" ></script>
@@ -42,6 +38,7 @@
         <script type="text/javascript" src="/static/scripts/jquery.validate.min.js"></script>
         <script type="text/javascript" src="/static/scripts/json2.min.js"></script>
         <script type="text/javascript" src="/static/scripts/ConnectorSocialNetwork.js"></script>
+        
         <c:if test="${not empty socialType}">
                 <script type="text/javascript">
                     if(window.parent != window) {                        
@@ -59,16 +56,15 @@
                             fileref.setAttribute("rel", "stylesheet");
                             fileref.setAttribute("type", "text/css");
                             fileref.setAttribute("href", "${vkCss}");
-                            document.getElementsByTagName("head")[0].appendChild(fileref);
-                            attachPath = "vk/attach";
+                            document.getElementsByTagName("head")[0].appendChild(fileref); 
                         </c:when>
                         <c:when test="${socialType==fb}">
+                            
                             fileref=document.createElement("link");
                             fileref.setAttribute("rel", "stylesheet");
                             fileref.setAttribute("type", "text/css");
                             fileref.setAttribute("href", "${fbCss}");
-                            document.getElementsByTagName("head")[0].appendChild(fileref);
-                            attachPath = "fb/attach";                                    
+                            document.getElementsByTagName("head")[0].appendChild(fileref);                                                                
                         </c:when>
                     </c:choose>
                   }
@@ -98,7 +94,13 @@
                                     id_VKontakte = "<spring:message code="app.vkontakte.clientid"/>";
                                     linkVKontacte();
                                 </c:if>
-                                window.location.href = "/"+attachPath;
+                                    
+                                <c:if test="${socialType==fb}">
+                                    id_Facebook = "<spring:message code="app.facebook.clientid"/>";
+                                    linkFacebook();
+                                </c:if>
+                                    
+                                window.location.href = "/";
                                 
                             } else {
                                 $('#password').val("");

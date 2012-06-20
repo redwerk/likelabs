@@ -37,9 +37,6 @@ public class VKController {
     @Autowired
     private Authenticator authentificator;
     
-    @Autowired
-    private GatewayFactory gatewayFactory;
-    
     @RequestMapping(value={"/", ""}, method = RequestMethod.GET)
     public String requestGET(@RequestParam(value = "viewer_id", required = true) String socialAccountId, HttpSession session, HttpServletRequest request) {
         session.setAttribute(VIEWER_ID, socialAccountId);
@@ -53,11 +50,6 @@ public class VKController {
         if(user != null){
             authentificator.authenticateUser(request, user);
         }
-        return "redirect:/index";
-    }
-    
-    @RequestMapping(value={"attach/", "attach"}, method = RequestMethod.GET)
-    public String attachAccount(HttpSession session) {
         return "redirect:/index";
     }
     
