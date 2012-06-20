@@ -68,7 +68,7 @@ body {
 }
 
 .item-data .photo img {
-  width: 230px;
+  max-width: 230px;
   max-height: 180px;
 }
 
@@ -186,6 +186,7 @@ body {
 .field {
     margin: 5px 0 10px;
     padding-top: 0 !important;
+    font-size: 10px;
 }
 
 .field td {
