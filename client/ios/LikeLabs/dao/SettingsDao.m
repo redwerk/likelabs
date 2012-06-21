@@ -14,7 +14,7 @@ static NSString *const PHONE_PREFIX_KEY = @"phone_prefix_preference";
 static NSString *const DEFAULT_LOGO_IMAGE_NAME = @"welcome_company.png";
 static NSString *const DEFAULT_SERVER_URL = @"http://likelabs.redwerk.com";
 static NSString *const DEFAULT_COMPANY_NAME = @"[Vendor Name]";
-static NSString *const DEFAULT_PHONE_PREFIX = @"+7";
+static NSString *const DEFAULT_PHONE_PREFIX = @"7";
 
 NSString* const PHONE_FORMAT = @"(___)___-____";
 NSString* const PHONE_DIGIT_MASK = @"_";

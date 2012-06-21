@@ -44,7 +44,7 @@
 			<key>KeyboardType</key>
 			<string>NumberPad</string>
 			<key>DefaultValue</key>
-			<string>+7</string>
+			<string>7</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>
