@@ -7,6 +7,8 @@ import com.redwerk.likelabs.application.dto.user.UserSettingsData;
 import com.redwerk.likelabs.application.impl.registration.CodeGenerator;
 import com.redwerk.likelabs.application.messaging.EmailService;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.model.company.Company;
+import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
 import com.redwerk.likelabs.domain.model.user.*;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
@@ -14,6 +16,7 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.query.Pager;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -34,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -172,7 +178,19 @@ public class UserServiceImpl implements UserService {
             userRepository.remove(user, reviewRepository);
         }
     }
-    
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isAdminFor(long userId, long companyId) {
+        Company company = companyRepository.get(companyId);
+        for (User user: company.getAdmins()) {
+            if (user.getId() == userId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     @Transactional
     public UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode) {

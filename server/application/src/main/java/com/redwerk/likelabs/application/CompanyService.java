@@ -19,7 +19,7 @@ public interface CompanyService {
     Report<CompanyReportItem> getCompanies(Pager pager);
 
     Report<CompanyReportItem> getCompaniesForAdmin(long adminId, Pager pager);
-    
+
     List<Company> getCompaniesForClient(long clientId);
 
     int getCompaniesCount();

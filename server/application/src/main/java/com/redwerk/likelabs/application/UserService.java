@@ -37,6 +37,9 @@ public interface UserService {
     void updateStatus(long userId, long updaterId, UserStatus status);
 
 
+    boolean isAdminFor(long userId, long companyId);
+
+
     UserSocialAccount attachAccount(long userId, SocialNetworkType snType, String accessCode);
 
     UserSocialAccount attachAccount(long userId, UserSocialAccount account);
