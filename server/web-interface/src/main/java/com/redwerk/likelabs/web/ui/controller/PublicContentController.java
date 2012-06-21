@@ -186,11 +186,7 @@ public class PublicContentController {
     public String getReviewDetails(ModelMap model, @PathVariable Long reviewId) {
 
         Review review = reviewService.getReview(reviewId);
-        if (review.getStatus() != ReviewStatus.APPROVED) {
-            model.put("not_approved", true);
-            return VIEW_REVIEW_DETAILS;
-        }
-        model.put("not_approved", false);
+        model.put("isAllowed", review.getStatus() == ReviewStatus.APPROVED);
         model.put("review",review);
         return VIEW_REVIEW_DETAILS;
     }

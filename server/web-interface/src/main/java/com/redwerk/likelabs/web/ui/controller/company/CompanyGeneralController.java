@@ -52,6 +52,7 @@ public class CompanyGeneralController {
 
     private static final String VIEW_COMPANY_REVIEWS_LIST = "company/company_review_list";
     private static final String VIEW_COMPANY_DASHBOARD = "company/dashboard";
+    private static final String VIEW_REVIEW_DETAILS = "review_details";
 
     @Autowired
     private CompanyService companyService;
@@ -193,6 +194,15 @@ public class CompanyGeneralController {
             resBuilder.setNotSuccess(messageTemplateService.getMessage("review.public.failed"));
         }
         return resBuilder.getModelResponse();
+    }
+    
+    @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
+    public String getReviewDetails(ModelMap model, @PathVariable Long companyId, @PathVariable Long reviewId) {
+        Review review = reviewService.getReview(reviewId);
+        boolean isAllowed = review.getStatus() == ReviewStatus.APPROVED || review.getCompany().getId() == companyId;
+        model.put("isAllowed", isAllowed);
+        model.put("review",review);
+        return VIEW_REVIEW_DETAILS;
     }
 
     @PreAuthorize("permitAll")

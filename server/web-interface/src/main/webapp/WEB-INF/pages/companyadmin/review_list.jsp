@@ -138,7 +138,7 @@ $(document).ready(function(){
     }
 
     function fillTable(data) {
-        var template = new EJS({url: "/static/templates/company_review_table.ejs"}).render({feeds: data});
+        var template = new EJS({url: "/static/templates/company_review_table.ejs"}).render({feeds: data, companyId : companyId});
         $("#feeds_table").html(template);
     }
 

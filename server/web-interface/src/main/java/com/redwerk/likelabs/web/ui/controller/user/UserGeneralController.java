@@ -91,7 +91,8 @@ public class UserGeneralController {
     @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
     public String getReviewDetails(ModelMap model, @PathVariable Long userId, @PathVariable Long reviewId) {
         Review review = reviewService.getReview(reviewId);
-        model.put("not_approved", false);
+        boolean isAllowed = review.getStatus() == ReviewStatus.APPROVED || review.getAuthor().getId() == userId;
+        model.put("isAllowed", isAllowed);
         model.put("review",review);
         return VIEW_REVIEW_DETAILS;
     }

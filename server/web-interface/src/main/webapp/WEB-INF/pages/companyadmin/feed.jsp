@@ -169,7 +169,7 @@
                 $('#content').unmask();
                 return;
             } else{
-                var view = template.render({reviews: data.reviews});
+                var view = template.render({reviews: data.reviews, adminId : '${adminId}'});
                 $('#feedContainer').html(view);
             }
            

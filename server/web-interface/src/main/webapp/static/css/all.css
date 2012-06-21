@@ -1177,3 +1177,17 @@ a.ui-selectmenu:hover{text-decoration: none;}
     width: 600px; 
     border: solid 1px #d2d9df;
 }
+
+.details_icon {
+    display: block;
+    width: 32px;
+    height: 32px;
+    background: url("/static/images/details_icon.png") no-repeat;
+    border: 0;
+    text-decoration: none;
+}
+
+.details_icon:hover {
+    background: url("/static/images/details_icon_active.png") no-repeat;
+    text-decoration: none;
+}

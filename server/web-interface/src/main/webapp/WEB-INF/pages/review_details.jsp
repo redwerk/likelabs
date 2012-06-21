@@ -4,13 +4,7 @@
     <div>
         <h1>Review details</h1>
         <c:choose>
-            <c:when test="${not_approved eq true}">
-                <div style="text-align: justify; text-indent: 50px;">
-                    This review was not approved yet. Please try later
-                </div>
-            </c:when>
-
-            <c:when test="${not_approved eq false}">
+            <c:when test="${isAllowed eq true}">
                 <div style="position: relative; float: left; width: 300px; padding-top: 10px;">
                         <table style="width: 100%" class="review_table">
                             <tr>
@@ -58,7 +52,9 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <%-- --%>
+                <div style="text-align: justify; text-indent: 50px;">
+                    This review was not approved yet. Please try later
+                </div>
             </c:otherwise>
     </c:choose>
     <div class="clear"></div>

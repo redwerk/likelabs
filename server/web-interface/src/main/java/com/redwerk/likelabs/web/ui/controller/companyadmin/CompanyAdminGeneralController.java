@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,7 @@ public class CompanyAdminGeneralController {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     private static final String LOGO_LINK_TEMPLATE = "/public/{0}/logo";
     private static final String PHOTO_REVIEW_LINK_TEMPLATE = "/public/review/{0}/photo";
+    private static final String VIEW_REVIEW_DETAILS = "review_details";
     
     private final Logger log = LogManager.getLogger(getClass());
 
@@ -169,6 +171,16 @@ public class CompanyAdminGeneralController {
         modelMap.put("count", reviewsResult.getCount());
         return modelMap;
 
+    }
+
+    @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
+    public String getReviewDetails(ModelMap model, @PathVariable Long adminId, @PathVariable Long reviewId) {
+        Review review = reviewService.getReview(reviewId);
+        boolean isAllowed = (review.getStatus() == ReviewStatus.APPROVED) || userService.isAdminFor(adminId, review.getCompany().getId());
+        
+        model.put("isAllowed", isAllowed);
+        model.put("review",review);
+        return VIEW_REVIEW_DETAILS;
     }
 
     private ReviewQueryData buildReviewQuery(String pointFilterParam,
