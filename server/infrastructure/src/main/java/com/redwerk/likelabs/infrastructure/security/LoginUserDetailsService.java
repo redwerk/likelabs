@@ -20,4 +20,5 @@ public class LoginUserDetailsService extends AbstractUserDetailsService {
         }
         return createDetails(user);
     }
+
 }
