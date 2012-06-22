@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONTokener;
