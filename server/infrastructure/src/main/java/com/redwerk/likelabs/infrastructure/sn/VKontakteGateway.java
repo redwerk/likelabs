@@ -132,10 +132,10 @@ public class VKontakteGateway implements SocialNetworkGateway {
                         throw new ResourceAccessDeniedException(SNResourceType.USER_MESSAGE_POSTING, publisher);
                     }
                 }
-                throw new SNGeneralException("Unknown message posting error");
+                throw new SNException("Unknown message posting error");
             }
         } catch (UnsupportedEncodingException ex) {
-            throw new SNGeneralException(ex);
+            throw new SNException(ex);
         }
     }
     
@@ -197,10 +197,10 @@ public class VKontakteGateway implements SocialNetworkGateway {
                         throw new ResourceAccessDeniedException(SNResourceType.COMPANY_MESSAGE_POSTING, publisher);
                     }
                 }
-                throw new SNGeneralException("Unknown company message posting error");
+                throw new SNException("Unknown company message posting error");
             }
         } catch (UnsupportedEncodingException ex) {
-            throw new SNGeneralException(ex);
+            throw new SNException(ex);
         }
     }
 
@@ -237,7 +237,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
                 try {
                     return json.getJSONObject("response");
                 } catch (JSONException exc) {
-                    throw new SNGeneralException(exc);
+                    throw new SNException(exc);
                 }
             }
         } else if (json.containsKey("error")) {
@@ -247,7 +247,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
                     throw new AccessTokenExpiredException(null);
                 }
             }
-            throw new SNGeneralException(json.getJSONObject("error").getString("error_msg"));
+            throw new SNException(json.getJSONObject("error").getString("error_msg"));
         }
         return null;
     }

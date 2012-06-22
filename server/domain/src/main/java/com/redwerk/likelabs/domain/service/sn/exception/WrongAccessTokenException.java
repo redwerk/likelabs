@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.domain.service.sn.exception;
 
-public class WrongAccessTokenException extends SNGeneralException {
+public class WrongAccessTokenException extends SNException {
 
     private final String accessToken;
 

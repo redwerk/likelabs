@@ -2,7 +2,7 @@ package com.redwerk.likelabs.domain.service.sn.exception;
 
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 
-public class WrongUserAccountException extends SNGeneralException {
+public class WrongUserAccountException extends SNException {
 
     private final UserSocialAccount userAccount;
 

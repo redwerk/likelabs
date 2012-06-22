@@ -1,6 +1,8 @@
 package com.redwerk.likelabs.domain.model.review;
 
+import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
+import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.event.Event;
 import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.event.EventType;
@@ -11,7 +13,10 @@ import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.notification.NotificationProcessor;
+import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
+import com.redwerk.likelabs.domain.service.sn.exception.SNException;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -111,6 +116,10 @@ public class Review {
         return photo;
     }
 
+    public boolean hasPhoto() {
+        return photo != null;
+    }
+
     public Point getPoint() {
         return point;
     }
@@ -181,17 +190,34 @@ public class Review {
         return true;
     }
 
-    public boolean publishInCompanySN(User moderator) {
+    public boolean publishInCompanySN(User moderator, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
         if (!canModerate(moderator)) {
             throw new NotAuthorizedReviewUpdateException(moderator, this, UpdateType.APPROVE_FOR_COMPANY_PAGE);
         }
         if (publishedInCompanySN) {
             return false;
         }
-        // TODO: publish on company pages
-        publishedInCompanySN = true;
+        publishedInCompanySN = sendToCompanySN(gatewayFactory, imageSourceFactory);
         markAsModerated(moderator);
         return true;
+    }
+
+    private boolean sendToCompanySN(GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+        boolean isSuccessful = true;
+/*        for (SocialNetworkType snType: SocialNetworkType.values()) {
+            for (CompanySocialPage page: point.getCompany().getSocialPages(snType)) {
+                try {
+                    gatewayFactory.getGateway(snType).postCompanyMessage(page, author.findAccount(snType), message,
+                            (photo != null) ? imageSourceFactory.createImageSource(photo) : null);
+                }
+                catch (SNException e) {
+                    if (isSuccessful) {
+                        isSuccessful = false;
+                    }
+                }
+            }
+}*/
+        return isSuccessful;
     }
 
     public boolean setSampleStatus(boolean useAsSample, User moderator) {

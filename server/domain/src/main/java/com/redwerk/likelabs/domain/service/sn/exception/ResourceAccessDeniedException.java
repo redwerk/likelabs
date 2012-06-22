@@ -3,7 +3,7 @@ package com.redwerk.likelabs.domain.service.sn.exception;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 
-public class ResourceAccessDeniedException extends SNGeneralException {
+public class ResourceAccessDeniedException extends SNException {
 
     private final SNResourceType resourceType;
 

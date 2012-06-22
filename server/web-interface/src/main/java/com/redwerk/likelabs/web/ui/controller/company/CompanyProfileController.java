@@ -9,7 +9,7 @@ import com.redwerk.likelabs.application.dto.company.CompanyPageData;
 import com.redwerk.likelabs.application.dto.user.UserProfileData;
 import com.redwerk.likelabs.application.messaging.exception.EmailMessagingException;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
-import com.redwerk.likelabs.domain.service.sn.exception.SNGeneralException;
+import com.redwerk.likelabs.domain.service.sn.exception.SNException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
@@ -279,7 +279,7 @@ public class CompanyProfileController {
         try {
             SocialNetworkType socialNetworkType = SocialNetworkType.valueOf(type.toUpperCase(Locale.ENGLISH));
             companyService.attachPage(companyId, new CompanyPageData(socialNetworkType, url));
-        } catch (SNGeneralException e) {
+        } catch (SNException e) {
             log.error(e, e);
             resBuilder.setNotSuccess("Social page not added. Page not found");
         } catch (Exception e) {

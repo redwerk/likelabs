@@ -190,7 +190,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.get(reviewId);
         review.setStatus(status, user, eventRepository, getNotificationProcessor());
         if (publishOnCompanyPage) {
-            review.publishInCompanySN(user);
+            review.publishInCompanySN(user, gatewayFactory, imageSourceFactory);
         }
         review.setSampleStatus(useAsSample, user);
     }

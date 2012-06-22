@@ -1,6 +1,6 @@
 package com.redwerk.likelabs.domain.service.sn.exception;
 
-public class WrongPageUrlException extends SNGeneralException {
+public class WrongPageUrlException extends SNException {
 
     private final String pageUrl;
 
