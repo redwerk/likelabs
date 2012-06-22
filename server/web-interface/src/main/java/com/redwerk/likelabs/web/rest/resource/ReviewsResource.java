@@ -46,7 +46,7 @@ public class ReviewsResource {
     }
     
     private String getNormalizedPhone(String phone) {
-        return "+" + CharMatcher.DIGIT.retainFrom(phone);
+        return CharMatcher.DIGIT.retainFrom(phone);
     }
     
     @Path("{reviewId}")

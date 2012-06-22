@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Statistics {
+public class TotalsStatistics {
     
     private final List<Parameter> parameters;
 
-    public Statistics(List<Parameter> parameters) {
+    public TotalsStatistics(List<Parameter> parameters) {
         this.parameters = new ArrayList<Parameter> (parameters);
     }
 
