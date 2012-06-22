@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.domain.service.sn;
 
+import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 
@@ -49,6 +50,15 @@ public interface SocialNetworkGateway {
      * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
     public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource);
+
+    /**
+     * Post message to the company page in the social network
+     * @param page company page in the social network
+     * @param company publisher company
+     * @param message text of the message
+     * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
+     */
+    public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource);
 
     /**
      * Checks if user account has administrative privileges for the company page in social network

@@ -11,9 +11,11 @@ import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.review.exception.NotAuthorizedReviewUpdateException;
 import com.redwerk.likelabs.domain.model.review.exception.UpdateType;
 import com.redwerk.likelabs.domain.model.user.User;
+import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.notification.NotificationProcessor;
 import com.redwerk.likelabs.domain.service.sn.GatewayFactory;
+import com.redwerk.likelabs.domain.service.sn.ImageSource;
 import com.redwerk.likelabs.domain.service.sn.ImageSourceFactory;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.SNException;
@@ -29,6 +31,8 @@ import java.util.*;
 @Entity
 @Table(name = "review")
 public class Review {
+    
+    private static final Logger LOGGER = Logger.getLogger(Review.class);
 
     private static final int MAX_RECIPIENTS_NUMBER = 5;
 
@@ -197,26 +201,35 @@ public class Review {
         if (publishedInCompanySN) {
             return false;
         }
-        publishedInCompanySN = sendToCompanySN(gatewayFactory, imageSourceFactory);
+        sendToCompanyPage(gatewayFactory, imageSourceFactory);
+        publishedInCompanySN = true;
         markAsModerated(moderator);
         return true;
     }
 
-    private boolean sendToCompanySN(GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+    private boolean sendToCompanyPage(GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
         boolean isSuccessful = true;
-/*        for (SocialNetworkType snType: SocialNetworkType.values()) {
-            for (CompanySocialPage page: point.getCompany().getSocialPages(snType)) {
+        for (SocialNetworkType snType: SocialNetworkType.values()) {
+            for (CompanySocialPage page: getCompany().getSocialPages(snType)) {
                 try {
-                    gatewayFactory.getGateway(snType).postCompanyMessage(page, author.findAccount(snType), message,
-                            (photo != null) ? imageSourceFactory.createImageSource(photo) : null);
+                    SocialNetworkGateway snGateway = gatewayFactory.getGateway(snType);
+                    ImageSource imageSource = (photo != null) ? imageSourceFactory.createImageSource(photo) : null;
+                    UserSocialAccount authorAccount = author.findAccount(snType);
+                    if (authorAccount != null) {
+                        snGateway.postCompanyMessage(page, authorAccount, message, imageSource);
+                    }
+                    else {
+                        snGateway.postCompanyMessage(page, getCompany(), message, imageSource);
+                    }
                 }
                 catch (SNException e) {
+                    LOGGER.error("error occurred during review sending to " + page.getUrl(), e);
                     if (isSuccessful) {
                         isSuccessful = false;
                     }
                 }
             }
-}*/
+        }
         return isSuccessful;
     }
 

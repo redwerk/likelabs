@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.service.sn.ImageSource;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.*;
@@ -174,8 +175,12 @@ public class VKontakteGateway implements SocialNetworkGateway {
         } catch (IOException ex) {
             log.debug(ex, ex);
         }
-        
         return "";
+    }
+
+    @Override
+    public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
+        // TODO: add implementation
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
 import com.redwerk.likelabs.application.template.MessageTemplateService;
+import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.service.sn.ImageSource;
 import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.AccessTokenExpiredException;
@@ -21,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.sun.xml.internal.bind.v2.TODO;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONTokener;
@@ -163,7 +166,11 @@ public class FacebookGateway implements SocialNetworkGateway {
         } catch (IOException ex) {
             throw new SNConnectionFailedException(ex);
         }
+    }
 
+    @Override
+    public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
+        // TODO: add implementation
     }
 
     @Override
