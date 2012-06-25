@@ -137,6 +137,7 @@ public class FacebookGateway implements SocialNetworkGateway {
         String imageUrl = (imageSource != null) ? imageSource.getImageUrl() : "";
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(API_POST_USER_MESSAGE_URL);
+        postMethod.addRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         postMethod.addParameter("message", message);
         postMethod.addParameter("picture", imageUrl);
         postMethod.addParameter("access_token", publisher.getAccessToken());
@@ -157,6 +158,7 @@ public class FacebookGateway implements SocialNetworkGateway {
         String imageUrl = (imageSource != null) ? imageSource.getImageUrl() : "";
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, page.getPageId()));
+        postMethod.addRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         postMethod.addParameter("message", message);
         postMethod.addParameter("picture", imageUrl);
         postMethod.addParameter("access_token", publisher.getAccessToken());
