@@ -133,7 +133,7 @@
     }
 
     function fillTable(data) {
-        var template = new EJS({url: "/static/templates/user_review_table.ejs"}).render({feeds: data});
+        var template = new EJS({url: "/static/templates/user_review_table.ejs"}).render({feeds: data, userId : '${userId}'});
         $("#feeds_table").html(template);
     }
     
