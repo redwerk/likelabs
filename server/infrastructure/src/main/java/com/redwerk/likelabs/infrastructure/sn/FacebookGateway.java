@@ -13,6 +13,7 @@ import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessCodeException
 import com.redwerk.likelabs.domain.service.sn.exception.WrongPageUrlException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessTokenException;
 
@@ -23,6 +24,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.Set;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONTokener;
@@ -54,6 +57,8 @@ public class FacebookGateway implements SocialNetworkGateway {
     private static final String API_USER_INFO_TEMPLATE = API_URL + "me?access_token={0}";
     
     private static final String API_INFO_TEMPLATE = API_URL + "{0}";
+    
+    private static final String API_ACCOUNTS_INFO_TEMPLATE = API_URL + "{0}/accounts?access_token={1}";
     
     private static final String API_USER_EMAIL_TEMPLATE = API_URL + "me?fields=email&access_token={0}";
     
@@ -169,9 +174,29 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     @Override
     public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
-        // TODO: add implementation
+        Set<User> users = company.getAdmins();
+        
+        for (User user : users) {
+            UserSocialAccount admin = user.findAccount(SocialNetworkType.FACEBOOK);
+            if (admin == null) {
+                throw new SNException();
+            }
+            String url = MessageFormat.format(API_ACCOUNTS_INFO_TEMPLATE, admin.getAccountId(), admin.getAccessToken());
+            JSONObject json = requestApiDataJson(url);
+            JSONArray socialNetworkPages = json.getJSONArray("data");
+            for (Object socialNetworkPage : socialNetworkPages) {
+                JSONObject account = (JSONObject) socialNetworkPage;
+                String pageId = account.getString("id");
+                if (page.getPageId().equals(pageId)) {
+                    UserSocialAccount publisher = new UserSocialAccount(SocialNetworkType.FACEBOOK, pageId, account.getString("access_token"), account.getString("name"));
+                    postCompanyMessage(page, publisher, message, imageSource);
+                    return;
+                }
+            }
+        }
+        throw new SNException("Cant publish message to company page");
     }
-
+    
     @Override
     public boolean isAdminFor(UserSocialAccount account, CompanySocialPage page) {
         JSONObject json = requestApiDataJson(MessageFormat.format(API_IS_ADMIN_TEMPLATE, page.getPageId(), account.getAccessToken()));

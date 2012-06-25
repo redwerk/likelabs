@@ -7,11 +7,13 @@ import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.*;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sf.json.JSONException;
@@ -51,7 +53,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     
     private static final String API_POST_USER_MESSAGE_TEMPLATE = API_URL + "wall.post?owner_id={0}&message={1}&attachments={2}&access_token={3}";
     
-    private static final String API_POST_COMPANY_MESSAGE_TEMPLATE = API_URL + "wall.post?owner_id={0}&message={1}&attachments={2}access_token={3}";
+    private static final String API_POST_COMPANY_MESSAGE_TEMPLATE = API_URL + "wall.post?owner_id={0}&message={1}&attachments={2}&access_token={3}";
     
     private static final String API_IS_ADMIN_TEMPLATE = API_URL + "groups.getById?gid={0}&access_token={1}";
     
@@ -180,7 +182,17 @@ public class VKontakteGateway implements SocialNetworkGateway {
 
     @Override
     public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
-        // TODO: add implementation
+        Set<User> users = company.getAdmins();
+        
+        for (User user : users) {
+            UserSocialAccount admin = user.findAccount(SocialNetworkType.VKONTAKTE);
+            if (admin == null) {
+                throw new SNException();
+            }
+            postCompanyMessage(page, admin, message, imageSource);
+            return;
+        }
+        throw new SNException("Cant publish message to company page");
     }
 
     @Override
