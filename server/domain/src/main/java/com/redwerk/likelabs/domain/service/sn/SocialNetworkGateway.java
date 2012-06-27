@@ -67,5 +67,9 @@ public interface SocialNetworkGateway {
      * @return true if user is admin for the company, false - otherwise
      */
     public boolean isAdminFor(UserSocialAccount account, CompanySocialPage page);
+    
+    
+    
+    public Object getStatistics(CompanySocialPage page, UserSocialAccount account);
 
 }

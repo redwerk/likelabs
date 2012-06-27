@@ -1,5 +1,9 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
+import com.redwerk.likelabs.application.dto.statistics.IncrementalTotals;
+import com.redwerk.likelabs.application.dto.statistics.Parameter;
+import com.redwerk.likelabs.application.dto.statistics.ParameterType;
+import com.redwerk.likelabs.application.dto.statistics.TotalsStatistics;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.service.sn.ImageSource;
@@ -13,9 +17,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONTokener;
@@ -64,6 +72,8 @@ public class VKontakteGateway implements SocialNetworkGateway {
     private static final String API_GET_USER_ID_TEMPLATE = API_URL + "getUserInfo?access_token={0}";
     
     private static final String VK_COMPANY_URL_PATTERN = "http://vk.com/{0}";
+
+    private static final String API_STATISTICS_URL_TEMPLATE = API_URL + "wall.get?owner_id=-{0}&offset={1}&count=100&access_token={2}";
 
     @Autowired
     MessageTemplateService messageTemplateService;
@@ -267,5 +277,61 @@ public class VKontakteGateway implements SocialNetworkGateway {
             throw new SNException(json.getJSONObject("error").getString("error_msg"));
         }
         return null;
+    }
+
+    @Override
+    public TotalsStatistics getStatistics(CompanySocialPage page, UserSocialAccount account) {
+        boolean until = true;
+        
+        final IncrementalTotals postsTotal = new IncrementalTotals();
+        final IncrementalTotals commentsTotal = new IncrementalTotals();
+        final IncrementalTotals likesTotal = new IncrementalTotals();
+        final IncrementalTotals sharesTotal = new IncrementalTotals();
+
+        Long pager = 0l;
+        Calendar date = new GregorianCalendar();
+
+        while(until && pager < 10000) {
+            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, page.getPageId(), pager.toString(), account.getAccessToken());
+            String data = requestApiData(url);
+
+            JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
+            if (json.containsKey("response")) {
+                JSONArray arr = (JSONArray) json.get("response");
+                if(arr.size()<100){
+                    until = false;
+                }
+                for(int i=1; i<arr.size();i++){
+                    JSONObject item = arr.getJSONObject(i);
+                    
+                    if(item.containsKey("date")){
+                        date.setTimeInMillis(item.getLong("date") * 1000);
+                    }
+                    
+                    postsTotal.increment(1, date);
+                    commentsTotal.increment(getCount(item, "comments"), date);
+                    likesTotal.increment(getCount(item, "likes"), date);
+                    sharesTotal.increment(getCount(item, "reposts"), date);
+                }
+            } else {
+                until = false;
+            }
+            pager +=100;
+        }
+        return new TotalsStatistics(new ArrayList<Parameter>() {{
+            add(new Parameter(ParameterType.POSTS, postsTotal.getTotals()));
+            add(new Parameter(ParameterType.LIKES, likesTotal.getTotals()));
+            add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
+            add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
+        }});
+    }
+
+    private int getCount(JSONObject json, String key){
+        if(json.containsKey(key)){
+            JSONObject likes = json.getJSONObject(key);
+            int val = likes.getInt("count");
+            return val;
+        }
+        return 0;
     }
 }

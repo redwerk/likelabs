@@ -1,5 +1,9 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
+import com.redwerk.likelabs.application.dto.statistics.IncrementalTotals;
+import com.redwerk.likelabs.application.dto.statistics.Parameter;
+import com.redwerk.likelabs.application.dto.statistics.ParameterType;
+import com.redwerk.likelabs.application.dto.statistics.TotalsStatistics;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.service.sn.ImageSource;
@@ -19,6 +23,10 @@ import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessTokenExceptio
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -70,7 +78,8 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     private static final String MSG_APP_DOMAIN =  "app.domain";
 
-   
+    private static final String API_FEED_TEMPLATE = API_URL + "{0}/feed?fields=id,type,comments,shares,likes,created_time&date_format=U&limit=10000&since={1}&until={2}&access_token={3}";
+
     @Autowired
     MessageTemplateService messageTemplateService;
 
@@ -240,7 +249,7 @@ public class FacebookGateway implements SocialNetworkGateway {
         }
         return json;
     }
-    
+
     private static Map<String,String> parseResponse (String response) {
         Map<String,String> params = new HashMap<String, String>();
         String[] responseParts = response.split("&");
@@ -249,5 +258,44 @@ public class FacebookGateway implements SocialNetworkGateway {
             params.put(paramAttrs[0], paramAttrs[1]);
         }
         return params;
+    }
+    
+    @Override
+    public TotalsStatistics getStatistics(CompanySocialPage page, UserSocialAccount account) {
+        Date currentDate = new Date();
+        Long s = 0l;
+        Long e = currentDate.getTime() / 1000;
+        String feedUrl = MessageFormat.format(API_FEED_TEMPLATE, page.getPageId(), s.toString(), e.toString(), account.getAccessToken());
+        System.out.println(feedUrl);
+        JSONObject json = requestApiDataJson(feedUrl);
+        JSONArray data = json.getJSONArray("data");
+        if (data.size() < 1) return null;
+        
+        final IncrementalTotals postsTotal = new IncrementalTotals();
+        final IncrementalTotals commentsTotal = new IncrementalTotals();
+        final IncrementalTotals likesTotal = new IncrementalTotals();
+        final IncrementalTotals sharesTotal = new IncrementalTotals();
+        
+        for (Object item : data) {
+            JSONObject feed = (JSONObject) item;
+            Calendar date = new GregorianCalendar();
+            date.setTimeInMillis(feed.getLong("created_time") * 1000);
+            postsTotal.increment(1, date);
+            commentsTotal.increment(feed.getJSONObject("comments").getInt("count"), date);
+            if (feed.containsKey("shares")) {
+                sharesTotal.increment(feed.getJSONObject("shares").getInt("count"), date);
+            }
+            if (feed.containsKey("likes")) {
+                likesTotal.increment(feed.getJSONObject("likes").getInt("count"), date);
+            }
+            
+        }
+        
+        return new TotalsStatistics(new ArrayList<Parameter>() {{
+            add(new Parameter(ParameterType.POSTS, postsTotal.getTotals()));
+            add(new Parameter(ParameterType.LIKES, likesTotal.getTotals()));
+            add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
+            add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
+        }});
     }
 }
