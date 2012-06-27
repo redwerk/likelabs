@@ -176,9 +176,11 @@ public class FacebookGateway implements SocialNetworkGateway {
             String data = postMethod.getResponseBodyAsString();
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
             if (json.containsKey("error")) {
+                log.error(json.getString("error"));
                 throw new ResourceAccessDeniedException(SNResourceType.COMPANY_MESSAGE_POSTING, publisher, page);
             }
         } catch (IOException ex) {
+            log.error(ex, ex);
             throw new SNConnectionFailedException(ex);
         }
     }

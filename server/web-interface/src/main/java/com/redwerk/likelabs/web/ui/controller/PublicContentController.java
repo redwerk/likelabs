@@ -8,6 +8,7 @@ import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.company.CompanyReportItem;
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.photo.Photo;
+import com.redwerk.likelabs.domain.model.photo.PhotoNotFoundException;
 import com.redwerk.likelabs.domain.model.point.Point;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.Review;
@@ -224,6 +225,8 @@ public class PublicContentController {
             out.close();
         } catch (IOException e) {
             log.error(e, e);
+        } catch (PhotoNotFoundException e) {
+            log.error(e, e);
         }
     }
 
@@ -240,6 +243,8 @@ public class PublicContentController {
             out.write(photo.getImage());
             out.close();
         } catch (IOException e) {
+            log.error(e, e);
+        } catch (PhotoNotFoundException e) {
             log.error(e, e);
         }
     }

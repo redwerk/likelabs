@@ -3,7 +3,8 @@ package com.redwerk.likelabs.web.ui.utils;
 import java.beans.PropertyEditorSupport;
 
 /**
- *
+ * 
+ * Editor for enumeration data bind
  */
 public class EnumEditor extends PropertyEditorSupport {
 
