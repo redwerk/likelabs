@@ -13,6 +13,7 @@
 @property (retain, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) NSUInteger reviewIndex;
 @property (assign, nonatomic) BOOL pauseTimer;
+@property (assign, nonatomic) UIView* currentReview;
 - (void) layoutSubviewsForInterfaceOrientation: (UIInterfaceOrientation) orientation;
 - (NSArray*) getReviewsLayouts: (NSArray*) reviews;
 - (void) showNextReview;
@@ -22,10 +23,11 @@
 
 @implementation SplashScreenController
 
-static CGFloat const TIMER_INTERVAL = 1;
-static CGFloat const REVIEW_SPEED = 500; //pixel / second
+static CGFloat const TIMER_INTERVAL = 3;
+static CGFloat const REVIEW_SPEED = 400; //pixel / second
 static CGFloat const MAX_ANGLE_PORTRAIT = 12;
 static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
+static CGFloat const REVIEW_SCALE = 0.7;
 
 @synthesize startBtn = _startBtn;
 @synthesize socialButtonsView = _socialButtonsView;
@@ -40,6 +42,7 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
 @synthesize timer = _timer;
 @synthesize reviewIndex = _reviewIndex;
 @synthesize pauseTimer = _pauseTimer;
+@synthesize currentReview = _currentReview;
 
 @synthesize rootController = _rootController;
 
@@ -145,39 +148,66 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
         bottomMostReview.alpha = 0;
     } completion:^(BOOL finished) {}];
     
-    UIView* review = [self.reviews objectAtIndex:self.reviewIndex];
+    self.currentReview = [self.reviews objectAtIndex:self.reviewIndex];
+    self.currentReview.alpha = 1;    
+    self.currentReview.transform = CGAffineTransformIdentity;
+    self.currentReview.center = CGPointMake(self.reviewBox.frame.size.width/2, -self.currentReview.frame.size.height/2);
+    self.currentReview.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.currentReview.layer.shadowRadius = 30;
+    self.currentReview.layer.shadowOffset = CGSizeMake(0, 30);
+    [self.reviewBox addSubview:self.currentReview];
     
-    
-    review.alpha = 1;    
-    review.transform = CGAffineTransformIdentity;
-    review.center = CGPointMake(self.reviewBox.frame.size.width/2, -review.frame.size.height/2);
-    [self.reviewBox addSubview:review];
-    CGSize reviewSize = review.frame.size;
+    CGSize reviewCurrentSize = self.currentReview.frame.size;
+    CGSize reviewFinalSize = CGSizeMake(self.currentReview.frame.size.width * REVIEW_SCALE, self.currentReview.frame.size.height * REVIEW_SCALE);
     CGSize boxSize = self.reviewBox.frame.size;
     
-    CGFloat ty1 = reviewSize.height;
+    //1 - polaroid
+    CGFloat ty1 = reviewCurrentSize.height;
     [UIView animateWithDuration: ty1 / REVIEW_SPEED delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{        
-        review.transform = CGAffineTransformMakeTranslation(0, ty1);
+        self.currentReview.transform = CGAffineTransformMakeTranslation(0, ty1);
     } completion:^(BOOL finished) {
+        //2 - falling
         CGFloat maxAlpha = (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? MAX_ANGLE_PORTRAIT : MAX_ANGLE_LANDSCAPE);
         CGFloat alpha = (-maxAlpha + arc4random_uniform(maxAlpha*2)) * M_PI / 180.0;
-        CGFloat c = sqrtf(reviewSize.width * reviewSize.width + reviewSize.height * reviewSize.height);
-        CGFloat dx = c * cos(atanf(reviewSize.height / reviewSize.width ) - fabsf(alpha));
-        CGFloat dy = c * cos(atanf(reviewSize.width  / reviewSize.height) - fabsf(alpha));
+        CGFloat diagonal = sqrtf(reviewFinalSize.width * reviewFinalSize.width + reviewFinalSize.height * reviewFinalSize.height);
+        CGSize rotatedReviewBoxSize = CGSizeMake(diagonal * cos(atanf(reviewFinalSize.height / reviewFinalSize.width ) - fabsf(alpha)), 
+                                                 diagonal * cos(atanf(reviewFinalSize.width  / reviewFinalSize.height) - fabsf(alpha)));
         
         
-        CGFloat tx2 = - (boxSize.width - dx) / 2 + arc4random_uniform(boxSize.width - dx);
+        CGFloat ddy = (rotatedReviewBoxSize.height - reviewCurrentSize.height) / 2;
         
-        CGFloat ddy = (dy - reviewSize.height) / 2;
-        CGFloat ty2 = ddy + arc4random_uniform(boxSize.height - dy/2 - reviewSize.height / 2 - ddy);
+        CGSize fallingOffset = CGSizeMake( -(boxSize.width - rotatedReviewBoxSize.width) / 2 + arc4random_uniform(boxSize.width - rotatedReviewBoxSize.width),
+                                           ddy + arc4random_uniform(boxSize.height - rotatedReviewBoxSize.height/2 - reviewCurrentSize.height / 2 - ddy));
+        CGFloat fallingDistance = sqrtf(powf(fallingOffset.width, 2) + powf(fallingOffset.height, 2));
+        CGFloat fallingDuration = fallingDistance / REVIEW_SPEED;
         
-        [UIView animateWithDuration: sqrtf(tx2*tx2 + ty2*ty2) / REVIEW_SPEED delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
-            review.transform = CGAffineTransformTranslate(review.transform,tx2, ty2);
-            review.transform = CGAffineTransformRotate(review.transform, alpha);
+        [UIView animateWithDuration: fallingDuration delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.currentReview.transform = CGAffineTransformTranslate(self.currentReview.transform,fallingOffset.width, fallingOffset.height);
+            self.currentReview.transform = CGAffineTransformRotate(self.currentReview.transform, alpha);
+            self.currentReview.transform = CGAffineTransformScale(self.currentReview.transform, REVIEW_SCALE, REVIEW_SCALE);
+            
+            CABasicAnimation* shadowOffset = [CABasicAnimation animationWithKeyPath:@"shadowOffset"];
+            shadowOffset.delegate = self;
+            shadowOffset.duration = fallingDuration;
+            shadowOffset.fromValue = [NSValue valueWithCGSize:self.currentReview.layer.shadowOffset];
+            shadowOffset.toValue = [NSValue valueWithCGSize:CGSizeMake(0, 0)];
+            [self.currentReview.layer addAnimation:shadowOffset forKey:@"shadowOffset"];
+            
+            CABasicAnimation* shadowRadius = [CABasicAnimation animationWithKeyPath:@"shadowRadius"];
+            shadowRadius.delegate = self;
+            shadowRadius.duration = fallingDuration;
+            shadowRadius.fromValue = [NSNumber numberWithFloat:self.currentReview.layer.shadowRadius];
+            shadowRadius.toValue = [NSNumber numberWithFloat:0.0];
+            [self.currentReview.layer addAnimation:shadowRadius forKey:@"shadowRadius"];            
         } completion:^(BOOL finished) {}];
     }]; 
         
     self.reviewIndex = self.nextReviewIndex;
+}
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    self.currentReview.layer.shadowRadius = 0;
+    self.currentReview.layer.shadowColor = [UIColor clearColor].CGColor;
 }
 
 - (NSUInteger) nextReviewIndex {
@@ -213,7 +243,7 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
         self.shareYourSmileImg.frame = CGRectMake(128, 125, 507, 51);
         self.shareYourSmileImg.image = [UIImage imageNamed:@"share_your_smile_portrait.png"];
         self.logoBgView.center = CGPointMake(384, 61);
-        self.reviewBox.frame = CGRectMake(15, 500, 740, 500);
+        self.reviewBox.frame = CGRectMake(30, 500, 709, 484);
         self.poweredByImg.frame = CGRectMake(555, 448, 203, 30);
     } else { //LANDSCAPE
         self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"splash_bg_landscape.png"]];
@@ -224,7 +254,7 @@ static CGFloat const MAX_ANGLE_LANDSCAPE = 40;
         self.shareYourSmileImg.frame = CGRectMake(682, 180, 310, 98);
         self.shareYourSmileImg.image = [UIImage imageNamed:@"share_your_smile_landscape.png"];
         self.logoBgView.center = CGPointMake(837, 90);
-        self.reviewBox.frame = CGRectMake(15, 20, 620, 720);
+        self.reviewBox.frame = CGRectMake(30, 20, 592, 708);
         self.poweredByImg.frame = CGRectMake(811, 728, 203, 30);
     }
 }

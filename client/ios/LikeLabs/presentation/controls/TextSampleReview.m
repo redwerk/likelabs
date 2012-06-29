@@ -16,9 +16,6 @@
         self.text = text;
         
         self.clipsToBounds = NO;
-        self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOffset = CGSizeMake(0, 6);
-        self.layer.shadowRadius = 21;
         self.layer.shadowOpacity = 0.75;
         self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
         

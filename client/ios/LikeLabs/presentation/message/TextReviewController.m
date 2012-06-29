@@ -17,6 +17,7 @@ static NSString *const bgPortrait = @"textmessage_portrait.png";
 @property (retain, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) BOOL textPlaceholderActive;
 @property (assign, nonatomic) UIInterfaceOrientation currentOrientation;
+@property (assign, nonatomic) CGFloat commentsContentOffset;
 
 - (CGFloat) getTextHeight:(NSString*) text font:(UIFont*) font;
 - (NSInteger) getIndexFrom: (NSInteger)infiniteScrollSectionIndex dataSize: (NSInteger) dataSize;
@@ -36,8 +37,6 @@ const float ANIMATION_DURATION = 0.02;
 const int ANIMATION_SPEED = 1;
 const int ROWS_ENDLESS = 1000;
 
-float commentsContentOffset = 0;
-
 @synthesize socialComments = _socialComments;
 @synthesize textView = _textView;
 @synthesize rootController = _rootController;
@@ -48,7 +47,7 @@ float commentsContentOffset = 0;
 @synthesize textLabel = _textLabel;
 @synthesize review = _review;
 @synthesize currentOrientation = _currentOrientation;
-
+@synthesize commentsContentOffset = _commentsContentOffset;
 
 #pragma mark - Lifecycle
 
@@ -65,9 +64,11 @@ float commentsContentOffset = 0;
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
-    commentsContentOffset = self.socialComments.contentSize.height/2;
-    [self scrollComments];
+    if (self.reviews.count) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_DURATION target:self selector:@selector(scrollComments) userInfo:nil repeats:YES];
+        self.commentsContentOffset = self.socialComments.contentSize.height/2;
+        [self scrollComments];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -159,7 +160,6 @@ float commentsContentOffset = 0;
     UILabel* label = nil;
     UILabel* titleLabel = nil;
     if (cell == nil) {
-        
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TEXT_CELL_IDENTIFIER] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.opaque = NO;
@@ -308,9 +308,9 @@ float commentsContentOffset = 0;
         [CATransaction begin];
         [CATransaction disableActions];
         self.socialComments.contentOffset = CGPointMake(0, scrollView.contentSize.height);
+        self.commentsContentOffset = self.socialComments.contentSize.height/2;
         [CATransaction commit];
     }
-    
 }
 
 -(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -318,12 +318,12 @@ float commentsContentOffset = 0;
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    commentsContentOffset = scrollView.contentOffset.y;
+    self.commentsContentOffset = scrollView.contentOffset.y;
 }
 
 - (void) scrollComments {   
-    commentsContentOffset -=ANIMATION_SPEED;
-    [self.socialComments setContentOffset: CGPointMake(0, commentsContentOffset) animated:NO];
+    self.commentsContentOffset -=ANIMATION_SPEED;
+    [self.socialComments setContentOffset: CGPointMake(0, self.commentsContentOffset) animated:NO];
 }
 
 @end
