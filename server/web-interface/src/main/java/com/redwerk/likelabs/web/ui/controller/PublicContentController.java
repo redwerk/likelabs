@@ -207,6 +207,8 @@ public class PublicContentController {
             out.close();
         } catch (IOException e) {
             log.error(e, e);
+        } catch (PhotoNotFoundException e) {
+            log.error(e, e);
         }
     }
 

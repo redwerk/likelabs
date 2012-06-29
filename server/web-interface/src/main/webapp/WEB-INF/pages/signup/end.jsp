@@ -3,17 +3,17 @@
     var id_VKontakte = <spring:message code="app.vkontakte.clientid"/>;
     var id_Facebook = <spring:message code="app.facebook.clientid"/>;
     function linkEmail() {
-    $.post( "/signup/sendmail", {
-        "email": $("#email").val()
-    }, function(response){
-        if (!response.success) {
+        $.post( "/signup/sendmail", {
+            "email": $("#email").val()
+        }, function(response){
+            if (!response.success) {
+                errorDialog("Activate E-mail", response.message);
+                return;
+            }
             errorDialog("Activate E-mail", response.message);
-            return;
-        }
-        errorDialog("Activate E-mail", response.message);
 
-    })
-}
+        })
+    }
 </script>
 
 <div id="content">
@@ -35,7 +35,7 @@
             <%@include file="/WEB-INF/pages/commons/socialButtons.jspf" %>
         </div>
     </c:if>
-    
+
     <h4>Link Email:</h4>
     <div>Link email for receiving notifications</div>
     <div>In the message you receive, please link provided there</div>

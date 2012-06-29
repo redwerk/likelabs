@@ -31,7 +31,7 @@ public class JsonResponseBuilder {
         setErrorMessage(errorMessage);
     }
 
-    public void setData(List<? extends Object> data) {
+    public void setData(List data) {
         this.data = data;
     }
 

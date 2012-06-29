@@ -4,11 +4,12 @@ package com.redwerk.likelabs.web.ui.utils;
  *
  * resources name pages for menu
  */
-public final class PageNames {
+public interface PageNames {
 
-    public static final String KEY_PAGE = "page";
-    public static final String PAGE_PROFILE = "page";
-  /*  public static final String PAGE_PROFILE = "page";
+    static final String KEY_PAGE = "page";
+    static final String PAGE_PROFILE = "page";
+    //TODO add consts name page for menu
+    /*  public static final String PAGE_PROFILE = "page";
     public static final String PAGE_PROFILE = "page";
     public static final String PAGE_PROFILE = "page";
     public static final String PAGE_PROFILE = "page";
