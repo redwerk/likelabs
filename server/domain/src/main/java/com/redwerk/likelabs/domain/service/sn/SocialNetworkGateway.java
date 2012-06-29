@@ -70,6 +70,7 @@ public interface SocialNetworkGateway {
     
     
     
-    public Object getStatistics(CompanySocialPage page, UserSocialAccount account);
+    public Object getStatisticsCompany(CompanySocialPage page, UserSocialAccount account);
 
+    public Object getStatisticsUser(UserSocialAccount account);
 }

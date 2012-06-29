@@ -263,7 +263,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
     
     @Override
-    public TotalsStatistics getStatistics(CompanySocialPage page, UserSocialAccount account) {
+    public TotalsStatistics getStatisticsCompany(CompanySocialPage page, UserSocialAccount account) {
         Date currentDate = new Date();
         Long s = 0l;
         Long e = currentDate.getTime() / 1000;
@@ -299,5 +299,10 @@ public class FacebookGateway implements SocialNetworkGateway {
             add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
             add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
         }});
+    }
+
+    @Override
+    public TotalsStatistics getStatisticsUser(UserSocialAccount account) {
+        return null;
     }
 }

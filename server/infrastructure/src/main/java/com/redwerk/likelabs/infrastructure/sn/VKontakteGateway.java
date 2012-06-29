@@ -280,7 +280,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public TotalsStatistics getStatistics(CompanySocialPage page, UserSocialAccount account) {
+    public TotalsStatistics getStatisticsCompany(CompanySocialPage page, UserSocialAccount account) {
         boolean until = true;
         
         final IncrementalTotals postsTotal = new IncrementalTotals();
@@ -324,6 +324,11 @@ public class VKontakteGateway implements SocialNetworkGateway {
             add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
             add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
         }});
+    }
+
+    @Override
+    public TotalsStatistics getStatisticsUser(UserSocialAccount account) {
+        return null;
     }
 
     private int getCount(JSONObject json, String key){

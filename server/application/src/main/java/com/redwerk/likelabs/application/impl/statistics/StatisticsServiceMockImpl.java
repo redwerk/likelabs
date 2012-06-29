@@ -34,7 +34,7 @@ public class StatisticsServiceMockImpl implements StatisticsService {
     }};
     
     @Override
-    public TotalsStatistics getTotals(StatisticsType type) {
+    public TotalsStatistics getTotals(long companyId,StatisticsType type) {
         return statistics.get(type);
     }
 

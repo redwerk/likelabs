@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StatisticsService {
     
-    TotalsStatistics getTotals(StatisticsType type);
+    TotalsStatistics getTotals(long companyId, StatisticsType type);
 
     List<PointsStatistics> getPoints(long companyId, Interval interval);
 
