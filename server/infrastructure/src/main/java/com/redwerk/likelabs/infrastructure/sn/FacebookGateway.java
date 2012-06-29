@@ -80,6 +80,8 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     private static final String API_FEED_TEMPLATE = API_URL + "{0}/feed?fields=id,type,comments,shares,likes,created_time&date_format=U&limit=10000&since={1}&until={2}&access_token={3}";
 
+    private static final String API_FEED_USER_TEMPLATE = API_URL + "me/feed?fields=id,type,comments,shares,likes,created_time,application.id&date_format=U&limit=10000&since={0}&until={1}&access_token={2}";
+
     @Autowired
     MessageTemplateService messageTemplateService;
 
@@ -303,6 +305,40 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     @Override
     public TotalsStatistics getStatisticsUser(UserSocialAccount account) {
-        return null;
+        Date currentDate = new Date();
+        Long s = 0l;
+        Long e = currentDate.getTime() / 1000;
+        String feedUrl = MessageFormat.format(API_FEED_USER_TEMPLATE, s.toString(), e.toString(), account.getAccessToken());
+        System.out.println(feedUrl);
+        JSONObject json = requestApiDataJson(feedUrl);
+        JSONArray data = json.getJSONArray("data");
+        if (data.size() < 1) return null;
+
+        final IncrementalTotals postsTotal = new IncrementalTotals();
+        final IncrementalTotals commentsTotal = new IncrementalTotals();
+        final IncrementalTotals likesTotal = new IncrementalTotals();
+        final IncrementalTotals sharesTotal = new IncrementalTotals();
+        long ourAppId = Long.parseLong(messageTemplateService.getMessage(clientId));
+        for (Object item : data) {
+            JSONObject feed = (JSONObject) item;
+            if (feed.getJSONObject("application").getLong("id") == ourAppId) {
+                Calendar date = new GregorianCalendar();
+                date.setTimeInMillis(feed.getLong("created_time") * 1000);
+                postsTotal.increment(1, date);
+                commentsTotal.increment(feed.getJSONObject("comments").getInt("count"), date);
+                if (feed.containsKey("shares")) {
+                    sharesTotal.increment(feed.getJSONObject("shares").getInt("count"), date);
+                }
+                if (feed.containsKey("likes")) {
+                    likesTotal.increment(feed.getJSONObject("likes").getInt("count"), date);
+                }
+            }
+        }
+        return new TotalsStatistics(new ArrayList<Parameter>() {{
+            add(new Parameter(ParameterType.POSTS, postsTotal.getTotals()));
+            add(new Parameter(ParameterType.LIKES, likesTotal.getTotals()));
+            add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
+            add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
+        }});
     }
 }
