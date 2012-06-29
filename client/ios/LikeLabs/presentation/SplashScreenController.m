@@ -152,7 +152,7 @@ static CGFloat const REVIEW_SCALE = 0.7;
     self.currentReview.alpha = 1;    
     self.currentReview.transform = CGAffineTransformIdentity;
     self.currentReview.center = CGPointMake(self.reviewBox.frame.size.width/2, -self.currentReview.frame.size.height/2);
-    self.currentReview.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.currentReview.layer.shadowOpacity = 0.75;
     self.currentReview.layer.shadowRadius = 30;
     self.currentReview.layer.shadowOffset = CGSizeMake(0, 30);
     [self.reviewBox addSubview:self.currentReview];
@@ -187,27 +187,30 @@ static CGFloat const REVIEW_SCALE = 0.7;
             self.currentReview.transform = CGAffineTransformScale(self.currentReview.transform, REVIEW_SCALE, REVIEW_SCALE);
             
             CABasicAnimation* shadowOffset = [CABasicAnimation animationWithKeyPath:@"shadowOffset"];
-            shadowOffset.delegate = self;
             shadowOffset.duration = fallingDuration;
             shadowOffset.fromValue = [NSValue valueWithCGSize:self.currentReview.layer.shadowOffset];
             shadowOffset.toValue = [NSValue valueWithCGSize:CGSizeMake(0, 0)];
             [self.currentReview.layer addAnimation:shadowOffset forKey:@"shadowOffset"];
+            self.currentReview.layer.shadowOffset = CGSizeMake(0,0);
             
             CABasicAnimation* shadowRadius = [CABasicAnimation animationWithKeyPath:@"shadowRadius"];
-            shadowRadius.delegate = self;
             shadowRadius.duration = fallingDuration;
             shadowRadius.fromValue = [NSNumber numberWithFloat:self.currentReview.layer.shadowRadius];
             shadowRadius.toValue = [NSNumber numberWithFloat:0.0];
             [self.currentReview.layer addAnimation:shadowRadius forKey:@"shadowRadius"];            
+            self.currentReview.layer.shadowRadius = 0.0;
+            
+            CABasicAnimation* shadowOpacity = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+            shadowOpacity.duration = fallingDuration;
+            shadowOpacity.fromValue = [NSNumber numberWithFloat:self.currentReview.layer.shadowOpacity];
+            shadowOpacity.toValue = [NSNumber numberWithFloat:0.0];
+            [self.currentReview.layer addAnimation:shadowOpacity forKey:@"shadowOpacity"];
+            self.currentReview.layer.shadowOpacity = 0.0;
+            
         } completion:^(BOOL finished) {}];
     }]; 
         
     self.reviewIndex = self.nextReviewIndex;
-}
-
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    self.currentReview.layer.shadowRadius = 0;
-    self.currentReview.layer.shadowColor = [UIColor clearColor].CGColor;
 }
 
 - (NSUInteger) nextReviewIndex {

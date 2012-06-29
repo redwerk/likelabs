@@ -31,7 +31,7 @@
         [self addSubview:self.label];
         
         self.clipsToBounds = NO;
-        self.layer.shadowOpacity = 0.75;
+        self.layer.shadowColor = [UIColor blackColor].CGColor;
         self.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bounds].CGPath;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
