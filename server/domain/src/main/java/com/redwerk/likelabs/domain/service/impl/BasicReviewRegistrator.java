@@ -79,7 +79,7 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
 
         Review review = createReview(author, tablet.getPoint(), text, reviewPhoto);
 
-        notifyAuthor(author, review);
+        //notifyAuthor(author, review);
         notifyClients(tablet.getPoint(), review);
         notifyRecipients(review, recipients);
 
@@ -120,11 +120,11 @@ public class BasicReviewRegistrator implements ReviewRegistrator {
         reviewRepository.add(review);
         return review;
     }
-    
+   /*
     private void notifyAuthor(User author, Review review) {
         author.registerOwnReview(review, eventRepository, notificationProcessor, gatewayFactory, imageSourceFactory);
     }
-
+*/
     private void notifyClients(Point point, Review review) {
         User author = review.getAuthor();
         for (User client: userRepository.findClients(point)) {

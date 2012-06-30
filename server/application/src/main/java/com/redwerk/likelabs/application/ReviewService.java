@@ -23,6 +23,7 @@ public interface ReviewService {
     
     Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients);
 
+    void notifyAuthor(Review review);
 
     void updateReview(long userId, long reviewId, String text);
 

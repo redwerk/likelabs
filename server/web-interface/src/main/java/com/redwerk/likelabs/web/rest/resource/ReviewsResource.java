@@ -43,6 +43,7 @@ public class ReviewsResource {
             LOG.error("review creating failed, reviewProto: {}", reviewProto);
             throw new WebApplicationException();
         }
+        reviewService.notifyAuthor(review);
     }
     
     private String getNormalizedPhone(String phone) {

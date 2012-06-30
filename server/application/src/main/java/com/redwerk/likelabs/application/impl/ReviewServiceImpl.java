@@ -174,7 +174,13 @@ public class ReviewServiceImpl implements ReviewService {
     public Review createReview(long tabletId, String phone, String text, List<PhotoData> photos, List<RecipientData> recipients) {
         return getReviewRegistrator().registerReview(tabletRepository.get(tabletId), phone, text, photos, recipients);
     }
-    
+
+    @Override
+    @Transactional
+    public void notifyAuthor(Review review) {
+        review.getAuthor().registerOwnReview(review, eventRepository, notificationProcessor, gatewayFactory, imageSourceFactory);
+    }
+
     @Override
     @Transactional
     public void updateReview(long userId, long reviewId, String text) {
