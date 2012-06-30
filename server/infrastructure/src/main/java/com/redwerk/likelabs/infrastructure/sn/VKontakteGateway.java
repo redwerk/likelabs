@@ -139,12 +139,15 @@ public class VKontakteGateway implements SocialNetworkGateway {
                 if (json.containsKey("error") && json.getJSONObject("error").containsKey("error_code")) {
                     int errorCode = json.getJSONObject("error").getInt("error_code");
                     if (errorCode == 5) {
+                        log.error(json.getString("error"));
                         throw new AccessTokenExpiredException(publisher);
                     }
                     else if (errorCode == 214 || errorCode == 7) {
+                        log.error(json.getString("error"));
                         throw new ResourceAccessDeniedException(SNResourceType.USER_MESSAGE_POSTING, publisher);
                     }
                 }
+                log.error(json.getString("error"));
                 throw new SNException("Unknown message posting error");
             }
         } catch (UnsupportedEncodingException ex) {
