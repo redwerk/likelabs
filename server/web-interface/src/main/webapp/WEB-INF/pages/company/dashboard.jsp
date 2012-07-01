@@ -37,8 +37,7 @@
         ['Oct', 125, 258,45,32]
 
     ];
-
-
+    /*
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Employee Name');
     data.addColumn('date', 'Start Date');
@@ -49,26 +48,40 @@
     data.setCell(1, 1, new Date(2007, 5, 1));
     data.setCell(2, 0, 'Alice');
     data.setCell(2, 1, new Date(2006, 7, 16));
-    
+     */
     google.setOnLoadCallback(drawVisualization);
 
-
-    function drawVisualization() {
-        // Define the chart using setters:
+    function drawVisualization(data) {
+        $('#chart').html("");
         var wrap = new google.visualization.ChartWrapper();
         wrap.setChartType('LineChart');
-        //wrap.setDataSourceUrl('http://spreadsheets.google.com/tq?key=pCQbetd-CptGXxxQIG7VFIQ&pub=1');
-        wrap.setDataTable(dataTest);
+        wrap.setDataTable(data);
         wrap.setContainerId('chart');
-        //wrap.setQuery('SELECT A,D WHERE D > 100 ORDER BY D');
-        
-        wrap.setOptions({chartArea: {left:35,top:35,width:"80%",height:"75%",backgroundColor: '#efefef'},titlePosition: 'out', title:'Chart', legend :{left:50,top:35} ,hAxis : { format: 'MMM yy', 'gridlines': {color: '#ccc', count: 5}}, 'vAxis':{ 'gridlines': {color: '#ccc', count: 5}, 'minorGridlines': {color: '#333', count: 0}}});
+        wrap.setOptions({
+            chartArea: {left:35,top:35,width:"80%",height:"75%",backgroundColor: '#efefef'},
+            titlePosition: 'out', title:'Chart', legend :{left:50,top:35} ,
+            hAxis : { format: 'MMM yy', 'gridlines': {color: '#ccc', count: 5}},
+            vAxis:{ 'gridlines': {color: '#ccc', count: 5}, 'minorGridlines': {color: '#333', count: 0}}
+        });
         wrap.draw();
     }
 
-   function changeIterval(value) {
-       console.warn(value);
-   }
+    function changeIterval(value) {
+        $.get("/company/${companyId}/chartData", {"interval" : value}, function(response){
+            if (response.error) {
+                errorDialog("Error update chart", response.error);
+                return;
+            }
+            var data = response.data;
+            var data = dataTest;
+            drawVisualization(data);
+        });
+    }
+
+    $(document).ready(function(){
+        changeIterval($('#interval').val());
+    });
+
 </script>
 <style type="text/css">
     .content_table_stat{
@@ -122,7 +135,7 @@
         width: 120px;
         font-size: 12px;
         padding: 5px;
-}
+    }
 </style>
 <div id="content">
     <h1>Dashboard <c:out value="${companyName}"/></h1>
@@ -137,7 +150,7 @@
     </div>
     <div id='chart' style='height: 300px; width: 700px;'></div>
 
-    
+
     <div id="general_statistic" class="content" style="padding: 25px;">
         <label for="general_statistic">At a Glance</label>
         <table cellpadding="0" summary="" class="content_table_stat">

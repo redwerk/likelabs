@@ -5,6 +5,7 @@ import com.redwerk.likelabs.application.PointService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.application.StatisticsService;
 import com.redwerk.likelabs.application.dto.Report;
+import com.redwerk.likelabs.application.dto.statistics.ChartPoint;
 import com.redwerk.likelabs.application.dto.statistics.Interval;
 import com.redwerk.likelabs.application.dto.statistics.Parameter;
 import com.redwerk.likelabs.application.dto.statistics.PointsStatistics;
@@ -83,18 +84,19 @@ public class CompanyGeneralController {
     @RequestMapping(method = RequestMethod.GET)
     public String cabinet(ModelMap model, @PathVariable Long companyId) {
 
-         return "redirect:/company/"+ companyId + "/dashboard";
+         return "redirect:/company/"+ companyId + "/reviews";
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(ModelMap model, @PathVariable Long companyId) {
         
+        Map<StatisticsType, TotalsStatistics> stat = statisticsService.getAllStatistic(companyId);
         model.put(StatisticsType.GENERAL.toString(),
-                new TotalStatisticDto(statisticsService.getTotals(companyId, StatisticsType.GENERAL),messageTemplateService));
+                new TotalStatisticDto(stat.get(StatisticsType.GENERAL),messageTemplateService));
         model.put(StatisticsType.FACEBOOK.toString(),
-                new TotalStatisticDto(statisticsService.getTotals(companyId, StatisticsType.FACEBOOK),messageTemplateService));
+                new TotalStatisticDto(stat.get(StatisticsType.FACEBOOK),messageTemplateService));
         model.put(StatisticsType.VKONTAKTE.toString(),
-                new TotalStatisticDto(statisticsService.getTotals(companyId, StatisticsType.VKONTAKTE),messageTemplateService));
+                new TotalStatisticDto(stat.get(StatisticsType.VKONTAKTE),messageTemplateService));
         model.put("companyName", companyService.getCompany(companyId).getName());
         model.put("page", "dashboard");
         return VIEW_COMPANY_DASHBOARD;
@@ -107,9 +109,9 @@ public class CompanyGeneralController {
         
         JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
-            List<PointsStatistics> points = statisticsService.getPoints(companyId, interval);
+            List<ChartPoint> chartPonts = statisticsService.getChartPionts(companyId, interval);
             //TODO after implements service logic
-            resBuilder.setData(points);
+            resBuilder.setData(chartPonts);
         } catch (Exception e) {
             resBuilder.setNotSuccess();
             log.error(e,e);

@@ -111,7 +111,7 @@ $(document).ready(function(){
     function updateFeed(reviewId, name, value) {
         $.post("/company/" + companyId + "/reviews/" + reviewId + "/data/" + name, name+'='+value, function(response){
             if (response.error) {
-                errorDialog("Error update review", response.error)
+                errorDialog("Error update review", response.error);
                 return;
             }
             updateData();

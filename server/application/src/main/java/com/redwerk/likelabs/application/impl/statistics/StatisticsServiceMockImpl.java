@@ -2,9 +2,11 @@ package com.redwerk.likelabs.application.impl.statistics;
 
 import com.redwerk.likelabs.application.StatisticsService;
 import com.redwerk.likelabs.application.dto.statistics.*;
+import com.redwerk.likelabs.application.dto.statistics.ParameterType;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,15 +34,15 @@ public class StatisticsServiceMockImpl implements StatisticsService {
             add(new Parameter(ParameterType.SHARES, new Totals(121, 19, 22, 58)));
         }}));
     }};
-    
+
     @Override
-    public TotalsStatistics getTotals(long companyId,StatisticsType type) {
-        return statistics.get(type);
+    public Map<StatisticsType, TotalsStatistics> getAllStatistic(long companyId) {
+       
+        return statistics;
     }
 
     @Override
-    public List<PointsStatistics> getPoints(long companyId, Interval interval) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<ChartPoint> getChartPionts(long companyId, Interval interval) {
+        return null;
     }
-
 }
