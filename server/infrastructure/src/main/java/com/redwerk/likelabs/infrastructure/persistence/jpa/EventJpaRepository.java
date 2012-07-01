@@ -31,6 +31,9 @@ public class EventJpaRepository implements EventRepository {
 
     private static final String GET_USER_PENDING_EVENTS =
             GET_ALL_EVENTS + " where e.user.id = :userId and e.type = :eventType and e.notifiedDT is null order by createdDT desc";
+    
+    private static final String GET_USER_NOTIFIED_EVENTS = GET_ALL_EVENTS + 
+            " where e.user.id = :userId and e.notifiedDT is not null order by notifiedDT desc, createdDT desc";
 
     private static Map<EventStatus, String> queries = new HashMap<EventStatus, String>() {{
         put(PENDING, GET_PENDING_EVENTS);
@@ -47,6 +50,13 @@ public class EventJpaRepository implements EventRepository {
     @Override
     public List<Event> findAll(EventStatus status) {
         return getEntityRepository().findEntityList(queries.get(status), Pager.ALL_RECORDS);
+    }
+    
+    @Override
+    public List<Event> getNotifiedByUser(User user) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("userId", user.getId());
+        return getEntityRepository().findEntityList(GET_USER_NOTIFIED_EVENTS, parameters, Pager.ALL_RECORDS);
     }
 
     @Override

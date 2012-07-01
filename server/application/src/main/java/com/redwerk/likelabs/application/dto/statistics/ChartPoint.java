@@ -11,6 +11,23 @@ public class ChartPoint {
     private Integer vkontakte;
     private Integer emails;
 
+    public ChartPoint() {    }
+    
+    public ChartPoint(Date date, Integer photosTaken, Integer facebook, Integer vkontakte, Integer emails){
+        this.date = date;
+        this.photosTaken = photosTaken;
+        this.facebook = facebook;
+        this.vkontakte = vkontakte;
+        this.emails = emails;
+    }
+    
+    public void addPoint(ChartPoint point){
+        this.photosTaken += point.photosTaken;
+        this.facebook += point.facebook;
+        this.vkontakte += point.vkontakte;
+        this.emails += point.emails;
+    }
+    
     public Date getDate() {
         return date;
     }

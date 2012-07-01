@@ -3,6 +3,7 @@ package com.redwerk.likelabs.infrastructure.sn;
 import com.redwerk.likelabs.application.dto.statistics.IncrementalTotals;
 import com.redwerk.likelabs.application.dto.statistics.Parameter;
 import com.redwerk.likelabs.application.dto.statistics.ParameterType;
+import com.redwerk.likelabs.application.dto.statistics.SocialNetworkPost;
 import com.redwerk.likelabs.application.dto.statistics.TotalsStatistics;
 import com.redwerk.likelabs.application.template.MessageTemplateService;
 import com.redwerk.likelabs.domain.model.company.Company;
@@ -19,7 +20,9 @@ import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -149,6 +152,9 @@ public class VKontakteGateway implements SocialNetworkGateway {
                 }
                 log.error(json.getString("error"));
                 throw new SNException("Unknown message posting error");
+            } else {
+                JSONObject res = json.getJSONObject("response");
+                String postId = res.getString("post_id");
             }
         } catch (UnsupportedEncodingException ex) {
             throw new SNException(ex);
@@ -330,8 +336,47 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public TotalsStatistics getStatisticsUser(UserSocialAccount account) {
-        return null;
+    public Object getStatisticsUser(UserSocialAccount account) {
+    	boolean until = true;
+        
+        final IncrementalTotals postsTotal = new IncrementalTotals();
+        final IncrementalTotals commentsTotal = new IncrementalTotals();
+        final IncrementalTotals likesTotal = new IncrementalTotals();
+        final IncrementalTotals sharesTotal = new IncrementalTotals();
+
+        Long pager = 0l;
+        Calendar date = new GregorianCalendar();
+        List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
+        while(until && pager < 10000) {
+            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager.toString(), account.getAccessToken());
+            String data = requestApiData(url);
+            
+            JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
+            if (json.containsKey("response")) {
+                JSONArray arr = (JSONArray) json.get("response");
+                if(arr.size()<100){
+                    until = false;
+                }
+                for(int i=1; i<arr.size();i++){
+                    JSONObject item = arr.getJSONObject(i);
+                    
+                    if(item.containsKey("date")){
+                        date.setTimeInMillis(item.getLong("date") * 1000);
+                    }
+                    
+                    result.add(new SocialNetworkPost(new Date(), 
+                    		item.getJSONObject("shares").getInt("count"),
+                    		item.getJSONObject("comments").getInt("count"), 
+                    		item.getJSONObject("likes").getInt("count")) );
+                    
+                   
+                }
+            } else {
+                until = false;
+            }
+            pager +=100;
+        }
+        return result;
     }
 
     private int getCount(JSONObject json, String key){
@@ -342,4 +387,5 @@ public class VKontakteGateway implements SocialNetworkGateway {
         }
         return 0;
     }
+   
 }

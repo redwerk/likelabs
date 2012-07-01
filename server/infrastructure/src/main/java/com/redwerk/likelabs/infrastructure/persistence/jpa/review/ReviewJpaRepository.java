@@ -19,6 +19,8 @@ import java.util.Map;
 @Repository
 public class ReviewJpaRepository extends ReviewRepository {
 
+	private static final String GET_POSTED_PHOTO_REVIEW = "selecr r from Review where publishedInCompanySN=1 and photo!=null and point";
+	
     @PersistenceContext
     private EntityManager em;
 
@@ -46,6 +48,11 @@ public class ReviewJpaRepository extends ReviewRepository {
     @Override
     public void removeInternal(Review review) {
         getEntityRepository().remove(review);
+    }
+    
+    public List<Review> getPostPhotoReviewByCompany(Long companyID){
+    	
+    	return null;
     }
 
     private EntityJpaRepository<Review, Long> getEntityRepository() {

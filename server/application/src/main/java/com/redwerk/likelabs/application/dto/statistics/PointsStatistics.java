@@ -7,7 +7,7 @@ public class PointsStatistics {
     private final ParameterType type;
 
     private final List<Point> points;
-
+    
     public PointsStatistics(ParameterType type, List<Point> points) {
         this.type = type;
         this.points = points;

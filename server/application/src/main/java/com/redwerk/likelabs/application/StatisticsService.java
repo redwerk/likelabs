@@ -12,4 +12,5 @@ public interface StatisticsService {
     Map<StatisticsType, TotalsStatistics> getAllStatistic(long companyId);
 
     List<ChartPoint> getChartPionts(long companyId, Interval interval);
+
 }

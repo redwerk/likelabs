@@ -15,5 +15,5 @@ public class TotalsStatistics {
     public List<Parameter> getParameters() {
         return Collections.unmodifiableList(parameters);
     }
-
+    
 }

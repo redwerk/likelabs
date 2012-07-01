@@ -10,6 +10,8 @@ public interface EventRepository {
     List<Event> findAll(EventStatus status);
     
     List<Event> findPending(User user, EventType type);
+    
+    List<Event> getNotifiedByUser(User user);
 
     void add(Event event);
 
