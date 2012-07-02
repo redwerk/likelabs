@@ -28,7 +28,7 @@ public class UserDto {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.confirmPassword = user.getPassword();
-        this.publishInSN = user.isPublishInSN();
+        this.publishInSN = user.isPostToSN();
         for (EventType event : user.getEnabledEvents()) {
             switch (event) {
                 case USER_REVIEW_APPROVED: {

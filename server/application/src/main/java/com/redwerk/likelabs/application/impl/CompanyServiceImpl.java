@@ -247,7 +247,7 @@ public class CompanyServiceImpl implements CompanyService {
     private User createAdminUser(String phone, String email) {
         User user = new UserFactory().createUser(phone, passwordGenerator.getPassword(phone));
         user.setEmail(email);
-        user.setPublishInSN(false);
+        user.setPostToSN(false);
         userRepository.add(user);
         return user;
     }

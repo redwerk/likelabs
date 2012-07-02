@@ -16,7 +16,6 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.query.Pager;
 
 import java.text.MessageFormat;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -125,7 +124,7 @@ public class UserServiceImpl implements UserService {
         Validate.notNull(userSettings, "userSettings cannot be null");
         User user = userRepository.get(userId);
         user.setEnabledEvents(userSettings.getEnabledEvents());
-        user.setPublishInSN(userSettings.isPublishInSN());
+        user.setPostToSN(userSettings.isPublishInSN());
     }
 
     @Override

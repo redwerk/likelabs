@@ -42,8 +42,11 @@ public class User {
     @Column(name = "system_admin")
     private boolean systemAdmin = false;
 
-    @Column(name = "publish_in_sn")
-    private boolean publishInSN = true;
+    @Column(name = "post_to_sn")
+    private boolean postToSN = true;
+
+    @Column(name = "post_to_email")
+    private boolean postToEmail = false;
 
     @Column(name = "created_dt")
     @Temporal(TemporalType.TIMESTAMP)
@@ -118,8 +121,12 @@ public class User {
         return systemAdmin;
     }
 
-    public boolean isPublishInSN() {
-        return publishInSN;
+    public boolean isPostToSN() {
+        return postToSN;
+    }
+
+    public boolean isPostToEmail() {
+        return postToEmail;
     }
 
     public Date getNotifiedDT() {
@@ -183,8 +190,12 @@ public class User {
         this.systemAdmin = systemAdmin;
     }
 
-    public void setPublishInSN(boolean publishInSN) {
-        this.publishInSN = publishInSN;
+    public void setPostToSN(boolean postToSN) {
+        this.postToSN = postToSN;
+    }
+
+    public void setPostToEmail(boolean postToEmail) {
+        this.postToEmail = postToEmail;
     }
 
     public void setEnabledEvents(Set<EventType> enabledEvents) {
@@ -258,7 +269,7 @@ public class User {
     }
 
     private void publishInSN(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
-        if (publishInSN) {
+        if (postToSN) {
             for (UserSocialAccount account: accounts) {
                 account.publishReview(review, gatewayFactory, imageSourceFactory);
             }
@@ -293,7 +304,8 @@ public class User {
                 .append("status", status)
                 .append("email", email)
                 .append("systemAdmin", systemAdmin)
-                .append("publishInSN", publishInSN)
+                .append("postToSN", postToSN)
+                .append("postToEmail", postToEmail)
                 .append("createdDT", createdDT)
                 .append("notifiedDT", notifiedDT)
                 .append("accounts", accounts)

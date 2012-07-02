@@ -8,7 +8,8 @@ CREATE TABLE `user` (
      `status` TINYINT NOT NULL,
      `email` VARCHAR(40),
      `system_admin` TINYINT(1) NOT NULL,
-     `publish_in_sn` TINYINT(1) NOT NULL,
+     `post_to_sn` TINYINT(1) NOT NULL,
+     `post_to_email` TINYINT(1) NOT NULL,
      `created_dt` DATETIME NOT NULL,
      `notified_dt` DATETIME,
      CONSTRAINT `PK_user` PRIMARY KEY (`id`),
@@ -126,7 +127,6 @@ CREATE TABLE `review` (
      `moderated_dt` DATETIME,
      `point_id` BIGINT NOT NULL,
      CONSTRAINT `PK_review` PRIMARY KEY (`id`),
-
      CONSTRAINT `FK_review_point` FOREIGN KEY (`point_id`) REFERENCES `point` (`id`) ON DELETE CASCADE,
      CONSTRAINT `FK_review_photo` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`) ON DELETE SET NULL,
      CONSTRAINT `FK_review_author` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
@@ -165,6 +165,34 @@ CREATE TABLE `sample_review` (
      CONSTRAINT `PK_sample_review` PRIMARY KEY (`review_id`, `company_id`),
      CONSTRAINT `FK_sample_review_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE,
      CONSTRAINT `FK_sample_review_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `post`;
+CREATE TABLE `post` (
+     `id` BIGINT AUTO_INCREMENT NOT NULL,
+     `created_dt` DATETIME NOT NULL,
+     `review_id` BIGINT NOT NULL,
+     `recipient_id` BIGINT NOT NULL,
+     CONSTRAINT `PK_post` PRIMARY KEY (`id`),
+     CONSTRAINT `FK_post_review` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`) ON DELETE CASCADE,
+     CONSTRAINT `FK_post_recipient` FOREIGN KEY (`recipient_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sn_post`;
+CREATE TABLE `sn_post` (
+     `post_id` BIGINT AUTO_INCREMENT NOT NULL,
+     `sn_type` TINYINT NOT NULL,
+     `sn_post_id` VARCHAR(40) NOT NULL,
+     CONSTRAINT `PK_sn_post` PRIMARY KEY (`post_id`),
+     CONSTRAINT `FK_sn_post_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `email_post`;
+CREATE TABLE `email_post` (
+     `post_id` BIGINT AUTO_INCREMENT NOT NULL,
+     `email` VARCHAR(40) NOT NULL,
+     CONSTRAINT `PK_email_post` PRIMARY KEY (`post_id`),
+     CONSTRAINT `FK_email_post_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `event`;

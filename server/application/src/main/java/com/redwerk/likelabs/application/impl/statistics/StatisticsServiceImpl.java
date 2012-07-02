@@ -124,7 +124,9 @@ public class StatisticsServiceImpl  implements StatisticsService {
         }
     }
     
-    private void collectReviewAndEmailStatistic(Map<SocialNetworkType, List<SocialNetworkPost>> posts, IncrementalTotals photosTaken, IncrementalTotals emailsTotals, Company company){
+    private void collectReviewAndEmailStatistic(Map<SocialNetworkType, List<SocialNetworkPost>> posts,
+                                                IncrementalTotals photosTaken, IncrementalTotals emailsTotals,
+                                                Company company){
         
         ReviewQueryData query = new ReviewQueryData(null, null, null, ContentTypeFilter.CONTAINS_PHOTO, Boolean.FALSE, Boolean.FALSE, Pager.ALL_RECORDS, null);
         List<Review> reviews = reviewService.getCompanyReviews(company.getId(), null, query).getItems();
