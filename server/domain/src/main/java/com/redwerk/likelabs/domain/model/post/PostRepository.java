@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface PostRepository {
     
-    List<Post> findAll(Company company);
+    List<Post> findAll(Company company, PostTypeFilter postType);
 
+    void add(Post post);
+    
+    void remove(Post post);
+    
 }

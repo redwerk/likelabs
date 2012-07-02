@@ -2,6 +2,7 @@ package com.redwerk.likelabs.infrastructure.persistence.jpa.review;
 
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.point.Point;
+import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.review.ReviewQuery;
 import com.redwerk.likelabs.domain.model.review.ReviewRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +21,21 @@ import java.util.Map;
 @Repository
 public class ReviewJpaRepository extends ReviewRepository {
 
+    private static final String GET_PHOTO_REVIEWS_QUERY =
+            "select r from review r where r.point.company.id = :companyId and r.photo is not null order by r.createdDT desc";
+
     @PersistenceContext
     private EntityManager em;
 
     private EntityJpaRepository<Review, Long> entityRepository;
+
+
+    @Override
+    public List<Review> findPhotoReviews(Company company) {
+        return getEntityRepository().findEntityList(GET_PHOTO_REVIEWS_QUERY,
+                Collections.<String, Object>singletonMap("companyId", company.getId()),
+                Pager.ALL_RECORDS);
+    }
 
     @Override
     public Review get(long id) {
@@ -54,4 +67,5 @@ public class ReviewJpaRepository extends ReviewRepository {
         }
         return entityRepository;
     }
+
 }

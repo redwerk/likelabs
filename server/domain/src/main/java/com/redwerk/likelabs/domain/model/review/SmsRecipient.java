@@ -20,17 +20,20 @@ public class SmsRecipient extends Recipient {
     private String phone;
 
 
+    // constructors
+
     public SmsRecipient(Review review, String phone) {
         super(review);
         this.phone = phone;
     }
+
+    // overrides
 
     @Override
     protected boolean sendNotification(RecipientNotifier notifier) {
         return notifier.notifyBySms(phone, getReview());
     }
 
-    // overrides
 
     @Override
     public boolean equals(Object obj) {
