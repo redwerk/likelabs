@@ -15,7 +15,8 @@ public class UserDto {
     String confirmPassword;
     UserStatus status;
 
-    Boolean publishInSN = false;
+    Boolean postToSn = false;
+    Boolean postToEmail = false;
     Boolean eventReviewCreated = false;
     Boolean eventReviewApproved = false;
     Boolean eventClientReviewCreated = false;
@@ -28,7 +29,8 @@ public class UserDto {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.confirmPassword = user.getPassword();
-        this.publishInSN = user.isPostToSN();
+        this.postToSn = user.isPostToSN();
+        this.postToEmail = user.isPostToEmail();
         for (EventType event : user.getEnabledEvents()) {
             switch (event) {
                 case USER_REVIEW_APPROVED: {
@@ -126,12 +128,20 @@ public class UserDto {
         this.eventReviewCreated = eventReviewCreated;
     }
 
-    public Boolean getPublishInSN() {
-        return publishInSN;
+    public Boolean getPostToSn() {
+        return postToSn;
     }
 
-    public void setPublishInSN(Boolean publishInSN) {
-        this.publishInSN = publishInSN;
+    public void setPostToSn(Boolean postToSn) {
+        this.postToSn = postToSn;
+    }
+
+    public Boolean getPostToEmail() {
+        return postToEmail;
+    }
+
+    public void setPostToEmail(Boolean postToEmail) {
+        this.postToEmail = postToEmail;
     }
 
     public Set<EventType> getEnabledEvents() {
@@ -164,6 +174,30 @@ public class UserDto {
             return false;
         }
         if ((this.email == null) ? (other.email != null) : !this.email.equals(other.email)) {
+            return false;
+        }
+        if ((this.password == null) ? (other.password != null) : !this.password.equals(other.password)) {
+            return false;
+        }
+        if ((this.confirmPassword == null) ? (other.confirmPassword != null) : !this.confirmPassword.equals(other.confirmPassword)) {
+            return false;
+        }
+        if (this.status != other.status) {
+            return false;
+        }
+        if (this.postToSn != other.postToSn && (this.postToSn == null || !this.postToSn.equals(other.postToSn))) {
+            return false;
+        }
+        if (this.postToEmail != other.postToEmail && (this.postToEmail == null || !this.postToEmail.equals(other.postToEmail))) {
+            return false;
+        }
+        if (this.eventReviewCreated != other.eventReviewCreated && (this.eventReviewCreated == null || !this.eventReviewCreated.equals(other.eventReviewCreated))) {
+            return false;
+        }
+        if (this.eventReviewApproved != other.eventReviewApproved && (this.eventReviewApproved == null || !this.eventReviewApproved.equals(other.eventReviewApproved))) {
+            return false;
+        }
+        if (this.eventClientReviewCreated != other.eventClientReviewCreated && (this.eventClientReviewCreated == null || !this.eventClientReviewCreated.equals(other.eventClientReviewCreated))) {
             return false;
         }
         return true;

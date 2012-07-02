@@ -37,18 +37,7 @@
         ['Oct', 125, 258,45,32]
 
     ];
-    /*
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Employee Name');
-    data.addColumn('date', 'Start Date');
-    data.addRows(3);
-    data.setCell(0, 0, 'Mike');
-    data.setCell(0, 1, new Date(2008, 1, 28));
-    data.setCell(1, 0, 'Bob');
-    data.setCell(1, 1, new Date(2007, 5, 1));
-    data.setCell(2, 0, 'Alice');
-    data.setCell(2, 1, new Date(2006, 7, 16));
-     */
+
     google.setOnLoadCallback(drawVisualization);
 
     function drawVisualization(data) {
@@ -58,8 +47,8 @@
         wrap.setDataTable(data);
         wrap.setContainerId('chart');
         wrap.setOptions({
-            chartArea: {left:35,top:35,width:"80%",height:"75%",backgroundColor: '#efefef'},
-            titlePosition: 'out', title:'Chart', legend :{left:50,top:35} ,
+            chartArea: {left:35,top:35,width:"90%",height:"75%",backgroundColor: '#efefef'},
+            titlePosition: 'out', legend : 'top' ,
             hAxis : { format: 'MMM yy', 'gridlines': {color: '#ccc', count: 5}},
             vAxis:{ 'gridlines': {color: '#ccc', count: 5}, 'minorGridlines': {color: '#333', count: 0}}
         });
@@ -72,8 +61,28 @@
                 errorDialog("Error update chart", response.error);
                 return;
             }
-            var data = response.data;
-            var data = dataTest;
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Start Date');
+            data.addColumn('number', 'Photos Taken');
+            data.addColumn('number', 'Facebook');
+            data.addColumn('number', 'VKontakte');
+            data.addColumn('number', 'Email');
+            data.addRows(response.data.length);
+            for (var i=0; i < response.data.length ; i++) {
+                data.setCell(i, 0, response.data[i].date);
+                data.setCell(i, 1, response.data[i].photosTaken);
+                data.setCell(i, 2, response.data[i].facebook);
+                data.setCell(i, 3, response.data[i].vkontakte);
+                data.setCell(i, 4, response.data[i].emails);
+            }
+            data.addRows(30);
+            for (var i=0; i < 30 ; i++) {
+                data.setCell(i, 0, new Date(i*10000000000));
+                data.setCell(i, 1, i+100);
+                data.setCell(i, 2, i+120);
+                data.setCell(i, 3, i+80);
+                data.setCell(i, 4, i+150);
+            }
             drawVisualization(data);
         });
     }

@@ -157,7 +157,7 @@ public class UserGeneralController {
     public String submitSettings(ModelMap model, @PathVariable Long userId,
                      @ModelAttribute UserDto user, BindingResult result, SessionStatus status) {
         try {
-            userService.updateSettings(userId, new UserSettingsData(user.getPublishInSN(), user.getEnabledEvents()));
+            userService.updateSettings(userId, new UserSettingsData(user.getPostToSn(),user.getPostToEmail(), user.getEnabledEvents()));
             status.setComplete();
             model.clear();
         } catch (Exception e) {

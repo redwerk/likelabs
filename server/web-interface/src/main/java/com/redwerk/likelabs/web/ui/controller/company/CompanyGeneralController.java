@@ -8,7 +8,6 @@ import com.redwerk.likelabs.application.dto.Report;
 import com.redwerk.likelabs.application.dto.statistics.ChartPoint;
 import com.redwerk.likelabs.application.dto.statistics.Interval;
 import com.redwerk.likelabs.application.dto.statistics.Parameter;
-import com.redwerk.likelabs.application.dto.statistics.PointsStatistics;
 import com.redwerk.likelabs.application.dto.statistics.StatisticsType;
 import com.redwerk.likelabs.application.dto.statistics.TotalsStatistics;
 import com.redwerk.likelabs.application.template.MessageTemplateService;

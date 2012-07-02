@@ -15,8 +15,12 @@ $(document).ready(function(){
         <div class="checkbox-holder">
             <table cellpadding="0" cellspacing="0" summary="">
                 <tr>
-                    <td style="vertical-align: top; width: 30px; text-align: center"><form:checkbox path="publishInSN"/></td>
+                    <td style="vertical-align: top; width: 30px; text-align: center"><form:checkbox path="postToSn"/></td>
                     <td>Publish the reviews to my Facebook and VK pages (if connected)</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; width: 30px; text-align: center"><form:checkbox path="postToEmail"/></td>
+                    <td>Send the text reviews to my Email (if connected)</td>
                 </tr>
                 <tr>
                     <td style="vertical-align: top; width: 30px; text-align: center"><form:checkbox path="eventReviewCreated"/></td>

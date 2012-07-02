@@ -7,17 +7,24 @@ import java.util.Set;
 
 public class UserSettingsData {
 
-    private final boolean publishInSN;
+    private final boolean postToSn;
+
+    private final boolean postToEmail;
 
     private final Set<EventType> enabledEvents;
 
-    public UserSettingsData(boolean publishInSN, Set<EventType> enabledEvents) {
-        this.publishInSN = publishInSN;
+    public UserSettingsData(boolean postToSn, boolean postToEmail, Set<EventType> enabledEvents) {
+        this.postToSn = postToSn;
+        this.postToEmail = postToEmail;
         this.enabledEvents = new HashSet<EventType>(enabledEvents);
     }
 
-    public boolean isPublishInSN() {
-        return publishInSN;
+    public boolean isPostToSn() {
+        return postToSn;
+    }
+
+    public boolean isPostToEmail() {
+        return postToEmail;
     }
 
     public Set<EventType> getEnabledEvents() {

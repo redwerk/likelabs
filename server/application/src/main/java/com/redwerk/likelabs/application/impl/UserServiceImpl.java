@@ -124,7 +124,8 @@ public class UserServiceImpl implements UserService {
         Validate.notNull(userSettings, "userSettings cannot be null");
         User user = userRepository.get(userId);
         user.setEnabledEvents(userSettings.getEnabledEvents());
-        user.setPostToSN(userSettings.isPublishInSN());
+        user.setPostToSN(userSettings.isPostToSn());
+        user.setPostToEmail(userSettings.isPostToEmail());
     }
 
     @Override
