@@ -77,7 +77,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     
     private static final String VK_COMPANY_URL_PATTERN = "http://vk.com/{0}";
 
-    private static final String API_STATISTICS_URL_TEMPLATE = API_URL + "wall.get?owner_id=-{0}&offset={1}&count=100&access_token={2}";
+    private static final String API_STATISTICS_URL_TEMPLATE = API_URL + "wall.get?owner_id={0}&offset={1}&count=100&access_token={2}";
 
     @Autowired
     MessageTemplateService messageTemplateService;
@@ -388,14 +388,12 @@ public class VKontakteGateway implements SocialNetworkGateway {
     @Override
     public Object getUserStatistics(UserSocialAccount account, List<SNPost> posts) {
         boolean until = true;
-        
-        Long pager = 0l;
+        Long pager = 0L;
         Calendar date = new GregorianCalendar();
         List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
         while(until && pager < 10000) {
             String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager.toString(), account.getAccessToken());
             String data = requestApiData(url);
-            
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
             if (json.containsKey("response")) {
                 JSONArray arr = (JSONArray) json.get("response");
@@ -404,19 +402,21 @@ public class VKontakteGateway implements SocialNetworkGateway {
                 }
                 for(int i=1; i<arr.size();i++){
                     JSONObject item = arr.getJSONObject(i);
-                    
                     if(item.containsKey("date")){
                         date.setTimeInMillis(item.getLong("date") * 1000);
                     }
                     if(findSNId(item.getString("id"), posts)) {
-                        result.add(new SocialNetworkPost(new Date(), 
-                                    item.getInt("reply_count"),
-                                    getCount(item, "comments"), 
-                                    getCount(item, "likes")));
-                    } 
-                   
+                        int sh = item.getInt("reply_count");
+                        int com = getCount(item, "comments");
+                        int l = getCount(item, "likes");
+                        result.add(new SocialNetworkPost(new Date(),
+                                    sh,
+                                    com,
+                                    l));
+                    }
+
                 }
-                if(posts.size()==0) {
+                if(posts.isEmpty()) {
                     break;
                 }
             } else {
