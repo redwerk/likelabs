@@ -25,7 +25,7 @@
             legend : 'top' ,
             pointSize :  1,
             colors : ["#FB0000","#538DEB","#00E2FB","#00B73D"],
-            hAxis : { format: 'MMM yy' , 'gridlines': {color: '#ccc', count : 7},'minorGridlines': {color: '#333', count: 0}, baseline: 7},
+            hAxis : { format: 'MMM yy' , 'gridlines': {color: '#ccc', count : 10},'minorGridlines': {color: '#333', count: 0}, baseline: 7},
             vAxis:{ 'gridlines': {color: '#ccc', count: 5}, 'minorGridlines': {color: '#333', count: 0}}
         });
         wrap.draw();
