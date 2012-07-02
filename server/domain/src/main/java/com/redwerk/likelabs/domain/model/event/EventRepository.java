@@ -11,8 +11,6 @@ public interface EventRepository {
     
     List<Event> findPending(User user, EventType type);
     
-    List<Event> getNotifiedByUser(User user);
-
     void add(Event event);
 
     void remove(Event event);

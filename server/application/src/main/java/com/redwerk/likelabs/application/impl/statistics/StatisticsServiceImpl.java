@@ -163,7 +163,7 @@ public class StatisticsServiceImpl  implements StatisticsService {
     
     
     private void collectNotifiedEmail(IncrementalTotals emailsTotals, User user){
-        List<Event> events = eventRepository.getNotifiedByUser(user);
+        List<Event> events = Collections.emptyList();
         Calendar date = new GregorianCalendar();
         for(Event event : events){
             date.setTimeInMillis(event.getNotifiedDT().getTime());
@@ -333,7 +333,7 @@ public class StatisticsServiceImpl  implements StatisticsService {
                     
             }
             
-            List<Event> events = eventRepository.getNotifiedByUser(review.getAuthor());
+            List<Event> events = Collections.emptyList();
             for(Event event : events){
                 chartBuilder.addPoint(new ChartPoint(event.getNotifiedDT(), 0,0,0,1));
             }
