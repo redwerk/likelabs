@@ -3,10 +3,14 @@ package com.redwerk.likelabs.application.impl.statistics;
 import com.redwerk.likelabs.application.StatisticsService;
 import com.redwerk.likelabs.application.dto.statistics.*;
 import com.redwerk.likelabs.application.dto.statistics.ParameterType;
+import com.redwerk.likelabs.domain.model.notification.Period;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.EnumMap;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +44,22 @@ public class StatisticsServiceMockImpl implements StatisticsService {
         return statistics.get(statisticsType);
     }
 
+
     @Override
-    public List<ChartPoint> getChartPoints(long companyId, Interval interval) {
-        return null;
+    public List<ChartPoint> getChartPoints(long companyId, final Interval interval) {
+        return new  ArrayList<ChartPoint>(){{
+            int period;
+            Calendar c = new GregorianCalendar();
+            switch (interval) {
+                case DAYS_30: period = 1; c.add(Calendar.DATE, -30);break;
+                case MONTHS_12: period = 12; c.add(Calendar.YEAR, -1);break;
+                case MONTHS_6: period = 6; c.add(Calendar.MONTH, -6);break;
+                default: period = 1;
+            }
+            for (int i=0; i<30; i++) {
+                c.add(Calendar.DATE, period);
+                add(new ChartPoint(c.getTime(), (int)(Math.random()*1000), (int)(Math.random()*1000), (int)(Math.random()*1000), (int)(Math.random()*1000)));
+            }
+        }};
     }
 }

@@ -55,7 +55,6 @@ public class CompanyGeneralController {
     private static final String VIEW_COMPANY_REVIEWS_LIST = "company/company_review_list";
     private static final String VIEW_COMPANY_DASHBOARD = "company/dashboard";
     private static final String VIEW_REVIEW_DETAILS = "review_details";
-    private static final String INTERVAL_PARAM_DEFAULT = "DAYS_30";
 
     @Autowired
     private CompanyService companyService;
@@ -83,14 +82,8 @@ public class CompanyGeneralController {
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(ModelMap model, @PathVariable Long companyId) {
         
-        Map<StatisticsType, TotalsStatistics> stat = Collections.emptyMap();
-        // statisticsService.getAllStatistic(companyId);
         model.put(StatisticsType.GENERAL.toString(),
-                new TotalStatisticDto(stat.get(StatisticsType.GENERAL),messageTemplateService));
-        model.put(StatisticsType.FACEBOOK.toString(),
-                new TotalStatisticDto(stat.get(StatisticsType.FACEBOOK),messageTemplateService));
-        model.put(StatisticsType.VKONTAKTE.toString(),
-                new TotalStatisticDto(stat.get(StatisticsType.VKONTAKTE),messageTemplateService));
+                new TotalStatisticDto(statisticsService.getStatistics(companyId, StatisticsType.GENERAL),messageTemplateService));
         model.put("companyName", companyService.getCompany(companyId).getName());
         model.put("page", "dashboard");
         return VIEW_COMPANY_DASHBOARD;
@@ -98,14 +91,29 @@ public class CompanyGeneralController {
     
     @RequestMapping(value = "/chartData", method = RequestMethod.GET)
     @ResponseBody
-    public ModelMap totalsStatistic(ModelMap model, @PathVariable Long companyId,
-            @RequestParam(value = "interval", required = false , defaultValue = INTERVAL_PARAM_DEFAULT) Interval interval) {
+    public ModelMap chartData(ModelMap model, @PathVariable Long companyId,
+            @RequestParam(value = "interval") Interval interval) {
         
         JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
             List<ChartPoint> chartPonts = statisticsService.getChartPoints(companyId, interval);
-            //TODO after implements service logic
             resBuilder.setData(chartPonts);
+        } catch (Exception e) {
+            resBuilder.setNotSuccess();
+            log.error(e,e);
+        }
+        return resBuilder.getModelResponse();
+    }
+
+    @RequestMapping(value = "/tableData", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap tableData(ModelMap model, @PathVariable Long companyId,
+            @RequestParam(value = "statisticstype") StatisticsType statisticsType) {
+
+        JsonResponseBuilder resBuilder = new JsonResponseBuilder();
+        try {
+            final TotalsStatistics ts = statisticsService.getStatistics(companyId, statisticsType);
+            resBuilder.setData((new TotalStatisticDto(ts, messageTemplateService)).getItems());
         } catch (Exception e) {
             resBuilder.setNotSuccess();
             log.error(e,e);
