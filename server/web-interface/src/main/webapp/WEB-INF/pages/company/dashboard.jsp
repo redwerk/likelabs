@@ -14,15 +14,18 @@
     google.setOnLoadCallback(drawVisualization);
 
     function drawVisualization(data) {
-        $('#chart').html("");
+        //$('#chart').html("");
         var wrap = new google.visualization.ChartWrapper();
         wrap.setChartType('LineChart');
         wrap.setDataTable(data);
         wrap.setContainerId('chart');
         wrap.setOptions({
-            chartArea: {left:50,top:35,width:"90%",height:"75%",backgroundColor: '#efefef'},
-            titlePosition: 'out', legend : 'top' ,
-            hAxis : { format: 'MMM yy', 'gridlines': {color: '#ccc', count: 5}},
+            chartArea: {left:50,top:35,width:"100%",height:"60%",backgroundColor: '#efefef'},
+            titlePosition: 'out', 
+            legend : 'top' ,
+            pointSize :  1,
+            colors : ["#FB0000","#538DEB","#00E2FB","#00B73D"],
+            hAxis : { format: 'MMM yy' , 'gridlines': {color: '#ccc', count : 7},'minorGridlines': {color: '#333', count: 0}, baseline: 7},
             vAxis:{ 'gridlines': {color: '#ccc', count: 5}, 'minorGridlines': {color: '#333', count: 0}}
         });
         wrap.draw();
@@ -102,7 +105,7 @@
         padding: 3px;
         text-align: left;
         height: 30px;
-        width: 120px;
+        width: 110px;
         font-size: 12px;
         padding: 5px;
         font-weight: bold;
@@ -112,26 +115,27 @@
         padding: 3px;
         text-align: left;
         height: 30px;
-        width: 120px;
+        width: 110px;
         font-size: 12px;
         padding: 5px;
     }
+
+
 </style>
 <div id="content">
     <h1>Dashboard <c:out value="${companyName}"/></h1>
 
-    <div align="right">
-        <label for="interval">Interval:</label>
-        <select onchange="updateChartData(this.value)" id="interval"  style="width: 100px;">
+    <div align="right" style="padding-right: 60px">
+        <select onchange="updateChartData(this.value)" id="interval"  style="width: 150px;">
             <option value="MONTHS_12">12 Month</option>
             <option value="MONTHS_6">6 Month</option>
             <option value="DAYS_30">30 Days</option>
         </select>
     </div>
-    <div id='chart' style='height: 300px; width: 700px;'></div>
+    <div id='chart' style='height: 300px; width: 650px;' ></div>
 
-    <label for="general_statistic" class="content" style="padding: 15px;">At a Glance</label>
-    <div id="general_statistic" class="content" style="padding: 15px;">
+    <label for="general_statistic" style="padding: 15px 15px 15px 50px;">At a Glance</label>
+    <div id="general_statistic" style="padding: 0px 15px 15px 50px;">
         <table cellpadding="0" summary="" class="content_table_stat">
             <thead>
                 <tr>
@@ -170,13 +174,13 @@
         </table>
     </div>
     <br>
-    <label for="fb_statistic" class="content" style="padding: 15px;">Facebook</label>
-    <div id="fb_statistic"  class="content" style="padding: 15px;">
+    <label for="fb_statistic"style="padding: 15px 15px 15px 50px;">Facebook</label>
+    <div id="fb_statistic"  class="content" style="padding: 0px 15px 15px 50px;">
         <img src="/static/images/loading.gif" alt="">
     </div>
     <br>
-    <label for="vk_statistic" class="content" style="padding: 15px;">VKontakte</label>
-    <div id="vk_statistic" class="content" style="padding: 15px;">
+    <label for="vk_statistic" style="padding: 15px 15px 15px 50px;">VKontakte</label>
+    <div id="vk_statistic" style="padding: 0px 15px 15px 50px;">
         <img src="/static/images/loading.gif" alt="">
     </div>
 </div>

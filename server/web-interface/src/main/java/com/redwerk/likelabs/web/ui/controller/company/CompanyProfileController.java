@@ -96,6 +96,7 @@ public class CompanyProfileController {
         companyValidator.validate(companyDto, result);
         if (result.hasErrors()) {
             model.addAttribute("page", "profile");
+            model.addAttribute("title", "Edit Company Profile");
             return VIEW_COMPANY_PROFILE;
         }
         try {
