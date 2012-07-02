@@ -82,10 +82,12 @@ public class StatisticsServiceImpl  implements StatisticsService {
         }
         
         SocialNetworkGateway gateway = gatewayFactory.getGateway(type);
-        for(UserSocialAccount account : posts.keySet()){
+        for (UserSocialAccount account : posts.keySet()){
             List<SocialNetworkPost> snpPosts = new ArrayList<SocialNetworkPost>();
             try {
-                snpPosts = (List<SocialNetworkPost>) gateway.getUserStatistics(account, posts.get(account));
+                if (account != null) {
+                    snpPosts = (List<SocialNetworkPost>) gateway.getUserStatistics(account, posts.get(account));
+                }
             } catch (SNException e) {
                 log.error(e, e);
             }

@@ -329,7 +329,6 @@ public class FacebookGateway implements SocialNetworkGateway {
 
     @Override
     public Object getUserStatistics(UserSocialAccount account, List<SNPost> posts) {
-        if (account == null ) throw new SNException("not found social account for user");
         Date currentDate = new Date();
         Long s = 0l;
         Long e = currentDate.getTime() / 1000;
