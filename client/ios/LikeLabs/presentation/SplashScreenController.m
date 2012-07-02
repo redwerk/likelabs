@@ -19,6 +19,7 @@
 - (void) showNextReview;
 - (NSUInteger) nextReviewIndex;
 - (void) setLogo: (UIImage *)logo;
+- (CGSize) getMovementOffsetForReviewOfSze: (CGSize) reviewSize andAngle:(CGFloat) alpha;
 @end;
 
 @implementation SplashScreenController
@@ -157,32 +158,25 @@ static CGFloat const REVIEW_SCALE = 0.7;
     self.currentReview.layer.shadowOffset = CGSizeMake(0, 30);
     [self.reviewBox addSubview:self.currentReview];
     
-    CGSize reviewCurrentSize = self.currentReview.frame.size;
-    CGSize reviewFinalSize = CGSizeMake(self.currentReview.frame.size.width * REVIEW_SCALE, self.currentReview.frame.size.height * REVIEW_SCALE);
-    CGSize boxSize = self.reviewBox.frame.size;
-    
     //1 - polaroid
-    CGFloat ty1 = reviewCurrentSize.height;
+    CGFloat ty1 = self.currentReview.frame.size.height;
     [UIView animateWithDuration: ty1 / REVIEW_SPEED delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{        
         self.currentReview.transform = CGAffineTransformMakeTranslation(0, ty1);
     } completion:^(BOOL finished) {
-        //2 - falling
+        //2 - moving (simultanious with falling)
         CGFloat maxAlpha = (UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? MAX_ANGLE_PORTRAIT : MAX_ANGLE_LANDSCAPE);
         CGFloat alpha = (-maxAlpha + arc4random_uniform(maxAlpha*2)) * M_PI / 180.0;
-        CGFloat diagonal = sqrtf(reviewFinalSize.width * reviewFinalSize.width + reviewFinalSize.height * reviewFinalSize.height);
-        CGSize rotatedReviewBoxSize = CGSizeMake(diagonal * cos(atanf(reviewFinalSize.height / reviewFinalSize.width ) - fabsf(alpha)), 
-                                                 diagonal * cos(atanf(reviewFinalSize.width  / reviewFinalSize.height) - fabsf(alpha)));
+        CGSize  movingOffset = [self getMovementOffsetForReviewOfSze:self.currentReview.frame.size andAngle:alpha];
+        CGFloat movingDistance = sqrtf(powf(movingOffset.width, 2) + powf(movingOffset.height, 2));
+        CGFloat movingDuration = movingDistance / REVIEW_SPEED;
         
+        [UIView animateWithDuration: movingDuration delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            self.currentReview.center = CGPointMake(self.currentReview.center.x + movingOffset.width, self.currentReview.center.y + movingOffset.height);
+        } completion:^(BOOL finished) {}];
         
-        CGFloat ddy = (rotatedReviewBoxSize.height - reviewCurrentSize.height) / 2;
-        
-        CGSize fallingOffset = CGSizeMake( -(boxSize.width - rotatedReviewBoxSize.width) / 2 + arc4random_uniform(boxSize.width - rotatedReviewBoxSize.width),
-                                           ddy + arc4random_uniform(boxSize.height - rotatedReviewBoxSize.height/2 - reviewCurrentSize.height / 2 - ddy));
-        CGFloat fallingDistance = sqrtf(powf(fallingOffset.width, 2) + powf(fallingOffset.height, 2));
-        CGFloat fallingDuration = fallingDistance / REVIEW_SPEED;
-        
+        //3 - falling (simultanious with moving)
+        CGFloat const fallingDuration = 1.5;
         [UIView animateWithDuration: fallingDuration delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
-            self.currentReview.transform = CGAffineTransformTranslate(self.currentReview.transform,fallingOffset.width, fallingOffset.height);
             self.currentReview.transform = CGAffineTransformRotate(self.currentReview.transform, alpha);
             self.currentReview.transform = CGAffineTransformScale(self.currentReview.transform, REVIEW_SCALE, REVIEW_SCALE);
             
@@ -206,11 +200,25 @@ static CGFloat const REVIEW_SCALE = 0.7;
             shadowOpacity.toValue = [NSNumber numberWithFloat:0.0];
             [self.currentReview.layer addAnimation:shadowOpacity forKey:@"shadowOpacity"];
             self.currentReview.layer.shadowOpacity = 0.0;
-            
         } completion:^(BOOL finished) {}];
+        
+
     }]; 
         
     self.reviewIndex = self.nextReviewIndex;
+}
+
+- (CGSize) getMovementOffsetForReviewOfSze: (CGSize) reviewSize andAngle:(CGFloat) alpha {
+    CGSize boxSize = self.reviewBox.frame.size;
+    CGFloat diagonal = sqrtf(powf(reviewSize.width, 2) + powf(reviewSize.height, 2));
+    CGSize rotatedReviewBoxSize = CGSizeMake(diagonal * cos(atanf(reviewSize.height / reviewSize.width ) - fabsf(alpha)), 
+                                             diagonal * cos(atanf(reviewSize.width  / reviewSize.height) - fabsf(alpha)));
+    
+    
+    CGFloat ddy = (rotatedReviewBoxSize.height - reviewSize.height) / 2;
+    
+    return CGSizeMake(-(boxSize.width - rotatedReviewBoxSize.width) / 2 + arc4random_uniform(boxSize.width - rotatedReviewBoxSize.width),
+                      ddy + arc4random_uniform(boxSize.height - rotatedReviewBoxSize.height/2 - reviewSize.height / 2 - ddy));
 }
 
 - (NSUInteger) nextReviewIndex {
