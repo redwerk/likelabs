@@ -76,17 +76,16 @@ public class UserSocialAccount implements Comparable<UserSocialAccount> {
     
     // reviews publishing
     
-    public boolean publishReview(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+    public String publishReview(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
         SocialNetworkGateway snGateway = gatewayFactory.getGateway(type);
         try {
-            snGateway.postUserMessage(this, review.getMessage(),
+            return snGateway.postUserMessage(this, review.getMessage(),
                     review.hasPhoto() ? imageSourceFactory.createImageSource(review.getPhoto()) : null);
         }
         catch (SNException e) {
             LOGGER.error("cannot publish review in " + type, e);
-            return false;
+            return null;
         }
-        return true;
     }
 
     // overrides

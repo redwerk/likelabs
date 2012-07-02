@@ -5,7 +5,7 @@ import com.redwerk.likelabs.application.dto.statistics.Interval;
 import com.redwerk.likelabs.application.dto.statistics.StatisticsType;
 import com.redwerk.likelabs.application.dto.statistics.TotalsStatistics;
 import java.util.List;
-import java.util.Map;
+
 
 public interface StatisticsService {
     

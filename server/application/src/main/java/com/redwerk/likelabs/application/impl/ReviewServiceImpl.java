@@ -4,6 +4,7 @@ import com.redwerk.likelabs.application.RegistrationService;
 import com.redwerk.likelabs.application.ReviewService;
 import com.redwerk.likelabs.domain.model.company.CompanyRepository;
 import com.redwerk.likelabs.domain.model.notification.NotificationIntervalRepository;
+import com.redwerk.likelabs.domain.model.post.PostRepository;
 import com.redwerk.likelabs.domain.service.UserNotifier;
 import com.redwerk.likelabs.domain.service.RecipientNotifier;
 import com.redwerk.likelabs.domain.service.ReviewRegistrator;
@@ -46,6 +47,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private EventRepository eventRepository;
@@ -178,7 +182,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void notifyAuthor(Review review) {
-        review.getAuthor().registerOwnReview(review, eventRepository, notificationProcessor, gatewayFactory, imageSourceFactory);
+        review.getAuthor().registerOwnReview(review, eventRepository, notificationProcessor, gatewayFactory,
+                imageSourceFactory, postRepository);
     }
 
     @Override

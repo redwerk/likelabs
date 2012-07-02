@@ -4,6 +4,9 @@ import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.event.Event;
 import com.redwerk.likelabs.domain.model.event.EventRepository;
 import com.redwerk.likelabs.domain.model.event.EventType;
+import com.redwerk.likelabs.domain.model.post.EmailPost;
+import com.redwerk.likelabs.domain.model.post.PostRepository;
+import com.redwerk.likelabs.domain.model.post.SNPost;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.domain.model.user.exception.AccountNotExistsException;
 import com.redwerk.likelabs.domain.model.user.exception.DuplicatedAccountException;
@@ -243,10 +246,12 @@ public class User {
     
     // reviews
     
-    public void registerOwnReview(Review review, EventRepository eventRepository, NotificationProcessor notificationProcessor,
-                                  GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+    public void registerOwnReview(Review review, EventRepository eventRepository,
+                                  NotificationProcessor notificationProcessor, GatewayFactory gatewayFactory,
+                                  ImageSourceFactory imageSourceFactory, PostRepository postRepository) {
         generateEvent(EventType.USER_REVIEW_CREATED, eventRepository, review, notificationProcessor);
-        publishInSN(review, gatewayFactory, imageSourceFactory);
+        publishInSN(review, gatewayFactory, imageSourceFactory, postRepository);
+        sendToEmail(review, postRepository);
     }
 
     public void registerClientReview(Review review, EventRepository eventRepository,
@@ -268,11 +273,22 @@ public class User {
         }
     }
 
-    private void publishInSN(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory) {
+    private void publishInSN(Review review, GatewayFactory gatewayFactory, ImageSourceFactory imageSourceFactory,
+                             PostRepository postRepository) {
         if (postToSN) {
             for (UserSocialAccount account: accounts) {
-                account.publishReview(review, gatewayFactory, imageSourceFactory);
+                String postId = account.publishReview(review, gatewayFactory, imageSourceFactory);
+                if (postId != null) {
+                    postRepository.add(new SNPost(review, this, account.getType(), postId));
+                }
             }
+        }
+    }
+
+    private void sendToEmail(Review review, PostRepository postRepository) {
+        if (postToEmail && email != null) {
+            // TODO: send email
+            postRepository.add(new EmailPost(review, this, email));
         }
     }
 
