@@ -7,6 +7,7 @@ import com.redwerk.likelabs.domain.model.post.PostTypeFilter;
 import com.redwerk.likelabs.domain.model.query.Pager;
 import com.redwerk.likelabs.domain.model.review.Review;
 import com.redwerk.likelabs.infrastructure.persistence.jpa.util.EntityJpaRepository;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class PostJpaRepository implements PostRepository {
 
     private static final String POSTS_QUERY =
