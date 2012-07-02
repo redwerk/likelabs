@@ -148,7 +148,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
+    public String postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
         
         String imageUrl = (imageSource != null) ? imageSource.getImageUrl() : "";
         HttpClient client = new HttpClient();
@@ -165,13 +165,14 @@ public class FacebookGateway implements SocialNetworkGateway {
                 log.error(json.getString("error"));
                 throw new ResourceAccessDeniedException(SNResourceType.USER_MESSAGE_POSTING, publisher);
             }
+            return json.getString("id");
         } catch (IOException e) {
             throw new SNConnectionFailedException(e);
         }
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
+    public String postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
         String imageUrl = (imageSource != null) ? imageSource.getImageUrl() : "";
         HttpClient client = new HttpClient();
         PostMethod postMethod = new PostMethod(MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, page.getPageId()));
@@ -187,6 +188,7 @@ public class FacebookGateway implements SocialNetworkGateway {
                 log.error(json.getString("error"));
                 throw new ResourceAccessDeniedException(SNResourceType.COMPANY_MESSAGE_POSTING, publisher, page);
             }
+            return json.getString("id");
         } catch (IOException ex) {
             log.error(ex, ex);
             throw new SNConnectionFailedException(ex);
@@ -194,7 +196,7 @@ public class FacebookGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
+    public String postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
         Set<User> users = company.getAdmins();
         
         for (User user : users) {
@@ -210,8 +212,7 @@ public class FacebookGateway implements SocialNetworkGateway {
                 String pageId = account.getString("id");
                 if (page.getPageId().equals(pageId)) {
                     UserSocialAccount publisher = new UserSocialAccount(SocialNetworkType.FACEBOOK, pageId, account.getString("access_token"), account.getString("name"));
-                    postCompanyMessage(page, publisher, message, imageSource);
-                    return;
+                    return postCompanyMessage(page, publisher, message, imageSource);
                 }
             }
         }

@@ -131,7 +131,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
+    public String postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
             String photoId = (imageSource != null)? uploadPhoto(imageSource.getImageBytes(), publisher) : "";
             
@@ -155,6 +155,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
             } else {
                 JSONObject res = json.getJSONObject("response");
                 String postId = res.getString("post_id");
+                return postId;
             }
         } catch (UnsupportedEncodingException ex) {
             throw new SNException(ex);
@@ -200,7 +201,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
+    public String postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
         Set<User> users = company.getAdmins();
         
         for (User user : users) {
@@ -208,14 +209,13 @@ public class VKontakteGateway implements SocialNetworkGateway {
             if (admin == null) {
                 throw new SNException();
             }
-            postCompanyMessage(page, admin, message, imageSource);
-            return;
+            return postCompanyMessage(page, admin, message, imageSource);
         }
         throw new SNException("Cant publish message to company page");
     }
 
     @Override
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
+    public String postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
             String photoId = (imageSource != null)? uploadPhoto(imageSource.getImageBytes(), publisher) : "";
             
@@ -235,6 +235,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
                 }
                 throw new SNException("Unknown company message posting error");
             }
+            return json.getJSONObject("response").getString("post_id");
         } catch (UnsupportedEncodingException ex) {
             throw new SNException(ex);
         }

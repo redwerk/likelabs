@@ -40,7 +40,7 @@ public interface SocialNetworkGateway {
      * @param message text of the message
      * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
-    public void postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource);
+    public String postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource);
 
     /**
      * Post message to the company page in the social network
@@ -49,7 +49,7 @@ public interface SocialNetworkGateway {
      * @param message text of the message
      * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
-    public void postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource);
+    public String postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource);
 
     /**
      * Post message to the company page in the social network
@@ -58,7 +58,7 @@ public interface SocialNetworkGateway {
      * @param message text of the message
      * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
-    public void postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource);
+    public String postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource);
 
     /**
      * Checks if user account has administrative privileges for the company page in social network
