@@ -22,7 +22,7 @@ import java.util.Map;
 public class ReviewJpaRepository extends ReviewRepository {
 
     private static final String GET_PHOTO_REVIEWS_QUERY =
-            "select r from review r where r.point.company.id = :companyId and r.photo is not null order by r.createdDT desc";
+            "select r from Review r where r.point.company.id = :companyId and r.photo is not null order by r.createdDT desc";
 
     @PersistenceContext
     private EntityManager em;

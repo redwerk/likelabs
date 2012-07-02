@@ -6,14 +6,19 @@ import java.util.Date;
 public class ChartPoint {
 
     private Date date;
-    private Integer photosTaken;
-    private Integer facebook;
-    private Integer vkontakte;
-    private Integer emails;
 
-    public ChartPoint() {    }
+    private int photosTaken;
+
+    private int facebook;
+
+    private int vkontakte;
+
+    private int emails;
+
+    public ChartPoint() {
+    }
     
-    public ChartPoint(Date date, Integer photosTaken, Integer facebook, Integer vkontakte, Integer emails){
+    public ChartPoint(Date date, int photosTaken, int facebook, int vkontakte, int emails) {
         this.date = date;
         this.photosTaken = photosTaken;
         this.facebook = facebook;
@@ -21,7 +26,7 @@ public class ChartPoint {
         this.emails = emails;
     }
     
-    public void addPoint(ChartPoint point){
+    public void addPoint(ChartPoint point) {
         this.photosTaken += point.photosTaken;
         this.facebook += point.facebook;
         this.vkontakte += point.vkontakte;
@@ -36,73 +41,36 @@ public class ChartPoint {
         this.date = date;
     }
 
-    public Integer getEmails() {
+    public int getEmails() {
         return emails;
     }
 
-    public void setEmails(Integer emails) {
+    public void setEmails(int emails) {
         this.emails = emails;
     }
 
-    public Integer getFacebook() {
+    public int getFacebook() {
         return facebook;
     }
 
-    public void setFacebook(Integer facebook) {
+    public void setFacebook(int facebook) {
         this.facebook = facebook;
     }
 
-    public Integer getPhotosTaken() {
+    public int getPhotosTaken() {
         return photosTaken;
     }
 
-    public void setPhotosTaken(Integer photosTaken) {
+    public void setPhotosTaken(int photosTaken) {
         this.photosTaken = photosTaken;
     }
 
-    public Integer getVkontakte() {
+    public int getVkontakte() {
         return vkontakte;
     }
 
-    public void setVkontakte(Integer vkontakte) {
+    public void setVkontakte(int vkontakte) {
         this.vkontakte = vkontakte;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ChartPoint other = (ChartPoint) obj;
-        if (this.date != other.date && (this.date == null || !this.date.equals(other.date))) {
-            return false;
-        }
-        if (this.photosTaken != other.photosTaken && (this.photosTaken == null || !this.photosTaken.equals(other.photosTaken))) {
-            return false;
-        }
-        if (this.facebook != other.facebook && (this.facebook == null || !this.facebook.equals(other.facebook))) {
-            return false;
-        }
-        if (this.vkontakte != other.vkontakte && (this.vkontakte == null || !this.vkontakte.equals(other.vkontakte))) {
-            return false;
-        }
-        if (this.emails != other.emails && (this.emails == null || !this.emails.equals(other.emails))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + (this.date != null ? this.date.hashCode() : 0);
-        hash = 79 * hash + (this.photosTaken != null ? this.photosTaken.hashCode() : 0);
-        hash = 79 * hash + (this.facebook != null ? this.facebook.hashCode() : 0);
-        hash = 79 * hash + (this.vkontakte != null ? this.vkontakte.hashCode() : 0);
-        hash = 79 * hash + (this.emails != null ? this.emails.hashCode() : 0);
-        return hash;
-    }
 }

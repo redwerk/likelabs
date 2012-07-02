@@ -1,5 +1,7 @@
 package com.redwerk.likelabs.application.dto.statistics;
 
+import org.apache.commons.lang.Validate;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +26,11 @@ public class ChartBuilder {
     }
     
     public void addPoint(ChartPoint point) {
-        findPoint(point.getDate()).addPoint(point);
+        Validate.notNull(point);
+        ChartPoint groupPoint = findPoint(point.getDate());
+        if (groupPoint != null) {
+            groupPoint.addPoint(point);
+        }
     }
     
     public List<ChartPoint> getPoints(){
@@ -32,8 +38,8 @@ public class ChartBuilder {
     }
     
     private ChartPoint findPoint(Date date) {
-        for(ChartPoint point : this.points) {
-            if(point.getDate().before(date)){
+        for (ChartPoint point : this.points) {
+            if (point.getDate().after(date)){
                 return point;
             }
         }

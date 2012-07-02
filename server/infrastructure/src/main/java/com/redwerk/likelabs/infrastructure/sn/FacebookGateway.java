@@ -342,11 +342,11 @@ public class FacebookGateway implements SocialNetworkGateway {
         for (Object item : data) {
             JSONObject feed = (JSONObject) item;
             //if (feed.getJSONObject("application").getLong("id") == ourAppId) {
-            if(findSNId(feed.getString("id"), posts)) {
-                result.add(new SocialNetworkPost(new Date(), 
-                        feed.getJSONObject("shares").getInt("count"),
-                        feed.getJSONObject("comments").getInt("count"), 
-                        feed.getJSONObject("likes").getInt("count")) );
+            if (findSNId(feed.getString("id"), posts)) {
+                result.add(new SocialNetworkPost(new Date(),
+                        getCount(feed, "shares"),
+                        getCount(feed, "comments"),
+                        getCount(feed, "likes")));
             }
             //}
             if(posts.size()==0) {
@@ -356,7 +356,16 @@ public class FacebookGateway implements SocialNetworkGateway {
         }
         return result;
     }
-    
+
+    private int getCount(JSONObject json, String key){
+        if(json.containsKey(key)){
+            JSONObject likes = json.getJSONObject(key);
+            int val = likes.getInt("count");
+            return val;
+        }
+        return 0;
+    }
+
     private boolean findSNId(String snId, List<SNPost> posts) {
         for(SNPost post : posts) {
             if(post.getSnPostId().equals(snId)) {

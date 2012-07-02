@@ -36,9 +36,10 @@ public class PostJpaRepository implements PostRepository {
 
     @Override
     public List<Post> findAll(Company company, PostTypeFilter postType) {
-        return getEntityRepository().findEntityList(String.format(POSTS_QUERY, entityNames.get(postType)),
+        List<Post> res =  getEntityRepository().findEntityList(String.format(POSTS_QUERY, entityNames.get(postType)),
                 Collections.<String, Object>singletonMap("companyId", company.getId()),
                 Pager.ALL_RECORDS);
+        return res;
     }
 
     @Override
