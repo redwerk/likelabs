@@ -410,9 +410,9 @@ public class VKontakteGateway implements SocialNetworkGateway {
                     }
                     if(findSNId(item.getString("id"), posts)) {
                         result.add(new SocialNetworkPost(new Date(), 
-                                    item.getJSONObject("shares").getInt("count"),
-                                    item.getJSONObject("comments").getInt("count"), 
-                                    item.getJSONObject("likes").getInt("count")) );
+                                    item.getInt("reply_count"),
+                                    getCount(item, "comments"), 
+                                    getCount(item, "likes")));
                     } 
                    
                 }
