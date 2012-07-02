@@ -18,7 +18,7 @@ public class ChartBuilder {
         this.interval = interval;
         this.points = new ArrayList<ChartPoint>();
         Long start = new Date().getTime();
-        for(int i = 0; i<POINTS_COUNT; i++){
+        for(int i = 1; i<=POINTS_COUNT; i++){
             ChartPoint point = new ChartPoint();
             point.setDate(new Date(start-interval.getMillis()*i));
             this.points.add(point);
@@ -39,7 +39,7 @@ public class ChartBuilder {
     
     private ChartPoint findPoint(Date date) {
         for (ChartPoint point : this.points) {
-            if (point.getDate().after(date)){
+            if (point.getDate().before(date)){
                 return point;
             }
         }
