@@ -23,13 +23,7 @@ import com.redwerk.likelabs.web.ui.utils.EnumEditor;
 import com.redwerk.likelabs.web.ui.utils.JsonResponseBuilder;
 import com.redwerk.likelabs.web.ui.utils.QueryFilterBuilder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -89,7 +83,8 @@ public class CompanyGeneralController {
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(ModelMap model, @PathVariable Long companyId) {
         
-        Map<StatisticsType, TotalsStatistics> stat = statisticsService.getAllStatistic(companyId);
+        Map<StatisticsType, TotalsStatistics> stat = Collections.emptyMap();
+        // statisticsService.getAllStatistic(companyId);
         model.put(StatisticsType.GENERAL.toString(),
                 new TotalStatisticDto(stat.get(StatisticsType.GENERAL),messageTemplateService));
         model.put(StatisticsType.FACEBOOK.toString(),
@@ -108,7 +103,7 @@ public class CompanyGeneralController {
         
         JsonResponseBuilder resBuilder = new JsonResponseBuilder();
         try {
-            List<ChartPoint> chartPonts = statisticsService.getChartPionts(companyId, interval);
+            List<ChartPoint> chartPonts = statisticsService.getChartPoints(companyId, interval);
             //TODO after implements service logic
             resBuilder.setData(chartPonts);
         } catch (Exception e) {

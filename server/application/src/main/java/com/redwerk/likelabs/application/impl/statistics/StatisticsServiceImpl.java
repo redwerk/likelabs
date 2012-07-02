@@ -50,8 +50,8 @@ public class StatisticsServiceImpl  implements StatisticsService {
     @Autowired
     private EventRepository eventRepository;
     
-    @Override
     public Map<StatisticsType, TotalsStatistics> getAllStatistic(long companyId) {
+
         Company company = companyService.getCompany(companyId);
         
         Map<SocialNetworkType, List<SocialNetworkPost>> posts = new HashMap<SocialNetworkType, List<SocialNetworkPost>>();
@@ -73,7 +73,12 @@ public class StatisticsServiceImpl  implements StatisticsService {
         resMap.put(StatisticsType.GENERAL, new TotalsStatistics(params));
         return resMap;
     }
-    
+
+    @Override
+    public TotalsStatistics getStatistics(long companyId, StatisticsType statisticsType) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private Map<StatisticsType, TotalsStatistics> groupByTotals(Map<SocialNetworkType, List<SocialNetworkPost>> posts){
         Map<StatisticsType, TotalsStatistics> resMap = new HashMap<StatisticsType, TotalsStatistics>();
         Calendar date = new GregorianCalendar();
@@ -190,7 +195,7 @@ public class StatisticsServiceImpl  implements StatisticsService {
         Long startDate = new Date().getTime();
         Map<Long, Map<ParameterType, AtomicInteger>> points = new HashMap<Long, Map<ParameterType, AtomicInteger>>();
         for(int i=0; i<30; i++){
-        	points.put(startDate-interval.getSec()*i, new HashMap<ParameterType, AtomicInteger>());
+        	points.put(startDate-interval.getMillis()*i, new HashMap<ParameterType, AtomicInteger>());
         }
         
         for(User user : company.getAdmins()){
@@ -232,7 +237,7 @@ public class StatisticsServiceImpl  implements StatisticsService {
             	Map<ParameterType, AtomicInteger> curPoints = null;
             	for(Long key : points.keySet()){
             		Long d = post.getCreateDate().getTime();
-            		if(d>=(key-interval.getSec())&&d<key){
+            		if(d>=(key-interval.getMillis())&&d<key){
             			curPoints = points.get(key);  
             			break;
             		}
@@ -289,7 +294,7 @@ public class StatisticsServiceImpl  implements StatisticsService {
     }
 
     @Override
-    public List<ChartPoint> getChartPionts(long companyId, Interval interval) {
+    public List<ChartPoint> getChartPoints(long companyId, Interval interval) {
         Company company = companyService.getCompany(companyId);
         ChartBuilder chartBuilder = new ChartBuilder(interval);
 

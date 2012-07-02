@@ -36,13 +36,12 @@ public class StatisticsServiceMockImpl implements StatisticsService {
     }};
 
     @Override
-    public Map<StatisticsType, TotalsStatistics> getAllStatistic(long companyId) {
-       
-        return statistics;
+    public TotalsStatistics getStatistics(long companyId, StatisticsType statisticsType) {
+        return statistics.get(statisticsType);
     }
 
     @Override
-    public List<ChartPoint> getChartPionts(long companyId, Interval interval) {
+    public List<ChartPoint> getChartPoints(long companyId, Interval interval) {
         return null;
     }
 }

@@ -18,7 +18,7 @@ public class ChartBuilder {
         Long start = new Date().getTime();
         for(int i = 0; i<POINTS_COUNT; i++){
             ChartPoint point = new ChartPoint();
-            point.setDate(new Date(start-interval.getSec()*i));
+            point.setDate(new Date(start-interval.getMillis()*i));
             this.points.add(point);
         }
     }

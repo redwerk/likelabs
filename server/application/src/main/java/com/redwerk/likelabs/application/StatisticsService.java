@@ -9,8 +9,8 @@ import java.util.Map;
 
 public interface StatisticsService {
     
-    Map<StatisticsType, TotalsStatistics> getAllStatistic(long companyId);
+    TotalsStatistics getStatistics(long companyId, StatisticsType statisticsType);
 
-    List<ChartPoint> getChartPionts(long companyId, Interval interval);
+    List<ChartPoint> getChartPoints(long companyId, Interval interval);
 
 }
