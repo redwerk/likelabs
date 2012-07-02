@@ -2,7 +2,10 @@ package com.redwerk.likelabs.domain.service.sn;
 
 import com.redwerk.likelabs.domain.model.company.Company;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.post.Post;
+import com.redwerk.likelabs.domain.model.post.SNPost;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
+import java.util.List;
 
 public interface SocialNetworkGateway {
 
@@ -46,7 +49,7 @@ public interface SocialNetworkGateway {
      * Post message to the company page in the social network
      * @param page company page in the social network
      * @param publisher publisher in the social account
-     * @param message text of the message
+     * @param message text of the messageTotalsStatistics
      * @param imageSource helper object for retrieving image in appropriate form (url or array of bytes)
      */
     public String postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource);
@@ -73,4 +76,7 @@ public interface SocialNetworkGateway {
     public Object getStatisticsCompany(CompanySocialPage page, UserSocialAccount account);
 
     public Object getStatisticsUser(UserSocialAccount account);
+    
+    public Object getUserStatistics(UserSocialAccount account, List<SNPost> posts);
+
 }

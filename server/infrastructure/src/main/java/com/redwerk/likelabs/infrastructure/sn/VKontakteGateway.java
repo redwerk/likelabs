@@ -12,6 +12,7 @@ import com.redwerk.likelabs.domain.service.sn.SocialNetworkGateway;
 import com.redwerk.likelabs.domain.service.sn.exception.*;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.post.SNPost;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import java.io.IOException;
@@ -340,11 +341,6 @@ public class VKontakteGateway implements SocialNetworkGateway {
     public Object getStatisticsUser(UserSocialAccount account) {
     	boolean until = true;
         
-        final IncrementalTotals postsTotal = new IncrementalTotals();
-        final IncrementalTotals commentsTotal = new IncrementalTotals();
-        final IncrementalTotals likesTotal = new IncrementalTotals();
-        final IncrementalTotals sharesTotal = new IncrementalTotals();
-
         Long pager = 0l;
         Calendar date = new GregorianCalendar();
         List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
@@ -388,5 +384,56 @@ public class VKontakteGateway implements SocialNetworkGateway {
         }
         return 0;
     }
-   
+
+    @Override
+    public Object getUserStatistics(UserSocialAccount account, List<SNPost> posts) {
+        boolean until = true;
+        
+        Long pager = 0l;
+        Calendar date = new GregorianCalendar();
+        List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
+        while(until && pager < 10000) {
+            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager.toString(), account.getAccessToken());
+            String data = requestApiData(url);
+            
+            JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
+            if (json.containsKey("response")) {
+                JSONArray arr = (JSONArray) json.get("response");
+                if(arr.size()<100){
+                    until = false;
+                }
+                for(int i=1; i<arr.size();i++){
+                    JSONObject item = arr.getJSONObject(i);
+                    
+                    if(item.containsKey("date")){
+                        date.setTimeInMillis(item.getLong("date") * 1000);
+                    }
+                    if(findSNId(item.getString("id"), posts)) {
+                        result.add(new SocialNetworkPost(new Date(), 
+                                    item.getJSONObject("shares").getInt("count"),
+                                    item.getJSONObject("comments").getInt("count"), 
+                                    item.getJSONObject("likes").getInt("count")) );
+                    } 
+                   
+                }
+                if(posts.size()==0) {
+                    break;
+                }
+            } else {
+                until = false;
+            }
+            pager +=100;
+        }
+        return result;
+    }
+    
+    private boolean findSNId(String snId, List<SNPost> posts) {
+        for(SNPost post : posts) {
+            if(post.getSnPostId().equals(snId)) {
+                posts.remove(post);
+                return true;
+            }
+        }
+        return false;
+    }
 }

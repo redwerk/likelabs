@@ -1,5 +1,6 @@
 package com.redwerk.likelabs.infrastructure.sn;
 
+import com.google.common.collect.Collections2;
 import com.redwerk.likelabs.application.dto.statistics.IncrementalTotals;
 import com.redwerk.likelabs.application.dto.statistics.Interval;
 import com.redwerk.likelabs.application.dto.statistics.Parameter;
@@ -19,6 +20,8 @@ import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessCodeException
 import com.redwerk.likelabs.domain.service.sn.exception.WrongPageUrlException;
 import com.redwerk.likelabs.domain.model.SocialNetworkType;
 import com.redwerk.likelabs.domain.model.company.CompanySocialPage;
+import com.redwerk.likelabs.domain.model.post.Post;
+import com.redwerk.likelabs.domain.model.post.SNPost;
 import com.redwerk.likelabs.domain.model.user.User;
 import com.redwerk.likelabs.domain.model.user.UserSocialAccount;
 import com.redwerk.likelabs.domain.service.sn.exception.WrongAccessTokenException;
@@ -322,6 +325,46 @@ public class FacebookGateway implements SocialNetworkGateway {
             }
         }
         return result;
+    }
+
+    @Override
+    public Object getUserStatistics(UserSocialAccount account, List<SNPost> posts) {
+        Date currentDate = new Date();
+        Long s = 0l;
+        Long e = currentDate.getTime() / 1000;
+        String feedUrl = MessageFormat.format(API_FEED_USER_TEMPLATE, s.toString(), e.toString(), account.getAccessToken());
+        JSONObject json = requestApiDataJson(feedUrl);
+        JSONArray data = json.getJSONArray("data");
+        if (data.size() < 1) return null;
+        long ourAppId = Long.parseLong(messageTemplateService.getMessage(clientId));
+        
+        List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
+        for (Object item : data) {
+            JSONObject feed = (JSONObject) item;
+            //if (feed.getJSONObject("application").getLong("id") == ourAppId) {
+            if(findSNId(feed.getString("id"), posts)) {
+                result.add(new SocialNetworkPost(new Date(), 
+                        feed.getJSONObject("shares").getInt("count"),
+                        feed.getJSONObject("comments").getInt("count"), 
+                        feed.getJSONObject("likes").getInt("count")) );
+            }
+            //}
+            if(posts.size()==0) {
+                break;
+            }
+            
+        }
+        return result;
+    }
+    
+    private boolean findSNId(String snId, List<SNPost> posts) {
+        for(SNPost post : posts) {
+            if(post.getSnPostId().equals(snId)) {
+                posts.remove(post);
+                return true;
+            }
+        }
+        return false;
     }
     
 }
