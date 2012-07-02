@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/pages/commons/header.jsp" %>
 <script type="text/javascript"
-        src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1"}]}'>
+        src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1", "language": "en"}]}'>
 </script>
 <script type="text/javascript" >
     var sn = {facebook: "FACEBOOK" , vkontakte: "VKONTAKTE"};
@@ -11,10 +11,9 @@
         drawTableSn(sn.vkontakte, $("#vk_statistic"));
     });
 
-    google.setOnLoadCallback(drawVisualization);
+    //google.setOnLoadCallback(drawVisualization);
 
     function drawVisualization(data) {
-        //$('#chart').html("");
         var wrap = new google.visualization.ChartWrapper();
         wrap.setChartType('LineChart');
         wrap.setDataTable(data);
@@ -23,9 +22,8 @@
             chartArea: {left:50,top:35,width:"100%",height:"60%",backgroundColor: '#efefef'},
             titlePosition: 'out', 
             legend : 'top' ,
-            pointSize :  1,
             colors : ["#FB0000","#538DEB","#00E2FB","#00B73D"],
-            hAxis : { format: 'MMM yy' , 'gridlines': {color: '#ccc', count : 10},'minorGridlines': {color: '#333', count: 0}, baseline: 7},
+            hAxis : { format: 'MMM yy' , 'gridlines': {color: '#ccc', count : 10}},
             vAxis:{ 'gridlines': {color: '#ccc', count: 5}, 'minorGridlines': {color: '#333', count: 0}}
         });
         wrap.draw();
