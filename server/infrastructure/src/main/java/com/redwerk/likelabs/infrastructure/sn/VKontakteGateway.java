@@ -46,9 +46,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VKontakteGateway implements SocialNetworkGateway {
-    
+
     private static final Logger log = Logger.getLogger(VKontakteGateway.class);
-    
+
     private static final String API_URL = "https://api.vk.com/method/";
 
     private static final String clientId = "app.vkontakte.clientid";
@@ -56,28 +56,36 @@ public class VKontakteGateway implements SocialNetworkGateway {
     private static final String clientSecret = "app.vkontakte.secretkey";
 
     private static final String GET_ACCESS_TOKEN_URL_TEMPLATE = "https://oauth.vk.com/access_token?client_id={0}&client_secret={1}&code={2}";
-    
+
     private static final Pattern COMPANY_ID_URL_PATTERN = Pattern.compile("(?:vk\\.com/)([^\\/\\?]+)");
-    
+
     private static final String API_USER_INFO_TEMPLATE = API_URL + "users.get?uid={0}";
-    
+
     private static final String API_COMPANY_PAGE_TEMPLATE = API_URL + "groups.getById?gid={0}";
-    
+
     private static final String API_POST_USER_MESSAGE_TEMPLATE = API_URL + "wall.post?owner_id={0}&message={1}&attachments={2}&access_token={3}";
-    
+
     private static final String API_POST_COMPANY_MESSAGE_TEMPLATE = API_URL + "wall.post?owner_id={0}&message={1}&attachments={2}&access_token={3}";
-    
+
     private static final String API_IS_ADMIN_TEMPLATE = API_URL + "groups.getById?gid={0}&access_token={1}";
-    
-    private static final String API_GET_UPLOAD_SERVER = API_URL + "photos.getWallUploadServer?access_token={1}";
-    
-    private static final String API_WALL_SAVE_PHOTO = API_URL + "photos.saveWallPhoto?server={0}&photo={1}&hash={2}&access_token={3}";
-    
+
+    private static final String API_GET_UPLOAD_SERVER = API_URL + "photos.getUploadServer?aid={0}&gid={1}&access_token={2}";
+
+    private static final String API_SAVE_PHOTO = API_URL + "photos.save?aid={0}&gid={1}&server={2}&photos_list={3}&hash={4}&access_token={5}";
+
+    private static final String API_GET_ALBUMS_FOR_USER = API_URL + "photos.getAlbums?uid={0}&access_token={1}";
+
+    private static final String API_GET_ALBUMS_FOR_GROUP = API_URL + "photos.getAlbums?gid={0}&access_token={1}";
+
+    private static final String API_CREATE_ALBUM = API_URL + "photos.createAlbum?gid={0}&title={1}&access_token={2}";
+
     private static final String API_GET_USER_ID_TEMPLATE = API_URL + "getUserInfo?access_token={0}";
-    
+
     private static final String VK_COMPANY_URL_PATTERN = "http://vk.com/{0}";
 
-    private static final String API_STATISTICS_URL_TEMPLATE = API_URL + "wall.get?owner_id={0}&offset={1}&count=100&access_token={2}";
+    private static final String API_STATISTICS_URL_TEMPLATE = API_URL + "wall.get?owner_id={0}&offset={1,number,#}&count=100&access_token={2}";
+
+    private static final String PHOTO_ALBUM_NAME = "app.photo.album.name";
 
     @Autowired
     MessageTemplateService messageTemplateService;
@@ -100,7 +108,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
         JSONObject json = requestApiDataJson(url);
         return getUserSocialAccount(accessToken, json.getString("user_id"));
     }
-    
+
     private UserSocialAccount getUserSocialAccount(String accessToken, String userId) {
         JSONObject accountData = requestApiDataJson(MessageFormat.format(API_USER_INFO_TEMPLATE, userId));
         String name = accountData.getString("first_name") + " " + accountData.getString("last_name");
@@ -134,8 +142,12 @@ public class VKontakteGateway implements SocialNetworkGateway {
     @Override
     public String postUserMessage(UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
-            String photoId = (imageSource != null)? uploadPhoto(imageSource.getImageBytes(), publisher) : "";
-            
+            String photoId = "";
+            if (imageSource != null) {
+                String albumId = getAlbumId(publisher, messageTemplateService.getMessage(PHOTO_ALBUM_NAME));
+                photoId = uploadPhoto(imageSource.getImageBytes(), publisher, albumId);
+            }
+
             String url = MessageFormat.format(API_POST_USER_MESSAGE_TEMPLATE, publisher.getAccountId(), URLEncoder.encode(message, "UTF-8"), photoId, publisher.getAccessToken());
             String data = requestApiData(url);
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
@@ -145,8 +157,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
                     if (errorCode == 5) {
                         log.error(json.getString("error"));
                         throw new AccessTokenExpiredException(publisher);
-                    }
-                    else if (errorCode == 214 || errorCode == 7) {
+                    } else if (errorCode == 214 || errorCode == 7) {
                         log.error(json.getString("error"));
                         throw new ResourceAccessDeniedException(SNResourceType.USER_MESSAGE_POSTING, publisher);
                     }
@@ -162,37 +173,39 @@ public class VKontakteGateway implements SocialNetworkGateway {
             throw new SNException(ex);
         }
     }
-    
+
     /**
      * Upload image to user's default album
      * @param image
      * @param publisher 
      * @return Photo ID
      */
-    private String uploadPhoto(byte[] image, UserSocialAccount publisher) {
-        JSONObject server = requestApiDataJson(MessageFormat.format(API_GET_UPLOAD_SERVER, publisher.getAccountId(), publisher.getAccessToken()));
+    public String uploadPhoto(byte[] image, UserSocialAccount publisher, String albumId) {
+        return uploadPhoto(image, publisher, albumId, null);
+    }
+
+    public String uploadPhoto(byte[] image, UserSocialAccount publisher, String albumId, CompanySocialPage page) {
+        JSONObject server = requestApiDataJson(MessageFormat.format(API_GET_UPLOAD_SERVER, albumId, page != null ? page.getPageId() : "", publisher.getAccessToken()));
         String uploadUrl = server.getString("upload_url");
         try {
             PostMethod post = new PostMethod(uploadUrl);
-            PartSource  imagePartSource = new ByteArrayPartSource("test.png", image);
+            PartSource imagePartSource = new ByteArrayPartSource("test.png", image);
             Part[] parts = {
                 // do not change "file1" - this is required field name for VK API
                 new FilePart("file1", imagePartSource)
             };
             post.setRequestEntity(
-                new MultipartRequestEntity(parts, post.getParams())
-            );
+                    new MultipartRequestEntity(parts, post.getParams()));
             HttpClient client = new HttpClient();
             client.executeMethod(post);
-            
+
             String body = post.getResponseBodyAsString();
             JSONObject json = (JSONObject) (new JSONTokener(body)).nextValue();
             String serverId = json.getString("server");
-            String photo = json.getString("photo");
+            String photosList = json.getString("photos_list");
             String hash = json.getString("hash");
-            
-            String savePhotoUrl = MessageFormat.format(API_WALL_SAVE_PHOTO, serverId, URLEncoder.encode(photo, "UTF-8"), hash, publisher.getAccessToken());
-            System.out.println("Save Photo URL: " + savePhotoUrl);
+
+            String savePhotoUrl = MessageFormat.format(API_SAVE_PHOTO, albumId, page != null ? page.getPageId() : "", serverId, URLEncoder.encode(photosList, "UTF-8"), hash, publisher.getAccessToken());
             JSONObject photoResponse = requestApiDataJson(savePhotoUrl);
             return photoResponse.getString("id");
         } catch (IOException ex) {
@@ -201,10 +214,48 @@ public class VKontakteGateway implements SocialNetworkGateway {
         return "";
     }
 
+    public String getAlbumId(UserSocialAccount account, String title) {
+        return getAlbumId(account, title, null);
+    }
+
+    public String getAlbumId(UserSocialAccount account, String title, CompanySocialPage page) {
+        String url;
+        if (page != null) {
+            url = MessageFormat.format(API_GET_ALBUMS_FOR_GROUP, page.getPageId(), account.getAccessToken());
+        } else {
+            url = MessageFormat.format(API_GET_ALBUMS_FOR_USER, account.getAccountId(), account.getAccessToken());
+        }
+        String data = requestApiData(url);
+        JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
+        if (json.containsKey("response")) {
+            try {
+                JSONArray albums = json.getJSONArray("response");
+                if (albums.size() < 1) {
+                    return createAlbum(account, title, page);
+                }
+                for (Object item : albums) {
+                    JSONObject album = (JSONObject) item;
+                    if (title.equalsIgnoreCase(album.getString("title"))) {
+                        return album.getString("aid");
+                    }
+                }
+            } catch (JSONException ex) {
+                throw new SNException(ex);
+            }
+        }
+        return createAlbum(account, title, page);
+    }
+
+    public String createAlbum(UserSocialAccount account, String title, CompanySocialPage page) {
+        String url = MessageFormat.format(API_CREATE_ALBUM, page != null ? page.getPageId() : "", URLEncoder.encode(title), account.getAccessToken());
+        JSONObject album = requestApiDataJson(url);
+        return album.getString("aid");
+    }
+
     @Override
     public String postCompanyMessage(CompanySocialPage page, Company company, String message, ImageSource imageSource) {
         Set<User> users = company.getAdmins();
-        
+
         for (User user : users) {
             UserSocialAccount admin = user.findAccount(SocialNetworkType.VKONTAKTE);
             if (admin == null) {
@@ -212,27 +263,31 @@ public class VKontakteGateway implements SocialNetworkGateway {
             }
             return postCompanyMessage(page, admin, message, imageSource);
         }
-        throw new SNException("Cant publish message to company page");
+        throw new SNException("Can't publish message to company page");
     }
 
     @Override
     public String postCompanyMessage(CompanySocialPage page, UserSocialAccount publisher, String message, ImageSource imageSource) {
         try {
-            String photoId = (imageSource != null)? uploadPhoto(imageSource.getImageBytes(), publisher) : "";
-            
-            String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE,  "-" + page.getPageId(), URLEncoder.encode(message, "UTF-8"), photoId, publisher.getAccessToken());
+            String photoId = "";
+            if (imageSource != null) {
+                String albumId = getAlbumId(publisher, messageTemplateService.getMessage(PHOTO_ALBUM_NAME), page);
+                photoId = uploadPhoto(imageSource.getImageBytes(), publisher, albumId, page);
+            }
+            message = message == null ? "" : message;
+            String url = MessageFormat.format(API_POST_COMPANY_MESSAGE_TEMPLATE, "-" + page.getPageId(), URLEncoder.encode(message, "UTF-8"), photoId, publisher.getAccessToken());
             String data = requestApiData(url);
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
-            
+
             if (!json.containsKey("response")) {
                 if (json.containsKey("error") && json.getJSONObject("error").containsKey("error_code")) {
                     int errorCode = json.getJSONObject("error").getInt("error_code");
                     if (errorCode == 5) {
                         throw new AccessTokenExpiredException(publisher);
-                    }
-                    else if (errorCode == 214 || errorCode == 7) {
+                    } else if (errorCode == 214 || errorCode == 7) {
                         throw new ResourceAccessDeniedException(SNResourceType.COMPANY_MESSAGE_POSTING, publisher);
                     }
+                    throw new SNException(json.getJSONObject("error").getString("error_msg"));
                 }
                 throw new SNException("Unknown company message posting error");
             }
@@ -250,9 +305,12 @@ public class VKontakteGateway implements SocialNetworkGateway {
         }
         return false;
     }
+
     private String requestApiData(String url) {
-        if (StringUtils.isEmpty(url)) throw new IllegalArgumentException("Url must be not empty");
-        
+        if (StringUtils.isEmpty(url)) {
+            throw new IllegalArgumentException("Url must not be empty");
+        }
+
         HttpClient client = new HttpClient();
         GetMethod getMethod = new GetMethod(url);
         String data = "";
@@ -264,8 +322,8 @@ public class VKontakteGateway implements SocialNetworkGateway {
         }
         return data;
     }
-    
-    private JSONObject requestApiDataJson(String url){
+
+    private JSONObject requestApiDataJson(String url) {
         String data = requestApiData(url);
         JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
         if (json.containsKey("response")) {
@@ -279,7 +337,7 @@ public class VKontakteGateway implements SocialNetworkGateway {
                 }
             }
         } else if (json.containsKey("error")) {
-            if (json.getJSONObject("error").containsKey("error_code")){
+            if (json.getJSONObject("error").containsKey("error_code")) {
                 int errorCode = json.getJSONObject("error").getInt("error_code");
                 if (errorCode == 5) {
                     throw new AccessTokenExpiredException(null);
@@ -292,92 +350,92 @@ public class VKontakteGateway implements SocialNetworkGateway {
 
     @Override
     public TotalsStatistics getStatisticsCompany(CompanySocialPage page, UserSocialAccount account) {
-        boolean until = true;
-        
         final IncrementalTotals postsTotal = new IncrementalTotals();
         final IncrementalTotals commentsTotal = new IncrementalTotals();
         final IncrementalTotals likesTotal = new IncrementalTotals();
         final IncrementalTotals sharesTotal = new IncrementalTotals();
 
-        Long pager = 0l;
+        long pager = 0l;
         Calendar date = new GregorianCalendar();
 
-        while(until && pager < 10000) {
-            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, page.getPageId(), pager.toString(), account.getAccessToken());
+        while (pager < 10000) {
+            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, "-" + page.getPageId(), pager, account.getAccessToken());
             String data = requestApiData(url);
 
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
             if (json.containsKey("response")) {
                 JSONArray arr = (JSONArray) json.get("response");
-                if(arr.size()<100){
-                    until = false;
-                }
-                for(int i=1; i<arr.size();i++){
+                int size = arr.size();
+                for (int i = 1; i < size; i++) {
                     JSONObject item = arr.getJSONObject(i);
-                    
-                    if(item.containsKey("date")){
+
+                    if (item.containsKey("date")) {
                         date.setTimeInMillis(item.getLong("date") * 1000);
                     }
-                    
+
                     postsTotal.increment(1, date);
                     commentsTotal.increment(getCount(item, "comments"), date);
                     likesTotal.increment(getCount(item, "likes"), date);
                     sharesTotal.increment(getCount(item, "reposts"), date);
                 }
+                if (size < 100) {
+                    break;
+                }
             } else {
-                until = false;
+                break;
             }
-            pager +=100;
+            pager += 100;
         }
-        return new TotalsStatistics(new ArrayList<Parameter>() {{
-            add(new Parameter(ParameterType.POSTS, postsTotal.getTotals()));
-            add(new Parameter(ParameterType.LIKES, likesTotal.getTotals()));
-            add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
-            add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
-        }});
+        return new TotalsStatistics(new ArrayList<Parameter>() {
+
+            {
+                add(new Parameter(ParameterType.POSTS, postsTotal.getTotals()));
+                add(new Parameter(ParameterType.LIKES, likesTotal.getTotals()));
+                add(new Parameter(ParameterType.COMMENTS, commentsTotal.getTotals()));
+                add(new Parameter(ParameterType.SHARES, sharesTotal.getTotals()));
+            }
+        });
     }
 
     @Override
     public Object getStatisticsUser(UserSocialAccount account) {
-    	boolean until = true;
-        
-        Long pager = 0l;
+        long pager = 0l;
         Calendar date = new GregorianCalendar();
         List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
-        while(until && pager < 10000) {
-            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager.toString(), account.getAccessToken());
+        while (pager < 10000) {
+            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager, account.getAccessToken());
             String data = requestApiData(url);
-            
+
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
             if (json.containsKey("response")) {
                 JSONArray arr = (JSONArray) json.get("response");
-                if(arr.size()<100){
-                    until = false;
-                }
-                for(int i=1; i<arr.size();i++){
+                int size = arr.size();
+                for (int i = 1; i < size; i++) {
                     JSONObject item = arr.getJSONObject(i);
-                    
-                    if(item.containsKey("date")){
+
+                    if (item.containsKey("date")) {
                         date.setTimeInMillis(item.getLong("date") * 1000);
                     }
-                    
-                    result.add(new SocialNetworkPost(new Date(), 
-                    		item.getJSONObject("shares").getInt("count"),
-                    		item.getJSONObject("comments").getInt("count"), 
-                    		item.getJSONObject("likes").getInt("count")) );
-                    
-                   
+
+                    result.add(new SocialNetworkPost(new Date(),
+                            item.getJSONObject("shares").getInt("count"),
+                            item.getJSONObject("comments").getInt("count"),
+                            item.getJSONObject("likes").getInt("count")));
                 }
+                if (size < 100) {
+                    break;
+                }
+
             } else {
-                until = false;
+                break;
             }
-            pager +=100;
+            pager += 100;
         }
         return result;
     }
 
-    private int getCount(JSONObject json, String key){
-        if(json.containsKey(key)){
+    private int getCount(JSONObject json, String key) {
+        if (json.containsKey(key)) {
             JSONObject likes = json.getJSONObject(key);
             int val = likes.getInt("count");
             return val;
@@ -387,49 +445,43 @@ public class VKontakteGateway implements SocialNetworkGateway {
 
     @Override
     public Object getUserStatistics(UserSocialAccount account, List<SNPost> posts) {
-        boolean until = true;
-        Long pager = 0L;
+        long pager = 0L;
         Calendar date = new GregorianCalendar();
         List<SocialNetworkPost> result = new ArrayList<SocialNetworkPost>();
-        while(until && pager < 10000) {
-            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager.toString(), account.getAccessToken());
+        while (pager < 10000) {
+            String url = MessageFormat.format(API_STATISTICS_URL_TEMPLATE, account.getAccountId(), pager, account.getAccessToken());
             String data = requestApiData(url);
             JSONObject json = (JSONObject) (new JSONTokener(data)).nextValue();
             if (json.containsKey("response")) {
                 JSONArray arr = (JSONArray) json.get("response");
-                if(arr.size()<100){
-                    until = false;
-                }
-                for(int i=1; i<arr.size();i++){
+                int size = arr.size();
+                for (int i = 1; i < size; i++) {
                     JSONObject item = arr.getJSONObject(i);
-                    if(item.containsKey("date")){
+                    if (item.containsKey("date")) {
                         date.setTimeInMillis(item.getLong("date") * 1000);
                     }
-                    if(findSNId(item.getString("id"), posts)) {
-                        int sh = item.getInt("reply_count");
-                        int com = getCount(item, "comments");
-                        int l = getCount(item, "likes");
+                    if (findSNId(item.getString("id"), posts)) {
                         result.add(new SocialNetworkPost(new Date(),
-                                    sh,
-                                    com,
-                                    l));
+                                item.getInt("reply_count"),
+                                getCount(item, "comments"),
+                                getCount(item, "likes")));
                     }
 
                 }
-                if(posts.isEmpty()) {
+                if (posts.isEmpty() || size < 100) {
                     break;
                 }
             } else {
-                until = false;
+                break;
             }
-            pager +=100;
+            pager += 100;
         }
         return result;
     }
-    
+
     private boolean findSNId(String snId, List<SNPost> posts) {
-        for(SNPost post : posts) {
-            if(post.getSnPostId().equals(snId)) {
+        for (SNPost post : posts) {
+            if (post.getSnPostId().equals(snId)) {
                 posts.remove(post);
                 return true;
             }
